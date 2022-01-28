@@ -3,5 +3,7 @@
 # FrontEnd
 
 - 첫 branch 생성
+- start community
 
 # BackEnd
+

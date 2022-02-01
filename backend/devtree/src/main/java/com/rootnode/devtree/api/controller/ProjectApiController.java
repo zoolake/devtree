@@ -2,16 +2,15 @@ package com.rootnode.devtree.api.controller;
 
 import com.rootnode.devtree.api.request.ProjectCreateRequestDto;
 import com.rootnode.devtree.api.response.ProjectCreateResponseDto;
+import com.rootnode.devtree.api.response.ProjectDetailResponseDto;
 import com.rootnode.devtree.api.response.ProjectListResponseDto;
 import com.rootnode.devtree.api.service.TeamService;
+import com.rootnode.devtree.db.entity.TeamType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,12 +36,24 @@ public class ProjectApiController {
      * 기능: 프로젝트 리스트 조회
      */
     @GetMapping("/v1/project")
-    public ResponseEntity<Result> projectList() {
-        List<ProjectListResponseDto> projects = teamService.findProjects();
+    public ResponseEntity<Result> projectList(@RequestParam TeamType team_type) {
+        List<ProjectListResponseDto> responseDto = teamService.findTeams(team_type);
         return ResponseEntity
                 .status(200)
-                .body(new Result(projects));
+                .body(new Result(responseDto));
     }
+
+    /**
+     * 기능: 프로젝트 상세 조회
+     */
+    @GetMapping("/v1/project/{team_seq}")
+    public ResponseEntity<Result> projectDetail(@PathVariable Long team_seq) {
+        ProjectDetailResponseDto responseDto = teamService.findProject(team_seq);
+        return ResponseEntity
+                .status(200)
+                .body(new Result(responseDto));
+    }
+
 
 
     /**

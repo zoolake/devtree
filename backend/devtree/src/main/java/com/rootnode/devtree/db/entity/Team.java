@@ -1,10 +1,12 @@
 package com.rootnode.devtree.db.entity;
 
+import com.rootnode.devtree.api.response.TechInfoDto;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Table(name = "tb_team")
 @Getter
@@ -37,7 +39,20 @@ public class Team extends BaseTimeEntity{
 
     private int team_favorites_cnt;
 
-    // 프로젝트 조회 할 때 (팀_기술스택) 필요
+    // 팀 조회 할 때 (팀_기술스택) 필요
     @OneToMany(mappedBy = "team")
     private List<TeamTech> teamTechList;
+
+    /**
+     * teamTechList -> TechInfoDto로 변환해주는 메소드
+     * 목록조회와 상세조회에 공통적으로 사용되므로
+     * 도메인 계층에서 메소드로 따로 추출하여 관리하는 방식 선택
+     * Respository에서 fetch join으로 들고오기 때문에
+     * 지연로딩의 프록시 객체로 인한 에러는 발생하지 않는다.
+     */
+    public List<TechInfoDto> toTechInfoDto() {
+        return this.teamTechList.stream()
+                .map(teamTech -> new TechInfoDto(teamTech.getTech()))
+                .collect(Collectors.toList());
+    }
 }

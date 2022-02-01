@@ -19,10 +19,6 @@ bin/
 
 ### IntelliJ IDEA ###
 application-mysql.properties
-application.properties
-
-*.log
-*.gz
 
 .idea
 *.iws

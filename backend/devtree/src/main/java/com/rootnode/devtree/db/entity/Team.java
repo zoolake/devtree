@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Table(name = "tb_team")
 @Getter
@@ -35,4 +36,8 @@ public class Team extends BaseTimeEntity{
     private LocalDateTime team_end_time;
 
     private int team_favorites_cnt;
+
+    // 프로젝트 조회 할 때 (팀_기술스택) 필요
+    @OneToMany(mappedBy = "team")
+    private List<TeamTech> teamTechList;
 }

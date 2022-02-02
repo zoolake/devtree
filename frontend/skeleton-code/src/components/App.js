@@ -8,6 +8,8 @@ import RegisterPage from "./views/RegisterPage/RegisterPage.js";
 import ChatPage from "./views/ChatPage/ChatPage";
 import CommunityPage from "./views/CommunityPage/CommunityPage";
 import ProjectPage from "./views/ProjectPage/ProjectPage";
+import MentorPage from "./views/MentorPage/MentorPage";
+import MentorDetail from "./views/MentorPage/MentorDetail";
 import StudyPage from "./views/StudyPage/StudyPage";
 import NavBar from "./views/NavBar/NavBar";
 import Footer from "./views/Footer/Footer";
@@ -24,6 +26,10 @@ function App() {
           <Route exact path="/" component={Auth(LandingPage, null)} />
           <Route exact path="/study" component={Auth(StudyPage, null)} />
           <Route exact path="/project" component={Auth(ProjectPage, null)} />
+          <Route exact path="/mentor" component={Auth(MentorPage, null)} />
+          <Route exact path="/mentor/:id" component={Auth(MentorDetail, null)}>
+            <MentorDetail/>
+          </Route>
           <Route
             exact
             path="/community"

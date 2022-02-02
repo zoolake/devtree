@@ -1,12 +1,12 @@
 package com.rootnode.devtree.api.service;
 
 import com.rootnode.devtree.api.request.ProjectCreateRequestDto;
+import com.rootnode.devtree.api.request.ProjectJoinRequestDto;
+import com.rootnode.devtree.api.response.CommonResponseDto;
 import com.rootnode.devtree.api.response.ProjectDetailResponseDto;
 import com.rootnode.devtree.api.response.ProjectListResponseDto;
-import com.rootnode.devtree.db.entity.ProjectPosition;
-import com.rootnode.devtree.db.entity.Team;
-import com.rootnode.devtree.db.entity.TeamTech;
-import com.rootnode.devtree.db.entity.TeamType;
+import com.rootnode.devtree.db.entity.*;
+import com.rootnode.devtree.db.entity.compositeKey.ProjectPositionId;
 import com.rootnode.devtree.db.entity.compositeKey.TeamTechId;
 import com.rootnode.devtree.db.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +19,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class TeamService {
+    private final UserRepository userRepository;
+
     private final TeamRepository teamRepository;
     private final TeamTechRepository teamTechRepository;
-    private final ProjectPositionRepository projectPositionRepository;
     private final TechRepository techRepository;
-    private final UserRepository userRepository;
+
+    private final PositionRepository positionRepository;
+    private final ProjectPositionReservationRepository projectPositionReservationRepository;
+    private final ProjectPositionRepository projectPositionRepository;
 
 
     /**
@@ -36,7 +40,7 @@ public class TeamService {
      */
     @Transactional
     public Team save(ProjectCreateRequestDto requestDto) {
-        Team team = teamRepository.save(requestDto.toTeamEntity());
+        Team team = teamRepository.save(requestDto.toEntity());
 
         requestDto.getTeam_tech().forEach(tech -> {
             teamTechRepository.save(TeamTech.builder()
@@ -83,5 +87,19 @@ public class TeamService {
 
         // 4. DTO로 변환하여 반환 (userRepository 완성되면 바로 아래 주석 처리한 코드로 사용)
         return new ProjectDetailResponseDto(team, managerName, projectPositions);
+    }
+
+    public CommonResponseDto joinProject(Long team_seq, ProjectJoinRequestDto requestDto) {
+        Long user_seq = requestDto.getUser_seq();
+        String detail_position_name = requestDto.getDetail_position_name();
+
+        // 1. User 객체를 찾는다.
+        User user = userRepository.findById(user_seq).get();
+        // 2. ProjectPosition 객체를 찾는다.
+        ProjectPosition projectPosition = projectPositionRepository.findById(new ProjectPositionId(team_seq, detail_position_name)).get();
+        // 3. 저장
+        projectPositionReservationRepository.save(requestDto.toEntity(team_seq, user, projectPosition));
+
+        return new CommonResponseDto(201, "프로젝트 참여 요청에 성공하였습니다.");
     }
 }

@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  */
 @Getter
 @NoArgsConstructor
-public class ProjectDetailResponseDto {
+public class ProjectDetailResponseDto extends CommonResponseDto{
     private Long team_seq;
     private Long team_manager_seq;
     private String team_name;
@@ -28,9 +28,6 @@ public class ProjectDetailResponseDto {
     private String team_manager_name;
     private List<TechInfoDto> team_tech;
     private List<ProjectPositionInfoDto> team_position;
-
-    private int status;
-    private String message;
 
     public ProjectDetailResponseDto(Team team, String team_manager_name, List<ProjectPosition> projectPositions) {
         this.team_seq = team.getTeam_seq();

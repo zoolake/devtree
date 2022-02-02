@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class ProjectListResponseDto {
+public class ProjectListResponseDto extends CommonResponseDto{
     private Long team_seq;
     private Long team_manager_seq;
     private String team_name;
@@ -17,9 +17,6 @@ public class ProjectListResponseDto {
     private int team_recruit_cnt;
     private int team_member_cnt;
     private List<TechInfoDto> team_tech;
-
-    private int status;
-    private String message;
 
     public ProjectListResponseDto(Team team, String team_manger_name) {
         this.team_seq = team.getTeam_seq();

@@ -19,8 +19,8 @@ public class ProjectPositionReservation {
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("projectPositionID")
     @JoinColumns({
-            @JoinColumn(name = "team_seq"),
-            @JoinColumn(name = "detail_position_name")
+            @JoinColumn(name = "team_seq", referencedColumnName = "team_seq"),
+            @JoinColumn(name = "detail_position_name", referencedColumnName = "detail_position_name")
     })
     private ProjectPosition projectPosition;
 

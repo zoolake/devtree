@@ -8,10 +8,7 @@ import com.rootnode.devtree.db.entity.Team;
 import com.rootnode.devtree.db.entity.TeamTech;
 import com.rootnode.devtree.db.entity.TeamType;
 import com.rootnode.devtree.db.entity.compositeKey.TeamTechId;
-import com.rootnode.devtree.db.repository.ProjectPositionRepository;
-import com.rootnode.devtree.db.repository.TeamRepository;
-import com.rootnode.devtree.db.repository.TeamTechRepository;
-import com.rootnode.devtree.db.repository.TechRepository;
+import com.rootnode.devtree.db.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,11 +23,12 @@ public class TeamService {
     private final TeamTechRepository teamTechRepository;
     private final ProjectPositionRepository projectPositionRepository;
     private final TechRepository techRepository;
+    private final UserRepository userRepository;
 
 
     /**
      * 수정 필요 : service 레이어에서 DTO를 반환하는 일관적인 구조로 가져가야 할 듯.
-     *              (현재는 Team 엔티티를 Controller 계층까지 넘기고 있음.)
+     * (현재는 Team 엔티티를 Controller 계층까지 넘기고 있음.)
      * 로직
      * 1. team 테이블에 먼저 삽입 -> team_seq를 얻을 수 있음.
      * 2. 반복문을 통해 team_tech에 (팀 일련번호, 기술 일련번호) 삽입
@@ -57,28 +55,33 @@ public class TeamService {
 
     /**
      * 프로젝트 목록 조회 == 팀 목록 조회 이므로
-     * Parameter로 team_type을 받아와서 해당 스터디 or 프로젝트를 조회하는 방식으로 진행해도 될 듯
+     * Parameter로 team_type을 받아와서 해당 스터디 or 프로젝트를 조회하는 방식으로 진행
      */
     @Transactional(readOnly = true)
     public List<ProjectListResponseDto> findTeams(TeamType teamType) {
+        // 1. team_type 기반으로 목록 조회 진행
         List<Team> teamList = teamRepository.findAllByTeamType(teamType);
+
+        // 2. 얻어온 목록들을 기반으로 userRepository 에서 관리자 명을 찾아서 Dto로 만들고 반환해주는 방식
         return teamList.stream()
-                .map(team -> new ProjectListResponseDto(team))
+                .map(team -> {
+                    String managerName = userRepository.findById(team.getTeam_manager_seq()).get().getUser_name();
+                    return new ProjectListResponseDto(team, managerName);
+                })
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public ProjectDetailResponseDto findProject(Long team_seq) {
         // 1. 팀 테이블을 조회
-        Team team = teamRepository.findById(team_seq).get();
+        Team team = teamRepository.findTeamByTeamSeq(team_seq);
         // 2. team_seq를 활용하여 포지션 현황 조회
         List<ProjectPosition> projectPositions = projectPositionRepository.findByTeamSeq(team_seq);
 
         // 3. (1)에서 얻어온 team_manager_seq를 활용하여 관리자 이름 조회 (user 파트 완성 후 작업하기.)
-        // String managerName = userRepository.findById(team_manager_seq);
+        String managerName = userRepository.findById(team.getTeam_manager_seq()).get().getUser_name();
 
         // 4. DTO로 변환하여 반환 (userRepository 완성되면 바로 아래 주석 처리한 코드로 사용)
-        // return new ProjectDetailResponseDto(team, managerName, projectPositions);
-        return new ProjectDetailResponseDto(team, projectPositions);
+        return new ProjectDetailResponseDto(team, managerName, projectPositions);
     }
 }

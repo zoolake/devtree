@@ -25,17 +25,18 @@ public class ProjectDetailResponseDto {
     private Long team_manager_seq;
     private String team_name;
     private TeamState team_state;
-//    private String team_manager_name;
+    private String team_manager_name;
     private List<TechInfoDto> team_tech;
     private List<ProjectPositionInfoDto> team_position;
 
     private int status;
     private String message;
 
-    public ProjectDetailResponseDto (Team team, List<ProjectPosition> projectPositions) {
+    public ProjectDetailResponseDto(Team team, String team_manager_name, List<ProjectPosition> projectPositions) {
         this.team_seq = team.getTeam_seq();
         this.team_manager_seq = team.getTeam_manager_seq();
         this.team_name = team.getTeam_name();
+        this.team_manager_name = team_manager_name;
         this.team_state = team.getTeam_state();
         this.team_tech = team.toTechInfoDto();
         this.team_position = projectPositions.stream()

@@ -18,7 +18,7 @@ public class UserRes{
 	
 	public static UserRes of(User user) {
 		UserRes res = new UserRes();
-		res.setUserId(user.getUser_id());
+		res.setUserId(user.getUserId());
 		return res;
 	}
 }

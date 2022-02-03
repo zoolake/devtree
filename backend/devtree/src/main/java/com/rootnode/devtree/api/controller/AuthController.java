@@ -21,14 +21,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v1/user")
 public class AuthController {
-	@Autowired
 	UserService userService;
-	
-	@Autowired
 	PasswordEncoder passwordEncoder;
+	@Autowired
+	public AuthController(UserService userService,PasswordEncoder passwordEncoder){
+		this.userService = userService;
+		this.passwordEncoder = passwordEncoder;
+	}
 
 	/**
-	 *
 	 * @param loginInfo
 	 * @
 	 */

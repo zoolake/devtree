@@ -27,8 +27,8 @@ public class User{
     private String user_name;
     @Column(nullable = false)
     private String user_email;
-    @Column(nullable = false)
-    String user_id;
+    @Column(nullable = false,name = "user_id")
+    String userId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

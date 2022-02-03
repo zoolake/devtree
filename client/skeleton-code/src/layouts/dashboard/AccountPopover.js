@@ -80,6 +80,12 @@ export default function AccountPopover() {
       </Button>
     );
   }
+  let MENU_OPTIONS;
+  if (localStorage.getItem('user')) {
+    MENU_OPTIONS = MENU_OPTIONS_SIGNED;
+  } else {
+    MENU_OPTIONS = MENU_OPTIONS_GUEST;
+  }
   return (
     <>
       <IconButton
@@ -122,7 +128,7 @@ export default function AccountPopover() {
 
         <Divider sx={{ my: 1 }} />
 
-        {MENU_OPTIONS_SIGNED.map((option) => (
+        {MENU_OPTIONS.map((option) => (
           <MenuItem
             key={option.label}
             to={option.linkTo}

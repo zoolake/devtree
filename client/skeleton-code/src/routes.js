@@ -7,6 +7,7 @@ import Login from './pages/User/Login';
 import Register from './pages/User/Register';
 import MainPage from './pages/Main/MainPage';
 import Products from './pages/Products';
+import Profile from './pages/User/Profile';
 import Blog from './pages/Blog';
 import User from './pages/User';
 // ----------------------------------------------------------------------
@@ -21,7 +22,8 @@ export default function Router() {
         { path: 'app', element: <MainPage /> },
         { path: 'user', element: <User /> },
         { path: 'products', element: <Products /> },
-        { path: 'blog', element: <Blog /> }
+        { path: 'blog', element: <Blog /> },
+        { path: 'profile', element: <Profile /> }
       ]
     },
     {

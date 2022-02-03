@@ -23,7 +23,7 @@ export function registerUser(dataToSubmit) {
 
 export function detailUser(dataToSubmit) {
   const request = axios
-    .post(`${USER_SERVER}/user/`, dataToSubmit)
+    .get(`${USER_SERVER}/user/1`, dataToSubmit)
     .then((response) => response.data);
 
   return {

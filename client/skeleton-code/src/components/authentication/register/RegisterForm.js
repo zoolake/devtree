@@ -35,10 +35,6 @@ export default function RegisterForm(props) {
                   console.log('이미 있음');
                   return false;
                 }
-                // else {
-                //   console.log('존재하지 않음');
-                //   return true;
-                // }
               } catch (error) {
                 console.log(error);
               }

@@ -28,7 +28,7 @@ public class ProjectCreateRequestDto {
     private List<PositionMember> team_position;
 
 
-    public Team toTeamEntity() {
+    public Team toEntity() {
         int team_recruit_cnt = team_position.stream()
                 .mapToInt(PositionMember::getPosition_recruit_cnt)
                 .sum();

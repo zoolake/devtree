@@ -28,7 +28,7 @@ public class Mentor {
     /**
      * 일대일 매핑 고려
      */
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @MapsId("mentor_seq")
     @JoinColumn(name = "mentor_seq", unique = true)
     private User user;

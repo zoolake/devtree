@@ -1,6 +1,8 @@
 package com.rootnode.devtree.api.controller;
 
 import com.rootnode.devtree.api.request.ProjectCreateRequestDto;
+import com.rootnode.devtree.api.request.ProjectJoinRequestDto;
+import com.rootnode.devtree.api.response.CommonResponseDto;
 import com.rootnode.devtree.api.response.ProjectCreateResponseDto;
 import com.rootnode.devtree.api.response.ProjectDetailResponseDto;
 import com.rootnode.devtree.api.response.ProjectListResponseDto;
@@ -36,8 +38,8 @@ public class ProjectApiController {
      * 기능: 프로젝트 리스트 조회
      */
     @GetMapping("/v1/project")
-    public ResponseEntity<Result> projectList(@RequestParam TeamType team_type) {
-        List<ProjectListResponseDto> responseDto = teamService.findTeams(team_type);
+    public ResponseEntity<Result> projectList() {
+        List<ProjectListResponseDto> responseDto = teamService.findTeams(TeamType.PROJECT);
         return ResponseEntity
                 .status(200)
                 .body(new Result(responseDto));
@@ -54,6 +56,15 @@ public class ProjectApiController {
                 .body(new Result(responseDto));
     }
 
+    /**
+     * 기능: 프로젝트 신청
+     */
+    @PostMapping("/v1/project/{team_seq}")
+    public ResponseEntity<CommonResponseDto> projectJoin(@PathVariable Long team_seq, @RequestBody ProjectJoinRequestDto requestDto) {
+        return ResponseEntity
+                .status(201)
+                .body(teamService.joinProject(team_seq, requestDto));
+    }
 
 
     /**

@@ -21,7 +21,7 @@ public class MentorAuthentication {
     private String mentor_company_email;
     private String mentor_documentation;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @MapsId("user_seq")
     @JoinColumn(name = "user_seq", unique = true)
     private User user;

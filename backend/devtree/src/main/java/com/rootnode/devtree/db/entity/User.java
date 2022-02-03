@@ -38,10 +38,4 @@ public class User{
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     String user_password;
-
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-    private Mentor mentor;
-
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-    private MentorAuthentication mentorAuthentication;
 }

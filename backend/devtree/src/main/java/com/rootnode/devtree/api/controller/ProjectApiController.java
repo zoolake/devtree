@@ -2,11 +2,13 @@ package com.rootnode.devtree.api.controller;
 
 import com.rootnode.devtree.api.request.ProjectCreateRequestDto;
 import com.rootnode.devtree.api.request.ProjectJoinRequestDto;
+import com.rootnode.devtree.api.request.ProjectRespondRequestDto;
 import com.rootnode.devtree.api.response.CommonResponseDto;
 import com.rootnode.devtree.api.response.ProjectCreateResponseDto;
 import com.rootnode.devtree.api.response.ProjectDetailResponseDto;
 import com.rootnode.devtree.api.response.ProjectListResponseDto;
-import com.rootnode.devtree.api.service.TeamService;
+import com.rootnode.devtree.api.service.ProjectService;
+import com.rootnode.devtree.db.entity.ResponseType;
 import com.rootnode.devtree.db.entity.TeamType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +21,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class ProjectApiController {
-    private final TeamService teamService;
+    private final ProjectService projectService;
 
     /**
      * 기능: 프로젝트 생성
@@ -27,7 +29,7 @@ public class ProjectApiController {
     @PostMapping("/v1/project")
     public ResponseEntity<ProjectCreateResponseDto> projectCreate(@RequestBody ProjectCreateRequestDto requestDto) {
 
-        ProjectCreateResponseDto responseDto = new ProjectCreateResponseDto(teamService.save(requestDto));
+        ProjectCreateResponseDto responseDto = new ProjectCreateResponseDto(projectService.save(requestDto));
 
         return ResponseEntity
                 .status(201)
@@ -39,7 +41,7 @@ public class ProjectApiController {
      */
     @GetMapping("/v1/project")
     public ResponseEntity<Result> projectList() {
-        List<ProjectListResponseDto> responseDto = teamService.findTeams(TeamType.PROJECT);
+        List<ProjectListResponseDto> responseDto = projectService.findTeams(TeamType.PROJECT);
         return ResponseEntity
                 .status(200)
                 .body(new Result(responseDto));
@@ -50,7 +52,7 @@ public class ProjectApiController {
      */
     @GetMapping("/v1/project/{team_seq}")
     public ResponseEntity<Result> projectDetail(@PathVariable Long team_seq) {
-        ProjectDetailResponseDto responseDto = teamService.findProject(team_seq);
+        ProjectDetailResponseDto responseDto = projectService.findProject(team_seq);
         return ResponseEntity
                 .status(200)
                 .body(new Result(responseDto));
@@ -63,7 +65,20 @@ public class ProjectApiController {
     public ResponseEntity<CommonResponseDto> projectJoin(@PathVariable Long team_seq, @RequestBody ProjectJoinRequestDto requestDto) {
         return ResponseEntity
                 .status(201)
-                .body(teamService.joinProject(team_seq, requestDto));
+                .body(projectService.joinProject(team_seq, requestDto));
+    }
+
+    /**
+     * 기능: 프로젝트 신청 응답
+     */
+    @PostMapping("/v1/project/{team_seq}/{user_seq}")
+    public ResponseEntity<CommonResponseDto> projectRespond(@PathVariable Long team_seq,
+                                                            @PathVariable Long user_seq,
+                                                            @RequestBody ProjectRespondRequestDto requestDto
+    ) {
+        return ResponseEntity
+                .status(201)
+                .body(projectService.respondPosition(team_seq, user_seq, requestDto));
     }
 
 

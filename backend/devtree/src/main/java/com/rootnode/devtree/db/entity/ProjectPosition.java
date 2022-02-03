@@ -36,6 +36,6 @@ public class ProjectPosition {
 
     // 해당 포지션 모집된 멤버 증가
     public void addMemberCount() {
-        this.position_recruit_cnt += 1;
+        this.position_member_cnt += 1;
     }
 }

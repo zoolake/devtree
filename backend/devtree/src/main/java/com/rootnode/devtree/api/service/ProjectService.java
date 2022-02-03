@@ -2,11 +2,14 @@ package com.rootnode.devtree.api.service;
 
 import com.rootnode.devtree.api.request.ProjectCreateRequestDto;
 import com.rootnode.devtree.api.request.ProjectJoinRequestDto;
+import com.rootnode.devtree.api.request.ProjectRespondRequestDto;
 import com.rootnode.devtree.api.response.CommonResponseDto;
 import com.rootnode.devtree.api.response.ProjectDetailResponseDto;
 import com.rootnode.devtree.api.response.ProjectListResponseDto;
 import com.rootnode.devtree.db.entity.*;
 import com.rootnode.devtree.db.entity.compositeKey.ProjectPositionId;
+import com.rootnode.devtree.db.entity.compositeKey.ProjectPositionReservationId;
+import com.rootnode.devtree.db.entity.compositeKey.ProjectPositionUserId;
 import com.rootnode.devtree.db.entity.compositeKey.TeamTechId;
 import com.rootnode.devtree.db.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +21,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class TeamService {
+public class ProjectService {
     private final UserRepository userRepository;
 
     private final TeamRepository teamRepository;
@@ -28,6 +31,7 @@ public class TeamService {
     private final PositionRepository positionRepository;
     private final ProjectPositionReservationRepository projectPositionReservationRepository;
     private final ProjectPositionRepository projectPositionRepository;
+    private final ProjectPositionUserRepository projectPositionUserRepository;
 
 
     /**
@@ -89,6 +93,7 @@ public class TeamService {
         return new ProjectDetailResponseDto(team, managerName, projectPositions);
     }
 
+    @Transactional
     public CommonResponseDto joinProject(Long team_seq, ProjectJoinRequestDto requestDto) {
         Long user_seq = requestDto.getUser_seq();
         String detail_position_name = requestDto.getDetail_position_name();
@@ -101,5 +106,36 @@ public class TeamService {
         projectPositionReservationRepository.save(requestDto.toEntity(team_seq, user, projectPosition));
 
         return new CommonResponseDto(201, "프로젝트 참여 요청에 성공하였습니다.");
+    }
+
+    @Transactional
+    public CommonResponseDto respondPosition(Long team_seq, Long user_seq, ProjectRespondRequestDto requestDto) {
+
+        String detail_position_name = requestDto.getDetail_position_name();
+        ResponseType response_type = requestDto.getResponse_type();
+
+        ProjectPositionUserId projectPositionUserId = new ProjectPositionUserId(user_seq, new ProjectPositionId(team_seq, detail_position_name));
+        ProjectPosition projectPosition = projectPositionRepository.findById(new ProjectPositionId(team_seq, detail_position_name)).get();
+        User user = userRepository.findById(user_seq).get();
+
+        // 1. 수락을 하는 경우
+        if(ResponseType.ACCEPT.equals(response_type)) {
+            // 1. Project_Position_User_Repository 에 insert (해당 포지션 현재원 1 증가, 해당 팀 현재원 1 증가)
+            projectPositionUserRepository.save(new ProjectPositionUser(projectPositionUserId, projectPosition, user));
+            projectPosition.addMemberCount();
+            teamRepository.findById(team_seq).get().addTeamMember();
+
+            // 2. Project_position_Reservation_Repository 에 있는 (user_seq, team_seq) 데이터를 모두 지워준다.
+            projectPositionReservationRepository.deleteAllByUserSeqAndTeamSeq(user_seq, team_seq);
+        }
+
+        // 2. 거절을 하는 경우
+        if(ResponseType.REJECT.equals(response_type)) {
+            // 1. 해당 신청 기록을 Project_Position_Reservation_Repostiory 에서 지워준다.
+            projectPositionReservationRepository.deleteById(new ProjectPositionReservationId(user_seq, new ProjectPositionId(team_seq, detail_position_name)));
+        }
+
+
+        return new CommonResponseDto(201, "프로젝트 참여 요청 응답에 성공하였습니다.");
     }
 }

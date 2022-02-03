@@ -55,4 +55,8 @@ public class Team extends BaseTimeEntity{
                 .map(teamTech -> new TechInfoDto(teamTech.getTech()))
                 .collect(Collectors.toList());
     }
+
+    public void addTeamMember() {
+        this.team_member_cnt += 1;
+    }
 }

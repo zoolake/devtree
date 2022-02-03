@@ -7,6 +7,8 @@ import Login from './pages/User/Login';
 import Register from './pages/User/Register';
 import MainPage from './pages/Main/MainPage';
 import Products from './pages/Products';
+import Project from './pages/Project/ProjectMain';
+import ProjectDetail from './pages/Project/ProjectDetail';
 import Blog from './pages/Blog';
 import User from './pages/User';
 // ----------------------------------------------------------------------
@@ -22,6 +24,14 @@ export default function Router() {
         { path: 'user', element: <User /> },
         { path: 'products', element: <Products /> },
         { path: 'blog', element: <Blog /> }
+      ]
+    },
+    {
+      path: '/Project',
+      element: <DashboardLayout />,
+      children: [
+        { path: 'projectMain', element: <Project /> },
+        { path: ':post.id', element: <ProjectDetail /> }
       ]
     },
     {

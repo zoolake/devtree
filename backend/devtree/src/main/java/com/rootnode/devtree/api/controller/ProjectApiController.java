@@ -1,5 +1,6 @@
 package com.rootnode.devtree.api.controller;
 
+import com.rootnode.devtree.api.request.ChangeStateRequestDto;
 import com.rootnode.devtree.api.request.ProjectCreateRequestDto;
 import com.rootnode.devtree.api.request.ProjectJoinRequestDto;
 import com.rootnode.devtree.api.request.ProjectRespondRequestDto;
@@ -9,6 +10,7 @@ import com.rootnode.devtree.api.response.ProjectDetailResponseDto;
 import com.rootnode.devtree.api.response.ProjectListResponseDto;
 import com.rootnode.devtree.api.service.ProjectService;
 import com.rootnode.devtree.db.entity.ResponseType;
+import com.rootnode.devtree.db.entity.TeamState;
 import com.rootnode.devtree.db.entity.TeamType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -89,6 +91,16 @@ public class ProjectApiController {
         return ResponseEntity
                 .status(200)
                 .body(new Result(projectService.findProjectPositionDetail(team_seq)));
+    }
+
+    /**
+     * 기능: 프로젝트 상태 변경 == 팀 상태 변경 == 스터디 상태 변경
+     */
+    @PutMapping("/v1/team/change/state")
+    public ResponseEntity<CommonResponseDto> teamChangeState(@RequestBody ChangeStateRequestDto requestDto) {
+        return ResponseEntity
+                .status(201)
+                .body(projectService.updateTeamState(requestDto.getTeam_seq(), requestDto.getTeam_state()));
     }
 
     /**

@@ -56,7 +56,17 @@ public class Team extends BaseTimeEntity{
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 팀원 증가시 사용하는 메소드 (프로젝트 신청 수락, 스터디 신청 수락 등..)
+     */
     public void addTeamMember() {
         this.team_member_cnt += 1;
+    }
+
+    /**
+     * 모집 상태 변화를 위한 메소드 (setter 대신 사용)
+     */
+    public void changeTeamState(TeamState team_state) {
+        this.team_state = team_state;
     }
 }

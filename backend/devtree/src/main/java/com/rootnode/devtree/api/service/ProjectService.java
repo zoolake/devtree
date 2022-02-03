@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -137,7 +138,6 @@ public class ProjectService {
             projectPositionReservationRepository.deleteById(new ProjectPositionReservationId(user_seq, new ProjectPositionId(team_seq, detail_position_name)));
         }
 
-
         return new CommonResponseDto(201, "프로젝트 참여 요청 응답에 성공하였습니다.");
     }
 
@@ -147,5 +147,10 @@ public class ProjectService {
         return new ProjectPositionDetailResponseDto(projectPositionRepository.findByTeamSeq(team_seq));
     }
 
-
+    @Transactional
+    public CommonResponseDto updateTeamState(Long team_seq, TeamState team_state) {
+        Team team = teamRepository.findById(team_seq).get();
+        team.changeTeamState(team_state);
+        return new CommonResponseDto(201, "팀 상태 변경에 성공하였습니다.");
+    }
 }

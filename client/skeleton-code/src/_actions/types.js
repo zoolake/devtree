@@ -6,3 +6,4 @@ export const IDCHECK_USER = 'idcheck_user';
 export const DETAIL_USER = 'detail_user';
 export const GET_CHATS = 'get_chat';
 export const AFTER_POST_MESSAGE = 'after_post_message';
+export const PASSWORD_UPDATE = 'passwordUpdate';

@@ -7,7 +7,7 @@ import eyeFill from '@iconify/icons-eva/eye-fill';
 import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
-
+import { Cookies } from 'react-cookie';
 // material
 import {
   Link,
@@ -24,6 +24,7 @@ import { loginUser } from '../../../_actions/user_actions';
 
 export default function LoginForm() {
   axios.defaults.withCredentials = true;
+  const cookies = new Cookies();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [formErrorMessage, setFormErrorMessage] = useState('');
@@ -54,14 +55,15 @@ export default function LoginForm() {
         };
         dispatch(loginUser(dataToSubmit))
           .then((response) => {
-            console.log(response);
-            if (response.payload.loginSuccess) {
+            if (response) {
+              console.log('뀨?');
+              window.location.reload();
+              document.location.assign('/');
+
               const { accessToken } = response.data;
+
               axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-              // eslint-disable-next-line no-undef
-              props.history.push('/');
             } else {
-              console.log(response);
               setFormErrorMessage('아이디 또는 비밀번호를 확인해주세요.');
             }
           })

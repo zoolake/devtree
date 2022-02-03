@@ -4,9 +4,11 @@ import {
   AUTH_USER,
   LOGOUT_USER,
   IDCHECK_USER,
-  DETAIL_USER
+  DETAIL_USER,
+  PASSWORD_UPDATE
 } from '../_actions/types';
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default function (state = {}, action) {
   switch (action.type) {
     case REGISTER_USER:
@@ -18,6 +20,8 @@ export default function (state = {}, action) {
     case AUTH_USER:
       return { ...state, userData: action.payload };
     case DETAIL_USER:
+      return { ...state, userData: action.payload };
+    case PASSWORD_UPDATE:
       return { ...state, userData: action.payload };
     case LOGOUT_USER:
       return { ...state };

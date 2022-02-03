@@ -18,6 +18,7 @@ import {
   AppOrderTimeline,
   AppCurrentVisits
 } from '../../components/_dashboard/app';
+import { PasswordUpdate, UserProfile } from '../../components/Profile';
 // ----------------------------------------------------------------------
 
 const SORT_OPTIONS = [
@@ -50,7 +51,7 @@ const Tab = [
           <AppOrderTimeline />
         </Grid>{' '}
         <Grid item xs={12} md={6} lg={5}>
-          <AppCurrentVisits />
+          <UserProfile />
         </Grid>
       </Grid>
     )
@@ -59,7 +60,7 @@ const Tab = [
     title: '비밀번호 수정',
     content: (
       <Grid item xs={12} md={6} lg={8}>
-        <AppNewsUpdate />
+        <PasswordUpdate />
       </Grid>
     )
   },

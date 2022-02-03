@@ -5,10 +5,22 @@ import {
   AUTH_USER,
   LOGOUT_USER,
   IDCHECK_USER,
-  DETAIL_USER
+  DETAIL_USER,
+  PASSWORD_UPDATE
 } from './types';
 import { USER_SERVER } from '../components/config';
 // import authHeader from "./auth-header"
+
+export function passwordUpdate(dataToSubmit) {
+  const request = axios
+    .put(`${USER_SERVER}/password/1`, dataToSubmit)
+    .then((response) => response.data);
+
+  return {
+    type: PASSWORD_UPDATE,
+    payload: request
+  };
+}
 
 export function registerUser(dataToSubmit) {
   const request = axios
@@ -21,10 +33,8 @@ export function registerUser(dataToSubmit) {
   };
 }
 
-export function detailUser(dataToSubmit) {
-  const request = axios
-    .get(`${USER_SERVER}/user/1`, dataToSubmit)
-    .then((response) => response.data);
+export function detailUser() {
+  const request = axios.get(`http://localhost:8080/v1/user/me`).then((response) => response.data);
 
   return {
     type: DETAIL_USER,
@@ -44,11 +54,13 @@ export function idcheckUser(dataToSubmit) {
 }
 
 export function loginUser(dataToSubmit) {
-  const request = axios.post(`${USER_SERVER}/login`, dataToSubmit).then((response) => {
-    if (response.data.accessToken) {
-      localStorage.setItem('user', JSON.stringify(response.data));
-    }
-  });
+  const request = axios
+    .post(`http://localhost:8080/v1/user/login `, dataToSubmit)
+    .then((response) => {
+      if (response.data.accessToken) {
+        localStorage.setItem('user', JSON.stringify(response.data));
+      }
+    });
   return {
     type: LOGIN_USER,
     payload: request

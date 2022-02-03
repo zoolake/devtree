@@ -29,7 +29,6 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
     0.24
   )} 100%)`
 }));
-
 // ----------------------------------------------------------------------
 
 export default function AppStudyMain() {

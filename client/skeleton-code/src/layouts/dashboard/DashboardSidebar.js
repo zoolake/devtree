@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
+import jwtdecode from 'jwt-decode';
 // material
 import { styled } from '@mui/material/styles';
 import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
 // components
 import Logo from '../../components/Logo';
+
 import Scrollbar from '../../components/Scrollbar';
 import NavSection from '../../components/NavSection';
 import { MHidden } from '../../components/@material-extend';
@@ -16,7 +18,16 @@ import account from '../../_mocks_/account';
 // ----------------------------------------------------------------------
 
 const DRAWER_WIDTH = 280;
-
+let token = localStorage.getItem('user') || '로그인 해주세요';
+let a;
+if (localStorage.getItem('user')) {
+  token = `${
+    jwtdecode(JSON.parse(localStorage.getItem('user')).accessToken).sub
+  }님, \n안녕하세요😃`;
+  a = '/MainPage/profile';
+} else {
+  a = '/login';
+}
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('lg')]: {
     flexShrink: 0,
@@ -63,12 +74,12 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       </Box>
 
       <Box sx={{ mb: 5, mx: 2.5 }}>
-        <Link underline="none" component={RouterLink} to="/login">
+        <Link underline="none" component={RouterLink} to={a}>
           <AccountStyle>
             <Avatar src={account.photoURL} alt="photoURL" />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {account.displayName}
+                {token}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 {account.role}

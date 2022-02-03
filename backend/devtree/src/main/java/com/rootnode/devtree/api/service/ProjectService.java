@@ -6,6 +6,7 @@ import com.rootnode.devtree.api.request.ProjectRespondRequestDto;
 import com.rootnode.devtree.api.response.CommonResponseDto;
 import com.rootnode.devtree.api.response.ProjectDetailResponseDto;
 import com.rootnode.devtree.api.response.ProjectListResponseDto;
+import com.rootnode.devtree.api.response.ProjectPositionDetailResponseDto;
 import com.rootnode.devtree.db.entity.*;
 import com.rootnode.devtree.db.entity.compositeKey.ProjectPositionId;
 import com.rootnode.devtree.db.entity.compositeKey.ProjectPositionReservationId;
@@ -83,6 +84,7 @@ public class ProjectService {
     public ProjectDetailResponseDto findProject(Long team_seq) {
         // 1. 팀 테이블을 조회
         Team team = teamRepository.findTeamByTeamSeq(team_seq);
+
         // 2. team_seq를 활용하여 포지션 현황 조회
         List<ProjectPosition> projectPositions = projectPositionRepository.findByTeamSeq(team_seq);
 
@@ -119,7 +121,7 @@ public class ProjectService {
         User user = userRepository.findById(user_seq).get();
 
         // 1. 수락을 하는 경우
-        if(ResponseType.ACCEPT.equals(response_type)) {
+        if (ResponseType.ACCEPT.equals(response_type)) {
             // 1. Project_Position_User_Repository 에 insert (해당 포지션 현재원 1 증가, 해당 팀 현재원 1 증가)
             projectPositionUserRepository.save(new ProjectPositionUser(projectPositionUserId, projectPosition, user));
             projectPosition.addMemberCount();
@@ -130,7 +132,7 @@ public class ProjectService {
         }
 
         // 2. 거절을 하는 경우
-        if(ResponseType.REJECT.equals(response_type)) {
+        if (ResponseType.REJECT.equals(response_type)) {
             // 1. 해당 신청 기록을 Project_Position_Reservation_Repostiory 에서 지워준다.
             projectPositionReservationRepository.deleteById(new ProjectPositionReservationId(user_seq, new ProjectPositionId(team_seq, detail_position_name)));
         }
@@ -138,4 +140,12 @@ public class ProjectService {
 
         return new CommonResponseDto(201, "프로젝트 참여 요청 응답에 성공하였습니다.");
     }
+
+
+    @Transactional
+    public ProjectPositionDetailResponseDto findProjectPositionDetail(Long team_seq) {
+        return new ProjectPositionDetailResponseDto(projectPositionRepository.findByTeamSeq(team_seq));
+    }
+
+
 }

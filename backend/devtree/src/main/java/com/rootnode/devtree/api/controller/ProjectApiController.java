@@ -81,6 +81,15 @@ public class ProjectApiController {
                 .body(projectService.respondPosition(team_seq, user_seq, requestDto));
     }
 
+    /**
+     * 기능: 프로젝트 포지션 조회
+     */
+    @GetMapping("/v1/project/{team_seq}/position")
+    public ResponseEntity<Result> projectPositionDetail(@PathVariable Long team_seq) {
+        return ResponseEntity
+                .status(200)
+                .body(new Result(projectService.findProjectPositionDetail(team_seq)));
+    }
 
     /**
      * List를 한번 감싸서 보내기 위하여 만든 클래스

@@ -1,8 +1,6 @@
 package com.rootnode.devtree.api.service;
 
-import com.rootnode.devtree.api.request.ProjectCreateRequestDto;
-import com.rootnode.devtree.api.request.ProjectJoinRequestDto;
-import com.rootnode.devtree.api.request.ProjectRespondRequestDto;
+import com.rootnode.devtree.api.request.*;
 import com.rootnode.devtree.api.response.CommonResponseDto;
 import com.rootnode.devtree.api.response.ProjectDetailResponseDto;
 import com.rootnode.devtree.api.response.ProjectListResponseDto;
@@ -16,9 +14,10 @@ import com.rootnode.devtree.db.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -48,17 +47,16 @@ public class ProjectService {
     public Team save(ProjectCreateRequestDto requestDto) {
         Team team = teamRepository.save(requestDto.toEntity());
 
+        // 원본
         requestDto.getTeam_tech().forEach(tech -> {
             teamTechRepository.save(TeamTech.builder()
-                    .teamTechID(new TeamTechId(tech, team.getTeam_seq()))
+                    .teamTechID(new TeamTechId(team.getTeam_seq(), tech))
                     .team(team)
                     .tech(techRepository.findById(tech).get())
                     .build());
         });
 
-        requestDto.getTeam_position().forEach(positionMember -> {
-            projectPositionRepository.save(positionMember.toProjectPositionEntity(team));
-        });
+        saveProjectPosition(requestDto.getTeam_position(), team);
 
         return team;
     }
@@ -152,5 +150,69 @@ public class ProjectService {
         Team team = teamRepository.findById(team_seq).get();
         team.changeTeamState(team_state);
         return new CommonResponseDto(201, "팀 상태 변경에 성공하였습니다.");
+    }
+
+    @Transactional
+    public CommonResponseDto updateProject(Long team_seq, ProjectUpdateRequestDto requestDto) {
+        Team team = teamRepository.findById(team_seq).get();
+
+        if (StringUtils.hasText(requestDto.getTeam_name())) {
+            team.changeTeamName(requestDto.getTeam_name());
+        }
+
+        if (StringUtils.hasText(requestDto.getTeam_desc())) {
+            team.changeTeamDesc(requestDto.getTeam_desc());
+        }
+
+        if (!Objects.isNull(requestDto.getTeam_tech())) {
+            // 부모쪽 먼저 삭제
+            team.getTeamTechList().clear();
+            // 자식쪽 삭제
+            teamTechRepository.deleteByTeamSeq(team_seq);
+
+            // 새로 삽입
+            requestDto.getTeam_tech().forEach(techSeq -> {
+                teamTechRepository.save(TeamTech.builder()
+                        .teamTechID(new TeamTechId(team_seq, techSeq))
+                        .team(team)
+                        .tech(techRepository.findById(techSeq).get())
+                        .build());
+            });
+        }
+
+        if (!Objects.isNull(requestDto.getTeam_position())) {
+            // 새로 삽입
+            List<PositionMember> positionMembers = requestDto.getTeam_position();
+
+            // 기존 포지션이 인원이 변경되는 경우면 update
+            positionMembers.forEach(positionMember -> {
+                // 이미 있는 포지션이라면 인원만 update
+                if (projectPositionRepository.findById(new ProjectPositionId(team_seq, positionMember.getPosition().getDetail_position_name())).isPresent()) {
+                    ProjectPosition projectPosition = projectPositionRepository.findById(new ProjectPositionId(team_seq, positionMember.getPosition().getDetail_position_name())).get();
+                    int positionRecruitCnt = positionMember.getPosition_recruit_cnt();
+                    projectPosition.changeRecruitCount(positionRecruitCnt);
+                }
+                // 새로운 포지션이 생기면 삽입
+                else {
+                    projectPositionRepository.save(positionMember.toProjectPositionEntity(team));
+                }
+            });
+
+            // 팀 총 정원도 변경되기 때문에 수정해준다.
+            team.changeTeamRecruitCnt(projectPositionRepository.findAll().stream()
+                    .mapToInt(ProjectPosition::getPosition_recruit_cnt)
+                    .sum());
+        }
+
+        return new CommonResponseDto(201, "프로젝트 정보 수정에 성공하였습니다.");
+    }
+
+    /**
+     * List<포지션 이름, 정원> , 팀을 넘기면 저장해주는 메소드
+     */
+    private void saveProjectPosition(List<PositionMember> project_position, Team team) {
+        project_position.forEach(positionMember -> {
+            projectPositionRepository.save(positionMember.toProjectPositionEntity(team));
+        });
     }
 }

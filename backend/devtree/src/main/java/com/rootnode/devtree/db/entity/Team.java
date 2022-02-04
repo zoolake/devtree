@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,9 +15,10 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class Team extends BaseTimeEntity{
+public class Team extends BaseTimeEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long team_seq;
 
     private Long team_manager_seq;
@@ -40,8 +42,11 @@ public class Team extends BaseTimeEntity{
     private int team_favorites_cnt;
 
     // 팀 조회 할 때 (팀_기술스택) 필요
-    @OneToMany(mappedBy = "team")
-    private List<TeamTech> teamTechList;
+    @OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<TeamTech> teamTechList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<ProjectPosition> teamPositionList = new ArrayList<>();
 
     /**
      * teamTechList -> TechInfoDto로 변환해주는 메소드
@@ -63,10 +68,35 @@ public class Team extends BaseTimeEntity{
         this.team_member_cnt += 1;
     }
 
+
     /**
-     * 모집 상태 변화를 위한 메소드 (setter 대신 사용)
+     * 프로젝트 정보를 수정하기 위한 메소드들 (setter 대신 사용)
      */
+    public void changeTeamManger(Long team_manager_seq) {
+        this.team_manager_seq = team_manager_seq;
+    }
+
     public void changeTeamState(TeamState team_state) {
         this.team_state = team_state;
+
+        // 모집완료 상태가 되면 team_start_time 설정
+        if(TeamState.COMPLETED.equals(this.team_state)) {
+            this.team_start_time = LocalDateTime.now();
+        }
+
+        // 팀 종료 상태가 되면 team_end_time 설정
+        if(TeamState.FINISH.equals(this.team_state)) {
+            this.team_end_time = LocalDateTime.now();
+        }
+    }
+
+    public void changeTeamName(String team_name) {
+        this.team_name = team_name;
+    }
+    public void changeTeamDesc(String team_desc) {
+        this.team_desc = team_desc;
+    }
+    public void changeTeamRecruitCnt(int team_recruit_cnt) {
+        this.team_recruit_cnt = team_recruit_cnt;
     }
 }

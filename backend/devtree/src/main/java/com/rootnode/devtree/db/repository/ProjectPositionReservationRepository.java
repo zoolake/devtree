@@ -14,4 +14,9 @@ public interface ProjectPositionReservationRepository extends JpaRepository<Proj
     @Modifying
     @Query(value = "delete from ProjectPositionReservation r where r.projectPositionReservationID.user_seq = :user_seq and r.projectPositionReservationID.projectPositionID.team_seq = :team_seq")
     void deleteAllByUserSeqAndTeamSeq(Long user_seq, Long team_seq);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete from ProjectPositionReservation r where r.projectPositionReservationID.projectPositionID.team_seq = :teamSeq")
+    void deleteByTeamSeq(Long teamSeq);
 }

@@ -1,13 +1,7 @@
 package com.rootnode.devtree.api.controller;
 
-import com.rootnode.devtree.api.request.ChangeStateRequestDto;
-import com.rootnode.devtree.api.request.ProjectCreateRequestDto;
-import com.rootnode.devtree.api.request.ProjectJoinRequestDto;
-import com.rootnode.devtree.api.request.ProjectRespondRequestDto;
-import com.rootnode.devtree.api.response.CommonResponseDto;
-import com.rootnode.devtree.api.response.ProjectCreateResponseDto;
-import com.rootnode.devtree.api.response.ProjectDetailResponseDto;
-import com.rootnode.devtree.api.response.ProjectListResponseDto;
+import com.rootnode.devtree.api.request.*;
+import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.api.service.ProjectService;
 import com.rootnode.devtree.db.entity.ResponseType;
 import com.rootnode.devtree.db.entity.TeamState;
@@ -102,6 +96,18 @@ public class ProjectApiController {
                 .status(201)
                 .body(projectService.updateTeamState(requestDto.getTeam_seq(), requestDto.getTeam_state()));
     }
+
+    /**
+     * 기능: 프로젝트 정보 수정
+     */
+    @PutMapping("/v1/project/{team_seq}")
+    public ResponseEntity<CommonResponseDto> projectDetailUpdate(@PathVariable Long team_seq,
+                                                                        @RequestBody ProjectUpdateRequestDto requestDto) {
+        return ResponseEntity
+                .status(201)
+                .body(projectService.updateProject(team_seq, requestDto));
+    }
+
 
     /**
      * List를 한번 감싸서 보내기 위하여 만든 클래스

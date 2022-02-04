@@ -25,4 +25,12 @@ public class TeamTech {
     @MapsId("tech_seq")
     @JoinColumn(name = "tech_seq")
     private Tech tech;
+
+    /**
+     * 양방향 연관관계 편의 메소드
+     */
+    public void setTeam(Team team) {
+        this.team = team;
+        team.getTeamTechList().add(this);
+    }
 }

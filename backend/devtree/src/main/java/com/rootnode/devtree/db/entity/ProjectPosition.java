@@ -4,6 +4,7 @@ import com.rootnode.devtree.db.entity.compositeKey.ProjectPositionId;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Table(name = "tb_project_position")
 @Getter
@@ -37,5 +38,10 @@ public class ProjectPosition {
     // 해당 포지션 모집된 멤버 증가
     public void addMemberCount() {
         this.position_member_cnt += 1;
+    }
+
+    // 해당 포지션 정원 변경
+    public void changeRecruitCount(int position_recruit_cnt) {
+        this.position_recruit_cnt = position_recruit_cnt;
     }
 }

@@ -1,11 +1,14 @@
 package com.rootnode.devtree.api.controller;
 
 import com.rootnode.devtree.api.request.StudyCreateRequestDto;
+import com.rootnode.devtree.api.request.StudyJoinRequestDto;
+import com.rootnode.devtree.api.response.CommonResponseDto;
 import com.rootnode.devtree.api.response.StudyCreateResponseDto;
 import com.rootnode.devtree.api.response.StudyDetailResponseDto;
 import com.rootnode.devtree.api.response.StudyListResponseDto;
 import com.rootnode.devtree.api.service.StudyService;
 import com.rootnode.devtree.db.entity.TeamType;
+import com.rootnode.devtree.db.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +54,16 @@ public class StudyApiController {
         return ResponseEntity
                 .status(200)
                 .body(new Result(responseDto));
+    }
+
+    /**
+     * 기능 : 스터디 신청
+     */
+    @PostMapping("/v1/study/{team_seq}")
+    public ResponseEntity<CommonResponseDto> studyJoin(@PathVariable Long team_seq, @RequestBody StudyJoinRequestDto requestDto) {
+        return ResponseEntity
+                .status(200)
+                .body(studyService.joinStudy(team_seq, requestDto));
     }
 
 

@@ -1,16 +1,16 @@
 package com.rootnode.devtree.api.service;
 
 import com.rootnode.devtree.api.request.StudyCreateRequestDto;
+import com.rootnode.devtree.api.request.StudyJoinRequestDto;
+import com.rootnode.devtree.api.response.CommonResponseDto;
 import com.rootnode.devtree.api.response.StudyDetailResponseDto;
 import com.rootnode.devtree.api.response.StudyListResponseDto;
 import com.rootnode.devtree.db.entity.Team;
 import com.rootnode.devtree.db.entity.TeamTech;
 import com.rootnode.devtree.db.entity.TeamType;
+import com.rootnode.devtree.db.entity.User;
 import com.rootnode.devtree.db.entity.compositeKey.TeamTechId;
-import com.rootnode.devtree.db.repository.TeamRepository;
-import com.rootnode.devtree.db.repository.TeamTechRepository;
-import com.rootnode.devtree.db.repository.TechRepository;
-import com.rootnode.devtree.db.repository.UserRepository;
+import com.rootnode.devtree.db.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +26,8 @@ public class StudyService {
     private final TeamRepository teamRepository;
     private final TeamTechRepository teamTechRepository;
     private final TechRepository techRepository;
+
+    private final StudyReservationRepository studyReservationRepository;
 
     // 스터디 생성
     @Transactional
@@ -66,5 +68,20 @@ public class StudyService {
         String managerName = userRepository.findById(team.getTeam_manager_seq()).get().getUser_name();
         //3. Dto로 변환하여 반환
         return new StudyDetailResponseDto(team, managerName);
+    }
+
+    // 스터디 신청
+    public CommonResponseDto joinStudy(Long team_seq, StudyJoinRequestDto requestDto) {
+        Long user_seq = requestDto.getUser_seq();
+
+        // 1. User 객체를 찾는다.
+        User user = userRepository.findById(user_seq).get();
+        System.out.println(user.getUser_name());
+        // 2. Team 객체를 찾는다.
+        Team team = teamRepository.findTeamByTeamSeq(team_seq);
+        // 3. 저장
+        studyReservationRepository.save(requestDto.toEntity(team_seq, team, user));
+
+        return new CommonResponseDto(200, "스터디 신청에 성공하였습니다.");
     }
 }

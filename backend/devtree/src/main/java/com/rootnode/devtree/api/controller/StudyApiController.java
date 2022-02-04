@@ -2,6 +2,7 @@ package com.rootnode.devtree.api.controller;
 
 import com.rootnode.devtree.api.request.StudyCreateRequestDto;
 import com.rootnode.devtree.api.response.StudyCreateResponseDto;
+import com.rootnode.devtree.api.response.StudyDetailResponseDto;
 import com.rootnode.devtree.api.response.StudyListResponseDto;
 import com.rootnode.devtree.api.service.StudyService;
 import com.rootnode.devtree.db.entity.TeamType;
@@ -9,10 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,6 +35,19 @@ public class StudyApiController {
     @GetMapping("/v1/study")
     public ResponseEntity<Result> studyList() {
         List<StudyListResponseDto> responseDto = studyService.findStudy(TeamType.STUDY);
+        return ResponseEntity
+                .status(200)
+                .body(new Result(responseDto));
+    }
+
+
+    /**
+     * 기능 : 스터디 상세 조회
+     */
+    @GetMapping("/v1/study/{team_seq}")
+    public ResponseEntity<Result> studyDetail(@PathVariable Long team_seq) {
+        System.out.println("team_seq >>> " + team_seq);
+        StudyDetailResponseDto responseDto = studyService.findStudyDetail(team_seq);
         return ResponseEntity
                 .status(200)
                 .body(new Result(responseDto));

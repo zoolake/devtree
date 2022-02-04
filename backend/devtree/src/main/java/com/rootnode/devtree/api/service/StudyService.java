@@ -1,6 +1,7 @@
 package com.rootnode.devtree.api.service;
 
 import com.rootnode.devtree.api.request.StudyCreateRequestDto;
+import com.rootnode.devtree.api.response.StudyDetailResponseDto;
 import com.rootnode.devtree.api.response.StudyListResponseDto;
 import com.rootnode.devtree.db.entity.Team;
 import com.rootnode.devtree.db.entity.TeamTech;
@@ -54,5 +55,16 @@ public class StudyService {
                     return new StudyListResponseDto(team, managerName);
                 })
                 .collect(Collectors.toList());
+    }
+
+    // 스터디 상세 조회
+    @Transactional(readOnly = true)
+    public StudyDetailResponseDto findStudyDetail(Long team_seq) {
+        // 1. 팀 테이블 조회
+        Team team = teamRepository.findTeamByTeamSeq(team_seq);
+        // 2. team_manager_seq로 관리자 이름 조회
+        String managerName = userRepository.findById(team.getTeam_manager_seq()).get().getUser_name();
+        //3. Dto로 변환하여 반환
+        return new StudyDetailResponseDto(team, managerName);
     }
 }

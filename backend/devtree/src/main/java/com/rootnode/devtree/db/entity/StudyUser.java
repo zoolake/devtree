@@ -6,10 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Table(name = "tb_study_user")
 @Getter
@@ -21,5 +18,14 @@ public class StudyUser {
     @EmbeddedId
     private StudyUserId studyUserId;
 
-//    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("user_seq")
+    @JoinColumn(name = "user_seq")
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("team_seq")
+    @JoinColumn(name = "team_seq")
+    private Team team;
+
 }

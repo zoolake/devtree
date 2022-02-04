@@ -1,10 +1,7 @@
 package com.rootnode.devtree.api.service;
 
 import com.rootnode.devtree.api.request.*;
-import com.rootnode.devtree.api.response.CommonResponseDto;
-import com.rootnode.devtree.api.response.ProjectDetailResponseDto;
-import com.rootnode.devtree.api.response.ProjectListResponseDto;
-import com.rootnode.devtree.api.response.ProjectPositionDetailResponseDto;
+import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.db.entity.*;
 import com.rootnode.devtree.db.entity.compositeKey.ProjectPositionId;
 import com.rootnode.devtree.db.entity.compositeKey.ProjectPositionReservationId;
@@ -207,6 +204,14 @@ public class ProjectService {
         return new CommonResponseDto(201, "프로젝트 정보 수정에 성공하였습니다.");
     }
 
+    public List<ProjectJoinListResponseDto> findProjectJoinList(Long teamSeq) {
+        List<ProjectPositionReservation> joinList = projectPositionReservationRepository.findAllByTeamSeq(teamSeq);
+        return joinList.stream()
+                .map(entity -> new ProjectJoinListResponseDto(entity))
+                .collect(Collectors.toList());
+    }
+
+
     /**
      * List<포지션 이름, 정원> , 팀을 넘기면 저장해주는 메소드
      */
@@ -215,4 +220,5 @@ public class ProjectService {
             projectPositionRepository.save(positionMember.toProjectPositionEntity(team));
         });
     }
+
 }

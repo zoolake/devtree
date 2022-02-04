@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 public interface ProjectPositionReservationRepository extends JpaRepository<ProjectPositionReservation, ProjectPositionReservationId> {
     @Transactional
@@ -19,4 +21,7 @@ public interface ProjectPositionReservationRepository extends JpaRepository<Proj
     @Modifying
     @Query(value = "delete from ProjectPositionReservation r where r.projectPositionReservationID.projectPositionID.team_seq = :teamSeq")
     void deleteByTeamSeq(Long teamSeq);
+
+    @Query(value = "select p from ProjectPositionReservation p join fetch p.user join fetch p.projectPosition where p.projectPosition.team.team_seq = :teamSeq")
+    List<ProjectPositionReservation> findAllByTeamSeq(Long teamSeq);
 }

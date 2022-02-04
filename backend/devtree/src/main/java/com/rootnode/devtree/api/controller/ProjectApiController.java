@@ -3,10 +3,9 @@ package com.rootnode.devtree.api.controller;
 import com.rootnode.devtree.api.request.*;
 import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.api.service.ProjectService;
-import com.rootnode.devtree.db.entity.ResponseType;
-import com.rootnode.devtree.db.entity.TeamState;
 import com.rootnode.devtree.db.entity.TeamType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +39,11 @@ public class ProjectApiController {
         List<ProjectListResponseDto> responseDto = projectService.findTeams(TeamType.PROJECT);
         return ResponseEntity
                 .status(200)
-                .body(new Result(responseDto));
+                .body(Result.builder()
+                        .data(responseDto)
+                        .status(200)
+                        .message("프로젝트 목록 조회에 성공하였습니다.")
+                        .build());
     }
 
     /**
@@ -51,13 +54,15 @@ public class ProjectApiController {
         ProjectDetailResponseDto responseDto = projectService.findProject(team_seq);
         return ResponseEntity
                 .status(200)
-                .body(new Result(responseDto));
+                .body(Result.builder()
+                        .data(responseDto)
+                        .build());
     }
 
     /**
      * 기능: 프로젝트 신청
      */
-    @PostMapping("/v1/project/{team_seq}")
+    @PostMapping("/v1/project/join/{team_seq}")
     public ResponseEntity<CommonResponseDto> projectJoin(@PathVariable Long team_seq, @RequestBody ProjectJoinRequestDto requestDto) {
         return ResponseEntity
                 .status(201)
@@ -67,10 +72,10 @@ public class ProjectApiController {
     /**
      * 기능: 프로젝트 신청 응답
      */
-    @PostMapping("/v1/project/{team_seq}/{user_seq}")
-    public ResponseEntity<CommonResponseDto> projectRespond(@PathVariable Long team_seq,
-                                                            @PathVariable Long user_seq,
-                                                            @RequestBody ProjectRespondRequestDto requestDto
+    @PostMapping("/v1/project/join/{team_seq}/{user_seq}")
+    public ResponseEntity<CommonResponseDto> projectJoinResponse(@PathVariable Long team_seq,
+                                                                 @PathVariable Long user_seq,
+                                                                 @RequestBody ProjectRespondRequestDto requestDto
     ) {
         return ResponseEntity
                 .status(201)
@@ -81,10 +86,10 @@ public class ProjectApiController {
      * 기능: 프로젝트 포지션 조회
      */
     @GetMapping("/v1/project/{team_seq}/position")
-    public ResponseEntity<Result> projectPositionDetail(@PathVariable Long team_seq) {
+    public ResponseEntity<ProjectPositionDetailResponseDto> projectPositionDetail(@PathVariable Long team_seq) {
         return ResponseEntity
                 .status(200)
-                .body(new Result(projectService.findProjectPositionDetail(team_seq)));
+                .body(projectService.findProjectPositionDetail(team_seq));
     }
 
     /**
@@ -102,10 +107,25 @@ public class ProjectApiController {
      */
     @PutMapping("/v1/project/{team_seq}")
     public ResponseEntity<CommonResponseDto> projectDetailUpdate(@PathVariable Long team_seq,
-                                                                        @RequestBody ProjectUpdateRequestDto requestDto) {
+                                                                 @RequestBody ProjectUpdateRequestDto requestDto) {
         return ResponseEntity
                 .status(201)
                 .body(projectService.updateProject(team_seq, requestDto));
+    }
+
+    /**
+     * 기능: 프로젝트 신청 조회 (프로젝트 관리 페이지)
+     */
+    @GetMapping("/v1/project/join/{teamSeq}")
+    public ResponseEntity<Result> projectJoinList(@PathVariable Long teamSeq) {
+        List<ProjectJoinListResponseDto> responseDto = projectService.findProjectJoinList(teamSeq);
+        return ResponseEntity
+                .status(200)
+                .body(Result.builder()
+                        .data(responseDto)
+                        .status(200)
+                        .message("프로젝트 신청 내역 조회에 성공하였습니다.")
+                        .build());
     }
 
 
@@ -114,7 +134,10 @@ public class ProjectApiController {
      */
     @Data
     @AllArgsConstructor
+    @Builder
     static class Result<T> {
         private T data;
+        private int status;
+        private String message;
     }
 }

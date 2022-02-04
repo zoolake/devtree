@@ -15,23 +15,24 @@ const TitleStyle = styled(Link)({
 // ----------------------------------------------------------------------
 
 ProjectListCard.propTypes = {
-  post: PropTypes.object.isRequired,
+  project: PropTypes.object.isRequired,
   index: PropTypes.number
 };
 
-export default function ProjectListCard({ post, index }) {
+export default function ProjectListCard({ project, index }) {
   return (
     <div>
       <TitleStyle
-        to={`/${post.id}`}
+        to="detail"
         color="inherit"
         variant="subtitle2"
         underline="hover"
         component={RouterLink}
+        project={project}
       >
-        {index}) 프로젝트 이름: {post.team_name}
+        {index}) 프로젝트 이름: {project.team_name}
       </TitleStyle>
-      <p>{post.team_desc}</p>
+      <p>{project.team_desc}</p>
       <br />
     </div>
   );

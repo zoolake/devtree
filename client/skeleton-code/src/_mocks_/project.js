@@ -34,8 +34,8 @@ const POST_TITLES = [
 const posts = [...Array(23)].map((_, index) => ({
   team_name: faker.random.word(30),
   team_desc: faker.lorem.sentences(),
-
   id: faker.datatype.uuid(),
+
   cover: mockImgCover(index + 1),
   createdAt: faker.date.past(),
   view: faker.datatype.number(),

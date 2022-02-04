@@ -37,18 +37,18 @@ const RootStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 ProjectSearch.propTypes = {
-  posts: PropTypes.array.isRequired
+  projects: PropTypes.array.isRequired
 };
 
-export default function ProjectSearch({ posts }) {
+export default function ProjectSearch({ projects }) {
   return (
     <RootStyle>
       <Autocomplete
         size="small"
         disablePortal
         popupIcon={null}
-        options={posts}
-        getOptionLabel={(post) => post.title}
+        options={projects}
+        getOptionLabel={(project) => project.title}
         renderInput={(params) => (
           <TextField
             {...params}

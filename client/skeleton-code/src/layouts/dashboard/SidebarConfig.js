@@ -28,7 +28,7 @@ const sidebarConfig = [
   },
   {
     title: 'project',
-    path: '/Project/projectMain',
+    path: '/project',
     icon: getIcon(fileTextFill)
   },
   {

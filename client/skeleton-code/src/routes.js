@@ -27,11 +27,11 @@ export default function Router() {
       ]
     },
     {
-      path: '/Project',
+      path: '/project',
       element: <DashboardLayout />,
       children: [
-        { path: 'projectMain', element: <Project /> },
-        { path: ':post.id', element: <ProjectDetail /> }
+        { path: '', element: <Project /> },
+        { path: 'detail', element: <ProjectDetail /> }
       ]
     },
     {

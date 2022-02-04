@@ -31,7 +31,7 @@ export default function Router() {
       element: <DashboardLayout />,
       children: [
         { path: '', element: <Project /> },
-        { path: 'detail', element: <ProjectDetail /> }
+        { path: ':id', element: <ProjectDetail /> }
       ]
     },
     {

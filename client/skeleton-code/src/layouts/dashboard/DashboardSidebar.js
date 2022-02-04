@@ -21,9 +21,8 @@ const DRAWER_WIDTH = 280;
 let token = localStorage.getItem('user') || '로그인 해주세요';
 let a;
 if (localStorage.getItem('user')) {
-  token = `${
-    jwtdecode(JSON.parse(localStorage.getItem('user')).accessToken).sub
-  }님, \n안녕하세요😃`;
+  token = `${jwtdecode(localStorage.getItem('user')).sub}님, \n안녕하세요😃`;
+  console.log();
   a = '/MainPage/profile';
 } else {
   a = '/login';
@@ -51,14 +50,12 @@ DashboardSidebar.propTypes = {
 };
 
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
-  const { pathname } = useLocation();
-
   useEffect(() => {
     if (isOpenSidebar) {
       onCloseSidebar();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+  }, [localStorage.getItem('user')]);
 
   const renderContent = (
     <Scrollbar

@@ -59,10 +59,6 @@ export default function LoginForm() {
               console.log('뀨?');
               window.location.reload();
               document.location.assign('/');
-
-              const { accessToken } = response.data;
-
-              axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
             } else {
               setFormErrorMessage('아이디 또는 비밀번호를 확인해주세요.');
             }

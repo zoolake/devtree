@@ -9,11 +9,13 @@ import {
   PASSWORD_UPDATE
 } from './types';
 import { USER_SERVER } from '../components/config';
+import setAuthorizationToken from '../utils/setAuthorizationToken';
 // import authHeader from "./auth-header"
 
 export function passwordUpdate(dataToSubmit) {
+  const header = localStorage.getItem('user');
   const request = axios
-    .put(`${USER_SERVER}/password/1`, dataToSubmit)
+    .put(`${USER_SERVER}/password/1`, dataToSubmit, { header })
     .then((response) => response.data);
 
   return {
@@ -34,7 +36,9 @@ export function registerUser(dataToSubmit) {
 }
 
 export function detailUser() {
-  const request = axios.get(`http://localhost:8080/v1/user/me`).then((response) => response.data);
+  const request = axios
+    .get(`http://localhost:8080/api/v1/users/me`)
+    .then((response) => response.data);
 
   return {
     type: DETAIL_USER,
@@ -55,10 +59,12 @@ export function idcheckUser(dataToSubmit) {
 
 export function loginUser(dataToSubmit) {
   const request = axios
-    .post(`http://localhost:8080/v1/user/login `, dataToSubmit)
+    .post(`http://localhost:8080/v1/user/login`, dataToSubmit)
     .then((response) => {
       if (response.data.accessToken) {
-        localStorage.setItem('user', JSON.stringify(response.data));
+        const token = response.data.accessToken;
+        localStorage.setItem('user', token);
+        setAuthorizationToken(token);
       }
     });
   return {

@@ -17,7 +17,8 @@ import java.time.LocalDateTime;
 public class Mentoring extends BaseTimeEntity{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long mentoring_seq;
+    @Column(name = "mentoring_seq")
+    private Long mentoringSeq;
 
     @ManyToOne
     @JoinColumn(name = "team_seq")

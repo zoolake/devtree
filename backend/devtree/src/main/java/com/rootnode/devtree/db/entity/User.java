@@ -2,6 +2,7 @@ package com.rootnode.devtree.db.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,21 +22,25 @@ public class User{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long user_seq;
-    @Column(nullable = false)
-    private String user_name;
-    @Column(nullable = false)
-    private String user_email;
-    @Column(nullable = false)
-    String user_id;
+    @Column(name = "user_seq")
+    private Long userSeq;
+    @Column(name = "user_name")
+    private String userName;
+    @Column(name = "user_email")
+    private String userEmail;
+    @Column(name = "user_id")
+    private String userId;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private UserRole user_role;
-    private String user_desc;
-    private String user_nickname;
+    @Column(nullable = false,name = "user_role")
+    private UserRole userRole;
+    @Column(name = "user_desc")
+    private String userDesc;
+    @Column(name = "user_nickname")
+    private String userNickname;
 
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     String user_password;
+
 }

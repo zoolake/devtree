@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
@@ -14,6 +15,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Embeddable
 public class ProjectPositionReservationId implements Serializable {
-    private Long user_seq;
+    @Column(name = "user_seq")
+    private Long userSeq;
+
     private ProjectPositionId projectPositionID;
 }

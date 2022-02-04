@@ -17,16 +17,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor @AllArgsConstructor
 @Builder
 public class ProjectJoinRequestDto {
-    private Long user_seq;
-    private String detail_position_name;
+    private Long userSeq;
+    private String detailPositionName;
 
-    public ProjectPositionReservation toEntity(Long team_seq, User user, ProjectPosition projectPosition) {
+    public ProjectPositionReservation toEntity(Long teamSeq, User user, ProjectPosition projectPosition) {
         return ProjectPositionReservation.builder()
                 .projectPositionReservationID(
-                        new ProjectPositionReservationId(this.user_seq, new ProjectPositionId(team_seq, this.detail_position_name)))
+                        new ProjectPositionReservationId(this.userSeq, new ProjectPositionId(teamSeq, this.detailPositionName)))
                 .projectPosition(projectPosition)
                 .user(user)
-                .project_reservation_create_time(LocalDateTime.now())
+                .projectReservationCreateTime(LocalDateTime.now())
                 .build();
 
     }

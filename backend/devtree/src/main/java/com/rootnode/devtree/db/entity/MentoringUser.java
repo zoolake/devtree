@@ -17,12 +17,12 @@ public class MentoringUser {
     private MentoringUserId mentoringUserID;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("user_seq")
+    @MapsId("userSeq")
     @JoinColumn(name = "user_seq")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("mentoring_seq")
+    @MapsId("mentoringSeq")
     @JoinColumn(name = "mentoring_seq")
     private Mentoring mentoring;
 }

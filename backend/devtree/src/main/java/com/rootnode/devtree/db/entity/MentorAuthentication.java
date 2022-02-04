@@ -16,13 +16,17 @@ import javax.persistence.*;
 @Builder
 public class MentorAuthentication {
     @Id
-    private Long user_seq;
+    @Column(name = "user_seq")
+    private Long userSeq;
 
-    private String mentor_company_email;
-    private String mentor_documentation;
+    @Column(name = "mentor_company_email")
+    private String mentorCompanyEmail;
+
+    @Column(name = "mentor_documentation")
+    private String mentorDocumentation;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId("user_seq")
+    @MapsId("userSeq")
     @JoinColumn(name = "user_seq", unique = true)
     private User user;
 }

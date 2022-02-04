@@ -18,10 +18,13 @@ public class Tech {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tech_seq;
+    @Column(name = "tech_seq")
+    private Long techSeq;
 
-    private String tech_name;
-    private String tech_image;
+    @Column(name = "tech_name")
+    private String techName;
+    @Column(name = "tech_image")
+    private String techImage;
 }
 
 

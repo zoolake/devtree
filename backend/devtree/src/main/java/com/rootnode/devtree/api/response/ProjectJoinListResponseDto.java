@@ -12,8 +12,8 @@ public class ProjectJoinListResponseDto {
     private String detailPositionName;
 
     public ProjectJoinListResponseDto(ProjectPositionReservation entity) {
-        this.userSeq = entity.getUser().getUser_seq();
-        this.userId = entity.getUser().getUser_id();
-        this.detailPositionName = entity.getProjectPosition().getPosition().getDetail_position_name();
+        this.userSeq = entity.getUser().getUserSeq();
+        this.userId = entity.getUser().getUserId();
+        this.detailPositionName = entity.getProjectPosition().getPosition().getDetailPositionName();
     }
 }

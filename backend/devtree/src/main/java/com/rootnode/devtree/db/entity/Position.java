@@ -2,6 +2,7 @@ package com.rootnode.devtree.db.entity;
 
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -21,7 +22,9 @@ import javax.persistence.Table;
 public class Position {
 
     @Id
-    private String detail_position_name;
+    @Column(name = "detail_position_name")
+    private String detailPositionName;
 
-    private String position_name;
+    @Column(name = "position_name")
+    private String positionName;
 }

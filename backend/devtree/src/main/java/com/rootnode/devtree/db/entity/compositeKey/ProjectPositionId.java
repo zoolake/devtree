@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
@@ -14,6 +15,9 @@ import java.io.Serializable;
 @Embeddable
 public class ProjectPositionId implements Serializable {
 
-    private Long team_seq;
-    private String detail_position_name;
+    @Column(name = "team_seq")
+    private Long teamSeq;
+
+    @Column(name = "detail_position_name")
+    private String detailPositionName;
 }

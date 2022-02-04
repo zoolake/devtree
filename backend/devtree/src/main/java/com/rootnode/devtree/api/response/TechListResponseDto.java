@@ -11,7 +11,7 @@ public class TechListResponseDto{
     private String techName;
 
     public TechListResponseDto(Tech tech) {
-        this.techSeq = tech.getTech_seq();
-        this.techName = tech.getTech_name();
+        this.techSeq = tech.getTechSeq();
+        this.techName = tech.getTechName();
     }
 }

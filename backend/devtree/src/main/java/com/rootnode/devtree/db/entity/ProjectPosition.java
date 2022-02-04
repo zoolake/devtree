@@ -18,17 +18,20 @@ public class ProjectPosition {
     private ProjectPositionId projectPositionID;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("team_seq")
+    @MapsId("teamSeq")
     @JoinColumn(name = "team_seq")
     private Team team;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("detail_position_name")
+    @MapsId("detailPositionName")
     @JoinColumn(name = "detail_position_name")
     private Position position;
 
-    private int position_recruit_cnt;
-    private int position_member_cnt;
+    @Column(name = "position_recruit_cnt")
+    private int positionRecruitCnt;
+
+    @Column(name = "position_member_cnt")
+    private int positionMemberCnt;
 
     /**
      * 비즈니스 로직은 도메인에 작성해야 한다.
@@ -37,11 +40,11 @@ public class ProjectPosition {
 
     // 해당 포지션 모집된 멤버 증가
     public void addMemberCount() {
-        this.position_member_cnt += 1;
+        this.positionMemberCnt += 1;
     }
 
     // 해당 포지션 정원 변경
-    public void changeRecruitCount(int position_recruit_cnt) {
-        this.position_recruit_cnt = position_recruit_cnt;
+    public void changeRecruitCount(int positionRecruitCnt) {
+        this.positionRecruitCnt = positionRecruitCnt;
     }
 }

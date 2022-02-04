@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ProjectPositionInfoDto {
-    private String detail_position_name;
-    private int position_recruit_cnt;
-    private int position_member_cnt;
+    private String detailPositionName;
+    private int positionRecruitCnt;
+    private int positionMemberCnt;
 
     public ProjectPositionInfoDto(ProjectPosition projectPosition) {
-        this.detail_position_name = projectPosition.getPosition().getDetail_position_name();
-        this.position_recruit_cnt = projectPosition.getPosition_recruit_cnt();
-        this.position_member_cnt = projectPosition.getPosition_member_cnt();
+        this.detailPositionName = projectPosition.getPosition().getDetailPositionName();
+        this.positionRecruitCnt = projectPosition.getPositionRecruitCnt();
+        this.positionMemberCnt = projectPosition.getPositionMemberCnt();
     }
 }

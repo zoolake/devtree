@@ -45,15 +45,15 @@ public class ProjectService {
         Team team = teamRepository.save(requestDto.toEntity());
 
         // 원본
-        requestDto.getTeam_tech().forEach(tech -> {
+        requestDto.getTeamTech().forEach(tech -> {
             teamTechRepository.save(TeamTech.builder()
-                    .teamTechID(new TeamTechId(team.getTeam_seq(), tech))
+                    .teamTechID(new TeamTechId(team.getTeamSeq(), tech))
                     .team(team)
                     .tech(techRepository.findById(tech).get())
                     .build());
         });
 
-        saveProjectPosition(requestDto.getTeam_position(), team);
+        saveProjectPosition(requestDto.getTeamPosition(), team);
 
         return team;
     }
@@ -70,7 +70,7 @@ public class ProjectService {
         // 2. 얻어온 목록들을 기반으로 userRepository 에서 관리자 명을 찾아서 Dto로 만들고 반환해주는 방식
         return teamList.stream()
                 .map(team -> {
-                    String managerName = userRepository.findById(team.getTeam_manager_seq()).get().getUser_name();
+                    String managerName = userRepository.findById(team.getTeamManagerSeq()).get().getUserName();
                     return new ProjectListResponseDto(team, managerName);
                 })
                 .collect(Collectors.toList());
@@ -85,7 +85,7 @@ public class ProjectService {
         List<ProjectPosition> projectPositions = projectPositionRepository.findByTeamSeq(team_seq);
 
         // 3. (1)에서 얻어온 team_manager_seq를 활용하여 관리자 이름 조회 (user 파트 완성 후 작업하기.)
-        String managerName = userRepository.findById(team.getTeam_manager_seq()).get().getUser_name();
+        String managerName = userRepository.findById(team.getTeamManagerSeq()).get().getUserName();
 
         // 4. DTO로 변환하여 반환 (userRepository 완성되면 바로 아래 주석 처리한 코드로 사용)
         return new ProjectDetailResponseDto(team, managerName, projectPositions);
@@ -93,8 +93,8 @@ public class ProjectService {
 
     @Transactional
     public CommonResponseDto joinProject(Long team_seq, ProjectJoinRequestDto requestDto) {
-        Long user_seq = requestDto.getUser_seq();
-        String detail_position_name = requestDto.getDetail_position_name();
+        Long user_seq = requestDto.getUserSeq();
+        String detail_position_name = requestDto.getDetailPositionName();
 
         // 1. User 객체를 찾는다.
         User user = userRepository.findById(user_seq).get();
@@ -109,8 +109,8 @@ public class ProjectService {
     @Transactional
     public CommonResponseDto respondPosition(Long team_seq, Long user_seq, ProjectRespondRequestDto requestDto) {
 
-        String detail_position_name = requestDto.getDetail_position_name();
-        ResponseType response_type = requestDto.getResponse_type();
+        String detail_position_name = requestDto.getDetailPositionName();
+        ResponseType response_type = requestDto.getResponseType();
 
         ProjectPositionUserId projectPositionUserId = new ProjectPositionUserId(user_seq, new ProjectPositionId(team_seq, detail_position_name));
         ProjectPosition projectPosition = projectPositionRepository.findById(new ProjectPositionId(team_seq, detail_position_name)).get();
@@ -153,22 +153,22 @@ public class ProjectService {
     public CommonResponseDto updateProject(Long team_seq, ProjectUpdateRequestDto requestDto) {
         Team team = teamRepository.findById(team_seq).get();
 
-        if (StringUtils.hasText(requestDto.getTeam_name())) {
-            team.changeTeamName(requestDto.getTeam_name());
+        if (StringUtils.hasText(requestDto.getTeamName())) {
+            team.changeTeamName(requestDto.getTeamName());
         }
 
-        if (StringUtils.hasText(requestDto.getTeam_desc())) {
-            team.changeTeamDesc(requestDto.getTeam_desc());
+        if (StringUtils.hasText(requestDto.getTeamDesc())) {
+            team.changeTeamDesc(requestDto.getTeamDesc());
         }
 
-        if (!Objects.isNull(requestDto.getTeam_tech())) {
+        if (!Objects.isNull(requestDto.getTeamTech())) {
             // 부모쪽 먼저 삭제
             team.getTeamTechList().clear();
             // 자식쪽 삭제
             teamTechRepository.deleteByTeamSeq(team_seq);
 
             // 새로 삽입
-            requestDto.getTeam_tech().forEach(techSeq -> {
+            requestDto.getTeamTech().forEach(techSeq -> {
                 teamTechRepository.save(TeamTech.builder()
                         .teamTechID(new TeamTechId(team_seq, techSeq))
                         .team(team)
@@ -177,16 +177,16 @@ public class ProjectService {
             });
         }
 
-        if (!Objects.isNull(requestDto.getTeam_position())) {
+        if (!Objects.isNull(requestDto.getTeamPosition())) {
             // 새로 삽입
-            List<PositionMember> positionMembers = requestDto.getTeam_position();
+            List<PositionMember> positionMembers = requestDto.getTeamPosition();
 
             // 기존 포지션이 인원이 변경되는 경우면 update
             positionMembers.forEach(positionMember -> {
                 // 이미 있는 포지션이라면 인원만 update
-                if (projectPositionRepository.findById(new ProjectPositionId(team_seq, positionMember.getPosition().getDetail_position_name())).isPresent()) {
-                    ProjectPosition projectPosition = projectPositionRepository.findById(new ProjectPositionId(team_seq, positionMember.getPosition().getDetail_position_name())).get();
-                    int positionRecruitCnt = positionMember.getPosition_recruit_cnt();
+                if (projectPositionRepository.findById(new ProjectPositionId(team_seq, positionMember.getPosition().getDetailPositionName())).isPresent()) {
+                    ProjectPosition projectPosition = projectPositionRepository.findById(new ProjectPositionId(team_seq, positionMember.getPosition().getDetailPositionName())).get();
+                    int positionRecruitCnt = positionMember.getPositionRecruitCnt();
                     projectPosition.changeRecruitCount(positionRecruitCnt);
                 }
                 // 새로운 포지션이 생기면 삽입
@@ -197,7 +197,7 @@ public class ProjectService {
 
             // 팀 총 정원도 변경되기 때문에 수정해준다.
             team.changeTeamRecruitCnt(projectPositionRepository.findAll().stream()
-                    .mapToInt(ProjectPosition::getPosition_recruit_cnt)
+                    .mapToInt(ProjectPosition::getPositionRecruitCnt)
                     .sum());
         }
 

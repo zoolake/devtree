@@ -17,12 +17,12 @@ public class TeamTech {
     private TeamTechId teamTechID;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("team_seq")
+    @MapsId("teamSeq")
     @JoinColumn(name = "team_seq")
     private Team team;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("tech_seq")
+    @MapsId("techSeq")
     @JoinColumn(name = "tech_seq")
     private Tech tech;
 

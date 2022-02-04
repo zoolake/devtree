@@ -23,5 +23,6 @@ public class MentoringComment {
     })
     private MentoringUser mentoringUser;
 
-    private String mentor_comment;
+    @Column(name = "mentor_comment")
+    private String mentorComment;
 }

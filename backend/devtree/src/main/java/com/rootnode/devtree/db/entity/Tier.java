@@ -17,9 +17,15 @@ import javax.persistence.*;
 public class Tier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "")
     private Long tier_seq;
-    private String tier_name;
-    private String tier_icon;
-    private Long tier_min_exp;
-    private Long tier_max_exp;
+
+    @Column(name = "tier_name")
+    private String tierName;
+    @Column(name = "tier_icon")
+    private String tierIcon;
+    @Column(name = "tier_min_exp")
+    private Long tierMinExp;
+    @Column(name = "tier_max_exp")
+    private Long tierMaxExp;
 }

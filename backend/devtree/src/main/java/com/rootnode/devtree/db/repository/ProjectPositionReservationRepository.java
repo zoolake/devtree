@@ -14,14 +14,14 @@ import java.util.List;
 public interface ProjectPositionReservationRepository extends JpaRepository<ProjectPositionReservation, ProjectPositionReservationId> {
     @Transactional
     @Modifying
-    @Query(value = "delete from ProjectPositionReservation r where r.projectPositionReservationID.user_seq = :user_seq and r.projectPositionReservationID.projectPositionID.team_seq = :team_seq")
+    @Query(value = "delete from ProjectPositionReservation r where r.projectPositionReservationID.userSeq = :user_seq and r.projectPositionReservationID.projectPositionID.teamSeq = :team_seq")
     void deleteAllByUserSeqAndTeamSeq(Long user_seq, Long team_seq);
 
     @Transactional
     @Modifying
-    @Query(value = "delete from ProjectPositionReservation r where r.projectPositionReservationID.projectPositionID.team_seq = :teamSeq")
+    @Query(value = "delete from ProjectPositionReservation r where r.projectPositionReservationID.projectPositionID.teamSeq = :teamSeq")
     void deleteByTeamSeq(Long teamSeq);
 
-    @Query(value = "select p from ProjectPositionReservation p join fetch p.user join fetch p.projectPosition where p.projectPosition.team.team_seq = :teamSeq")
+    @Query(value = "select p from ProjectPositionReservation p join fetch p.user join fetch p.projectPosition where p.projectPosition.team.teamSeq = :teamSeq")
     List<ProjectPositionReservation> findAllByTeamSeq(Long teamSeq);
 }

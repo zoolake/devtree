@@ -17,12 +17,23 @@ import java.time.LocalDateTime;
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long notification_seq;
-    private Long notification_send_user_seq;
-    private Long notification_receive_user_seq;
-    private LocalDateTime notification_send_time;
-    private String notification_detail_position_name;
-    private String notification_content;
+    @Column(name = "notification_seq")
+    private Long notificationSeq;
+
+    @Column(name = "notification_send_user_seq")
+    private Long notificationSendUserSeq;
+
+    @Column(name = "notification_receive_user_seq")
+    private Long notificationReceiveUserSeq;
+
+    @Column(name = "notification_send_time")
+    private LocalDateTime notificationSendTime;
+
+    @Column(name = "notification_detail_position_name")
+    private String notificationDetailPositionName;
+
+    @Column(name = "notification_content")
+    private String notificationContent;
 //
 //    @Enumerated(EnumType.STRING)
 //    private NotificationType notificationType;

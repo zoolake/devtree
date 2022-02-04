@@ -21,7 +21,7 @@ public class MentorSchedule {
 
 
     @ManyToOne
-    @MapsId("mentor_seq")
+    @MapsId("mentorSeq")
     @JoinColumn(name = "mentor_seq")
     private Mentor mentor;
 

@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface TechRepository extends JpaRepository<Tech, Long> {
 
-    @Query("select t from Tech t where t.tech_name = ?1")
+    @Query("select t from Tech t where t.techName = :techName")
     Tech findByTech_name(String techName);
 }

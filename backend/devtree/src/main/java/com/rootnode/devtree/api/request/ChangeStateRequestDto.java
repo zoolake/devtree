@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor @AllArgsConstructor
 @Builder
 public class ChangeStateRequestDto {
-    private Long team_seq;
-    private TeamState team_state;
+    private Long teamSeq;
+    private TeamState teamState;
 }

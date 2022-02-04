@@ -14,6 +14,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Embeddable
 public class MentoringUserId implements Serializable {
-    private Long user_seq;
-    private Long mentoring_seq;
+    private Long userSeq;
+    private Long mentoringSeq;
 }

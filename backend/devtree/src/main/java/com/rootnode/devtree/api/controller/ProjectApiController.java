@@ -99,7 +99,7 @@ public class ProjectApiController {
     public ResponseEntity<CommonResponseDto> teamChangeState(@RequestBody ChangeStateRequestDto requestDto) {
         return ResponseEntity
                 .status(201)
-                .body(projectService.updateTeamState(requestDto.getTeam_seq(), requestDto.getTeam_state()));
+                .body(projectService.updateTeamState(requestDto.getTeamSeq(), requestDto.getTeamState()));
     }
 
     /**

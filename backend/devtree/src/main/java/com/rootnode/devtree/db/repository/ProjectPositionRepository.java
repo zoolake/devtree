@@ -10,11 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface ProjectPositionRepository extends JpaRepository<ProjectPosition, ProjectPositionId> {
-    @Query(value = "select p from ProjectPosition p where p.projectPositionID.team_seq = :team_seq")
+    @Query(value = "select p from ProjectPosition p where p.projectPositionID.teamSeq = :team_seq")
     List<ProjectPosition> findByTeamSeq(Long team_seq);
 
     @Transactional
     @Modifying
-    @Query(value = "delete from ProjectPosition p where p.projectPositionID.team_seq = :teamSeq")
+    @Query(value = "delete from ProjectPosition p where p.projectPositionID.teamSeq = :teamSeq")
     void deleteByTeamSeq(Long teamSeq);
 }

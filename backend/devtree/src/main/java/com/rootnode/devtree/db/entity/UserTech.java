@@ -20,12 +20,12 @@ public class UserTech {
     private UserTechId userTechId;
 
     @ManyToOne
-    @MapsId("user_seq")
+    @MapsId("userSeq")
     @JoinColumn(name = "user_seq")
     private User user;
 
     @ManyToOne
-    @MapsId("tech_seq")
+    @MapsId("techSeq")
     @JoinColumn(name = "tech_seq")
     private Tech tech;
 }

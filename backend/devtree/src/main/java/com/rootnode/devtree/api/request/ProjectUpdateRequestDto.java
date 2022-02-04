@@ -12,10 +12,10 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class ProjectUpdateRequestDto {
-    private Long team_manager_seq;
-    private String team_name;
-    private String team_desc;
+    private Long teamManagerSeq;
+    private String teamName;
+    private String teamDesc;
 
-    private List<Long> team_tech;
-    private List<PositionMember> team_position;
+    private List<Long> teamTech;
+    private List<PositionMember> teamPosition;
 }

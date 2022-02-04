@@ -25,9 +25,10 @@ public class ProjectPositionReservation {
     private ProjectPosition projectPosition;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("user_seq")
+    @MapsId("userSeq")
     @JoinColumn(name = "user_seq")
     private User user;
 
-    private LocalDateTime project_reservation_create_time;
+    @Column(name = "project_reservation_create_time")
+    private LocalDateTime projectReservationCreateTime;
 }

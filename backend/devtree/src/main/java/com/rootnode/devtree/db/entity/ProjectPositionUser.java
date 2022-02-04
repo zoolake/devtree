@@ -25,7 +25,7 @@ public class ProjectPositionUser {
     private ProjectPosition projectPosition;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("user_seq")
+    @MapsId("userSeq")
     @JoinColumn(name = "user_seq")
     private User user;
 }

@@ -19,27 +19,38 @@ public class Team extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long team_seq;
+    @Column(name = "team_seq")
+    private Long teamSeq;
 
-    private Long team_manager_seq;
+    @Column(name = "team_manager_seq")
+    private Long teamManagerSeq;
 
+    @Column(name = "team_type")
     @Enumerated(EnumType.STRING)
-    private TeamType team_type;
+    private TeamType teamType;
 
-    private String team_name;
+    @Column(name = "team_name")
+    private String teamName;
 
-    private String team_desc;
+    @Column(name = "team_desc")
+    private String teamDesc;
 
+    @Column(name = "team_state")
     @Enumerated(EnumType.STRING)
-    private TeamState team_state;
+    private TeamState teamState;
 
-    private int team_recruit_cnt;
-    private int team_member_cnt;
+    @Column(name = "team_recruit_cnt")
+    private int teamRecruitCnt;
+    @Column(name = "team_member_cnt")
+    private int teamMemberCnt;
 
-    private LocalDateTime team_start_time;
-    private LocalDateTime team_end_time;
+    @Column(name = "team_start_time")
+    private LocalDateTime teamStartTime;
+    @Column(name = "team_end_time")
+    private LocalDateTime teamEndTime;
 
-    private int team_favorites_cnt;
+    @Column(name = "team_favorites_cnt")
+    private int teamFavoritesCnt;
 
     // 팀 조회 할 때 (팀_기술스택) 필요
     @OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE, orphanRemoval = true)
@@ -65,38 +76,38 @@ public class Team extends BaseTimeEntity {
      * 팀원 증가시 사용하는 메소드 (프로젝트 신청 수락, 스터디 신청 수락 등..)
      */
     public void addTeamMember() {
-        this.team_member_cnt += 1;
+        this.teamMemberCnt += 1;
     }
 
 
     /**
      * 프로젝트 정보를 수정하기 위한 메소드들 (setter 대신 사용)
      */
-    public void changeTeamManger(Long team_manager_seq) {
-        this.team_manager_seq = team_manager_seq;
+    public void changeTeamManger(Long teamManagerSeq) {
+        this.teamManagerSeq = teamManagerSeq;
     }
 
-    public void changeTeamState(TeamState team_state) {
-        this.team_state = team_state;
+    public void changeTeamState(TeamState teamState) {
+        this.teamState = teamState;
 
         // 모집완료 상태가 되면 team_start_time 설정
-        if(TeamState.COMPLETED.equals(this.team_state)) {
-            this.team_start_time = LocalDateTime.now();
+        if(TeamState.COMPLETED.equals(this.teamState)) {
+            this.teamStartTime = LocalDateTime.now();
         }
 
         // 팀 종료 상태가 되면 team_end_time 설정
-        if(TeamState.FINISH.equals(this.team_state)) {
-            this.team_end_time = LocalDateTime.now();
+        if(TeamState.FINISH.equals(this.teamState)) {
+            this.teamEndTime = LocalDateTime.now();
         }
     }
 
-    public void changeTeamName(String team_name) {
-        this.team_name = team_name;
+    public void changeTeamName(String teamName) {
+        this.teamName = teamName;
     }
-    public void changeTeamDesc(String team_desc) {
-        this.team_desc = team_desc;
+    public void changeTeamDesc(String teamDesc) {
+        this.teamDesc = teamDesc;
     }
-    public void changeTeamRecruitCnt(int team_recruit_cnt) {
-        this.team_recruit_cnt = team_recruit_cnt;
+    public void changeTeamRecruitCnt(int teamRecruitCnt) {
+        this.teamRecruitCnt = teamRecruitCnt;
     }
 }

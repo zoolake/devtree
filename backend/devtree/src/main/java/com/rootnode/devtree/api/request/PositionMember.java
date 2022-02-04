@@ -11,14 +11,14 @@ import lombok.Getter;
 @AllArgsConstructor
 public class PositionMember {
     private Position position;
-    private int position_recruit_cnt;
+    private int positionRecruitCnt;
 
     public ProjectPosition toProjectPositionEntity(Team team) {
         return ProjectPosition.builder()
-                .projectPositionID(new ProjectPositionId(team.getTeam_seq(), position.getDetail_position_name()))
+                .projectPositionID(new ProjectPositionId(team.getTeamSeq(), position.getDetailPositionName()))
                 .position(position)
                 .team(team)
-                .position_recruit_cnt(position_recruit_cnt)
+                .positionRecruitCnt(positionRecruitCnt)
                 .build();
     }
 }

@@ -18,28 +18,28 @@ import java.util.List;
 @NoArgsConstructor
 @Builder @AllArgsConstructor
 public class ProjectCreateRequestDto {
-    private Long team_manager_seq;
-    private String team_name;
-    private String team_desc;
-    private TeamState team_state;
-    private TeamType team_type;
+    private Long teamManagerSeq;
+    private String teamName;
+    private String teamDesc;
+    private TeamState teamState;
+    private TeamType teamType;
 
-    private List<Long> team_tech;
-    private List<PositionMember> team_position;
+    private List<Long> teamTech;
+    private List<PositionMember> teamPosition;
 
 
     public Team toEntity() {
-        int team_recruit_cnt = team_position.stream()
-                .mapToInt(PositionMember::getPosition_recruit_cnt)
+        int teamRecruitCnt = teamPosition.stream()
+                .mapToInt(PositionMember::getPositionRecruitCnt)
                 .sum();
 
         return Team.builder()
-                .team_manager_seq(team_manager_seq)
-                .team_name(team_name)
-                .team_desc(team_desc)
-                .team_state(team_state)
-                .team_type(team_type)
-                .team_recruit_cnt(team_recruit_cnt)
+                .teamManagerSeq(teamManagerSeq)
+                .teamName(teamName)
+                .teamDesc(teamDesc)
+                .teamState(teamState)
+                .teamType(teamType)
+                .teamRecruitCnt(teamRecruitCnt)
                 .build();
     }
 }

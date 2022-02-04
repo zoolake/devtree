@@ -10,6 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface TeamTechRepository extends JpaRepository<TeamTech, TeamTechId> {
     @Transactional
     @Modifying
-    @Query(value = "delete from TeamTech t where t.team.team_seq = :teamSeq")
+    @Query(value = "delete from TeamTech t where t.team.teamSeq = :teamSeq")
     void deleteByTeamSeq(Long teamSeq);
 }

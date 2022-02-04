@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor @AllArgsConstructor
 @Builder
 public class ProjectRespondRequestDto {
-    private String detail_position_name;
-    private ResponseType response_type;
+    private String detailPositionName;
+    private ResponseType responseType;
 }

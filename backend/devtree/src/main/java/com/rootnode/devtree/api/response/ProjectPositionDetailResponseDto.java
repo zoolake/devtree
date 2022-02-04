@@ -10,11 +10,11 @@ import java.util.stream.Collectors;
 @Getter
 @NoArgsConstructor
 public class ProjectPositionDetailResponseDto extends CommonResponseDto{
-    private List<ProjectPositionInfoDto> team_position;
+    private List<ProjectPositionInfoDto> teamPosition;
 
 
     public ProjectPositionDetailResponseDto(List<ProjectPosition> projectPositions) {
-        this.team_position = projectPositions.stream()
+        this.teamPosition = projectPositions.stream()
                 .map(projectPosition -> new ProjectPositionInfoDto(projectPosition))
                 .collect(Collectors.toList());
         this.status = 200;

@@ -21,22 +21,22 @@ import java.util.stream.Collectors;
 @Getter
 @NoArgsConstructor
 public class ProjectDetailResponseDto extends CommonResponseDto{
-    private Long team_seq;
-    private Long team_manager_seq;
-    private String team_name;
-    private TeamState team_state;
-    private String team_manager_name;
-    private List<TechInfoDto> team_tech;
-    private List<ProjectPositionInfoDto> team_position;
+    private Long teamSeq;
+    private Long teamManagerSeq;
+    private String teamName;
+    private String teamManagerName;
+    private TeamState teamState;
+    private List<TechInfoDto> teamTech;
+    private List<ProjectPositionInfoDto> teamPosition;
 
-    public ProjectDetailResponseDto(Team team, String team_manager_name, List<ProjectPosition> projectPositions) {
-        this.team_seq = team.getTeam_seq();
-        this.team_manager_seq = team.getTeam_manager_seq();
-        this.team_name = team.getTeam_name();
-        this.team_manager_name = team_manager_name;
-        this.team_state = team.getTeam_state();
-        this.team_tech = team.toTechInfoDto();
-        this.team_position = projectPositions.stream()
+    public ProjectDetailResponseDto(Team team, String teamManagerName, List<ProjectPosition> projectPositions) {
+        this.teamSeq = team.getTeamSeq();
+        this.teamManagerSeq = team.getTeamManagerSeq();
+        this.teamName = team.getTeamName();
+        this.teamManagerName = teamManagerName;
+        this.teamState = team.getTeamState();
+        this.teamTech = team.toTechInfoDto();
+        this.teamPosition = projectPositions.stream()
                 .map(projectPosition -> new ProjectPositionInfoDto(projectPosition))
                 .collect(Collectors.toList());
 

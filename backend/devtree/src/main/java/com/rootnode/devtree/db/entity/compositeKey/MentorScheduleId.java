@@ -12,10 +12,11 @@ import java.time.LocalDateTime;
 public class MentorScheduleId implements Serializable {
 
     @Column(name = "mentor_day")
-    private Long mentor_day;
+    private Long mentorDay;
 
     @Column(name ="mentor_time" )
-    private LocalDateTime mentor_time;
+    private LocalDateTime mentorTime;
 
-    private Long mentor_seq;
+    @Column(name = "mentor_seq")
+    private Long mentorSeq;
 }

@@ -17,19 +17,24 @@ import javax.persistence.*;
 @Builder
 public class Mentor {
     @Id
-    private Long mentor_seq;
+    @Column(name = "mentor_seq")
+    private Long mentorSeq;
 
-    private String mentor_career;
-    private int mentoring_cnt;
-    private Long mentor_exp;
-    private String mentor_desc;
+    @Column(name = "mentor_career")
+    private String mentorCareer;
+    @Column(name = "mentoring_cnt")
+    private int mentoringCnt;
+    @Column(name = "mentor_exp")
+    private Long mentorExp;
+    @Column(name = "mentor_desc")
+    private String mentorDesc;
 
 
     /**
      * 일대일 매핑 고려
      */
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId("mentor_seq")
+    @MapsId("mentorSeq")
     @JoinColumn(name = "mentor_seq", unique = true)
     private User user;
 }

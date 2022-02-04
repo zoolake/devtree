@@ -6,16 +6,38 @@ import {
   LOGOUT_USER,
   IDCHECK_USER,
   DETAIL_USER,
-  PASSWORD_UPDATE
+  PASSWORD_UPDATE,
+  DELETE_USER,
+  UPDATE_USER
 } from './types';
 import { USER_SERVER } from '../components/config';
 import setAuthorizationToken from '../utils/setAuthorizationToken';
-// import authHeader from "./auth-header"
+
+export function updateUser(dataToSubmit) {
+  const request = axios
+    .put(`${USER_SERVER}/password/1`, dataToSubmit)
+    .then((response) => response.data);
+
+  return {
+    type: UPDATE_USER,
+    payload: request
+  };
+}
+
+export function deleteUser(dataToSubmit) {
+  const request = axios
+    .delete(`${USER_SERVER}/password/1`, dataToSubmit)
+    .then((response) => response.data);
+
+  return {
+    type: DELETE_USER,
+    payload: request
+  };
+}
 
 export function passwordUpdate(dataToSubmit) {
-  const header = localStorage.getItem('user');
   const request = axios
-    .put(`${USER_SERVER}/password/1`, dataToSubmit, { header })
+    .put(`${USER_SERVER}/password/1`, dataToSubmit)
     .then((response) => response.data);
 
   return {

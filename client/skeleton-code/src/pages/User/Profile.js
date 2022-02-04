@@ -18,7 +18,21 @@ import {
   AppOrderTimeline,
   AppCurrentVisits
 } from '../../components/_dashboard/app';
-import { PasswordUpdate, UserProfile } from '../../components/Profile';
+import {
+  Mentoring,
+  MentoringReview,
+  MentoringStack,
+  MentoringTime,
+  ProjectChart,
+  ProjectList,
+  StudyChart,
+  StudyList,
+  UserDelete,
+  UserStack,
+  MentorProfile,
+  UserProfile,
+  PasswordUpdate
+} from '../../components/Profile';
 // ----------------------------------------------------------------------
 
 const SORT_OPTIONS = [
@@ -32,8 +46,16 @@ const Tab = [
   {
     title: '내 프로필',
     content: (
-      <Grid item xs={12} md={6} lg={4}>
-        <AppOrderTimeline />
+      <Grid container spacing={1}>
+        <Grid item xs={12} md={6} lg={10}>
+          <UserProfile />
+        </Grid>{' '}
+        <Grid item xs={12} md={6} lg={10}>
+          <UserStack />
+        </Grid>{' '}
+        <Grid item xs={12} md={6} lg={10}>
+          <UserDelete />
+        </Grid>{' '}
       </Grid>
     )
   },
@@ -42,16 +64,16 @@ const Tab = [
     content: (
       <Grid container spacing={1}>
         <Grid item xs={12} md={6} lg={4}>
-          <AppOrderTimeline />
+          <StudyList />
         </Grid>{' '}
         <Grid item xs={12} md={6} lg={5}>
-          <AppCurrentVisits />
+          <StudyChart />
         </Grid>{' '}
         <Grid item xs={12} md={6} lg={4}>
-          <AppOrderTimeline />
+          <ProjectList />
         </Grid>{' '}
         <Grid item xs={12} md={6} lg={5}>
-          <UserProfile />
+          <ProjectChart />
         </Grid>
       </Grid>
     )
@@ -68,7 +90,7 @@ const Tab = [
     title: '멘토 프로필',
     content: (
       <Grid item xs={12} md={6} lg={8}>
-        <AppNewsUpdate />
+        <MentoringTime />
       </Grid>
     )
   },

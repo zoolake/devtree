@@ -52,7 +52,7 @@ public class AuthController {
 
     /**
      *
-     * Feat : 프로필 조회
+     * Feat : 나의 프로필 조회
      * User객체에 기술 스택 정보가 없으니 기술 스택 객체에서 가져와야한다.
      *
      * 요청해더에

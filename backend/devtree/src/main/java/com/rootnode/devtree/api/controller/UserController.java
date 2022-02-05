@@ -5,6 +5,7 @@ import com.rootnode.devtree.api.response.UserRes;
 import com.rootnode.devtree.api.service.UserService;
 import com.rootnode.devtree.common.auth.UserDetail;
 import com.rootnode.devtree.api.response.BaseResponseBody;
+import com.rootnode.devtree.db.entity.Team;
 import com.rootnode.devtree.db.entity.User;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,7 +36,7 @@ public class UserController {
 	/**
 	 * @param registerInfo
 	 */
-	@PostMapping("/signup")
+	@PostMapping("/v1/user/signup")
 	public  ResponseEntity<? extends BaseResponseBody> register(@RequestBody UserRegisterPostReq registerInfo) {
 
 		User user1 = userService.getUserByUserId(registerInfo.getUser_id());
@@ -51,9 +53,7 @@ public class UserController {
 	}
 
 	/**
-	 *
 	 * 전체 유저 목록 조회
-	 *
 	 */
 	@GetMapping("/v1/users")
 	public ResponseEntity<List<User>> userList(){
@@ -69,9 +69,7 @@ public class UserController {
 
 	/**
 	 * List를 한번 감싸서 보내기 위하여 만든 클래스
-	 *
 	 * Result<>를 사용하다가 수정중에 다시 돌려놓음...
-	 *
 	 * from 준호님
 	 */
 	@Data

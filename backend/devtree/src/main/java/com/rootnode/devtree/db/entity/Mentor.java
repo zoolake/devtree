@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Table(name = "tb_mentor")
 @Entity
@@ -37,4 +38,7 @@ public class Mentor {
     @MapsId("mentorSeq")
     @JoinColumn(name = "mentor_seq", unique = true)
     private User user;
+
+    @OneToMany(mappedBy = "mentor")
+    private List<MentorTech> techList;
 }

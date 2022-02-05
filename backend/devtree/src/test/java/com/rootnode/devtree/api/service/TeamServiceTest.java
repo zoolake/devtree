@@ -103,8 +103,8 @@ class TeamServiceTest {
         team_position.add(new PositionMember(position2,2));
 
         List<Long> team_tech = new ArrayList<>();
-        team_tech.add(techRepository.findByTech_name("스프링").getTech_seq());
-        team_tech.add(techRepository.findByTech_name("도커").getTech_seq());
+//        team_tech.add(techRepository.findByTech_name("스프링").getTech_seq());
+//        team_tech.add(techRepository.findByTech_name("도커").getTech_seq());
 
         ProjectCreateRequestDto requestDto = ProjectCreateRequestDto.builder()
                 .team_manager_seq(team_manager_seq)

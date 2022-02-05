@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-
 @Table(name = "tb_mentor")
 @Entity
 @Getter
@@ -16,6 +15,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 public class Mentor {
+
     @Id
     @Column(name = "mentor_seq")
     private Long mentorSeq;

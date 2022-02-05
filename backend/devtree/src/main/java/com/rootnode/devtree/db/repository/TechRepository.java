@@ -10,4 +10,5 @@ public interface TechRepository extends JpaRepository<Tech, Long> {
 
     @Query("select t from Tech t where t.techName = :techName")
     Tech findByTech_name(String techName);
+    Tech findByTechSeq(Long tech_seq);
 }

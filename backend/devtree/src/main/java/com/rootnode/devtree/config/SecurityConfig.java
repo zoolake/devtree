@@ -4,6 +4,7 @@ import com.rootnode.devtree.api.service.UserService;
 import com.rootnode.devtree.common.auth.JwtAuthenticationFilter;
 import com.rootnode.devtree.common.auth.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -69,6 +70,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/users/me").authenticated()       //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
     	        	    .anyRequest().permitAll()
                 .and().cors();
+
+
     }
 
 

@@ -18,8 +18,13 @@ public class Tech {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tech_seq;
-    private String tech_name;
-    private String tech_image;
+
+//  jpa가 이렇게 해야 잘 읽어요.. 다른방법이 있다면 알려주세요!
+    @Column(name = "tech_seq")
+    private Long techSeq;
+    @Column(name = "tech_name")
+    private String techName;
+    @Column(name = "tech_image")
+    private String techImage;
 
 }

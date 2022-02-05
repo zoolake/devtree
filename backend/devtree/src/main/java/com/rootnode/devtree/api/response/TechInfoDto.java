@@ -17,7 +17,7 @@ public class TechInfoDto {
     private String tech_image;
 
     public TechInfoDto(Tech tech) {
-        this.tech_name = tech.getTech_name();
-        this.tech_image = tech.getTech_image();
+        this.tech_name = tech.getTechName();
+        this.tech_image = tech.getTechImage();
     }
 }

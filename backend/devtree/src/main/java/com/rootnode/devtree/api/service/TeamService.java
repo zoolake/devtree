@@ -69,7 +69,7 @@ public class TeamService {
         // 2. 얻어온 목록들을 기반으로 userRepository 에서 관리자 명을 찾아서 Dto로 만들고 반환해주는 방식
         return teamList.stream()
                 .map(team -> {
-                    String managerName = userRepository.findById(team.getTeam_manager_seq()).get().getUser_name();
+                    String managerName = userRepository.findById(team.getTeam_manager_seq()).get().getUserName();
                     return new ProjectListResponseDto(team, managerName);
                 })
                 .collect(Collectors.toList());
@@ -83,7 +83,7 @@ public class TeamService {
         List<ProjectPosition> projectPositions = projectPositionRepository.findByTeamSeq(team_seq);
 
         // 3. (1)에서 얻어온 team_manager_seq를 활용하여 관리자 이름 조회 (user 파트 완성 후 작업하기.)
-        String managerName = userRepository.findById(team.getTeam_manager_seq()).get().getUser_name();
+        String managerName = userRepository.findById(team.getTeam_manager_seq()).get().getUserName();
 
         // 4. DTO로 변환하여 반환 (userRepository 완성되면 바로 아래 주석 처리한 코드로 사용)
         return new ProjectDetailResponseDto(team, managerName, projectPositions);

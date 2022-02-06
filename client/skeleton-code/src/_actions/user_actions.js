@@ -13,6 +13,31 @@ import {
 import { USER_SERVER } from '../components/config';
 import setAuthorizationToken from '../utils/setAuthorizationToken';
 
+export function getStudy() {
+  const request = axios
+    .get(`https://61f649b22e1d7e0017fd6d42.mockapi.io/project`)
+    .then((response) => response.data);
+
+  return { type: UPDATE_USER, payload: request };
+}
+export function getProject() {
+  const request = axios
+    .get(`https://61f649b22e1d7e0017fd6d42.mockapi.io/project`)
+    .then((response) => response.data);
+
+  return { type: UPDATE_USER, payload: request };
+}
+export function getTech() {
+  const request = axios
+    .put(`https://61f649b22e1d7e0017fd6d42.mockapi.io/tech`)
+    .then((response) => response.data);
+
+  return {
+    type: UPDATE_USER,
+    payload: request
+  };
+}
+
 export function updateUser(dataToSubmit) {
   const request = axios
     .put(`${USER_SERVER}/password/1`, dataToSubmit)

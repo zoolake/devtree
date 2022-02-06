@@ -3,7 +3,7 @@ import { Icon } from '@iconify/react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Grid, Button, Container, Stack, Typography } from '@mui/material';
+import { Grid, Card, Button, Container, Stack, Typography } from '@mui/material';
 // components
 import Page from '../../components/Page';
 import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../../components/_dashboard/blog';
@@ -63,16 +63,16 @@ const Tab = [
     title: '활동내역',
     content: (
       <Grid container spacing={1}>
-        <Grid item xs={12} md={6} lg={4}>
+        <Grid item xs={12} md={6} lg={12}>
           <StudyList />
         </Grid>{' '}
-        <Grid item xs={12} md={6} lg={5}>
+        <Grid item xs={12} md={6} lg={12}>
           <StudyChart />
-        </Grid>{' '}
-        <Grid item xs={12} md={6} lg={4}>
+        </Grid>
+        <Grid item xs={12} md={6} lg={12}>
           <ProjectList />
-        </Grid>{' '}
-        <Grid item xs={12} md={6} lg={5}>
+        </Grid>
+        <Grid item xs={12} md={6} lg={12}>
           <ProjectChart />
         </Grid>
       </Grid>

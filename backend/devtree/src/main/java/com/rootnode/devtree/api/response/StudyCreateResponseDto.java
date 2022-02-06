@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class StudyCreateResponseDto extends  CommonResponseDto{
-    private Long team_seq;
-    private String team_name;
+    private Long teamSeq;
+    private String teamName;
 
     public StudyCreateResponseDto(Team team) {
-        this.team_seq = team.getTeamSeq();
-        this.team_name = team.getTeamName();
+        this.teamSeq = team.getTeamSeq();
+        this.teamName = team.getTeamName();
         this.status = 201;
         this.message = "스터디 생성에 성공하셨습니다.";
     }

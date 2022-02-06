@@ -2,13 +2,13 @@ package com.rootnode.devtree.api.service;
 
 import com.rootnode.devtree.api.request.StudyCreateRequestDto;
 import com.rootnode.devtree.api.request.StudyJoinRequestDto;
+import com.rootnode.devtree.api.request.StudyRespondRequestDto;
 import com.rootnode.devtree.api.response.CommonResponseDto;
 import com.rootnode.devtree.api.response.StudyDetailResponseDto;
 import com.rootnode.devtree.api.response.StudyListResponseDto;
-import com.rootnode.devtree.db.entity.Team;
-import com.rootnode.devtree.db.entity.TeamTech;
-import com.rootnode.devtree.db.entity.TeamType;
-import com.rootnode.devtree.db.entity.User;
+import com.rootnode.devtree.db.entity.*;
+import com.rootnode.devtree.db.entity.compositeKey.StudyReservationId;
+import com.rootnode.devtree.db.entity.compositeKey.StudyUserId;
 import com.rootnode.devtree.db.entity.compositeKey.TeamTechId;
 import com.rootnode.devtree.db.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +28,7 @@ public class StudyService {
     private final TechRepository techRepository;
 
     private final StudyReservationRepository studyReservationRepository;
+    private final StudyUserRepository studyUserRepository;
 
     // 스터디 생성
     @Transactional
@@ -61,9 +62,9 @@ public class StudyService {
 
     // 스터디 상세 조회
     @Transactional(readOnly = true)
-    public StudyDetailResponseDto findStudyDetail(Long team_seq) {
+    public StudyDetailResponseDto findStudyDetail(Long teamSeq) {
         // 1. 팀 테이블 조회
-        Team team = teamRepository.findTeamByTeamSeq(team_seq);
+        Team team = teamRepository.findTeamByTeamSeq(teamSeq);
         // 2. team_manager_seq로 관리자 이름 조회
         String managerName = userRepository.findById(team.getTeamManagerSeq()).get().getUserName();
         //3. Dto로 변환하여 반환
@@ -71,17 +72,46 @@ public class StudyService {
     }
 
     // 스터디 신청
-    public CommonResponseDto joinStudy(Long team_seq, StudyJoinRequestDto requestDto) {
-        Long user_seq = requestDto.getUserSeq();
-
+    public CommonResponseDto joinStudy(Long teamSeq, StudyJoinRequestDto requestDto) {
+        Long userSeq = requestDto.getUserSeq();
+        System.out.println("userSeq >>> " + userSeq);
         // 1. User 객체를 찾는다.
-        User user = userRepository.findById(user_seq).get();
+        User user = userRepository.findById(userSeq).get();
         System.out.println(user.getUserName());
         // 2. Team 객체를 찾는다.
-        Team team = teamRepository.findTeamByTeamSeq(team_seq);
+        Team team = teamRepository.findTeamByTeamSeq(teamSeq);
         // 3. 저장
-        studyReservationRepository.save(requestDto.toEntity(team_seq, team, user));
+        studyReservationRepository.save(requestDto.toEntity(teamSeq, team, user));
 
-        return new CommonResponseDto(200, "스터디 신청에 성공하였습니다.");
+        return new CommonResponseDto(201, "스터디 신청에 성공하였습니다.");
+    }
+
+    // 스터디 신청 응답
+    @Transactional
+    public CommonResponseDto respondStudy(Long teamSeq, Long userSeq, StudyRespondRequestDto requestDto) {
+        // 응답 타입 (수락 / 거절)
+        ResponseType responseType = requestDto.getResponseType();
+        StudyUserId studyUserId = new StudyUserId(userSeq, teamSeq);
+        User user = userRepository.findById(userSeq).get();
+        Team team = teamRepository.findById(teamSeq).get();
+
+        // 1. 수락을 하는 경우
+        if(ResponseType.ACCEPT.equals(responseType)) {
+            // 1. Study_User_Repository에 insert
+            studyUserRepository.save(new StudyUser(studyUserId, user, team));
+            // 2. 해당 팀 현재원 1 증가
+            teamRepository.findById(teamSeq).get().addTeamMember();
+            // 3. Study_Reservation_Repository 에 있는 (userSeq, teamSeq) 데이터 삭제
+            studyReservationRepository.deleteById(new StudyReservationId(userSeq, teamSeq));
+        }
+
+        // 2. 거절을 하는 경우
+        if (ResponseType.REJECT.equals(responseType)) {
+            // 1. 해당 신청 기록을 Study_Reservation_Repository 에서 삭제
+            studyReservationRepository.deleteById(new StudyReservationId(userSeq, teamSeq));
+        }
+
+
+        return new CommonResponseDto(201, "스터디 요청 응답에 성공하였습니다.");
     }
 }

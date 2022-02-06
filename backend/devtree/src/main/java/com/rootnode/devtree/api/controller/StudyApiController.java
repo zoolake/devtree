@@ -2,6 +2,7 @@ package com.rootnode.devtree.api.controller;
 
 import com.rootnode.devtree.api.request.StudyCreateRequestDto;
 import com.rootnode.devtree.api.request.StudyJoinRequestDto;
+import com.rootnode.devtree.api.request.StudyRespondRequestDto;
 import com.rootnode.devtree.api.response.CommonResponseDto;
 import com.rootnode.devtree.api.response.StudyCreateResponseDto;
 import com.rootnode.devtree.api.response.StudyDetailResponseDto;
@@ -48,8 +49,8 @@ public class StudyApiController {
      * 기능 : 스터디 상세 조회
      */
     @GetMapping("/v1/study/{team_seq}")
-    public ResponseEntity<Result> studyDetail(@PathVariable Long teamSeq) {
-        StudyDetailResponseDto responseDto = studyService.findStudyDetail(teamSeq);
+    public ResponseEntity<Result> studyDetail(@PathVariable Long team_seq) {
+        StudyDetailResponseDto responseDto = studyService.findStudyDetail(team_seq);
         return ResponseEntity
                 .status(200)
                 .body(new Result(responseDto));
@@ -59,15 +60,32 @@ public class StudyApiController {
      * 기능 : 스터디 신청
      */
     @PostMapping("/v1/study/{team_seq}")
-    public ResponseEntity<CommonResponseDto> studyJoin(@PathVariable Long teamSeq, @RequestBody StudyJoinRequestDto requestDto) {
+    public ResponseEntity<CommonResponseDto> studyJoin(@PathVariable Long team_seq, @RequestBody StudyJoinRequestDto requestDto) {
+        System.out.println("user_seq >>> " + requestDto.getUserSeq());
         return ResponseEntity
                 .status(200)
-                .body(studyService.joinStudy(teamSeq, requestDto));
+                .body(studyService.joinStudy(team_seq, requestDto));
     }
+
+    /**
+     * 기능 : 스터디 신청 응답
+     */
+    @PostMapping("/v1/study/join/{team_seq}/{user_seq}")
+    public ResponseEntity<CommonResponseDto> studyJoinResponse(@PathVariable Long team_seq,
+                                                               @PathVariable Long user_seq,
+                                                               @RequestBody StudyRespondRequestDto requestDto) {
+        return ResponseEntity
+                .status(201)
+                .body(studyService.respondStudy(team_seq, user_seq, requestDto));
+    }
+
+    /**
+     * 기능 : 스터디 신청 조회
+     */
 
 
     /**
-     * 기능 : 스터디 수정
+     * 기능 : 스터디 정보 수정
      */
 
 

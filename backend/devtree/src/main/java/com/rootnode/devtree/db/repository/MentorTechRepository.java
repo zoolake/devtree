@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface MentorTechRepository extends JpaRepository<MentorTech, MentorTechId> {
     //select ? from ? join ? on id = id
-    @Query(value = "select t from MentorTech t join fetch t.tech")
+    @Query(value = "select t from MentorTech t join fetch t.tech where t.mentor.mentorSeq = :mentorSeq")
     List<MentorTech> findByMentorTechIdMentorSeq(Long mentorSeq);
 }

@@ -21,7 +21,7 @@ public class MentorService {
     private final MentorTechRepository mentorTechRepository;
 
     public Page<MentorListResponseDto> findMentors(Pageable pageable) {
-        Page<Mentor> mentors = mentorRepository.findAll(pageable);
+        Page<Mentor> mentors = mentorRepository.findAllWithPagination(pageable);
         return new PageImpl(mentors.stream()
                 .map(mentor -> {
                     List<MentorTechInfoDto> mentorTechInfoDtoList =

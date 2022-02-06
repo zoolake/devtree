@@ -1,5 +1,7 @@
 package com.rootnode.devtree.api.controller;
 
+import com.rootnode.devtree.api.request.MentorScheduleRequestDto;
+import com.rootnode.devtree.api.response.CommonResponseDto;
 import com.rootnode.devtree.api.response.MentorDetailResponseDto;
 import com.rootnode.devtree.api.response.MentorListResponseDto;
 import com.rootnode.devtree.api.service.MentorService;
@@ -10,11 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,6 +41,14 @@ public class MentorApiController {
         return ResponseEntity
                 .status(200)
                 .body(new Result(responseDto, 200, "멘토 프로필 조회에 성공하였습니다."));
+    }
+
+    /**
+     * 기능: 멘토 가능 스케줄 설정
+     */
+    @PutMapping("/v1/mentor/{mentorSeq}/available")
+    public CommonResponseDto mentorSchedule(@PathVariable Long mentorSeq, @RequestBody MentorScheduleRequestDto requestDto) {
+        return mentorService.changeSchedule(mentorSeq, requestDto);
     }
 
     @Data

@@ -1,7 +1,9 @@
 package com.rootnode.devtree.api.service;
 
+import com.rootnode.devtree.api.request.MentorScheduleRequestDto;
 import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.db.entity.*;
+import com.rootnode.devtree.db.entity.compositeKey.MentorScheduleId;
 import com.rootnode.devtree.db.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,11 +19,10 @@ import java.util.stream.Collectors;
 public class MentorService {
     private final MentorRepository mentorRepository;
     private final UserRepository userRepository;
-    private final TeamRepository teamRepository;
-    private final TechRepository techRepository;
     private final MentorTechRepository mentorTechRepository;
     private final MentoringRepository mentoringRepository;
     private final MentoringCommentRepository mentoringCommentRepository;
+    private final MentorScheduleRepository mentorScheduleRepository;
 
     public Page<MentorListResponseDto> findMentors(Pageable pageable) {
         Page<Mentor> mentors = mentorRepository.findAllWithPagination(pageable);
@@ -91,5 +92,11 @@ public class MentorService {
                 .mentoringInfoMap(mentoringInfoMap)
                 .mentoringReviewList(reviewDtoList)
                 .build();
+    }
+
+    public CommonResponseDto changeSchedule(Long mentorSeq, MentorScheduleRequestDto requestDto) {
+        Mentor mentor = mentorRepository.findById(mentorSeq).get();
+        MentorSchedule mentorSchedule = mentorScheduleRepository.save(new MentorSchedule(new MentorScheduleId(requestDto.getMentorDay(), requestDto.getMentorTime(), mentorSeq), mentor));
+        return new CommonResponseDto(201, "스케줄 설정에 성공하였습니다.");
     }
 }

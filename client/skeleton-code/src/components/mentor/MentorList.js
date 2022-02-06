@@ -7,7 +7,7 @@ export default function MentorList({ mentors }) {
   return (
     <Grid container spacing={3}>
       {mentors.map((mentor) => (
-        <Grid key={mentor.mentor_seq} item xs={12} sm={6} md={2}>
+        <Grid key={mentor.mentorseq} item xs={12} sm={6} md={2}>
           <MentorListCard mentor={mentor} />
         </Grid>
       ))}

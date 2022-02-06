@@ -10,6 +10,8 @@ import Products from './pages/Products';
 import Project from './pages/Project/ProjectMain';
 import ProjectDetail from './pages/Project/ProjectDetail';
 import ProjectCreate from './pages/Project/ProjectCreate';
+import ProjectUpdate from './pages/Project/ProjectUpdate';
+import ProjectDelete from './pages/Project/ProjectDelete';
 import Blog from './pages/Blog';
 import User from './pages/User';
 // ----------------------------------------------------------------------
@@ -33,7 +35,9 @@ export default function Router() {
       children: [
         { path: '', element: <Project /> },
         { path: ':id', element: <ProjectDetail /> },
-        { path: 'create', element: <ProjectCreate /> }
+        { path: 'create', element: <ProjectCreate /> },
+        { path: ':id/update', element: <ProjectUpdate /> },
+        { path: ':id/delete', element: <ProjectDelete /> }
       ]
     },
     {

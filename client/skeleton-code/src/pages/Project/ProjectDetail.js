@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link as RouterLink } from 'react-router-dom';
 import axios from 'axios';
+import { Button } from '@mui/material';
 
 export default function ProjectDetail() {
   const projectId = useParams().id;
@@ -38,6 +39,12 @@ export default function ProjectDetail() {
         <li>프로젝트 설명: {project.team_desc}</li>
         <li>프로젝트 포지션: {project.team_position}</li>
       </ul> */}
+      <Button variant="contained" component={RouterLink} to="update">
+        프로젝트 수정
+      </Button>
+      <Button variant="contained" component={RouterLink} to="delete">
+        프로젝트 삭제
+      </Button>
     </div>
   );
 }

@@ -30,7 +30,8 @@ import { registerUser } from '../../../_actions/user_actions';
 // ----------------------------------------------------------------------
 
 export default function ProjectCreationForm(props) {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
+
   const RegisterSchema = Yup.object().shape({
     team_name: Yup.string()
       .required('프로젝트 제목은 필수 값 입니다.')
@@ -76,7 +77,7 @@ export default function ProjectCreationForm(props) {
               console.log(response, '성공');
             })
             .catch((error) => {
-              console.log('실패');
+              console.log(error, '실패');
             });
         };
         // dispatch(registerUser(dataToSubmit)).then((response) => {});
@@ -86,14 +87,19 @@ export default function ProjectCreationForm(props) {
     }
   });
 
+  // 기술테크 리스트, 포지션 리스트 불러와야 함
+
   const [techList, setTech] = useState([]);
   const [positionList, setPosition] = useState([]);
+  const [positionCnt, setPositionCnt] = useState('');
   const addTech = (newTech) => {
     setTech([...techList, newTech]);
   };
   const addPosition = (newPosition) => {
     setPosition([...positionList, newPosition]);
   };
+  // MemberCntList는 포지션별 멤버 수
+  const MemberCntList = [...Array(10).keys()].map((key) => key + 1);
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
@@ -137,8 +143,15 @@ export default function ProjectCreationForm(props) {
             ))}
           </TextField>
 
+          {/* techList 아이콘 */}
+          <div>
+            {techList.map((tech, idx) => (
+              <div key={idx}>{tech.tech.tech_image}</div>
+            ))}
+          </div>
+
           <TextField
-            fullWidth
+            // fullWidth
             select
             // autoComplete="techs"
             // type="email"
@@ -154,6 +167,44 @@ export default function ProjectCreationForm(props) {
               </MenuItem>
             ))}
           </TextField>
+
+          {/* added poistions */}
+          <div>
+            {positionList.map((position, idx) => (
+              <div key={idx}>
+                {position}
+                {position.position_recruit_cnt}
+                {position.position_member_cnt}
+                <TextField
+                  // fullWidth
+                  select
+                  // autoComplete="techs"
+                  // type="email"
+                  label="team_position_recruit_cnt"
+                  onChange={setPositionCnt}
+                  {...getFieldProps('team_position_recruit_cnt')}
+                  error={Boolean(
+                    touched.team_position_recruit_cnt && errors.team_position_recruit_cnt
+                  )}
+                  helperText={touched.team_position_recruit_cnt && errors.team_position_recruit_cnt}
+                >
+                  {MemberCntList.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <LoadingButton
+                  size="small"
+                  type="submit"
+                  variant="contained"
+                  loading={isSubmitting}
+                >
+                  생성
+                </LoadingButton>
+              </div>
+            ))}
+          </div>
 
           <LoadingButton
             fullWidth

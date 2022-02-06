@@ -14,8 +14,8 @@ import java.util.List;
 public interface ProjectPositionReservationRepository extends JpaRepository<ProjectPositionReservation, ProjectPositionReservationId> {
     @Transactional
     @Modifying
-    @Query(value = "delete from ProjectPositionReservation r where r.projectPositionReservationID.userSeq = :user_seq and r.projectPositionReservationID.projectPositionID.teamSeq = :team_seq")
-    void deleteAllByUserSeqAndTeamSeq(Long user_seq, Long team_seq);
+    @Query(value = "delete from ProjectPositionReservation r where r.projectPositionReservationID.userSeq = :userSeq and r.projectPositionReservationID.projectPositionID.teamSeq = :teamSeq")
+    void deleteAllByUserSeqAndTeamSeq(Long userSeq, Long teamSeq);
 
     @Transactional
     @Modifying

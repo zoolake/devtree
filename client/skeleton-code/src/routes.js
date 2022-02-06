@@ -14,10 +14,21 @@ import ProjectDetail from './pages/Project/ProjectDetail';
 import ProjectCreate from './pages/Project/ProjectCreate';
 import Blog from './pages/Blog';
 import User from './pages/User';
+import MentorPage from './pages/Mentor/MentorPage';
+import MentorDetail from './pages/Mentor/MentorDetail';
 // ----------------------------------------------------------------------
 
 export default function Router() {
   return useRoutes([
+    {
+      path: '/mentor',
+      element: <DashboardLayout />,
+      children: [
+        { element: <Navigate to="/mentor" replace /> },
+        { path: '', element: <MentorPage /> },
+        { path: ':id', element: <MentorDetail /> }
+      ]
+    },
     {
       path: '/MainPage',
       element: <DashboardLayout />,
@@ -36,7 +47,10 @@ export default function Router() {
       children: [
         { path: '', element: <Project /> },
         { path: ':id', element: <ProjectDetail /> },
-        { path: 'create', element: <ProjectCreate /> }
+        { path: 'create', element: <ProjectCreate /> },
+        { path: 'mentor', element: <Navigate to="/mentor" /> }
+        // { path: 'mentor/:id', element: <MentorDetail /> },
+        // { path: 'mentor', element: <MentorPage /> }
       ]
     },
     {

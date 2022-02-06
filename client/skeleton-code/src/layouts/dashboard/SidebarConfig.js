@@ -38,7 +38,7 @@ const sidebarConfig = [
   },
   {
     title: 'mentor',
-    path: '/MainPage/blog',
+    path: '/mentor',
     icon: getIcon(fileTextFill)
   },
   {

@@ -12,3 +12,4 @@ export { default as MentoringTime } from './MentoringTime';
 export { default as MentoringStack } from './MentoringStack';
 export { default as MentoringReview } from './MentoringReview';
 export { default as Mentoring } from './Mentoring';
+export { default as MentorAuth } from './MentorAuth';

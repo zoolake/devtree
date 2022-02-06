@@ -27,14 +27,42 @@ export default function MyProfile() {
   const [users, setUsers] = useState(null);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const userDetail = async () => {
+    setUsers(null);
+    // loading 상태를 true 로 바꿉니다.
+    setLoading(true);
+    await dispatch(detailUser())
+      .then((response) => {
+        if (response) {
+          setUsers(response.payload);
+          console.log(users.userId);
+        }
+      })
+      .catch((err) => {
+        setTimeout(() => {}, 3000);
+      });
+    setLoading(false);
+  };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    userDetail();
+  }, []);
+
+  const flag = () => {
+    setVisible((e) => !e);
+  };
+  if (loading) return <div>로딩중..</div>;
+  if (!users) {
+    return null;
+  }
 
   return (
     <div>
-      <CardHeader title="멘토링 가능 시간" />
+      <CardHeader title="멘토를 인증해주세요" />
       <Box sx={{ p: 3 }}>
-        멘토링 가능 시간
+        이름
+        <TextField disabled={!visible} fullWidth type="text" value={users.userName} />
+        멘토 인증하는 내용
         <Divider />
       </Box>
     </div>

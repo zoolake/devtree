@@ -31,10 +31,11 @@ import {
   UserStack,
   MentorProfile,
   UserProfile,
-  PasswordUpdate
+  PasswordUpdate,
+  MentorAuth
 } from '../../components/Profile';
 // ----------------------------------------------------------------------
-
+const ismentor = 'true';
 const SORT_OPTIONS = [
   { value: 'detail', label: '내 프로필' },
   { value: 'detaillist', label: '활동내역' },
@@ -88,11 +89,27 @@ const Tab = [
   },
   {
     title: '멘토 프로필',
-    content: (
-      <Grid item xs={12} md={6} lg={8}>
-        <MentoringTime />
-      </Grid>
-    )
+    content:
+      ismentor === 'true' ? (
+        <Grid container spacing={1}>
+          <Grid item xs={12} md={6} lg={12}>
+            <MentorProfile />
+          </Grid>{' '}
+          <Grid item xs={12} md={6} lg={12}>
+            <MentoringStack />
+          </Grid>
+          <Grid item xs={12} md={6} lg={12}>
+            <MentoringTime />
+          </Grid>
+          <Grid item xs={12} md={6} lg={12}>
+            <MentoringReview />
+          </Grid>
+        </Grid>
+      ) : (
+        <Grid item xs={12} md={6} lg={8}>
+          <MentorAuth />
+        </Grid>
+      )
   },
   {
     title: '즐겨찾기',

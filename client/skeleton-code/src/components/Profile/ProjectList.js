@@ -25,7 +25,6 @@ import Label from '../Label';
 import Scrollbar from '../Scrollbar';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../_dashboard/profileHistory';
 //
-import USERLIST from '../../_mocks_/project';
 import { getProject } from '../../_actions/user_actions';
 // ----------------------------------------------------------------------
 

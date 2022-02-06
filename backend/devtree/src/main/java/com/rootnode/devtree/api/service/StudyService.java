@@ -36,7 +36,7 @@ public class StudyService {
 
         requestDto.getTeam_tech().forEach(tech -> {
             teamTechRepository.save(TeamTech.builder()
-                    .teamTechID(new TeamTechId(tech, team.getTeam_seq()))
+                    .teamTechID(new TeamTechId(tech, team.getTeamSeq()))
                     .team(team)
                     .tech(techRepository.findById(tech).get())
                     .build());
@@ -53,7 +53,7 @@ public class StudyService {
         // 2. 얻어온 목록들을 기반으로 userRepository에서 관리자 명을 찾아서 Dto로 만들고 반환해주는 방식
         return teamList.stream()
                 .map(team -> {
-                    String managerName = userRepository.findById(team.getTeam_manager_seq()).get().getUser_name();
+                    String managerName = userRepository.findById(team.getTeamManagerSeq()).get().getUserName();
                     return new StudyListResponseDto(team, managerName);
                 })
                 .collect(Collectors.toList());
@@ -65,7 +65,7 @@ public class StudyService {
         // 1. 팀 테이블 조회
         Team team = teamRepository.findTeamByTeamSeq(team_seq);
         // 2. team_manager_seq로 관리자 이름 조회
-        String managerName = userRepository.findById(team.getTeam_manager_seq()).get().getUser_name();
+        String managerName = userRepository.findById(team.getTeamManagerSeq()).get().getUserName();
         //3. Dto로 변환하여 반환
         return new StudyDetailResponseDto(team, managerName);
     }
@@ -76,7 +76,7 @@ public class StudyService {
 
         // 1. User 객체를 찾는다.
         User user = userRepository.findById(user_seq).get();
-        System.out.println(user.getUser_name());
+        System.out.println(user.getUserName());
         // 2. Team 객체를 찾는다.
         Team team = teamRepository.findTeamByTeamSeq(team_seq);
         // 3. 저장

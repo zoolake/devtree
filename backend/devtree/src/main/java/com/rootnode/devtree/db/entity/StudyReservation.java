@@ -17,12 +17,12 @@ public class StudyReservation {
     private StudyReservationId studyReservationID;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("user_seq")
+    @MapsId("userSeq")
     @JoinColumn(name = "user_seq")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("team_seq")
+    @MapsId("teamSeq")
     @JoinColumn(name = "team_seq")
     private Team team;
 

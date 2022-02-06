@@ -20,24 +20,24 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class StudyDetailResponseDto extends CommonResponseDto {
-    private Long team_seq;
-    private Long team_manager_seq;
-    private String team_name;
-    private TeamState team_state;
-    private String team_manager_name;
-    private int team_recruit_cnt;
-    private int team_member_cnt;
-    private List<TechInfoDto> team_tech;
+    private Long teamSeq;
+    private Long teamManagerSeq;
+    private String teamName;
+    private TeamState teamState;
+    private String teamManagerName;
+    private int teamRecruitCnt;
+    private int teamMemberCnt;
+    private List<TechInfoDto> teamTech;
 
-    public StudyDetailResponseDto(Team team, String team_manager_name) {
-        this.team_seq = team.getTeam_seq();
-        this.team_manager_seq = team.getTeam_manager_seq();
-        this.team_name = team.getTeam_name();
-        this.team_state = team.getTeam_state();
-        this.team_manager_name = team_manager_name;
-        this.team_recruit_cnt = team.getTeam_recruit_cnt();
-        this.team_member_cnt = team.getTeam_member_cnt();
-        this.team_tech = team.toTechInfoDto();
+    public StudyDetailResponseDto(Team team, String teamManagerName) {
+        this.teamSeq = team.getTeamSeq();
+        this.teamManagerSeq = team.getTeamManagerSeq();
+        this.teamName = team.getTeamName();
+        this.teamState = team.getTeamState();
+        this.teamManagerName = teamManagerName;
+        this.teamRecruitCnt = team.getTeamRecruitCnt();
+        this.teamMemberCnt = team.getTeamMemberCnt();
+        this.teamTech = team.toTechInfoDto();
 
         this.status = 200;
         this.message = "스터디 정보 조회에 성공하였습니다.";

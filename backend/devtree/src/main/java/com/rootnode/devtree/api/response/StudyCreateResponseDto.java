@@ -11,8 +11,8 @@ public class StudyCreateResponseDto extends  CommonResponseDto{
     private String team_name;
 
     public StudyCreateResponseDto(Team team) {
-        this.team_seq = team.getTeam_seq();
-        this.team_name = team.getTeam_name();
+        this.team_seq = team.getTeamSeq();
+        this.team_name = team.getTeamName();
         this.status = 201;
         this.message = "스터디 생성에 성공하셨습니다.";
     }

@@ -14,6 +14,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Embeddable
 public class StudyUserId implements Serializable {
-    private Long user_seq;
-    private Long team_seq;
+    private Long userSeq;
+    private Long teamSeq;
 }

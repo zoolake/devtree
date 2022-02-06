@@ -16,11 +16,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class StudyJoinRequestDto {
-    private Long user_seq;
+    private Long userSeq;
 
-    public StudyReservation toEntity(Long team_seq, Team team, User user) {
+    public StudyReservation toEntity(Long teamSeq, Team team, User user) {
         return StudyReservation.builder()
-                .studyReservationID(new StudyReservationId(this.user_seq, team_seq))
+                .studyReservationID(new StudyReservationId(this.userSeq, teamSeq))
                 .team(team)
                 .user(user)
                 .study_reservation_create_time(LocalDateTime.now())

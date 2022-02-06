@@ -48,9 +48,8 @@ public class StudyApiController {
      * 기능 : 스터디 상세 조회
      */
     @GetMapping("/v1/study/{team_seq}")
-    public ResponseEntity<Result> studyDetail(@PathVariable Long team_seq) {
-        System.out.println("team_seq >>> " + team_seq);
-        StudyDetailResponseDto responseDto = studyService.findStudyDetail(team_seq);
+    public ResponseEntity<Result> studyDetail(@PathVariable Long teamSeq) {
+        StudyDetailResponseDto responseDto = studyService.findStudyDetail(teamSeq);
         return ResponseEntity
                 .status(200)
                 .body(new Result(responseDto));
@@ -60,10 +59,10 @@ public class StudyApiController {
      * 기능 : 스터디 신청
      */
     @PostMapping("/v1/study/{team_seq}")
-    public ResponseEntity<CommonResponseDto> studyJoin(@PathVariable Long team_seq, @RequestBody StudyJoinRequestDto requestDto) {
+    public ResponseEntity<CommonResponseDto> studyJoin(@PathVariable Long teamSeq, @RequestBody StudyJoinRequestDto requestDto) {
         return ResponseEntity
                 .status(200)
-                .body(studyService.joinStudy(team_seq, requestDto));
+                .body(studyService.joinStudy(teamSeq, requestDto));
     }
 
 

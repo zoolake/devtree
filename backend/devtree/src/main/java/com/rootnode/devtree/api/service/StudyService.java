@@ -34,7 +34,7 @@ public class StudyService {
     public Team save(StudyCreateRequestDto requestDto) {
         Team team = teamRepository.save(requestDto.toEntity());
 
-        requestDto.getTeam_tech().forEach(tech -> {
+        requestDto.getTeamTech().forEach(tech -> {
             teamTechRepository.save(TeamTech.builder()
                     .teamTechID(new TeamTechId(tech, team.getTeamSeq()))
                     .team(team)
@@ -72,7 +72,7 @@ public class StudyService {
 
     // 스터디 신청
     public CommonResponseDto joinStudy(Long team_seq, StudyJoinRequestDto requestDto) {
-        Long user_seq = requestDto.getUser_seq();
+        Long user_seq = requestDto.getUserSeq();
 
         // 1. User 객체를 찾는다.
         User user = userRepository.findById(user_seq).get();

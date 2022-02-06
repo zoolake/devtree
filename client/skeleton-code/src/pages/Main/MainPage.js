@@ -25,7 +25,7 @@ export default function MainPage() {
         </Box>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <Link underline="none" component={RouterLink} to="/project">
+            <Link underline="none" component={RouterLink} to="/Project/projectMain">
               <AppProjectMain />
             </Link>
           </Grid>

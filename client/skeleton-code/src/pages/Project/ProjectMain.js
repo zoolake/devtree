@@ -66,7 +66,7 @@ export default function ProjectMain() {
           <Button
             variant="contained"
             component={RouterLink}
-            to="#"
+            to="create"
             startIcon={<Icon icon={plusFill} />}
           >
             프로젝트 생성 {/* 버튼 */}

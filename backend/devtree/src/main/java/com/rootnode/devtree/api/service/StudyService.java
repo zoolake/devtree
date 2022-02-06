@@ -3,6 +3,7 @@ package com.rootnode.devtree.api.service;
 import com.rootnode.devtree.api.request.StudyCreateRequestDto;
 import com.rootnode.devtree.api.request.StudyJoinRequestDto;
 import com.rootnode.devtree.api.request.StudyRespondRequestDto;
+import com.rootnode.devtree.api.request.StudyUpdateRequestDto;
 import com.rootnode.devtree.api.response.CommonResponseDto;
 import com.rootnode.devtree.api.response.StudyDetailResponseDto;
 import com.rootnode.devtree.api.response.StudyListResponseDto;
@@ -14,8 +15,10 @@ import com.rootnode.devtree.db.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -111,7 +114,57 @@ public class StudyService {
             studyReservationRepository.deleteById(new StudyReservationId(userSeq, teamSeq));
         }
 
-
         return new CommonResponseDto(201, "스터디 요청 응답에 성공하였습니다.");
     }
+
+    // 스터디 신청 조회
+
+    // 스터디 상태 변경 == 프로젝트 상태 변경 == 팀 상태 변경
+
+    // 스터디 정보 수정
+    @Transactional
+    public CommonResponseDto updateStudy(Long teamSeq, StudyUpdateRequestDto requestDto) {
+        Team team = teamRepository.findById(teamSeq).get();
+
+        // 팀 이름 변경
+        if(StringUtils.hasText(requestDto.getTeamName())) {
+            team.changeTeamName(requestDto.getTeamName());
+        }
+
+        // 팀 설명 변경
+        if(StringUtils.hasText(requestDto.getTeamDesc())) {
+            team.changeTeamDesc(requestDto.getTeamDesc());
+        }
+
+        // 팀 기술 스택 변경
+        if(!Objects.isNull(requestDto.getTeamTech())) {
+            // 부모 쪽 먼저 삭제
+            team.getTeamTechList().clear();
+            // 자식 쪽 삭제
+            teamTechRepository.deleteByTeamSeq(teamSeq);
+
+            // 새로 삽입
+            requestDto.getTeamTech().forEach(techSeq -> {
+                teamTechRepository.save(TeamTech.builder()
+                        .teamTechID(new TeamTechId(teamSeq, techSeq))
+                        .team(team)
+                        .tech(techRepository.findById(techSeq).get())
+                        .build());
+            });
+        }
+
+        // 팀 인원 변경
+        // 현재 팀 모집 인원과 수정된 팀 모집 인원이 다르고
+        if(team.getTeamRecruitCnt() != requestDto.getTeamRecruitCnt()) {
+            // 수정하려고 하는 팀 모집 인원이 현재 팀 인원보다 작거나 같으면 변경
+            if(team.getTeamMemberCnt() <= requestDto.getTeamRecruitCnt()) {
+                team.changeTeamRecruitCnt(requestDto.getTeamRecruitCnt());
+            } else {
+                return new CommonResponseDto(201, "스터디 인원을 변경할 수 없습니다.");
+            }
+        }
+
+        return new CommonResponseDto(201, "스터디 정보 수정에 성공하였습니다.");
+    }
+
 }

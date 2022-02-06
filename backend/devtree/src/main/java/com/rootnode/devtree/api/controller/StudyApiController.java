@@ -3,6 +3,7 @@ package com.rootnode.devtree.api.controller;
 import com.rootnode.devtree.api.request.StudyCreateRequestDto;
 import com.rootnode.devtree.api.request.StudyJoinRequestDto;
 import com.rootnode.devtree.api.request.StudyRespondRequestDto;
+import com.rootnode.devtree.api.request.StudyUpdateRequestDto;
 import com.rootnode.devtree.api.response.CommonResponseDto;
 import com.rootnode.devtree.api.response.StudyCreateResponseDto;
 import com.rootnode.devtree.api.response.StudyDetailResponseDto;
@@ -87,8 +88,13 @@ public class StudyApiController {
     /**
      * 기능 : 스터디 정보 수정
      */
-
-
+    @PutMapping("/v1/study/{team_seq}")
+    public ResponseEntity<CommonResponseDto> studyDetailUpdate(@PathVariable Long team_seq,
+                                                               @RequestBody StudyUpdateRequestDto requestDto) {
+        return ResponseEntity
+                .status(201)
+                .body(studyService.updateStudy(team_seq, requestDto));
+    }
 
     /**
      * 기능 : 스터디 삭제

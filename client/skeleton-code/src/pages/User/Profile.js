@@ -6,18 +6,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Grid, Card, Button, Container, Stack, Typography } from '@mui/material';
 // components
 import Page from '../../components/Page';
-import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../../components/_dashboard/blog';
-import POSTS from '../../_mocks_/blog';
-import {
-  AppTasks,
-  AppStudyMain,
-  AppCommunityMain,
-  AppMentorMain,
-  AppNewsUpdate,
-  AppProjectMain,
-  AppOrderTimeline,
-  AppCurrentVisits
-} from '../../components/_dashboard/app';
+import { AppNewsUpdate } from '../../components/_dashboard/app';
 import {
   Mentoring,
   MentoringReview,
@@ -136,7 +125,7 @@ const useTab = (idx, Tabs) => {
 export default function Profile() {
   const { currentItem, changeItem } = useTab(0, Tab);
   return (
-    <Page title="Dashboard: Blog | Minimal-UI">
+    <Page title="profile">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
@@ -151,8 +140,6 @@ export default function Profile() {
           ))}
         </div>
         <div>{currentItem.content}</div>
-        {/* <Grid container spacing={3}></Grid> */}
-        {/* <BlogPostsSort options={SORT_OPTIONS} /> */}
       </Container>
     </Page>
   );

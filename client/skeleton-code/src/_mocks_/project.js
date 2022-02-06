@@ -28,8 +28,4 @@ const users = [...Array(24)].map((_, index) => ({
   ])
 }));
 
-const x = () => {
-  console.log('헤헷');
-};
-
 export default users;

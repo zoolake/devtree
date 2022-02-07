@@ -36,6 +36,9 @@ public class ProjectApiController {
      */
     @GetMapping("/v1/project")
     public ResponseEntity<Result> projectList() {
+        System.out.println(
+                "hi"
+        );
         List<ProjectListResponseDto> responseDto = projectService.findTeams(TeamType.PROJECT);
         return ResponseEntity
                 .status(200)

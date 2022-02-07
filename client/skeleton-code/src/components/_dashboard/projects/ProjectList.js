@@ -1,5 +1,5 @@
-import { Icon } from '@iconify/react';
-import plusFill from '@iconify/icons-eva/plus-fill';
+// import { Icon } from '@iconify/react';
+// import plusFill from '@iconify/icons-eva/plus-fill';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
@@ -7,10 +7,9 @@ import {
   Container
 } from '@mui/material';
 // components
-import Page from '../../Page';
+// import Page from '../../Page';
 import { ProjectListCard } from '.';
-//
-import PROJECTS from '../../../_mocks_/project';
+// import PROJECTS from '../../../_mocks_/project';
 
 // ----------------------------------------------------------------------
 
@@ -26,17 +25,17 @@ export default function ProjectList() {
   // 조회 기능
   const [projectList, setProjectList] = useState([]);
   const getProjectList = async () => {
-    // 임시 목업 받아오기
-    // const pList = await setProjectList(PROJECTS);
     // api 받아오기
-    const url = '/project';
+    const projectListUrl = '/project';
     await axios
-      .get(url)
+      .get(projectListUrl)
       .then((response) => {
         if (response.data.data.length > 0) {
           const pList = [response.data.data];
           setProjectList(pList);
-          console.log(projectList, '프로젝트 리스트 조회 성공');
+          console.log(projectList, response.data.message);
+        } else {
+          console.log('생성할 프로젝트 없음');
         }
       })
       .catch((error) => {

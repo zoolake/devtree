@@ -1,19 +1,31 @@
 import axios from 'axios';
 import * as Yup from 'yup';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 // import { Icon } from '@iconify/react';
 import { useFormik, Form, FormikProvider } from 'formik';
 // import eyeFill from '@iconify/icons-eva/eye-fill';
 // import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
 // import { useNavigate } from 'react-router-dom';
-// material
-import { Stack, TextField, IconButton, InputAdornment, MenuItem } from '@mui/material';
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
+import {
+  Stack,
+  TextField,
+  // IconButton,
+  // InputAdornment,
+  MenuItem,
+  Box,
+  // Card,
+  // Typography,
+  CardHeader
+  // CardContent
+} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import { useDispatch } from 'react-redux';
-import { registerUser } from '../../../_actions/user_actions';
+// import { useDispatch } from 'react-redux';
+// import { registerUser } from '../../../_actions/user_actions';
 // ----------------------------------------------------------------------
 
-export default function ProjectCreationForm(props) {
+export default function ProjectCreationForm() {
   // const dispatch = useDispatch();
 
   const RegisterSchema = Yup.object().shape({
@@ -78,40 +90,38 @@ export default function ProjectCreationForm(props) {
     }
   });
 
-  // 기술테크 리스트 불러오기
+  const [loading, setLoading] = useState(false);
   const [allTechList, setAllTech] = useState([]);
-  const getTechs = async () => {
+  const [allPositionList, setAllPosition] = useState([]);
+
+  const SetSelections = async () => {
+    // 기술테크, 포지션 리스트 불러오기
     const techUrl = '/tech';
+    const positionUrl = 'https://620113cafdf509001724980b.mockapi.io/api/v1/position';
     await axios
       .get(techUrl)
       .then((response) => {
-        console.log(response, '테크 불러오기 성공');
-        setAllTech(response.data.data);
-        // console.log(allTechList);
+        console.log(response.data.message);
+        return response.data.data;
+      })
+      .then((dataList) => {
+        const allTechs = dataList.reduce((total, data, i) => {
+          total = [...total, { value: data.techSeq, label: data.techName }];
+          return total;
+        }, []);
+        return allTechs;
+      })
+      .then((allTechs) => {
+        setAllTech(allTechs);
       })
       .catch((error) => {
         console.log(error, '테크 불러오기 실패');
       });
   };
-  // 포지션 리스트 불러오기
-  const [allPositionList, setAllPosition] = useState([]);
-  const getPositions = async () => {
-    const positionUrl = '/position';
-    await axios
-      .get(positionUrl)
-      .then((response) => {
-        console.log(response, '포지션 불러오기 성공');
-        setAllPosition(response.data.data);
-        console.log(allPositionList);
-      })
-      .catch((error) => {
-        console.log(error, '포지션 불러오기 실패');
-      });
-  };
+
   // 초기 렌더링
   useEffect(() => {
-    getTechs();
-    getPositions();
+    SetSelections();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -119,15 +129,6 @@ export default function ProjectCreationForm(props) {
   const [techList, setTech] = useState([]);
   const [positionList, setPosition] = useState([]);
   const [positionCnt, setPositionCnt] = useState('');
-
-  const addTech = (newTech) => {
-    if (techList.includes(newTech)) {
-      console.log('이미 있음');
-    } else {
-      setTech([...techList, newTech]);
-      console.log(techList, '추가됨');
-    }
-  };
 
   const addPosition = (newPosition) => {
     if (positionList.includes(newPosition)) {
@@ -142,6 +143,61 @@ export default function ProjectCreationForm(props) {
   const MemberCntList = [...Array(10).keys()].map((key) => key + 1);
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
+
+  // Selection Form
+  // ---------------------------------------
+  // multiselect for posiition
+  const animatedComponents = makeAnimated();
+  // styles that do not show 'x' for fixed options
+  const styles = useMemo(
+    () => ({
+      multiValueRemove: (base, state) => (state.data.isFixed ? { ...base, display: 'none' } : base)
+    }),
+    []
+  );
+
+  // sort options with alphabet order
+  const orderByLabel = useCallback((a, b) => a.label.localeCompare(b.label), []);
+
+  // listed fixed options first and then the delete-able options
+  const orderOptions = useCallback(
+    (values) =>
+      values
+        .filter((v) => v.isFixed)
+        .sort(orderByLabel)
+        .concat(values.filter((v) => !v.isFixed).sort(orderByLabel)),
+    [orderByLabel]
+  );
+
+  // selected values, initially it lists all options in order
+  const [value, setValue] = useState(orderOptions(allTechList));
+
+  // handler for changes
+  const handleTechs = useCallback(
+    (inputValue, { action, removedValue }) => {
+      switch (action) {
+        case 'remove-value': // delete with 'x'
+          setTech(orderOptions(techList.filter((tech) => tech !== removedValue)));
+          return;
+        case 'pop-value': // delete with backspace
+          if (removedValue.isFixed) {
+            setTech(orderOptions([...inputValue, removedValue]));
+            return;
+          }
+          break;
+        case 'clear': // clear button is clicked
+          setTech(techList.filter((v) => v.isFixed));
+          return;
+        case 'select-option':
+          setTech(inputValue);
+          return;
+        default:
+      }
+      setValue(inputValue);
+    },
+    [techList, orderOptions],
+    console.log(techList)
+  );
 
   return (
     <FormikProvider value={formik}>
@@ -165,32 +221,38 @@ export default function ProjectCreationForm(props) {
             helperText={touched.team_desc && errors.team_desc}
           />
 
-          <TextField
-            fullWidth
-            select
-            // autoComplete="techs"
-            // type="email"
-            label="team_tech"
-            onChange={addTech}
-            {...getFieldProps('team_tech')}
-            error={Boolean(touched.team_tech && errors.team_tech)}
-            helperText={touched.team_tech && errors.team_tech}
-          >
-            {allTechList.map((option) => (
-              <MenuItem key={option.techSeq} value={option.techName}>
-                {option.techName}
-              </MenuItem>
-            ))}
-          </TextField>
+          <Box sx={7}>
+            <Select
+              // closeMenuOnSelect={false}
+              components={animatedComponents}
+              isMulti
+              options={allTechList}
+              placeholder="기술 스택 추가"
+              // // isClearable={techList.some((v) => !v.isFixed)} // clear button shows conditionally
+              styles={styles} // styles that do not show 'x' for fixed options
+              // value={addTech(value)} // selected values
+              onChange={handleTechs} // handler for changes
+              // // error={Boolean(touched.team_position && errors.team_position)}
+              // // helperText={touched.team_position && errors.team_position}
+            />
+          </Box>
 
-          {/* techList 아이콘 */}
-          <div>
-            {techList.map((tech, idx) => (
-              <div key={idx}>{tech.techSeq}</div>
-            ))}
-          </div>
+          <Box sx={7}>
+            <Select
+              isMulti // show multiple options
+              components={animatedComponents} // animate builtin components
+              isClearable={positionList.some((v) => !v.isFixed)} // clear button shows conditionally
+              styles={styles} // styles that do not show 'x' for fixed options
+              options={SetSelections.allPositionList} // all options
+              value={positionList} // selected values
+              onChange={addPosition} // handler for changes
+              placeholder="포지션 추가"
+              // error={Boolean(touched.team_position && errors.team_position)}
+              // helperText={touched.team_position && errors.team_position}
+            />
+          </Box>
 
-          <TextField
+          {/* <TextField
             // fullWidth
             select
             // autoComplete="techs"
@@ -206,7 +268,7 @@ export default function ProjectCreationForm(props) {
                 {option.label}
               </MenuItem>
             ))}
-          </TextField>
+          </TextField> */}
 
           {/* added poistions */}
           <div>

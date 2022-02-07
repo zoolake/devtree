@@ -9,3 +9,4 @@ export const AFTER_POST_MESSAGE = 'after_post_message';
 export const PASSWORD_UPDATE = 'passwordUpdate';
 export const DELETE_USER = 'delete_user';
 export const UPDATE_USER = 'update_user';
+export const GET_MENTORS = 'get_mentors';

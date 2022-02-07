@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface TeamTechRepository extends JpaRepository<TeamTech, TeamTechId> {
     @Transactional
-    @Modifying
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(value = "delete from TeamTech t where t.team.teamSeq = :teamSeq")
     void deleteByTeamSeq(Long teamSeq);
 }

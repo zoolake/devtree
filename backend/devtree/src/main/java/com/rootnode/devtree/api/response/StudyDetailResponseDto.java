@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Getter
 @NoArgsConstructor
-public class StudyDetailResponseDto extends CommonResponseDto {
+public class StudyDetailResponseDto {
     private Long teamSeq;
     private Long teamManagerSeq;
     private String teamName;
@@ -38,8 +38,5 @@ public class StudyDetailResponseDto extends CommonResponseDto {
         this.teamRecruitCnt = team.getTeamRecruitCnt();
         this.teamMemberCnt = team.getTeamMemberCnt();
         this.teamTech = team.toTechInfoDto();
-
-        this.status = 200;
-        this.message = "스터디 정보 조회에 성공하였습니다.";
     }
 }

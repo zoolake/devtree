@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Grid, Card, Button, Container, Stack, Typography } from '@mui/material';
+import Page from '../../components/Page';
+import { MentorStack, MentorProfile, MentorReviewList } from '../../components/_dashboard/mentor';
 
 function MentorDetail() {
   const { id } = useParams();
   const [mentor, setMentor] = useState();
-  const getMentor = async () => {
-    const json = await (
-      await fetch(`https://61fa456931f9c20017596733.mockapi.io/mentors/${id}`)
-    ).json();
-    // console.log(json);
-    setMentor(json);
-  };
+  const getMentor = async () => {};
   useEffect(() => {
     getMentor();
   }, []);
@@ -18,10 +15,17 @@ function MentorDetail() {
   console.log(mentor);
 
   return (
-    <div>
-      <h1>{mentor.user_name}</h1>
-      <h2>{mentor.mentor_seq}</h2>
-    </div>
+    <Grid container spacing={1}>
+      <Grid item xs={12} md={6} lg={10}>
+        <MentorProfile index={id} />
+      </Grid>
+      <Grid item xs={12} md={6} lg={10}>
+        <MentorStack />
+      </Grid>{' '}
+      <Grid item xs={12} md={6} lg={10}>
+        <MentorReviewList />
+      </Grid>
+    </Grid>
   );
 }
 export default MentorDetail;

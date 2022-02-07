@@ -6,13 +6,10 @@ import shareFill from '@iconify/icons-eva/share-fill';
 import messageCircleFill from '@iconify/icons-eva/message-circle-fill';
 // material
 import { alpha, styled } from '@mui/material/styles';
-import { Box, Link, Card, Grid, Avatar, Typography, CardContent } from '@mui/material';
+import { Stack, Box, Link, Card, Grid, Avatar, Typography, CardContent } from '@mui/material';
 // utils
 import { fDate } from '../../../utils/formatTime';
 import { fShortenNumber } from '../../../utils/formatNumber';
-
-//
-// ----------------------------------------------------------------------
 
 const CardMediaStyle = styled('div')({
   position: 'relative',
@@ -71,19 +68,18 @@ export default function MentorCard({ post, index }) {
 
   return (
     <Grid item xs={12} sm={6} md={3}>
+      {' '}
       <Card sx={{ position: 'relative' }}>
         <CardMediaStyle>
           <AvatarStyle />
           <CoverImgStyle alt={mentorname} src="/static/mock-images/covers/cover_1.jpg" />
         </CardMediaStyle>
-
         <CardContent>
           <Typography gutterBottom variant="caption">
             {mentorcarrer}
           </Typography>
-
           <TitleStyle
-            to="#"
+            to={`${post.id}`}
             color="inherit"
             variant="subtitle2"
             underline="hover"

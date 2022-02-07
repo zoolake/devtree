@@ -131,7 +131,7 @@ export default function Profile() {
           <Typography variant="h4" gutterBottom>
             Profile
           </Typography>
-        </Stack>{' '}
+        </Stack>
         <div>
           {Tab.map((e, index) => (
             <button key={index} onClick={(e) => changeItem(index)}>

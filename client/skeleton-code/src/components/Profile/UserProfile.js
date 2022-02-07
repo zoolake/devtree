@@ -22,8 +22,6 @@ import { detailUser, updateUser } from '../../_actions/user_actions';
 import { MyProfile } from '.';
 // ---------------------------------------------------------------------
 
-// ----------------------------------------------------------------------
-
 export default function UserProfile() {
   const [visible, setVisible] = useState(false);
   const [users, setUsers] = useState(null);

@@ -119,6 +119,12 @@ public class StudyApiController {
     /**
      * 기능 : 스터디 삭제
      */
+    @DeleteMapping("/v1/study/{team_seq}")
+    public ResponseEntity<CommonResponseDto> studyDelete(@PathVariable Long team_seq) {
+        return ResponseEntity
+                .status(204)
+                .body(studyService.deleteStudy(team_seq));
+    }
 
     /**
      * List를 한번 감싸서 보내기 위하여 만든 클래스

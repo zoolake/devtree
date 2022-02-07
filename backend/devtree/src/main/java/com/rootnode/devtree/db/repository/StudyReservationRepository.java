@@ -11,8 +11,8 @@ import java.util.List;
 
 public interface StudyReservationRepository extends JpaRepository<StudyReservation, StudyReservationId> {
     @Transactional
-    @Modifying
-    @Query(value = "delete from StudyReservation r where r.studyReservationID.teamSeq = :teamSeq")
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query(value = "delete from StudyReservation r where r.team.teamSeq = :teamSeq")
     void deleteByTeamSeq(Long teamSeq);
 
     @Query(value = "select s from StudyReservation s where s.team.teamSeq = :teamSeq")

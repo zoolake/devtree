@@ -46,6 +46,7 @@ public class StudyService {
                     .tech(techRepository.findById(tech).get())
                     .build());
         });
+
         return team;
     }
 
@@ -174,4 +175,13 @@ public class StudyService {
         return new CommonResponseDto(201, "스터디 정보 수정에 성공하였습니다.");
     }
 
+    // 스터디 삭제
+    public CommonResponseDto deleteStudy(Long teamSeq) {
+        teamTechRepository.deleteByTeamSeq(teamSeq);
+        studyReservationRepository.deleteByTeamSeq(teamSeq);
+        studyUserRepository.deleteByTeamSeq(teamSeq);
+
+        teamRepository.deleteById(teamSeq);
+        return new CommonResponseDto(204, "스터디 삭제에 성공하였습니다.");
+    }
 }

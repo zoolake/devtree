@@ -6,6 +6,7 @@ import com.rootnode.devtree.api.request.StudyRespondRequestDto;
 import com.rootnode.devtree.api.request.StudyUpdateRequestDto;
 import com.rootnode.devtree.api.response.CommonResponseDto;
 import com.rootnode.devtree.api.response.StudyDetailResponseDto;
+import com.rootnode.devtree.api.response.StudyJoinListResponseDto;
 import com.rootnode.devtree.api.response.StudyListResponseDto;
 import com.rootnode.devtree.db.entity.*;
 import com.rootnode.devtree.db.entity.compositeKey.StudyReservationId;
@@ -118,6 +119,12 @@ public class StudyService {
     }
 
     // 스터디 신청 조회
+    public List<StudyJoinListResponseDto> findStudyJoinList(Long teamSeq) {
+        List<StudyReservation> joinList = studyReservationRepository.findByTeamSeq(teamSeq);
+        return joinList.stream()
+                .map(entity -> new StudyJoinListResponseDto(entity))
+                .collect(Collectors.toList());
+    }
 
     // 스터디 상태 변경 == 프로젝트 상태 변경 == 팀 상태 변경
 

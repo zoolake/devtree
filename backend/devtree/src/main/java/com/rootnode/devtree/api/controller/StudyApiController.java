@@ -4,14 +4,12 @@ import com.rootnode.devtree.api.request.StudyCreateRequestDto;
 import com.rootnode.devtree.api.request.StudyJoinRequestDto;
 import com.rootnode.devtree.api.request.StudyRespondRequestDto;
 import com.rootnode.devtree.api.request.StudyUpdateRequestDto;
-import com.rootnode.devtree.api.response.CommonResponseDto;
-import com.rootnode.devtree.api.response.StudyCreateResponseDto;
-import com.rootnode.devtree.api.response.StudyDetailResponseDto;
-import com.rootnode.devtree.api.response.StudyListResponseDto;
+import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.api.service.StudyService;
 import com.rootnode.devtree.db.entity.TeamType;
 import com.rootnode.devtree.db.entity.User;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -42,9 +40,12 @@ public class StudyApiController {
         List<StudyListResponseDto> responseDto = studyService.findStudy(TeamType.STUDY);
         return ResponseEntity
                 .status(200)
-                .body(new Result(responseDto));
+                .body(Result.builder()
+                        .data(responseDto)
+                        .status(200)
+                        .message("스터디 목록 조회에 성공하였습니다.")
+                        .build());
     }
-
 
     /**
      * 기능 : 스터디 상세 조회
@@ -54,7 +55,11 @@ public class StudyApiController {
         StudyDetailResponseDto responseDto = studyService.findStudyDetail(team_seq);
         return ResponseEntity
                 .status(200)
-                .body(new Result(responseDto));
+                .body(Result.builder()
+                        .data(responseDto)
+                        .status(200)
+                        .message("스터디 정보 조회에 성공하였습니다.")
+                        .build());
     }
 
     /**
@@ -66,6 +71,21 @@ public class StudyApiController {
         return ResponseEntity
                 .status(200)
                 .body(studyService.joinStudy(team_seq, requestDto));
+    }
+
+    /**
+     * 기능 : 스터디 신청 조회
+     */
+    @GetMapping("/v1/study/join/{team_seq}")
+    public ResponseEntity<Result> studyJoinList(@PathVariable Long team_seq) {
+        List<StudyJoinListResponseDto> responseDto = studyService.findStudyJoinList(team_seq);
+        return ResponseEntity
+                .status(200)
+                .body(Result.builder()
+                        .data(responseDto)
+                        .status(200)
+                        .message("스터디 신청 내역 조회에 성공하였습니다.")
+                        .build());
     }
 
     /**
@@ -81,7 +101,7 @@ public class StudyApiController {
     }
 
     /**
-     * 기능 : 스터디 신청 조회
+     * 기능 : 본인이 한 스터디 내역 조회 ==> 유저 컨트롤러에서 할 것
      */
 
 
@@ -105,7 +125,10 @@ public class StudyApiController {
      */
     @Data
     @AllArgsConstructor
+    @Builder
     static class Result<T> {
         private T data;
+        private int status;
+        private String message;
     }
 }

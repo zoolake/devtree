@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  */
 @Getter
 @NoArgsConstructor
-public class ProjectDetailResponseDto extends CommonResponseDto{
+public class ProjectDetailResponseDto {
     private Long teamSeq;
     private Long teamManagerSeq;
     private String teamName;
@@ -39,8 +39,5 @@ public class ProjectDetailResponseDto extends CommonResponseDto{
         this.teamPosition = projectPositions.stream()
                 .map(projectPosition -> new ProjectPositionInfoDto(projectPosition))
                 .collect(Collectors.toList());
-
-        this.status = 200;
-        this.message = "프로젝트 정보 조회에 성공하였습니다.";
     }
 }

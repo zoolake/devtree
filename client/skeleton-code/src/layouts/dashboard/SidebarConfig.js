@@ -42,11 +42,6 @@ const sidebarConfig = [
     icon: getIcon(fileTextFill)
   },
   {
-    title: 'profile',
-    path: '/login',
-    icon: getIcon(lockFill)
-  },
-  {
     title: 'user',
     path: '/MainPage/user',
     icon: getIcon(peopleFill)

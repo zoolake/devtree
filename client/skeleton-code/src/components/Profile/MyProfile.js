@@ -17,9 +17,6 @@ import { LoadingButton } from '@mui/lab';
 // utils
 import { fDateTime } from '../../utils/formatTime';
 import { detailUser } from '../../_actions/user_actions';
-
-// ---------------------------------------------------------------------
-
 // ----------------------------------------------------------------------
 
 export default function MyProfile() {

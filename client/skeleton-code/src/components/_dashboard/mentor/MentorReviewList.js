@@ -78,7 +78,6 @@ export default function MentorStack() {
   return (
     <Box sx={{ p: 3 }}>
       <CardHeader title="멘토링 리뷰" />
-      <div></div>
     </Box>
   );
 }

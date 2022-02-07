@@ -175,7 +175,20 @@ public class StudyService {
         return new CommonResponseDto(201, "스터디 정보 수정에 성공하였습니다.");
     }
 
+    // 팀 관리자 변경
+    @Transactional
+    public CommonResponseDto changeTeamManager(Long teamSeq, Long userSeq) {
+        Team team = teamRepository.findById(teamSeq).get();
+        if(team.getTeamManagerSeq() != userSeq) {
+            team.changeTeamManager(userSeq);
+        } else {
+            return new CommonResponseDto(201, "스터디 관리자를 변경할 수 없습니다.");
+        }
+        return new CommonResponseDto(201, "스터디 관리자를 변경하였습니다.");
+    }
+
     // 스터디 삭제
+    @Transactional
     public CommonResponseDto deleteStudy(Long teamSeq) {
         teamTechRepository.deleteByTeamSeq(teamSeq);
         studyReservationRepository.deleteByTeamSeq(teamSeq);

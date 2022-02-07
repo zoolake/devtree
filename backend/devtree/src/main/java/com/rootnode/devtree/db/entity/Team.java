@@ -83,10 +83,6 @@ public class Team extends BaseTimeEntity {
     /**
      * 프로젝트 정보를 수정하기 위한 메소드들 (setter 대신 사용)
      */
-    public void changeTeamManger(Long teamManagerSeq) {
-        this.teamManagerSeq = teamManagerSeq;
-    }
-
     public void changeTeamState(TeamState teamState) {
         this.teamState = teamState;
 
@@ -101,13 +97,8 @@ public class Team extends BaseTimeEntity {
         }
     }
 
-    public void changeTeamName(String teamName) {
-        this.teamName = teamName;
-    }
-    public void changeTeamDesc(String teamDesc) {
-        this.teamDesc = teamDesc;
-    }
-    public void changeTeamRecruitCnt(int teamRecruitCnt) {
-        this.teamRecruitCnt = teamRecruitCnt;
-    }
+    public void changeTeamManager(Long teamManagerSeq) { this.teamManagerSeq = teamManagerSeq; }
+    public void changeTeamName(String teamName) { this.teamName = teamName; }
+    public void changeTeamDesc(String teamDesc) { this.teamDesc = teamDesc; }
+    public void changeTeamRecruitCnt(int teamRecruitCnt) { this.teamRecruitCnt = teamRecruitCnt; }
 }

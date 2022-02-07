@@ -1,9 +1,6 @@
 package com.rootnode.devtree.api.controller;
 
-import com.rootnode.devtree.api.request.StudyCreateRequestDto;
-import com.rootnode.devtree.api.request.StudyJoinRequestDto;
-import com.rootnode.devtree.api.request.StudyRespondRequestDto;
-import com.rootnode.devtree.api.request.StudyUpdateRequestDto;
+import com.rootnode.devtree.api.request.*;
 import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.api.service.StudyService;
 import com.rootnode.devtree.db.entity.TeamType;
@@ -101,9 +98,14 @@ public class StudyApiController {
     }
 
     /**
-     * 기능 : 본인이 한 스터디 내역 조회 ==> 유저 컨트롤러에서 할 것
+     * 기능 : 팀 관리자 변경
      */
-
+    @PutMapping("/v1/team/change/manager")
+    public ResponseEntity<CommonResponseDto> teamManagerChange(@RequestBody ChangeTeamManagerRequestDto requestDto) {
+        return ResponseEntity
+                .status(201)
+                .body(studyService.changeTeamManager(requestDto.getTeamSeq(), requestDto.getUserSeq()));
+    }
 
     /**
      * 기능 : 스터디 정보 수정

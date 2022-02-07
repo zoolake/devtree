@@ -40,19 +40,16 @@ export default function ProjectCreationForm(props) {
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
         const dataToSubmit = {
-          team_seq: null,
-          team_create_time: null,
-          team_update_time: null,
           team_desc: values.team_desc,
-          team_end_time: null,
-          team_favorite_cnt: null,
-          team_manager_seq: '1', // 생성자의 seq
-          team_member_cnt: null,
+          team_end_time: '2010-10-10 10:10:10',
+          team_favorite_cnt: 0, // 즐겨찾기 수
+          team_manager_seq: 1, // 생성자의 seq
+          team_member_cnt: 1,
           team_name: values.team_name,
-          team_recruit_cnt: null,
-          team_start_time: null,
-          team_state: '모집 중',
-          team_type: 'project'
+          team_recruit_cnt: 10,
+          team_start_time: '2010-10-10 10:10:10',
+          team_state: 'RECRUIT', // RECRUIT, COMPLETED, FINISH
+          team_type: 'PROJECT' // STUDY, PROJECT
           // team_tech: values.team_tech,
           // team_position: values.team_position
           // team_position: '1'

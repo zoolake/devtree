@@ -51,7 +51,7 @@ export default function Router() {
         { path: ':id', element: <ProjectDetail /> },
         { path: 'create', element: <ProjectCreate /> },
         { path: ':id/update', element: <ProjectUpdate /> },
-        { path: ':id/delete', element: <ProjectDelete /> }
+        { path: ':id/delete', element: <ProjectDelete /> },
         { path: 'mentor', element: <Navigate to="/mentor" /> }
         // { path: 'mentor/:id', element: <MentorDetail /> },
         // { path: 'mentor', element: <MentorPage /> }

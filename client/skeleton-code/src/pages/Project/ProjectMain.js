@@ -13,9 +13,9 @@ import {
 // components
 import Page from '../../components/Page';
 import {
-  ProjectListCard,
   ProjectsPostsSort,
-  ProjectSearch
+  ProjectSearch,
+  ProjectList
 } from '../../components/_dashboard/projects';
 //
 import PROJECTS from '../../_mocks_/project';
@@ -41,13 +41,12 @@ export default function ProjectMain() {
     await axios
       .get(url)
       .then((response) => {
-        console.log(response, '성공');
         const pList = response.data;
         setProjectList(pList);
-        console.log(projectList);
+        console.log(projectList, '프로젝트 리스트 조회 성공');
       })
       .catch((error) => {
-        console.log(error, '실패');
+        console.log(error, '프로젝트 조회 실패');
       });
   };
   useEffect(() => {
@@ -77,9 +76,7 @@ export default function ProjectMain() {
         </Stack>
 
         <Container>
-          {PROJECTS.map((project, index) => (
-            <ProjectListCard key={project.id} project={project} index={index} />
-          ))}
+          <ProjectList />
         </Container>
       </Container>
     </Page>

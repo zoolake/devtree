@@ -8,12 +8,12 @@ import { Provider } from 'react-redux';
 import promiseMiddleware from 'redux-promise';
 import ReduxThunk from 'redux-thunk';
 import Reducer from './_reducers';
-
+import setAuthorizationToken from './utils/setAuthorizationToken';
 //
 import App from './App';
 // ----------------------------------------------------------------------
 const createStoreWithMiddleware = applyMiddleware(promiseMiddleware, ReduxThunk)(createStore);
-
+setAuthorizationToken(localStorage.user);
 ReactDOM.render(
   <HelmetProvider>
     <Provider

@@ -22,6 +22,7 @@
     }
   },
   "rules": {
+    "camelcase": [1, { "properties": "never" }],
     "import": 0,
     "max-len": 0,
     "no-alert": 0,

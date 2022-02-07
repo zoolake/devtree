@@ -3,18 +3,25 @@ import { useRef, useState } from 'react';
 import homeFill from '@iconify/icons-eva/home-fill';
 import personFill from '@iconify/icons-eva/person-fill';
 import settings2Fill from '@iconify/icons-eva/settings-2-fill';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 // material
 import { alpha } from '@mui/material/styles';
-import { Button, Box, Divider, MenuItem, Typography, Avatar, IconButton } from '@mui/material';
+import {
+  Button,
+  Box,
+  Link,
+  Divider,
+  MenuItem,
+  Typography,
+  Avatar,
+  IconButton,
+  Stack
+} from '@mui/material';
 // components
 import MenuPopover from '../../components/MenuPopover';
-//
 import account from '../../_mocks_/account';
 
-// ----------------------------------------------------------------------
-
-const MENU_OPTIONS = [
+const MENU_OPTIONS_SIGNED = [
   {
     label: 'Home',
     icon: homeFill,
@@ -23,12 +30,20 @@ const MENU_OPTIONS = [
   {
     label: 'Profile',
     icon: personFill,
-    linkTo: '#'
+    linkTo: '/MainPage/profile'
+  }
+];
+
+const MENU_OPTIONS_GUEST = [
+  {
+    label: 'Home',
+    icon: homeFill,
+    linkTo: '/'
   },
   {
-    label: 'Settings',
-    icon: settings2Fill,
-    linkTo: '#'
+    label: 'SignUp',
+    icon: personFill,
+    linkTo: '/Register'
   }
 ];
 
@@ -37,6 +52,7 @@ const MENU_OPTIONS = [
 export default function AccountPopover() {
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
+  let btn;
 
   const handleOpen = () => {
     setOpen(true);
@@ -44,7 +60,32 @@ export default function AccountPopover() {
   const handleClose = () => {
     setOpen(false);
   };
-
+  const logout = () => {
+    localStorage.removeItem('user');
+    window.location.reload();
+    document.location.assign('/');
+  };
+  if (localStorage.getItem('user')) {
+    btn = (
+      <Button fullWidth color="inherit" variant="outlined" onClick={logout}>
+        Logout
+      </Button>
+    );
+  } else {
+    btn = (
+      <Button fullWidth color="inherit" variant="outlined">
+        <Link underline="none" component={RouterLink} to="/login">
+          Login
+        </Link>
+      </Button>
+    );
+  }
+  let MENU_OPTIONS;
+  if (localStorage.getItem('user')) {
+    MENU_OPTIONS = MENU_OPTIONS_SIGNED;
+  } else {
+    MENU_OPTIONS = MENU_OPTIONS_GUEST;
+  }
   return (
     <>
       <IconButton
@@ -78,7 +119,7 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle1" noWrap>
-            {account.displayName}
+            Menu
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
             {account.email}
@@ -109,11 +150,7 @@ export default function AccountPopover() {
           </MenuItem>
         ))}
 
-        <Box sx={{ p: 2, pt: 1.5 }}>
-          <Button fullWidth color="inherit" variant="outlined">
-            Logout
-          </Button>
-        </Box>
+        <Box sx={{ p: 2, pt: 1.5 }}>{btn}</Box>
       </MenuPopover>
     </>
   );

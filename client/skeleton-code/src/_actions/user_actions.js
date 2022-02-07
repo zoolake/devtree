@@ -5,10 +5,71 @@ import {
   AUTH_USER,
   LOGOUT_USER,
   IDCHECK_USER,
-  DETAIL_USER
+  DETAIL_USER,
+  PASSWORD_UPDATE,
+  DELETE_USER,
+  UPDATE_USER
 } from './types';
 import { USER_SERVER } from '../components/config';
-// import authHeader from "./auth-header"
+import setAuthorizationToken from '../utils/setAuthorizationToken';
+
+export function getStudy() {
+  const request = axios
+    .get(`https://61f649b22e1d7e0017fd6d42.mockapi.io/project`)
+    .then((response) => response.data);
+
+  return { type: UPDATE_USER, payload: request };
+}
+export function getProject() {
+  const request = axios
+    .get(`https://61f649b22e1d7e0017fd6d42.mockapi.io/project`)
+    .then((response) => response.data);
+
+  return { type: UPDATE_USER, payload: request };
+}
+export function getTech() {
+  const request = axios
+    .put(`https://61f649b22e1d7e0017fd6d42.mockapi.io/tech`)
+    .then((response) => response.data);
+
+  return {
+    type: UPDATE_USER,
+    payload: request
+  };
+}
+
+export function updateUser(dataToSubmit) {
+  const request = axios
+    .put(`${USER_SERVER}/password/1`, dataToSubmit)
+    .then((response) => response.data);
+
+  return {
+    type: UPDATE_USER,
+    payload: request
+  };
+}
+
+export function deleteUser(dataToSubmit) {
+  const request = axios
+    .delete(`${USER_SERVER}/password/1`, dataToSubmit)
+    .then((response) => response.data);
+
+  return {
+    type: DELETE_USER,
+    payload: request
+  };
+}
+
+export function passwordUpdate(dataToSubmit) {
+  const request = axios
+    .put(`${USER_SERVER}/password/1`, dataToSubmit)
+    .then((response) => response.data);
+
+  return {
+    type: PASSWORD_UPDATE,
+    payload: request
+  };
+}
 
 export function registerUser(dataToSubmit) {
   const request = axios
@@ -21,9 +82,9 @@ export function registerUser(dataToSubmit) {
   };
 }
 
-export function detailUser(dataToSubmit) {
+export function detailUser() {
   const request = axios
-    .post(`${USER_SERVER}/user/`, dataToSubmit)
+    .get(`http://localhost:8080/api/v1/users/me`)
     .then((response) => response.data);
 
   return {
@@ -44,11 +105,15 @@ export function idcheckUser(dataToSubmit) {
 }
 
 export function loginUser(dataToSubmit) {
-  const request = axios.post(`${USER_SERVER}/login`, dataToSubmit).then((response) => {
-    if (response.data.accessToken) {
-      localStorage.setItem('user', JSON.stringify(response.data));
-    }
-  });
+  const request = axios
+    .post(`http://localhost:8080/v1/user/login`, dataToSubmit)
+    .then((response) => {
+      if (response.data.accessToken) {
+        const token = response.data.accessToken;
+        localStorage.setItem('user', token);
+        setAuthorizationToken(token);
+      }
+    });
   return {
     type: LOGIN_USER,
     payload: request

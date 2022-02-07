@@ -8,7 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Data
 @NoArgsConstructor @AllArgsConstructor
@@ -19,7 +18,7 @@ public class MentorScheduleId implements Serializable {
     private int mentorDay;      // 원래 Long으로 되어있었음
 
     @Column(name ="mentor_time" )
-    private LocalTime mentorTime;   // 원래 LocalDateTime으로 되어있었음
+    private LocalDateTime mentorTime;   // 원래 LocalDateTime으로 되어있었음
 
     @Column(name = "mentor_seq")
     private Long mentorSeq;

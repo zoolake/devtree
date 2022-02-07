@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -47,7 +49,8 @@ public class MentorApiController {
      * 기능: 멘토 가능 스케줄 설정
      */
     @PutMapping("/v1/mentor/{mentorSeq}/available")
-    public CommonResponseDto mentorSchedule(@PathVariable Long mentorSeq, @RequestBody MentorScheduleRequestDto requestDto) {
+    public CommonResponseDto mentorSchedule(@PathVariable Long mentorSeq,
+                                            @RequestBody List<MentorScheduleRequestDto> requestDto) {
         return mentorService.changeSchedule(mentorSeq, requestDto);
     }
 

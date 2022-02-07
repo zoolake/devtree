@@ -1,5 +1,6 @@
 package com.rootnode.devtree.api.service;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.rootnode.devtree.api.request.MentorScheduleRequestDto;
 import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.db.entity.*;
@@ -94,9 +95,11 @@ public class MentorService {
                 .build();
     }
 
-    public CommonResponseDto changeSchedule(Long mentorSeq, MentorScheduleRequestDto requestDto) {
+    public CommonResponseDto changeSchedule(Long mentorSeq, List<MentorScheduleRequestDto> requestDto) {
         Mentor mentor = mentorRepository.findById(mentorSeq).get();
-        MentorSchedule mentorSchedule = mentorScheduleRepository.save(new MentorSchedule(new MentorScheduleId(requestDto.getMentorDay(), requestDto.getMentorTime(), mentorSeq), mentor));
+        requestDto.forEach(dto -> {
+            mentorScheduleRepository.saveAll(dto.toEntity(mentor));
+        });
         return new CommonResponseDto(201, "스케줄 설정에 성공하였습니다.");
     }
 }

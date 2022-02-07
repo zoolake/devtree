@@ -47,6 +47,16 @@ public class StudyService {
                     .build());
         });
 
+        // 스터디 생성하면 스터디 유저 테이블에 생성한 사람 추가, 팀 현재원 1 증가
+        Long userSeq = team.getTeamManagerSeq();
+        Long teamSeq = team.getTeamSeq();
+        StudyUserId studyUserId = new StudyUserId(userSeq, teamSeq);
+        User user = userRepository.findById(userSeq).get();
+        // 1. Study_User_Repository에 현재 사용자 insert
+        studyUserRepository.save(new StudyUser(studyUserId, user, team));
+        // 2. 해당 팀 현재원 1 증가
+        teamRepository.findById(teamSeq).get().addTeamMember();
+
         return team;
     }
 

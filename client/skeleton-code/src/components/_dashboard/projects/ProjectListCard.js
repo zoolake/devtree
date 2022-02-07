@@ -20,7 +20,7 @@ ProjectListCard.propTypes = {
 };
 
 export default function ProjectListCard({ project, index }) {
-  console.log(project);
+  // console.log(project);
   return (
     <div>
       <TitleStyle

@@ -35,10 +35,9 @@ export default function ProjectMain() {
   const [projectList, setProjectList] = useState([]);
   const getProjectList = async () => {
     // 임시 목업 받아오기
-    const pList = await setProjectList(PROJECTS);
+    // const pList = await setProjectList(PROJECTS);
     // api 받아오기
-    /*
-    const url = 'http://localhost:3000/api/v1/project';
+    const url = '/project';
     await axios
       .get(url)
       .then((response) => {
@@ -48,9 +47,8 @@ export default function ProjectMain() {
         console.log(projectList);
       })
       .catch((error) => {
-        console.log('실패');
+        console.log(error, '실패');
       });
-    */
   };
   useEffect(() => {
     getProjectList();

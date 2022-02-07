@@ -1,22 +1,6 @@
 import axios from 'axios';
-/*
-export default function ProjectListCard() {
-  const createProject = async () => {
-    // api 받아오기
-    const url = 'http://localhost:3000/api/v1/project';
-    await axios
-      .post(url)
-      .then((response) => {
-        console.log(response, '성공');
-      })
-      .catch((error) => {
-        console.log('실패');
-      });
-  };
-*/
-
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // import { Icon } from '@iconify/react';
 import { useFormik, Form, FormikProvider } from 'formik';
 // import eyeFill from '@iconify/icons-eva/eye-fill';
@@ -56,48 +40,107 @@ export default function ProjectCreationForm(props) {
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
         const dataToSubmit = {
-          team_type: 'project',
-          team_name: values.team_name,
-          team_state: '모집 중',
-          team_manager_seq: '', // 생성자의 seq
+          team_seq: null,
+          team_create_time: null,
+          team_update_time: null,
           team_desc: values.team_desc,
-          team_tech: values.team_tech,
-          team_position: values.team_position
+          team_end_time: null,
+          team_favorite_cnt: null,
+          team_manager_seq: '1', // 생성자의 seq
+          team_member_cnt: null,
+          team_name: values.team_name,
+          team_recruit_cnt: null,
+          team_start_time: null,
+          team_state: '모집 중',
+          team_type: 'project'
+          // team_tech: values.team_tech,
+          // team_position: values.team_position
+          // team_position: '1'
         };
 
         // post
         const createProject = async () => {
-          // api 받아오기
-          const url = 'http://localhost:3000/api/v1/project';
+          const createUrl = '/project';
           await axios
-            .post(url, {
+            .post(createUrl, {
               dataToSubmit
             })
             .then((response) => {
-              console.log(response, '성공');
+              console.log(response, '프로젝트 생성 성공');
             })
             .catch((error) => {
-              console.log(error, '실패');
+              console.log(error, '프로젝트 생성 실패');
+              console.log(dataToSubmit);
             });
         };
         // dispatch(registerUser(dataToSubmit)).then((response) => {});
+        createProject();
 
         setSubmitting(false);
       }, 500);
     }
   });
 
-  // 기술테크 리스트, 포지션 리스트 불러와야 함
+  // 기술테크 리스트 불러오기
+  const [allTechList, setAllTech] = useState([]);
+  const getTechs = async () => {
+    const techUrl = '/tech';
+    await axios
+      .get(techUrl)
+      .then((response) => {
+        console.log(response, '테크 불러오기 성공');
+        setAllTech(response.data.data);
+        // console.log(allTechList);
+      })
+      .catch((error) => {
+        console.log(error, '테크 불러오기 실패');
+      });
+  };
+  // 포지션 리스트 불러오기
+  const [allPositionList, setAllPosition] = useState([]);
+  const getPositions = async () => {
+    const positionUrl = '/position';
+    await axios
+      .get(positionUrl)
+      .then((response) => {
+        console.log(response, '포지션 불러오기 성공');
+        setAllPosition(response.data.data);
+        console.log(allPositionList);
+      })
+      .catch((error) => {
+        console.log(error, '포지션 불러오기 실패');
+      });
+  };
+  // 초기 렌더링
+  useEffect(() => {
+    getTechs();
+    getPositions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
+  // 사용자가 추가하기
   const [techList, setTech] = useState([]);
   const [positionList, setPosition] = useState([]);
   const [positionCnt, setPositionCnt] = useState('');
+
   const addTech = (newTech) => {
-    setTech([...techList, newTech]);
+    if (techList.includes(newTech)) {
+      console.log('이미 있음');
+    } else {
+      setTech([...techList, newTech]);
+      console.log(techList, '추가됨');
+    }
   };
+
   const addPosition = (newPosition) => {
-    setPosition([...positionList, newPosition]);
+    if (positionList.includes(newPosition)) {
+      console.log('이미 있음');
+    } else {
+      setPosition([...positionList, newPosition]);
+      console.log(positionList, '추가됨');
+    }
   };
+
   // MemberCntList는 포지션별 멤버 수
   const MemberCntList = [...Array(10).keys()].map((key) => key + 1);
 
@@ -136,9 +179,9 @@ export default function ProjectCreationForm(props) {
             error={Boolean(touched.team_tech && errors.team_tech)}
             helperText={touched.team_tech && errors.team_tech}
           >
-            {techList.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
+            {allTechList.map((option) => (
+              <MenuItem key={option.techSeq} value={option.techName}>
+                {option.techName}
               </MenuItem>
             ))}
           </TextField>
@@ -146,7 +189,7 @@ export default function ProjectCreationForm(props) {
           {/* techList 아이콘 */}
           <div>
             {techList.map((tech, idx) => (
-              <div key={idx}>{tech.tech.tech_image}</div>
+              <div key={idx}>{tech.techSeq}</div>
             ))}
           </div>
 
@@ -212,6 +255,7 @@ export default function ProjectCreationForm(props) {
             type="submit"
             variant="contained"
             loading={isSubmitting}
+            onChange={formik.onSubmit}
           >
             생성
           </LoadingButton>

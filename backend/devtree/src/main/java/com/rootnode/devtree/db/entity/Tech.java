@@ -27,4 +27,3 @@ public class Tech {
     private String techImage;
 }
 
-

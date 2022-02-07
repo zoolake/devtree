@@ -28,4 +28,5 @@ public class UserTech {
     @MapsId("techSeq")
     @JoinColumn(name = "tech_seq")
     private Tech tech;
+
 }

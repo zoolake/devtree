@@ -14,7 +14,7 @@ public interface ProjectPositionRepository extends JpaRepository<ProjectPosition
     List<ProjectPosition> findByTeamSeq(Long team_seq);
 
     @Transactional
-    @Modifying
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(value = "delete from ProjectPosition p where p.projectPositionID.teamSeq = :teamSeq")
     void deleteByTeamSeq(Long teamSeq);
 }

@@ -128,6 +128,15 @@ public class ProjectApiController {
                         .build());
     }
 
+    /**
+     * 기능: 프로젝트 삭제
+     */
+    @DeleteMapping("/v1/project/{teamSeq}")
+    public CommonResponseDto projectDelete(@PathVariable Long teamSeq) {
+        projectService.deleteProject(teamSeq);
+        return new CommonResponseDto(204, "프로젝트 삭제에 성공하였습니다.");
+    }
+
 
     /**
      * List를 한번 감싸서 보내기 위하여 만든 클래스

@@ -28,7 +28,10 @@ public class Mentoring extends BaseTimeEntity{
     @JoinColumn(name = "mentor_seq")
     private Mentor mentor;
 
-    private LocalDateTime mentoring_start_time;
-    private LocalDateTime mentoring_create_time;    // auditing 고려
-    private MentoringState mentoring_state;
+    @Column(name = "mentoring_start_time")
+    private LocalDateTime mentoringStartTime;
+    @Column(name = "mentoring_create_time")
+    private LocalDateTime mentoringCreateTime;
+    @Column(name = "mentoring_state")
+    private MentoringState mentoringState;
 }

@@ -211,6 +211,9 @@ public class ProjectService {
                 .collect(Collectors.toList());
     }
 
+    public void deleteProject(Long teamSeq) {
+        teamRepository.deleteById(teamSeq);
+    }
 
     /**
      * List<포지션 이름, 정원> , 팀을 넘기면 저장해주는 메소드
@@ -220,5 +223,6 @@ public class ProjectService {
             projectPositionRepository.save(positionMember.toProjectPositionEntity(team));
         });
     }
+
 
 }

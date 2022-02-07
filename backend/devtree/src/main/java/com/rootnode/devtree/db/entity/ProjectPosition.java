@@ -33,6 +33,12 @@ public class ProjectPosition {
     @Column(name = "position_member_cnt")
     private int positionMemberCnt;
 
+    @OneToMany(mappedBy = "projectPosition", cascade = CascadeType.REMOVE)
+    private List<ProjectPositionReservation> projectPositionReservationList;
+
+    @OneToMany(mappedBy = "projectPosition", cascade = CascadeType.REMOVE)
+    private List<ProjectPositionUser> projectPositionUserList;
+
     /**
      * 비즈니스 로직은 도메인에 작성해야 한다.
      * 노션 / 백엔드 / 스프링 부트와 AWS로 혼자 구현하는... 참고하시면 됩니다.

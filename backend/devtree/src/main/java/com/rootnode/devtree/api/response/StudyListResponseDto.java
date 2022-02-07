@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class StudyListResponseDto extends CommonResponseDto {
+public class StudyListResponseDto {
     private Long teamSeq;
     private Long teamManagerSeq;
     private String teamName;
@@ -27,9 +27,5 @@ public class StudyListResponseDto extends CommonResponseDto {
         this.teamRecruitCnt = team.getTeamRecruitCnt();
         this.teamMemberCnt = team.getTeamMemberCnt();
         this.teamTech = team.toTechInfoDto();
-
-        this.status = 200;
-        this.message = "스터디 목록 조회에 성공하였습니다.";
     }
-
 }

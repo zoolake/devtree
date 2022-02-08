@@ -71,7 +71,9 @@ public class ProjectService {
         return teamList.stream()
                 .map(team -> {
                     String managerName = userRepository.findById(team.getTeamManagerSeq()).get().getUserName();
-                    return new ProjectListResponseDto(team, managerName);
+                    // 2. team_seq를 활용하여 포지션 현황 조회
+                    List<ProjectPosition> projectPositions = projectPositionRepository.findByTeamSeq(team.getTeamSeq());
+                    return new ProjectListResponseDto(team, managerName, projectPositions);
                 })
                 .collect(Collectors.toList());
     }

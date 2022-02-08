@@ -10,7 +10,7 @@ export default function StudyList() {
   const [studyList, setStudyList] = useState([]);
   const [loading, setLoading] = useState(false);
   const getStudyList = async () => {
-    const studyListUrl = '/study'; // http://127.26.1.146:8080/v1/study
+    const studyListUrl = '/v1/study';
     setLoading(true);
     await axios
       .get(studyListUrl)

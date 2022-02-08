@@ -44,9 +44,9 @@ export default function StudyUpdateForm(project) {
         };
 
         // post
-        const createProject = async () => {
+        const updateStudy = async () => {
           // api 받아오기
-          const url = 'http://localhost:3000/api/v1/project';
+          const url = '/v1/project';
           await axios
             .post(url, {
               dataToSubmit
@@ -65,19 +65,11 @@ export default function StudyUpdateForm(project) {
     }
   });
 
-  // 기술테크 리스트, 포지션 리스트 불러와야 함
-
+  // 기술테크 리스트 불러오기
   const [techList, setTech] = useState([]);
-  const [positionList, setPosition] = useState([]);
-  const [positionCnt, setPositionCnt] = useState('');
   const addTech = (newTech) => {
     setTech([...techList, newTech]);
   };
-  const addPosition = (newPosition) => {
-    setPosition([...positionList, newPosition]);
-  };
-  // MemberCntList는 포지션별 멤버 수
-  const MemberCntList = [...Array(10).keys()].map((key) => key + 1);
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
@@ -125,70 +117,6 @@ export default function StudyUpdateForm(project) {
           <div>
             {techList.map((tech, idx) => (
               <div key={idx}>{tech.tech.tech_image}</div>
-            ))}
-          </div>
-
-          <TextField
-            // fullWidth
-            select
-            // autoComplete="techs"
-            // type="email"
-            label="team_position"
-            onChange={addPosition}
-            {...getFieldProps('team_position')}
-            error={Boolean(touched.team_position && errors.team_position)}
-            helperText={touched.team_position && errors.team_position}
-          >
-            {positionList.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-
-          {/* added poistions */}
-          <div>
-            {positionList.map((position, idx) => (
-              <div key={idx}>
-                {position}
-                {position.position_recruit_cnt}
-                {position.position_member_cnt}
-                <TextField
-                  // fullWidth
-                  select
-                  // autoComplete="techs"
-                  // type="email"
-                  label="team_position_recruit_cnt"
-                  onChange={setPositionCnt}
-                  {...getFieldProps('team_position_recruit_cnt')}
-                  error={Boolean(
-                    touched.team_position_recruit_cnt && errors.team_position_recruit_cnt
-                  )}
-                  helperText={touched.team_position_recruit_cnt && errors.team_position_recruit_cnt}
-                >
-                  {MemberCntList.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <LoadingButton
-                  size="small"
-                  type="submit"
-                  variant="contained"
-                  loading={isSubmitting}
-                >
-                  추가
-                </LoadingButton>
-                <LoadingButton
-                  size="small"
-                  type="delete"
-                  variant="contained"
-                  loading={isSubmitting}
-                >
-                  x
-                </LoadingButton>
-              </div>
             ))}
           </div>
 

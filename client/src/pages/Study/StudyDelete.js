@@ -6,7 +6,7 @@ export default function StudyDelete() {
   const teamSeq = useParams();
   console.log(teamSeq.id);
   const studyDelete = async () => {
-    const url = `/study/${teamSeq.id}`; // http://127.26.1.146:8080/v1/study/${teamSeq.id}
+    const url = `/v1/study/${teamSeq.id}`;
     await axios
       .delete(url)
       .then((response) => {

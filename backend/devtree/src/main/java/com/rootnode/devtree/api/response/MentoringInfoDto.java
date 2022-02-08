@@ -4,15 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class MentoringInfoDto {
-    private String techName;
-    private String techImage;
-    private int mentoringCount;
-
-    public void addMentoringCount() {
-        this.mentoringCount += 1;
-    }
+    private String teamName;
+    private List<String> techNameList;
+    private LocalDateTime mentoringStartTime;
 }

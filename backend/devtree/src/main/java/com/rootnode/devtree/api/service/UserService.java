@@ -2,9 +2,7 @@ package com.rootnode.devtree.api.service;
 
 import com.rootnode.devtree.api.request.UserRegisterPostReq;
 import com.rootnode.devtree.api.request.UserUpdateRequestDto;
-import com.rootnode.devtree.api.response.UserDetailResponseDto;
-import com.rootnode.devtree.api.response.UserActivitiesCntResponseDto;
-import com.rootnode.devtree.api.response.UserStudyActivitiesListResponseDto;
+import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.db.entity.TeamState;
 import com.rootnode.devtree.db.entity.User;
 
@@ -21,7 +19,11 @@ public interface UserService {
 	public void updateUser(Long userSeq, UserUpdateRequestDto userUpdateRequestDto);
 	public UserDetailResponseDto getUserDetailByUserId(String userId);
 
-	List<UserActivitiesCntResponseDto> findStudyCount(Long userSeq);
+	List<UserActivitiesTechCntResponseDto> findStudyCount(Long userSeq);
 	List<UserStudyActivitiesListResponseDto> findStudyListAll(Long userSeq);
 	List<UserStudyActivitiesListResponseDto> findStudyListState(Long userSeq, TeamState teamState);
+
+	List<UserActivitiesPositionCntResponseDto> findProjectCount(Long userSeq);
+	List<UserProjectActivitiesListResponseDto> findProjectListAll(Long userSeq);
+	List<UserProjectActivitiesListResponseDto> findProjectListState(Long userSeq, TeamState teamState);
 }

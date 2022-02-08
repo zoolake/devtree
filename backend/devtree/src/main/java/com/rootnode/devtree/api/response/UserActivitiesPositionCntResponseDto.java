@@ -7,10 +7,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserActivitiesCntResponseDto {
-    private String techName;
-    private String techImage;
-    private int techCnt;
+public class UserActivitiesPositionCntResponseDto {
+    private String positionName;
+    private int positionCount;
 
-    public void addTechCount() { this.techCnt += 1; }
+    public void addPositionCount() { positionCount += 1; }
 }

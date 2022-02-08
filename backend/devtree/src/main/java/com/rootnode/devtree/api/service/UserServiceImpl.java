@@ -2,9 +2,7 @@ package com.rootnode.devtree.api.service;
 
 import com.rootnode.devtree.api.request.UserRegisterPostReq;
 import com.rootnode.devtree.api.request.UserUpdateRequestDto;
-import com.rootnode.devtree.api.response.UserDetailResponseDto;
-import com.rootnode.devtree.api.response.UserActivitiesCntResponseDto;
-import com.rootnode.devtree.api.response.UserStudyActivitiesListResponseDto;
+import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.db.entity.*;
 import com.rootnode.devtree.db.entity.compositeKey.UserTechId;
 import com.rootnode.devtree.db.repository.*;
@@ -30,6 +28,8 @@ public class UserServiceImpl implements UserService {
 
     private final TeamRepository teamRepository;
     private final StudyUserRepository studyUserRepository;
+    private final ProjectPositionUserRepository projectPositionUserRepository;
+    private final ProjectPositionRepository projectPositionRepository;
 //
 //    @Autowired
 //    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -164,13 +164,13 @@ public class UserServiceImpl implements UserService {
 
     // 유저의 스터디 기록 내역 (기술 당 스터디를 몇 번 했는지)
     @Override
-    public List<UserActivitiesCntResponseDto> findStudyCount(Long userSeq) {
-        // 1. study_user 테이블에서 user_seq로 속한 스터디(teamSeq) 리스트(teamList) 찾기
+    public List<UserActivitiesTechCntResponseDto> findStudyCount(Long userSeq) {
+        // 1. study_user 테이블에서 user_seq로 속한 스터디(teamSeq) 리스트 찾기
         List<Team> teamList = studyUserRepository.findTeamSeqByUserSeq(userSeq).stream()
                 .map(teamSeq -> teamRepository.findById(teamSeq).get())
                 .collect(Collectors.toList());
         // 2. 각 스터디 별 기술 스택을 확인하고
-        Map<String, UserActivitiesCntResponseDto> studyTechCntMap = new HashMap<>();
+        Map<String, UserActivitiesTechCntResponseDto> studyTechCntMap = new HashMap<>();
         teamList.forEach(team -> {
             List<TeamTech> teamTechList = team.getTeamTechList();
             teamTechList.forEach(teamTech -> {
@@ -178,21 +178,20 @@ public class UserServiceImpl implements UserService {
                 String techImage = teamTech.getTech().getTechImage();
                 // 3. 유저 스터디 기술 스택 리스트에 없으면 추가하고
                 if(studyTechCntMap.get(techName) == null) {
-                    studyTechCntMap.put(techName, new UserActivitiesCntResponseDto(techName, techImage, 1));
+                    studyTechCntMap.put(techName, new UserActivitiesTechCntResponseDto(techName, techImage, 1));
                 } else {
                 // 4. 있으면 cnt+1
                     studyTechCntMap.get(techName).addTechCount();
                 }
             });
         });
-
-        return studyTechCntMap.values().stream().sorted(Comparator.comparing(UserActivitiesCntResponseDto::getTechCnt).reversed()).collect(Collectors.toList());
+        return studyTechCntMap.values().stream().sorted(Comparator.comparing(UserActivitiesTechCntResponseDto::getTechCount).reversed()).collect(Collectors.toList());
     }
 
     // 유저의 스터디 활동 내역 (전체)
     @Override
     public List<UserStudyActivitiesListResponseDto> findStudyListAll(Long userSeq) {
-        // 1. study_user 테이블에서 user_seq로 어떤 스터디(teamSeq)에 속해있는지 찾기
+        // 1. study_user 테이블에서 user_seq로 속한 스터디(teamSeq) 리스트 찾기
         List<Long> userTeamList = studyUserRepository.findTeamSeqByUserSeq(userSeq);
         // 2. teamSeq를 가지고 teamRepository에서 team 정보 찾기
         return userTeamList.stream()
@@ -209,6 +208,53 @@ public class UserServiceImpl implements UserService {
         // 유저의 스터디 전체 활동 내역 -> 스터디 상태가 teamState인 것만
         return findStudyListAll(userSeq).stream()
                 .filter(t -> t.getTeamState().equals(teamState.name()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserActivitiesPositionCntResponseDto> findProjectCount(Long userSeq) {
+        // 1. project_postion_user 테이블에서 user_seq로 속한 프로젝트(teamSeq) 리스트 찾기
+        List<Team> teamList = projectPositionUserRepository.findTeamSeqByUserSeq(userSeq).stream()
+                .map(teamSeq -> teamRepository.findById(teamSeq).get())
+                .collect(Collectors.toList());
+        // 2. 각 스터디 별 기술 스택을 확인하고
+        Map<String, UserActivitiesPositionCntResponseDto> projectPositionCntMap = new HashMap<>();
+        teamList.forEach(team -> {
+            List<ProjectPosition> projectPositionList = team.getTeamPositionList();
+            projectPositionList.forEach(projectPosition -> {
+                String detailPositionName = projectPosition.getPosition().getDetailPositionName();
+                // 3. 유저 스터디 기술 스택 리스트에 없으면 추가하고
+                if(projectPositionCntMap.get(detailPositionName) == null) {
+                    projectPositionCntMap.put(detailPositionName, new UserActivitiesPositionCntResponseDto(detailPositionName, 1));
+                } else {
+                    // 4. 있으면 cnt+1
+                    projectPositionCntMap.get(detailPositionName).addPositionCount();
+                }
+            });
+        });
+        return projectPositionCntMap.values().stream().sorted(Comparator.comparing(UserActivitiesPositionCntResponseDto::getPositionCount).reversed()).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserProjectActivitiesListResponseDto> findProjectListAll(Long userSeq) {
+        // 1. project_position 테이블에서 user_seq로 속한 프로젝트(team) 리스트 찾기
+        List<Long> userTeamList = projectPositionUserRepository.findTeamSeqByUserSeq(userSeq);
+
+        return userTeamList.stream()
+                .map(teamSeq -> {
+                    Team team = teamRepository.findById(teamSeq).get();
+                    List<ProjectPosition> projectPosition = projectPositionRepository.findByTeamSeq(teamSeq);
+                    System.out.println("team = " + team.getTeamName());
+                    System.out.println("projectPosition.get(0) = " + projectPosition.get(0).getPosition().getDetailPositionName());
+                    return new UserProjectActivitiesListResponseDto(team, projectPosition);
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserProjectActivitiesListResponseDto> findProjectListState(Long userSeq, TeamState teamState) {
+        return findProjectListAll(userSeq).stream()
+                .filter(t -> t.getTeamState().equals((teamState.name())))
                 .collect(Collectors.toList());
     }
 }

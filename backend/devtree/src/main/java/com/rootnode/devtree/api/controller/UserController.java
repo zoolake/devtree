@@ -1,10 +1,8 @@
 package com.rootnode.devtree.api.controller;
 
 import com.rootnode.devtree.api.request.UserRegisterPostReq;
-import com.rootnode.devtree.api.response.UserActivitiesCntResponseDto;
-import com.rootnode.devtree.api.response.UserStudyActivitiesListResponseDto;
+import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.api.service.UserService;
-import com.rootnode.devtree.api.response.BaseResponseBody;
 import com.rootnode.devtree.db.entity.TeamState;
 import com.rootnode.devtree.db.entity.User;
 import lombok.*;
@@ -63,7 +61,7 @@ public class UserController {
 	 */
 	@GetMapping("/v1/user/study/{user_seq}/count")
 	public ResponseEntity<Result> userStudyCount(@PathVariable Long user_seq) {
-		List<UserActivitiesCntResponseDto> responseDto = userService.findStudyCount(user_seq);
+		List<UserActivitiesTechCntResponseDto> responseDto = userService.findStudyCount(user_seq);
 		return ResponseEntity
 				.status(200)
 				.body(Result.builder()
@@ -101,6 +99,52 @@ public class UserController {
 						.data(responseDto)
 						.status(200)
 						.message("참여한 스터디 상태 내역 조회 성공")
+						.build());
+	}
+
+	/**
+	 *  기능 : 유저의 프로젝트 기록 내역 (포지션 당 프로젝트를 몇 번 했는지)
+	 */
+	@GetMapping("/v1/user/project/{user_seq}/count")
+	public ResponseEntity<Result> userProjectCount(@PathVariable Long user_seq) {
+		List<UserActivitiesPositionCntResponseDto> responseDto = userService.findProjectCount(user_seq);
+		return ResponseEntity
+				.status(200)
+				.body(Result.builder()
+						.data(responseDto)
+						.status(200)
+						.message("참여한 프로젝트 포지션 카운트 조회 성공")
+						.build());
+	}
+
+	/**
+	 *  기능 : 유저의 프로젝트 전체 활동 내역
+	 */
+	@GetMapping("/v1/user/project/{user_seq}")
+	public ResponseEntity<Result> userProjectListAll(@PathVariable Long user_seq) {
+		List<UserProjectActivitiesListResponseDto> responseDto = userService.findProjectListAll(user_seq);
+		return ResponseEntity
+				.status(200)
+				.body(Result.builder()
+						.data(responseDto)
+						.status(200)
+						.message("참여한 프로젝트 전체 내역 조회 성공")
+						.build());
+	}
+
+	/**
+	 *  기능 : 유저의 프로젝트 상태 활동 내역
+	 */
+	@GetMapping("/v1/user/project/{user_seq}/{team_state}")
+	public ResponseEntity<Result> userProjectListState(@PathVariable Long user_seq,
+													 @PathVariable TeamState team_state) {
+		List<UserProjectActivitiesListResponseDto> responseDto = userService.findProjectListState(user_seq, team_state);
+		return ResponseEntity
+				.status(200)
+				.body(Result.builder()
+						.data(responseDto)
+						.status(200)
+						.message("참여한 프로젝트 상태 내역 조회 성공")
 						.build());
 	}
 

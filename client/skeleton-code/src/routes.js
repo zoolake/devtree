@@ -25,6 +25,7 @@ import Blog from './pages/Blog';
 import User from './pages/User';
 import MentorPage from './pages/Mentor/MentorPage';
 import MentorDetail from './pages/Mentor/MentorDetail';
+import MentoringReservation from './pages/Mentor/MentoringReservation';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -35,7 +36,20 @@ export default function Router() {
       children: [
         { element: <Navigate to="/mentor" replace /> },
         { path: '', element: <MentorPage /> },
-        { path: ':id', element: <MentorDetail /> }
+        {
+          path: ':id',
+          element: <MentorDetail />
+        }
+      ]
+    },
+    {
+      path: '/reservation',
+      element: <DashboardLayout />,
+      children: [
+        {
+          path: ':id',
+          element: <MentoringReservation />
+        }
       ]
     },
     {

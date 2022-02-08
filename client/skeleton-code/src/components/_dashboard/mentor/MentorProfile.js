@@ -57,11 +57,11 @@ export default function UserProfile({ index }) {
         <Typography sx={{ p: 3 }} variant="h4">
           {mentor.mentorname} <h5>{mentor.tier}</h5>
           <h5> {mentor.mentorcarrer}</h5>
-        </Typography>{' '}
-        <Button variant="contained" component={RouterLink} to="#">
+        </Typography>
+        <Button variant="contained" component={RouterLink} to={`/reservation/${index}`}>
           멘토링 신청하기
         </Button>
-      </Stack>{' '}
+      </Stack>
       <CardHeader />
       <Box sx={{ p: 3 }}>
         이메일

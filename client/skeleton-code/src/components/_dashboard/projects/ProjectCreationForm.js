@@ -24,7 +24,7 @@ export default function ProjectCreationForm() {
       teamName: '',
       teamDesc: '',
       teamState: 'RECRUIT',
-      teamType: 'PROJECT',
+      teamType: 'STUDY',
       teamTech: [],
       teamPosition: []
     },
@@ -37,11 +37,12 @@ export default function ProjectCreationForm() {
           teamDesc: values.teamDesc,
           teamState: formik.initialValues.teamState, // RECRUIT, COMPLETED, FINISH
           teamType: formik.initialValues.teamType, // STUDY, PROJECT
-          teamTech: values.techList,
-          teamPosition: values.positionList
+          teamTech: techList,
+          teamPosition: positionList
         };
 
         const createProject = async () => {
+          console.log(dataToSubmit);
           const createUrl = '/project'; // http://127.26.1.146:8080/v1/project
           await axios
             .post(createUrl, dataToSubmit)
@@ -50,7 +51,6 @@ export default function ProjectCreationForm() {
             })
             .catch((error) => {
               console.log(error, '프로젝트 생성 실패');
-              console.log(dataToSubmit);
             });
         };
         // dispatch(registerUser(dataToSubmit)).then((response) => {});
@@ -61,7 +61,6 @@ export default function ProjectCreationForm() {
     }
   });
 
-  const [loading, setLoading] = useState(false);
   const [allTechList, setAllTech] = useState([]);
   const [allPositionList, setAllPosition] = useState([]);
 

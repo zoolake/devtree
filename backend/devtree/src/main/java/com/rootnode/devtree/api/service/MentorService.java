@@ -95,11 +95,13 @@ public class MentorService {
                 .build();
     }
 
-    public CommonResponseDto changeSchedule(Long mentorSeq, List<MentorScheduleRequestDto> requestDto) {
+    public CommonResponseDto changeSchedule(Long mentorSeq, List<MentorScheduleRequestDto> requestDtos) {
         Mentor mentor = mentorRepository.findById(mentorSeq).get();
-        requestDto.forEach(dto -> {
-            mentorScheduleRepository.saveAll(dto.toEntity(mentor));
-        });
+
+        mentorScheduleRepository.saveAll(requestDtos.stream()
+                .map(requestDto -> requestDto.toEntity(mentor))
+                .collect(Collectors.toList()));
+
         return new CommonResponseDto(201, "스케줄 설정에 성공하였습니다.");
     }
 }

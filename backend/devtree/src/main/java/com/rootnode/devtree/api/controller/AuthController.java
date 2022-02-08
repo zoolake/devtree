@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 인증 관련 API 요청 처리를 위한 컨트롤러 정의.
@@ -75,9 +76,8 @@ public class AuthController {
      * 필요할까 싶음
      */
     @PostMapping("/v1/user/idcheck")
-    public ResponseEntity<Boolean> login(@RequestBody String user_id) {
-
-        User user = userService.getUserByUserId(user_id);
+    public ResponseEntity<Boolean> login(@RequestBody Map<String,String> request) {
+        User user = userService.getUserByUserId(request.get("user_id"));
         if (user == null) {
             return ResponseEntity.ok(true);
         }

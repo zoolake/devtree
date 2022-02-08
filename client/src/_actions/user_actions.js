@@ -40,7 +40,7 @@ export function getTech() {
 
 export function updateUser(dataToSubmit) {
   const request = axios
-    .put(`http://localhost:8080/v1/user`, dataToSubmit)
+    .put(`/v1/user`, dataToSubmit)
     .then((response) => response.data);
 
   return {
@@ -74,7 +74,7 @@ export function passwordUpdate(dataToSubmit) {
 export function registerUser(dataToSubmit) {
   console.log(dataToSubmit);
   const request = axios
-    .post(`http://localhost:8080/v1/user/signup`, dataToSubmit)
+    .post(`/v1/user/signup`, dataToSubmit)
     .then((response) => response.data);
 
   return {
@@ -84,7 +84,7 @@ export function registerUser(dataToSubmit) {
 }
 
 export function detailUser() {
-  const request = axios.get(`http://localhost:8080/v1/user`).then((response) => response.data);
+  const request = axios.get(`/v1/user`).then((response) => response.data);
   console.log(request);
   return {
     type: DETAIL_USER,
@@ -94,7 +94,7 @@ export function detailUser() {
 
 export function idcheckUser(dataToSubmit) {
   const request = axios
-    .post(`http://localhost:8080/v1/user/idcheck`, dataToSubmit)
+    .post(`/v1/user/idcheck`, dataToSubmit)
     .then((response) => response.data);
 
   return {
@@ -105,7 +105,7 @@ export function idcheckUser(dataToSubmit) {
 
 export function loginUser(dataToSubmit) {
   const request = axios
-    .post(`http://localhost:8080/v1/user/login`, dataToSubmit)
+    .post(`/v1/user/login`, dataToSubmit)
     .then((response) => {
       if (response.data.accessToken) {
         const token = response.data.accessToken;

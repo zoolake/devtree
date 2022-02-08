@@ -30,6 +30,8 @@ public class UserServiceImpl implements UserService {
     private final StudyUserRepository studyUserRepository;
     private final ProjectPositionUserRepository projectPositionUserRepository;
     private final ProjectPositionRepository projectPositionRepository;
+
+    private final MentoringRepository mentoringRepository;
 //
 //    @Autowired
 //    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -211,19 +213,20 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    // 유저의 프로젝트 기록 내역 (포지션 당 프로젝트를 몇 번 했는지)
     @Override
     public List<UserActivitiesPositionCntResponseDto> findProjectCount(Long userSeq) {
-        // 1. project_postion_user 테이블에서 user_seq로 속한 프로젝트(teamSeq) 리스트 찾기
+        // 1. project_position_user 테이블에서 user_seq로 속한 프로젝트(teamSeq) 리스트 찾기
         List<Team> teamList = projectPositionUserRepository.findTeamSeqByUserSeq(userSeq).stream()
                 .map(teamSeq -> teamRepository.findById(teamSeq).get())
                 .collect(Collectors.toList());
-        // 2. 각 스터디 별 기술 스택을 확인하고
+        // 2. 각 프로젝트 별 포지션을 확인하고
         Map<String, UserActivitiesPositionCntResponseDto> projectPositionCntMap = new HashMap<>();
         teamList.forEach(team -> {
             List<ProjectPosition> projectPositionList = team.getTeamPositionList();
             projectPositionList.forEach(projectPosition -> {
                 String detailPositionName = projectPosition.getPosition().getDetailPositionName();
-                // 3. 유저 스터디 기술 스택 리스트에 없으면 추가하고
+                // 3. 유저 프로젝트 포지션 리스트에 없으면 추가하고
                 if(projectPositionCntMap.get(detailPositionName) == null) {
                     projectPositionCntMap.put(detailPositionName, new UserActivitiesPositionCntResponseDto(detailPositionName, 1));
                 } else {
@@ -235,9 +238,10 @@ public class UserServiceImpl implements UserService {
         return projectPositionCntMap.values().stream().sorted(Comparator.comparing(UserActivitiesPositionCntResponseDto::getPositionCount).reversed()).collect(Collectors.toList());
     }
 
+    // 유저의 프로젝트 활동 내역 (전체)
     @Override
     public List<UserProjectActivitiesListResponseDto> findProjectListAll(Long userSeq) {
-        // 1. project_position 테이블에서 user_seq로 속한 프로젝트(team) 리스트 찾기
+        // 1. project_position_user 테이블에서 user_seq로 속한 프로젝트(teamSeq) 리스트 찾기
         List<Long> userTeamList = projectPositionUserRepository.findTeamSeqByUserSeq(userSeq);
 
         return userTeamList.stream()
@@ -251,10 +255,46 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    // 유저의 프로젝트 활동 내역 (상태)
     @Override
     public List<UserProjectActivitiesListResponseDto> findProjectListState(Long userSeq, TeamState teamState) {
         return findProjectListAll(userSeq).stream()
                 .filter(t -> t.getTeamState().equals((teamState.name())))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<UserMentoringActivitiesResponseDto> findMentoringListAll(Long userSeq) {
+        // 1. study_user 테이블, project_position_user 테이블에서 user_seq로 속한 팀(스터디 + 프로젝트) 리스트 찾기
+        List<Long> studyTeamList = studyUserRepository.findTeamSeqByUserSeq(userSeq);
+        List<Long> projectTeamList = projectPositionUserRepository.findTeamSeqByUserSeq(userSeq);
+
+        // 2. 팀 리스트에 팀 일련련번호와 팀 타 추가
+        List<TeamListDto> teamList = new ArrayList<>();
+        studyTeamList.forEach(teamSeq -> {
+            teamList.add(new TeamListDto(teamSeq, TeamType.STUDY));
+        });
+        projectTeamList.forEach(teamSeq -> {
+            teamList.add(new TeamListDto(teamSeq, TeamType.PROJECT));
+        });
+
+        List<UserMentoringActivitiesResponseDto> mentoringActivitiesList = new ArrayList<>();
+        // 2. mentoring_reservation 테이블에서 team_seq로 속한 멘토링 찾기
+        teamList.forEach(team -> {
+            List<Mentoring> mentoringList = mentoringRepository.findMentoringByTeamSeq(team.getTeamSeq());
+            mentoringList.forEach(mentoring -> {
+                mentoringActivitiesList.add(new UserMentoringActivitiesResponseDto(mentoring, team.getTeamType()));
+            });
+        });
+
+        return mentoringActivitiesList;
+    }
+
+    @Override
+    public List<UserMentoringActivitiesResponseDto> findMentoringListState(Long userSeq, MentoringState mentoringState) {
+        return findMentoringListAll(userSeq).stream()
+                .filter(m -> m.getMentoringState().equals(mentoringState.name()))
+                .collect(Collectors.toList());
+    }
+
 }

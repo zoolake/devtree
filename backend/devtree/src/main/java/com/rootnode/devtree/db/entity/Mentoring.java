@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Mentoring extends BaseTimeEntity{
+public class Mentoring {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "mentoring_seq")
@@ -30,8 +30,11 @@ public class Mentoring extends BaseTimeEntity{
 
     @Column(name = "mentoring_start_time")
     private LocalDateTime mentoringStartTime;
+    @Column(name = "mentoring_start_day")
+    private int mentoringStartDay;
     @Column(name = "mentoring_create_time")
     private LocalDateTime mentoringCreateTime;
     @Column(name = "mentoring_state")
+    @Enumerated(EnumType.STRING)
     private MentoringState mentoringState;
 }

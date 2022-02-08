@@ -3,6 +3,7 @@ package com.rootnode.devtree.api.service;
 import com.rootnode.devtree.api.request.UserRegisterPostReq;
 import com.rootnode.devtree.api.request.UserUpdateRequestDto;
 import com.rootnode.devtree.api.response.*;
+import com.rootnode.devtree.db.entity.MentoringState;
 import com.rootnode.devtree.db.entity.TeamState;
 import com.rootnode.devtree.db.entity.User;
 
@@ -26,4 +27,7 @@ public interface UserService {
 	List<UserActivitiesPositionCntResponseDto> findProjectCount(Long userSeq);
 	List<UserProjectActivitiesListResponseDto> findProjectListAll(Long userSeq);
 	List<UserProjectActivitiesListResponseDto> findProjectListState(Long userSeq, TeamState teamState);
+
+	List<UserMentoringActivitiesResponseDto> findMentoringListAll(Long userSeq);
+	List<UserMentoringActivitiesResponseDto> findMentoringListState(Long userSeq, MentoringState mentoringState);
 }

@@ -42,7 +42,6 @@ export default function StudyCreationForm() {
         };
 
         const createStudy = async () => {
-          console.log(dataToSubmit);
           const createUrl = '/study'; // http://127.26.1.146:8080/v1/study
           await axios
             .post(createUrl, dataToSubmit)

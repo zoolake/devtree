@@ -37,6 +37,16 @@ export default function ProjectDetail() {
 
   if (loading || projectDetail.length === 0) return null;
   console.log(projectDetail);
+  const pjtTech = projectDetail.teamTech.map((tech, idx) => (
+    <li key={idx}>
+      {tech.techName} {tech.techImage}
+    </li>
+  ));
+  const pjtPosition = projectDetail.teamPosition.map((position, idx) => (
+    <li key={idx}>
+      {position.detailPositionName} {position.positionMemberCnt}/{position.positionRecruitCnt}
+    </li>
+  ));
 
   return (
     <div>
@@ -46,17 +56,16 @@ export default function ProjectDetail() {
         <li>프로젝트 상태: {projectDetail.teamState}</li>
         <li>프로젝트 생성자: {projectDetail.teamManagerSeq}</li>
         <li>프로젝트 설명: {projectDetail.teamDesc}</li>
+        <ul>
+          프로젝트 기술 스택
+          {pjtTech}
+        </ul>
         <li>
           인원 현황: {projectDetail.teamMemberCnt}/{projectDetail.teamRecruitCnt}
         </li>
         <ul>
-          프로젝트 포지션:
-          {projectDetail.teamPosition.map((position, idx) => (
-            <li key={idx}>
-              {position.detailPositionName} {position.positionMemberCnt}/
-              {position.positionRecruitCnt}
-            </li>
-          ))}
+          프로젝트 포지션
+          {pjtPosition}
         </ul>
       </ul>
       <Button variant="contained" component={RouterLink} to="update">

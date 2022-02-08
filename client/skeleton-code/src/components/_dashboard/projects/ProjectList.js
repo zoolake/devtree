@@ -31,8 +31,11 @@ export default function ProjectList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (loading || projectList.length === 0) {
+  if (projectList.length === 0) {
     return <div>'생성된 프로젝트가 없습니다.'</div>;
+  }
+  if (loading) {
+    return <div>'로딩 중'</div>;
   }
 
   return (

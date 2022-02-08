@@ -35,7 +35,7 @@ export default function ProjectMain() {
         </Stack>
 
         <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
-          <ProjectSearch projects={ProjectList.projectList} />
+          <ProjectSearch />
           <ProjectsPostsSort options={SORT_OPTIONS} />
         </Stack>
 

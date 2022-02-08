@@ -37,6 +37,11 @@ export default function StudyDetail() {
 
   if (loading || studyDetail.length === 0) return null;
   console.log(studyDetail);
+  const studyTech = studyDetail.teamTech.map((tech, idx) => (
+    <li key={idx}>
+      {tech.techName} {tech.techImage}
+    </li>
+  ));
 
   return (
     <div>
@@ -46,6 +51,10 @@ export default function StudyDetail() {
         <li>스터디 상태: {studyDetail.teamState}</li>
         <li>스터디 생성자: {studyDetail.teamManagerSeq}</li>
         <li>스터디 설명: {studyDetail.teamDesc}</li>
+        <ul>
+          스터디 기술 스택
+          {studyTech}
+        </ul>
         <li>
           인원 현황: {studyDetail.teamMemberCnt}/{studyDetail.teamRecruitCnt}
         </li>

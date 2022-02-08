@@ -17,6 +17,6 @@ public class MentorDetailResponseDto {
     private List<MentorTechInfoDto> mentorTechList;
     private String mentorDesc;
     private String mentorEmail;
-    private Map<String, MentoringInfoDto> mentoringInfoMap;
+    private List<MentoringInfoDto> mentoringInfoList;
     private List<MentoringReviewDto> mentoringReviewList;
 }

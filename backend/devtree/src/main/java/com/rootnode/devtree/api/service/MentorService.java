@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,7 @@ public class MentorService {
                 .collect(Collectors.toList()));
     }
 
+
     public MentorDetailResponseDto findMentor(Long mentorSeq) {
         // 1. mentor 찾기
         Mentor mentor = mentorRepository.findById(mentorSeq).get();
@@ -51,21 +53,22 @@ public class MentorService {
                 .map(mentorTech -> new MentorTechInfoDto(mentorTech))
                 .collect(Collectors.toList());
 
-        // 4. 멘토링 이력 찾기 (각 기술스택 별로 카운트)
-        List<Mentoring> mentoringList = mentoringRepository.findByMentorMentorSeqAndAndMentoringState(mentorSeq, MentoringState.FINISH);
+        // 4. 멘토링 이력 찾기 (각 기술스택 별로 카운트) -> 리스트로 조회(팀이랑 그 팀의 기술스택, 멘토링 시간 순 정렬)
+        List<Mentoring> mentoringList = mentoringRepository.findByMentorMentorSeqAndMentoringState(mentorSeq, MentoringState.FINISH);
 
-        Map<String, MentoringInfoDto> mentoringInfoMap = new HashMap<>();
+        List<MentoringInfoDto> mentoringInfoList = new ArrayList<>();
         mentoringList.forEach(mentoring -> {
-            List<TeamTech> teamTechList = mentoring.getTeam().getTeamTechList();
-            teamTechList.forEach(teamTech -> {
-                String techName = teamTech.getTech().getTechName();
-                String techImage = teamTech.getTech().getTechImage();
-                if (mentoringInfoMap.get(techName) == null) {
-                    mentoringInfoMap.put(techName, new MentoringInfoDto(techName, techImage, 1));
-                } else {
-                    mentoringInfoMap.get(techName).addMentoringCount();
-                }
-            });
+            Team team = mentoring.getTeam();
+            List<TeamTech> teamTechList = team.getTeamTechList();
+            LocalDateTime mentoringStartTime = mentoring.getMentoringStartTime();
+
+            List<String> techNameList = teamTechList.stream()
+                    .map(teamTech -> {
+                        return teamTech.getTech().getTechName();
+                    })
+                    .collect(Collectors.toList());
+
+            mentoringInfoList.add(new MentoringInfoDto(team.getTeamName(), techNameList, mentoringStartTime));
         });
 
         // 5. 멘토링 후기 찾기
@@ -90,7 +93,7 @@ public class MentorService {
                 .mentorEmail(user.getUserEmail())
                 .mentorNickname(user.getUserNickname())
                 .mentorTechList(mentorTechInfoDtoList)
-                .mentoringInfoMap(mentoringInfoMap)
+                .mentoringInfoList(mentoringInfoList)
                 .mentoringReviewList(reviewDtoList)
                 .build();
     }

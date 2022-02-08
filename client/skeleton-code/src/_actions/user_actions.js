@@ -40,7 +40,7 @@ export function getTech() {
 
 export function updateUser(dataToSubmit) {
   const request = axios
-    .put(`${USER_SERVER}/password/1`, dataToSubmit)
+    .put(`http://localhost:8080/v1/user`, dataToSubmit)
     .then((response) => response.data);
 
   return {
@@ -72,8 +72,9 @@ export function passwordUpdate(dataToSubmit) {
 }
 
 export function registerUser(dataToSubmit) {
+  console.log(dataToSubmit);
   const request = axios
-    .post(`${USER_SERVER}/register`, dataToSubmit)
+    .post(`http://localhost:8080/v1/user/signup`, dataToSubmit)
     .then((response) => response.data);
 
   return {
@@ -83,10 +84,8 @@ export function registerUser(dataToSubmit) {
 }
 
 export function detailUser() {
-  const request = axios
-    .get(`http://localhost:8080/api/v1/users/me`)
-    .then((response) => response.data);
-
+  const request = axios.get(`http://localhost:8080/v1/user`).then((response) => response.data);
+  console.log(request);
   return {
     type: DETAIL_USER,
     payload: request
@@ -95,7 +94,7 @@ export function detailUser() {
 
 export function idcheckUser(dataToSubmit) {
   const request = axios
-    .post(`${USER_SERVER}/idcheck`, dataToSubmit)
+    .post(`http://localhost:8080/v1/user/idcheck`, dataToSubmit)
     .then((response) => response.data);
 
   return {

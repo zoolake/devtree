@@ -31,8 +31,8 @@ export default function MyProfile() {
     await dispatch(detailUser())
       .then((response) => {
         if (response) {
-          setUsers(response.payload);
-          console.log(users.userId);
+          console.log('test');
+          setUsers(response.payload.data.user);
         }
       })
       .catch((err) => {

@@ -9,7 +9,7 @@ import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
 import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useDispatch } from 'react-redux';
-import { registerUser } from '../../../_actions/user_actions';
+import { registerUser, idcheckUser } from '../../../_actions/user_actions';
 // ----------------------------------------------------------------------
 
 export default function RegisterForm(props) {
@@ -23,18 +23,22 @@ export default function RegisterForm(props) {
       .when('checkId', {
         is: true,
         then: Yup.string().test({
-          message: () => `이미 존재하는 아이디 입니다.`,
+          message: () => '이미 존재하는 아이디 입니다.',
           test: async (values) => {
             if (values) {
               try {
-                const response = await fetch(
-                  `https://61f649b22e1d7e0017fd6d42.mockapi.io/register/${values}`
-                );
+                const response = await fetch('http://localhost:8080/v1/user/idcheck', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ user_id: values })
+                });
                 console.log(response);
                 if (response.ok) {
-                  console.log('이미 있음');
-                  return false;
+                  return true;
                 }
+                return false;
               } catch (error) {
                 console.log(error);
               }
@@ -72,15 +76,15 @@ export default function RegisterForm(props) {
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
         const dataToSubmit = {
-          user_id: values.users_id,
+          user_id: values.user_id,
           user_email: values.user_email,
           user_password: values.user_password,
           user_name: values.user_name
         };
 
         dispatch(registerUser(dataToSubmit)).then((response) => {
-          if (response.payload.success) {
-            props.history.push('/login');
+          if (response.payload.message === 'Success') {
+            document.location.assign('/login');
           }
           // else {
           //   //test용

@@ -7,9 +7,14 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface StudyUserRepository extends JpaRepository<StudyUser, StudyUserId> {
     @Transactional
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(value = "delete from StudyUser s where s.team.teamSeq = :teamSeq")
     void deleteByTeamSeq(Long teamSeq);
+
+    @Query(value = "select s.team.teamSeq from StudyUser s where s.user.userSeq = :userSeq")
+    List<Long> findTeamSeqByUserSeq(Long userSeq);
 }

@@ -1,5 +1,6 @@
 package com.rootnode.devtree.db.repository;
 
+import com.rootnode.devtree.db.entity.ProjectPositionReservation;
 import com.rootnode.devtree.db.entity.Team;
 import com.rootnode.devtree.db.entity.TeamType;
 import org.springframework.data.jpa.repository.EntityGraph;

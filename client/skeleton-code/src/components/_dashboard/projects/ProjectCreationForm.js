@@ -1,33 +1,13 @@
 import axios from 'axios';
 import * as Yup from 'yup';
 import { useEffect, useState, useMemo, useCallback } from 'react';
-// import { Icon } from '@iconify/react';
 import { useFormik, Form, FormikProvider } from 'formik';
-// import eyeFill from '@iconify/icons-eva/eye-fill';
-// import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
-// import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
-import {
-  Stack,
-  TextField,
-  // IconButton,
-  // InputAdornment,
-  MenuItem,
-  Box,
-  // Card,
-  // Typography,
-  CardHeader
-  // CardContent
-} from '@mui/material';
+import { Stack, TextField, Box } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-// import { useDispatch } from 'react-redux';
-// import { registerUser } from '../../../_actions/user_actions';
-// ----------------------------------------------------------------------
 
 export default function ProjectCreationForm() {
-  // const dispatch = useDispatch();
-
   const RegisterSchema = Yup.object().shape({
     teamName: Yup.string()
       .required('프로젝트 제목은 필수 값 입니다.')
@@ -57,8 +37,8 @@ export default function ProjectCreationForm() {
           teamDesc: values.teamDesc,
           teamState: formik.initialValues.teamState, // RECRUIT, COMPLETED, FINISH
           teamType: formik.initialValues.teamType, // STUDY, PROJECT
-          teamTech: techList,
-          teamPosition: positionList
+          teamTech: values.techList,
+          teamPosition: values.positionList
         };
 
         const createProject = async () => {

@@ -33,7 +33,7 @@ const sidebarConfig = [
   },
   {
     title: 'study',
-    path: '/MainPage/blog',
+    path: '/study',
     icon: getIcon(fileTextFill)
   },
   {

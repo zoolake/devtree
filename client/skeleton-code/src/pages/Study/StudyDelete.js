@@ -2,26 +2,26 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
-export default function ProjectDelete() {
+export default function StudyDelete() {
   const teamSeq = useParams();
-  const projectDelete = async () => {
-    const url = `/project/${teamSeq.id}`; // http://127.26.1.146:8080/v1/project/${teamSeq.id}
+  const studyDelete = async () => {
+    const url = `/study/${teamSeq.id}`; // http://127.26.1.146:8080/v1/study/${teamSeq.id}
     await axios
       .delete(url)
       .then((response) => {
         if (response.data.message) {
           console.log(response, response.data.message);
         } else {
-          console.log(response, '프로젝트 삭제 성공');
+          console.log(response, '스터디 삭제 성공');
         }
       })
       .catch((error) => {
-        console.log(error, '프로젝트 삭제 실패');
+        console.log(error, '스터디 삭제 실패');
       });
   };
 
   useEffect(() => {
-    projectDelete();
+    studyDelete();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

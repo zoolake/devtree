@@ -1,25 +1,24 @@
 import PropTypes from 'prop-types';
 import axios from 'axios';
-
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { Stack, TextField, MenuItem } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
-ProjectUpdateForm.propTypes = {
+StudyUpdateForm.propTypes = {
   projects: PropTypes.array.isRequired
 };
 
-export default function ProjectUpdateForm(project) {
+export default function StudyUpdateForm(project) {
   const RegisterSchema = Yup.object().shape({
     team_name: Yup.string()
-      .required('프로젝트 제목은 필수 값 입니다.')
+      .required('스터디 제목은 필수 값 입니다.')
       .min(5, '이름은 5자 이상이여야 합니다.')
       .max(20, '이름은 20자 이하이여야 합니다.'),
     team_desc: Yup.string()
-      .required('프로젝트 설명은 필수 값 입니다.')
-      .min(10, '프로젝트 설명은 10자 이상이여야 합니다.')
+      .required('스터디 설명은 필수 값 입니다.')
+      .min(10, '스터디 설명은 10자 이상이여야 합니다.')
   });
 
   const formik = useFormik({
@@ -29,8 +28,7 @@ export default function ProjectUpdateForm(project) {
       team_state: '모집 중',
       team_manager_seq: '', // 생성자의 seq
       team_desc: '',
-      team_tech: '',
-      team_position: ''
+      team_tech: ''
     },
     validationSchema: RegisterSchema,
     onSubmit: (values, { setSubmitting }) => {

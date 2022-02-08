@@ -31,7 +31,9 @@ export default function MainPage() {
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppStudyMain />
+            <Link underline="none" component={RouterLink} to="/study/">
+              <AppStudyMain />
+            </Link>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <AppMentorMain />

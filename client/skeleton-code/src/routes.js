@@ -8,12 +8,19 @@ import Register from './pages/User/Register';
 import MainPage from './pages/Main/MainPage';
 import Products from './pages/Products';
 import Profile from './pages/User/Profile';
-// eslint-disable-next-line import/no-named-as-default
+// project
 import Project from './pages/Project/ProjectMain';
 import ProjectDetail from './pages/Project/ProjectDetail';
 import ProjectCreate from './pages/Project/ProjectCreate';
 import ProjectUpdate from './pages/Project/ProjectUpdate';
 import ProjectDelete from './pages/Project/ProjectDelete';
+// study
+import Study from './pages/Study/StudyMain';
+import StudyDetail from './pages/Study/StudyDetail';
+import StudyCreate from './pages/Study/StudyCreate';
+import StudyUpdate from './pages/Study/StudyUpdate';
+import StudyDelete from './pages/Study/StudyDelete';
+
 import Blog from './pages/Blog';
 import User from './pages/User';
 import MentorPage from './pages/Mentor/MentorPage';
@@ -52,6 +59,20 @@ export default function Router() {
         { path: 'create', element: <ProjectCreate /> },
         { path: ':id/update', element: <ProjectUpdate /> },
         { path: ':id/delete', element: <ProjectDelete /> },
+        { path: 'mentor', element: <Navigate to="/mentor" /> }
+        // { path: 'mentor/:id', element: <MentorDetail /> },
+        // { path: 'mentor', element: <MentorPage /> }
+      ]
+    },
+    {
+      path: '/study',
+      element: <DashboardLayout />,
+      children: [
+        { path: '', element: <Study /> },
+        { path: ':id', element: <StudyDetail /> },
+        { path: 'create', element: <StudyCreate /> },
+        { path: ':id/update', element: <StudyUpdate /> },
+        { path: ':id/delete', element: <StudyDelete /> },
         { path: 'mentor', element: <Navigate to="/mentor" /> }
         // { path: 'mentor/:id', element: <MentorDetail /> },
         // { path: 'mentor', element: <MentorPage /> }

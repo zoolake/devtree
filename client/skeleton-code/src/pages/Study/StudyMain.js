@@ -4,11 +4,8 @@ import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Button, Container, Stack, Typography } from '@mui/material';
 import Page from '../../components/Page';
-import {
-  ProjectsPostsSort,
-  ProjectSearch,
-  ProjectList
-} from '../../components/_dashboard/projects';
+import { StudyPostsSort, StudySearch, StudyList } from '../../components/_dashboard/study';
+// ----------------------------------------------------------------------
 
 const SORT_OPTIONS = [
   { value: 'latest', label: 'Latest' },
@@ -16,13 +13,15 @@ const SORT_OPTIONS = [
   { value: 'oldest', label: 'Oldest' }
 ];
 
-export default function ProjectMain() {
+// ----------------------------------------------------------------------
+
+export default function StudyMain() {
   return (
-    <Page title="Dashboard: Projects | Minimal-UI">
+    <Page title="Dashboard: Studys | Minimal-UI">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Project
+            Study
           </Typography>
           <Button
             variant="contained"
@@ -30,17 +29,17 @@ export default function ProjectMain() {
             to="create"
             startIcon={<Icon icon={plusFill} />}
           >
-            프로젝트 생성
+            스터디 생성
           </Button>
         </Stack>
 
         <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
-          <ProjectSearch projects={ProjectList.projectList} />
-          <ProjectsPostsSort options={SORT_OPTIONS} />
+          <StudySearch study={StudyList.studyList} />
+          <StudyPostsSort options={SORT_OPTIONS} />
         </Stack>
 
         <Container>
-          <ProjectList />
+          <StudyList />
         </Container>
       </Container>
     </Page>

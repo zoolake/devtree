@@ -10,24 +10,24 @@ const TitleStyle = styled(Link)({
   WebkitBoxOrient: 'vertical'
 });
 
-ProjectListCard.propTypes = {
-  project: PropTypes.object.isRequired,
+StudyListCard.propTypes = {
+  study: PropTypes.object.isRequired,
   index: PropTypes.number
 };
 
-export default function ProjectListCard({ project, index }) {
+export default function StudyListCard({ study, index }) {
   return (
     <div>
       <TitleStyle
-        to={`${project.teamSeq}`}
+        to={`${study.teamSeq}`}
         color="inherit"
         variant="subtitle2"
         underline="hover"
         component={RouterLink}
       >
-        {index}) 프로젝트 이름: {project.teamName}
+        {index}) 스터디 이름: {study.teamName}
       </TitleStyle>
-      <p>{project.teamDesc}</p>
+      <p>{study.teamDesc}</p>
       <br />
     </div>
   );

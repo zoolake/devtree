@@ -1,28 +1,9 @@
-// import { Icon } from '@iconify/react';
-// import plusFill from '@iconify/icons-eva/plus-fill';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {
-  // Grid,
-  Container
-} from '@mui/material';
-// components
-// import Page from '../../Page';
+import { Container } from '@mui/material';
 import { ProjectListCard } from '.';
-// import PROJECTS from '../../../_mocks_/project';
-
-// ----------------------------------------------------------------------
-
-const SORT_OPTIONS = [
-  { value: 'latest', label: 'Latest' },
-  { value: 'popular', label: 'Popular' },
-  { value: 'oldest', label: 'Oldest' }
-];
-
-// ----------------------------------------------------------------------
 
 export default function ProjectList() {
-  // 조회 기능
   const [projectList, setProjectList] = useState([]);
   const [loading, setLoading] = useState(false);
   const getProjectList = async () => {

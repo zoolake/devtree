@@ -1,9 +1,8 @@
 package com.rootnode.devtree.api.controller;
 
 import com.rootnode.devtree.api.request.MentorScheduleRequestDto;
-import com.rootnode.devtree.api.response.CommonResponseDto;
-import com.rootnode.devtree.api.response.MentorDetailResponseDto;
-import com.rootnode.devtree.api.response.MentorListResponseDto;
+import com.rootnode.devtree.api.request.MentoringAvailableTimeRequestDto;
+import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.api.service.MentorService;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,6 +52,22 @@ public class MentorApiController {
                                             @RequestBody List<MentorScheduleRequestDto> requestDto) {
         return mentorService.changeSchedule(mentorSeq, requestDto);
     }
+
+    /**
+     * 기능: 멘토링 가능 스케줄 조회
+     */
+    @PostMapping("/v1/mentoring/{mentorSeq}")
+    public ResponseEntity<Result> mentorAvailableSchedule(@PathVariable Long mentorSeq, @RequestBody MentoringAvailableTimeRequestDto requestDto) {
+        List<MentoringAvailableTimeResponseDto> responseDto = mentorService.findAvailableTime(mentorSeq, requestDto);
+        return ResponseEntity
+                .status(200)
+                .body(Result.builder()
+                        .data(responseDto)
+                        .status(200)
+                        .message("멘토 스케줄 조회 완료")
+                        .build());
+    }
+
 
     @Data
     @AllArgsConstructor

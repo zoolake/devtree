@@ -1,10 +1,9 @@
 package com.rootnode.devtree.api.service;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.rootnode.devtree.api.request.MentorScheduleRequestDto;
+import com.rootnode.devtree.api.request.MentoringAvailableTimeRequestDto;
 import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.db.entity.*;
-import com.rootnode.devtree.db.entity.compositeKey.MentorScheduleId;
 import com.rootnode.devtree.db.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -106,5 +106,23 @@ public class MentorService {
                 .collect(Collectors.toList()));
 
         return new CommonResponseDto(201, "스케줄 설정에 성공하였습니다.");
+    }
+
+    // 멘토링 가능 스케줄 조회
+    public List<MentoringAvailableTimeResponseDto> findAvailableTime(Long mentorSeq, MentoringAvailableTimeRequestDto requestDto) {
+        List<MentorSchedule> availableTimeList = mentorScheduleRepository.findByMentorSeq(mentorSeq);
+        List<MentoringAvailableTimeResponseDto> timeList = new ArrayList<>();
+        availableTimeList.forEach(t -> {
+            LocalDateTime time = t.getMentorScheduleId().getMentorTime();
+            // 멘토 스케줄 테이블에서 가져오는 날짜
+            String availableTime = time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            // 해당 날짜의 가능 스케줄을 서치하기 위해 가져온 날짜 정보
+            String mentorTime = requestDto.getMentorTime();
+
+            if(availableTime.equals(mentorTime)) {
+                timeList.add(new MentoringAvailableTimeResponseDto(time));
+            }
+        });
+        return timeList.stream().sorted(Comparator.comparing(MentoringAvailableTimeResponseDto::getHhmmTime)).collect(Collectors.toList());
     }
 }

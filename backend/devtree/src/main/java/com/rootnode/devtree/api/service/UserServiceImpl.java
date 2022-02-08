@@ -3,22 +3,18 @@ package com.rootnode.devtree.api.service;
 import com.rootnode.devtree.api.request.UserRegisterPostReq;
 import com.rootnode.devtree.api.request.UserUpdateRequestDto;
 import com.rootnode.devtree.api.response.UserDetailResponseDto;
-import com.rootnode.devtree.db.entity.Tech;
-import com.rootnode.devtree.db.entity.User;
-import com.rootnode.devtree.db.entity.UserRole;
-import com.rootnode.devtree.db.entity.UserTech;
+import com.rootnode.devtree.api.response.UserActivitiesCntResponseDto;
+import com.rootnode.devtree.api.response.UserStudyActivitiesListResponseDto;
+import com.rootnode.devtree.db.entity.*;
 import com.rootnode.devtree.db.entity.compositeKey.UserTechId;
-import com.rootnode.devtree.db.repository.TechRepository;
-import com.rootnode.devtree.db.repository.UserRepository;
-import com.rootnode.devtree.db.repository.UserTechRepository;
+import com.rootnode.devtree.db.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 유저 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
@@ -27,11 +23,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-
     private final UserRepository userRepository;
     private final UserTechRepository userTechRepository;
     private final TechRepository techRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final TeamRepository teamRepository;
+    private final StudyUserRepository studyUserRepository;
 //
 //    @Autowired
 //    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -71,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void UpdateUser(Long userSeq,UserUpdateRequestDto userUpdateRequestDto) {
+    public void updateUser(Long userSeq, UserUpdateRequestDto userUpdateRequestDto) {
 
         Optional<User>Ouser = userRepository.findByUserSeq(userSeq);
 //이름 닉네임 설명 테크
@@ -142,6 +140,7 @@ public class UserServiceImpl implements UserService {
         return userDetailResponseDto;
     }
 
+
     @Override
     @Transactional
     public User getUserByUserId(String userId) {
@@ -163,4 +162,53 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    // 유저의 스터디 기록 내역 (기술 당 스터디를 몇 번 했는지)
+    @Override
+    public List<UserActivitiesCntResponseDto> findStudyCount(Long userSeq) {
+        // 1. study_user 테이블에서 user_seq로 속한 스터디(teamSeq) 리스트(teamList) 찾기
+        List<Team> teamList = studyUserRepository.findTeamSeqByUserSeq(userSeq).stream()
+                .map(teamSeq -> teamRepository.findById(teamSeq).get())
+                .collect(Collectors.toList());
+        // 2. 각 스터디 별 기술 스택을 확인하고
+        Map<String, UserActivitiesCntResponseDto> studyTechCntMap = new HashMap<>();
+        teamList.forEach(team -> {
+            List<TeamTech> teamTechList = team.getTeamTechList();
+            teamTechList.forEach(teamTech -> {
+                String techName = teamTech.getTech().getTechName();
+                String techImage = teamTech.getTech().getTechImage();
+                // 3. 유저 스터디 기술 스택 리스트에 없으면 추가하고
+                if(studyTechCntMap.get(techName) == null) {
+                    studyTechCntMap.put(techName, new UserActivitiesCntResponseDto(techName, techImage, 1));
+                } else {
+                // 4. 있으면 cnt+1
+                    studyTechCntMap.get(techName).addTechCount();
+                }
+            });
+        });
+
+        return studyTechCntMap.values().stream().sorted(Comparator.comparing(UserActivitiesCntResponseDto::getTechCnt).reversed()).collect(Collectors.toList());
+    }
+
+    // 유저의 스터디 활동 내역 (전체)
+    @Override
+    public List<UserStudyActivitiesListResponseDto> findStudyListAll(Long userSeq) {
+        // 1. study_user 테이블에서 user_seq로 어떤 스터디(teamSeq)에 속해있는지 찾기
+        List<Long> userTeamList = studyUserRepository.findTeamSeqByUserSeq(userSeq);
+        // 2. teamSeq를 가지고 teamRepository에서 team 정보 찾기
+        return userTeamList.stream()
+                .map(teamSeq -> {
+                    Team team = teamRepository.findById(teamSeq).get();
+                    return new UserStudyActivitiesListResponseDto(team);
+                })
+                .collect(Collectors.toList());
+    }
+
+    // 유저의 스터디 활동 내역 (상태)
+    @Override
+    public List<UserStudyActivitiesListResponseDto> findStudyListState(Long userSeq, TeamState teamState) {
+        // 유저의 스터디 전체 활동 내역 -> 스터디 상태가 teamState인 것만
+        return findStudyListAll(userSeq).stream()
+                .filter(t -> t.getTeamState().equals(teamState.name()))
+                .collect(Collectors.toList());
+    }
 }

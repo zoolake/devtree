@@ -1,26 +1,18 @@
 package com.rootnode.devtree.api.controller;
 
 import com.rootnode.devtree.api.request.UserRegisterPostReq;
-import com.rootnode.devtree.api.response.UserRes;
+import com.rootnode.devtree.api.response.UserActivitiesCntResponseDto;
+import com.rootnode.devtree.api.response.UserStudyActivitiesListResponseDto;
 import com.rootnode.devtree.api.service.UserService;
-import com.rootnode.devtree.common.auth.UserDetail;
 import com.rootnode.devtree.api.response.BaseResponseBody;
-import com.rootnode.devtree.db.entity.Team;
+import com.rootnode.devtree.db.entity.TeamState;
 import com.rootnode.devtree.db.entity.User;
-import io.swagger.annotations.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 유저 관련 API 요청 처리를 위한 컨트롤러 정의.
@@ -31,7 +23,7 @@ import java.util.Objects;
 @Slf4j
 //mapping 바꾸자
 public class UserController {
-	private  final UserService userService;
+	private final UserService userService;
 
 	/**
 	 * @param registerInfo
@@ -66,6 +58,52 @@ public class UserController {
 		return ResponseEntity.status(400).body(users);
 	}
 
+	/**
+	 *  기능 : 유저의 스터디 기록 내역 (기술 당 스터디를 몇 번 했는지)
+	 */
+	@GetMapping("/v1/user/study/{user_seq}/count")
+	public ResponseEntity<Result> userStudyCount(@PathVariable Long user_seq) {
+		List<UserActivitiesCntResponseDto> responseDto = userService.findStudyCount(user_seq);
+		return ResponseEntity
+				.status(200)
+				.body(Result.builder()
+						.data(responseDto)
+						.status(200)
+						.message("참여한 스터디 기술스택 카운트 조회 성공")
+						.build());
+	}
+
+	/**
+	 *  기능 : 유저의 스터디 전체 활동 내역
+	 */
+	@GetMapping("/v1/user/study/{user_seq}")
+	public ResponseEntity<Result> userStudyListAll(@PathVariable Long user_seq) {
+		List<UserStudyActivitiesListResponseDto> responseDto = userService.findStudyListAll(user_seq);
+		return ResponseEntity
+				.status(200)
+				.body(Result.builder()
+						.data(responseDto)
+						.status(200)
+						.message("참여한 스터디 전체 내역 조회 성공")
+						.build());
+	}
+
+	/**
+	 *  기능 : 유저의 스터디 상태 활동 내역
+	 */
+	@GetMapping("/v1/user/study/{user_seq}/{team_state}")
+	public ResponseEntity<Result> userStudyListState(@PathVariable Long user_seq,
+													 @PathVariable TeamState team_state) {
+		List<UserStudyActivitiesListResponseDto> responseDto = userService.findStudyListState(user_seq, team_state);
+		return ResponseEntity
+				.status(200)
+				.body(Result.builder()
+						.data(responseDto)
+						.status(200)
+						.message("참여한 스터디 상태 내역 조회 성공")
+						.build());
+	}
+
 
 	/**
 	 * List를 한번 감싸서 보내기 위하여 만든 클래스
@@ -74,6 +112,7 @@ public class UserController {
 	 */
 	@Data
 	@AllArgsConstructor
+	@Builder
 	static class Result<T> {
 		private T data;
 		int status;

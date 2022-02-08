@@ -2,25 +2,20 @@ package com.rootnode.devtree.api.controller;
 
 import com.rootnode.devtree.api.request.UserLoginPostReq;
 import com.rootnode.devtree.api.request.UserUpdateRequestDto;
-import com.rootnode.devtree.api.response.UserDetailResponseDto;
 import com.rootnode.devtree.api.response.UserLoginPostRes;
 import com.rootnode.devtree.api.service.UserService;
 import com.rootnode.devtree.common.auth.UserDetail;
 import com.rootnode.devtree.common.util.JwtTokenUtil;
-import com.rootnode.devtree.db.entity.Tech;
 import com.rootnode.devtree.db.entity.User;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
-
-import java.util.List;
 
 /**
  * 인증 관련 API 요청 처리를 위한 컨트롤러 정의.
@@ -94,7 +89,7 @@ public class AuthController {
 //      user_seq 가져오기
         Long user_seq = userDetails.getUser().getUserSeq();
 //      프로필을 수정하자!
-        userService.UpdateUser(user_seq,userUpdateRequestDto);
+        userService.updateUser(user_seq,userUpdateRequestDto);
     }
 
     @Data

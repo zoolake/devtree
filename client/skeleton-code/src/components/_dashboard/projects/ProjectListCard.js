@@ -20,19 +20,18 @@ ProjectListCard.propTypes = {
 };
 
 export default function ProjectListCard({ project, index }) {
-  // console.log(project);
   return (
     <div>
       <TitleStyle
-        to={`${project.id}`}
+        to={`${project.teamSeq}`}
         color="inherit"
         variant="subtitle2"
         underline="hover"
         component={RouterLink}
       >
-        {index}) 프로젝트 이름: {project.team_name}
+        {index}) 프로젝트 이름: {project.teamName}
       </TitleStyle>
-      <p>{project.team_desc}</p>
+      <p>{project.teamDesc}</p>
       <br />
     </div>
   );

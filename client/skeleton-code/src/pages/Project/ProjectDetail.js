@@ -4,41 +4,61 @@ import axios from 'axios';
 import { Button } from '@mui/material';
 
 export default function ProjectDetail() {
-  const projectId = useParams().id;
-  const [project, setProject] = useState({});
-  const getProject = async () => {
-    // 임시 목업
-    setProject(projectId);
-    console.log(project);
-    // api 받아오기
-    /*
-    const url = `http://localhost:3000/api/v1/project/${projectId}`;
+  const teamSeq = useParams();
+  const [projectDetail, setProjectDetail] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const getProjectDetail = async () => {
+    const projectDetailUrl = `/project/${teamSeq.id}`; // http://127.26.1.146:8080/v1/project/${teamSeq.id}
+    setLoading(true);
     await axios
-      .get(url)
+      .get(projectDetailUrl)
       .then((response) => {
-        console.log(response, '성공');
-        setProject(response.data);
-        console.log(project);
+        if (response.data.message) {
+          console.log(response, response.data.message);
+        } else {
+          console.log(response, '프로젝트 상세 조회 성공');
+        }
+        const projectData = response.data.data;
+        return projectData;
+      })
+      .then((data) => {
+        setProjectDetail(data);
       })
       .catch((error) => {
-        console.log('실패');
+        console.log(error, '프로젝트 상세 조회 실패');
       });
-    */
+    setLoading(false);
   };
+
   useEffect(() => {
-    getProject();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    getProjectDetail();
   }, []);
+
+  if (loading || projectDetail.length === 0) return null;
+  console.log(projectDetail);
+
   return (
     <div>
-      <h1>Project Detail of {projectId}</h1>
-      {/* <ul>
-        <li>프로젝트 이름: {project.team_name}</li>
-        <li>프로젝트 상태: {project.team_state}</li>
-        <li>프로젝트 생성자: {project.team_manager_seq}</li>
-        <li>프로젝트 설명: {project.team_desc}</li>
-        <li>프로젝트 포지션: {project.team_position}</li>
-      </ul> */}
+      <h1>Project Detail of {projectDetail.teamSeq}</h1>
+      <ul>
+        <li>프로젝트 이름: {projectDetail.teamName}</li>
+        <li>프로젝트 상태: {projectDetail.teamState}</li>
+        <li>프로젝트 생성자: {projectDetail.teamManagerSeq}</li>
+        <li>프로젝트 설명: {projectDetail.teamDesc}</li>
+        <li>
+          인원 현황: {projectDetail.teamMemberCnt}/{projectDetail.teamRecruitCnt}
+        </li>
+        <ul>
+          프로젝트 포지션:
+          {projectDetail.teamPosition.map((position, idx) => (
+            <li key={idx}>
+              {position.detailPositionName} {position.positionMemberCnt}/
+              {position.positionRecruitCnt}
+            </li>
+          ))}
+        </ul>
+      </ul>
       <Button variant="contained" component={RouterLink} to="update">
         프로젝트 수정
       </Button>

@@ -1,11 +1,21 @@
 import faker from 'faker';
 import PropTypes from 'prop-types';
 import React, { useState, useCallback, useMemo } from 'react';
-import Select from 'react-select';
+import { useDispatch } from 'react-redux';
 import makeAnimated from 'react-select/animated';
-// material
+import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
 import AsyncCreatableSelect from 'react-select/creatable';
-import { Box, Card, Typography, CardHeader, CardContent } from '@mui/material';
+import {
+  Grid,
+  Box,
+  Button,
+  Container,
+  Stack,
+  Card,
+  Typography,
+  CardHeader,
+  CardContent
+} from '@mui/material';
 import {
   Timeline,
   TimelineItem,
@@ -14,9 +24,11 @@ import {
   TimelineSeparator,
   TimelineDot
 } from '@mui/lab';
+import { ReviewCard, MentorSearch, MentorSort } from '.';
 // utils
 import { fDateTime } from '../../../utils/formatTime';
-
+import POSTS from '../../../_mocks_/mentor';
+import { getReview } from '../../../_actions/mentor_actions';
 // ----------------------------------------------------------------------
 const animatedComponents = makeAnimated();
 // ----------------------------------------------------------------------
@@ -76,9 +88,15 @@ export default function MentorStack() {
   );
 
   return (
-    <Box sx={{ p: 3 }}>
-      <CardHeader title="멘토링 리뷰" />
-      <div></div>
+    <Box>
+      <Container>
+        <CardHeader title="멘토링 리뷰" />{' '}
+        <ScrollMenu>
+          {POSTS.map((post, index) => (
+            <ReviewCard key={post.id} post={post} index={index} />
+          ))}
+        </ScrollMenu>
+      </Container>
     </Box>
   );
 }

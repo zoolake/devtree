@@ -181,6 +181,31 @@ public class UserController {
 	}
 
 
+	@GetMapping("/v1/common/team/{userSeq}")
+	public ResponseEntity<Result> findUserTeam(@PathVariable Long userSeq) {
+		List<TeamInfoDto> responseDto = userService.findUserTeam(userSeq);
+		return ResponseEntity
+				.status(200)
+				.body(Result.builder()
+						.data(responseDto)
+						.status(200)
+						.message("참여한 팀 내역(팀 일련번호, 팀 이름, 팀 타입) 조회 성공")
+						.build());
+	}
+
+	@GetMapping("/v1/common/team/manager/{managerSeq}")
+	public ResponseEntity<Result> findManagerTeam(@PathVariable Long managerSeq) {
+		List<TeamInfoDto> responseDto = userService.findManagerTeam(managerSeq);
+		return ResponseEntity
+				.status(200)
+				.body(Result.builder()
+						.data(responseDto)
+						.status(200)
+						.message("참여한 팀 내역(팀 일련번호, 팀 이름, 팀 타입) 조회 성공")
+						.build());
+	}
+
+
 	/**
 	 * List를 한번 감싸서 보내기 위하여 만든 클래스
 	 * Result<>를 사용하다가 수정중에 다시 돌려놓음...

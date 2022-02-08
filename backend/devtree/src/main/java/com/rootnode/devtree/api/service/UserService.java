@@ -30,4 +30,7 @@ public interface UserService {
 
 	List<UserMentoringActivitiesResponseDto> findMentoringListAll(Long userSeq);
 	List<UserMentoringActivitiesResponseDto> findMentoringListState(Long userSeq, MentoringState mentoringState);
+
+	List<TeamInfoDto> findUserTeam(Long userSeq);
+	List<TeamInfoDto> findManagerTeam(Long managerSeq);
 }

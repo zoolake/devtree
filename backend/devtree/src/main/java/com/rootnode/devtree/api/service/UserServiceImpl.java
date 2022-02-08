@@ -263,20 +263,10 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    // 유저의 멘토링 활동 내역 (전체)
     @Override
     public List<UserMentoringActivitiesResponseDto> findMentoringListAll(Long userSeq) {
-        // 1. study_user 테이블, project_position_user 테이블에서 user_seq로 속한 팀(스터디 + 프로젝트) 리스트 찾기
-        List<Long> studyTeamList = studyUserRepository.findTeamSeqByUserSeq(userSeq);
-        List<Long> projectTeamList = projectPositionUserRepository.findTeamSeqByUserSeq(userSeq);
-
-        // 2. 팀 리스트에 팀 일련련번호와 팀 타 추가
-        List<TeamListDto> teamList = new ArrayList<>();
-        studyTeamList.forEach(teamSeq -> {
-            teamList.add(new TeamListDto(teamSeq, TeamType.STUDY));
-        });
-        projectTeamList.forEach(teamSeq -> {
-            teamList.add(new TeamListDto(teamSeq, TeamType.PROJECT));
-        });
+        List<TeamInfoDto> teamList = findUserTeam(userSeq);
 
         List<UserMentoringActivitiesResponseDto> mentoringActivitiesList = new ArrayList<>();
         // 2. mentoring_reservation 테이블에서 team_seq로 속한 멘토링 찾기
@@ -290,6 +280,7 @@ public class UserServiceImpl implements UserService {
         return mentoringActivitiesList;
     }
 
+    // 유저의 멘토링 활동 내역 (상태)
     @Override
     public List<UserMentoringActivitiesResponseDto> findMentoringListState(Long userSeq, MentoringState mentoringState) {
         return findMentoringListAll(userSeq).stream()
@@ -297,4 +288,30 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    // 사용자가 속한 팀 찾기
+    @Override
+    public List<TeamInfoDto> findUserTeam(Long userSeq) {
+        // 1. study_user 테이블, project_position_user 테이블에서 user_seq로 속한 팀(스터디 + 프로젝트) 리스트 찾기
+        List<Long> studyTeamList = studyUserRepository.findTeamSeqByUserSeq(userSeq).stream().sorted().collect(Collectors.toList());
+        List<Long> projectTeamList = projectPositionUserRepository.findTeamSeqByUserSeq(userSeq).stream().sorted().collect(Collectors.toList());
+
+        // 2. 팀 리스트에 팀 일련련번호와 팀 타 추가
+        List<TeamInfoDto> teamList = new ArrayList<>();
+        studyTeamList.forEach(teamSeq -> {
+            Team team = teamRepository.findById(teamSeq).get();
+            teamList.add(new TeamInfoDto(team));
+        });
+        projectTeamList.forEach(teamSeq -> {
+            Team team = teamRepository.findById(teamSeq).get();
+            teamList.add(new TeamInfoDto(team));
+        });
+        return teamList;
+    }
+
+    @Override
+    public List<TeamInfoDto> findManagerTeam(Long managerSeq) {
+        return teamRepository.findTeamByManagerSeq(managerSeq).stream()
+                .map(team -> new TeamInfoDto(team))
+                .collect(Collectors.toList());
+    }
 }

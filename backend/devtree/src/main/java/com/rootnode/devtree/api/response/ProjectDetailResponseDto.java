@@ -6,6 +6,7 @@ import com.rootnode.devtree.db.entity.TeamState;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,10 +23,18 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class ProjectDetailResponseDto {
     private Long teamSeq;
-    private Long teamManagerSeq;
     private String teamName;
+    private Long teamManagerSeq;
     private String teamManagerName;
+    private String teamType;
+    private String teamDesc;
     private TeamState teamState;
+    private int teamRecruitCnt;
+    private int teamMemberCnt;
+    private LocalDateTime teamCreateTime;
+    private LocalDateTime teamUpdateTime;
+    private LocalDateTime teamStartTime;
+    private LocalDateTime teamEndTime;
     private List<TechInfoDto> teamTech;
     private List<ProjectPositionInfoDto> teamPosition;
 
@@ -34,7 +43,15 @@ public class ProjectDetailResponseDto {
         this.teamManagerSeq = team.getTeamManagerSeq();
         this.teamName = team.getTeamName();
         this.teamManagerName = teamManagerName;
+        this.teamDesc = team.getTeamDesc();
         this.teamState = team.getTeamState();
+        this.teamType = team.getTeamType().name();
+        this.teamRecruitCnt = team.getTeamRecruitCnt();
+        this.teamMemberCnt = team.getTeamMemberCnt();
+        this.teamCreateTime = team.getTeamCreateTime();
+        this.teamUpdateTime = team.getTeamUpdateTime();
+        this.teamStartTime = team.getTeamStartTime();
+        this.teamEndTime = team.getTeamEndTime();
         this.teamTech = team.toTechInfoDto();
         this.teamPosition = projectPositions.stream()
                 .map(projectPosition -> new ProjectPositionInfoDto(projectPosition))

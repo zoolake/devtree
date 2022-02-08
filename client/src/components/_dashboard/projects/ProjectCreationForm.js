@@ -43,7 +43,7 @@ export default function ProjectCreationForm() {
 
         const createProject = async () => {
           console.log(dataToSubmit);
-          const createUrl = '/project'; // http://127.26.1.146:8080/v1/project
+          const createUrl = '/v1/project';
           await axios
             .post(createUrl, dataToSubmit)
             .then((response) => {
@@ -66,8 +66,8 @@ export default function ProjectCreationForm() {
 
   const SetSelections = async () => {
     // 기술테크, 포지션 리스트 불러오기
-    const techUrl = '/tech'; // http://127.26.1.146:8080/v1/tech
-    const positionUrl = '/position'; // http://127.26.1.146:8080/v1/position
+    const techUrl = '/v1/tech';
+    const positionUrl = '/v1/position';
     await axios
       .get(techUrl)
       .then((response) => {

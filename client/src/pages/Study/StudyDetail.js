@@ -9,7 +9,7 @@ export default function StudyDetail() {
   const [loading, setLoading] = useState(false);
 
   const getStudyDetail = async () => {
-    const studyDetailUrl = `/study/${teamSeq.id}`; // http://127.26.1.146:8080/v1/study/${teamSeq.id}
+    const studyDetailUrl = `/v1/study/${teamSeq.id}`;
     setLoading(true);
     await axios
       .get(studyDetailUrl)

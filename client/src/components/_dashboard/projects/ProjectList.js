@@ -7,7 +7,7 @@ export default function ProjectList() {
   const [projectList, setProjectList] = useState([]);
   const [loading, setLoading] = useState(false);
   const getProjectList = async () => {
-    const projectListUrl = '/project'; // http://127.26.1.146:8080/v1/project
+    const projectListUrl = '/v1/project';
     setLoading(true);
     await axios
       .get(projectListUrl)

@@ -5,7 +5,7 @@ import axios from 'axios';
 export default function ProjectDelete() {
   const teamSeq = useParams();
   const projectDelete = async () => {
-    const url = `/project/${teamSeq.id}`; // http://127.26.1.146:8080/v1/project/${teamSeq.id}
+    const url = `/v1/project/${teamSeq.id}`;
     await axios
       .delete(url)
       .then((response) => {

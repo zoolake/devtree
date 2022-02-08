@@ -9,7 +9,7 @@ export default function ProjectDetail() {
   const [loading, setLoading] = useState(false);
 
   const getProjectDetail = async () => {
-    const projectDetailUrl = `/project/${teamSeq.id}`; // http://127.26.1.146:8080/v1/project/${teamSeq.id}
+    const projectDetailUrl = `/v1/project/${teamSeq.id}`;
     setLoading(true);
     await axios
       .get(projectDetailUrl)

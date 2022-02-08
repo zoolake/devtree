@@ -46,9 +46,8 @@ export default function ProjectUpdateForm(project) {
         };
 
         // post
-        const createProject = async () => {
-          // api 받아오기
-          const url = 'http://localhost:3000/api/v1/project';
+        const updateProject = async () => {
+          const url = '/v1/project';
           await axios
             .post(url, {
               dataToSubmit

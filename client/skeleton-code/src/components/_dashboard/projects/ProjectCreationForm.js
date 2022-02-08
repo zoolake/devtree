@@ -29,51 +29,42 @@ export default function ProjectCreationForm() {
   // const dispatch = useDispatch();
 
   const RegisterSchema = Yup.object().shape({
-    team_name: Yup.string()
+    teamName: Yup.string()
       .required('프로젝트 제목은 필수 값 입니다.')
       .min(5, '이름은 5자 이상이여야 합니다.')
       .max(20, '이름은 20자 이하이여야 합니다.'),
-    team_desc: Yup.string()
+    teamDesc: Yup.string()
       .required('프로젝트 설명은 필수 값 입니다.')
       .min(10, '프로젝트 설명은 10자 이상이여야 합니다.')
   });
 
   const formik = useFormik({
     initialValues: {
-      team_type: 'project',
-      team_name: '',
-      team_state: '모집 중',
-      team_manager_seq: '', // 생성자의 seq
-      team_desc: '',
-      team_tech: '',
-      team_position: ''
+      teamManagerSeq: '',
+      teamName: '',
+      teamDesc: '',
+      teamState: 'RECRUIT',
+      teamType: 'PROJECT',
+      teamTech: [],
+      teamPosition: []
     },
     validationSchema: RegisterSchema,
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
         const dataToSubmit = {
-          team_desc: values.team_desc,
-          team_end_time: '2010-10-10 10:10:10',
-          team_favorite_cnt: 0, // 즐겨찾기 수
-          team_manager_seq: 1, // 생성자의 seq
-          team_member_cnt: 1,
-          team_name: values.team_name,
-          team_recruit_cnt: 10,
-          team_start_time: '2010-10-10 10:10:10',
-          team_state: 'RECRUIT', // RECRUIT, COMPLETED, FINISH
-          team_type: 'PROJECT' // STUDY, PROJECT
-          // team_tech: values.team_tech,
-          // team_position: values.team_position
-          // team_position: '1'
+          teamManagerSeq: 1,
+          teamName: values.teamName,
+          teamDesc: values.teamDesc,
+          teamState: formik.initialValues.teamState, // RECRUIT, COMPLETED, FINISH
+          teamType: formik.initialValues.teamType, // STUDY, PROJECT
+          teamTech: techList,
+          teamPosition: positionList
         };
 
-        // post
         const createProject = async () => {
-          const createUrl = '/project';
+          const createUrl = '/project'; // http://127.26.1.146:8080/v1/project
           await axios
-            .post(createUrl, {
-              dataToSubmit
-            })
+            .post(createUrl, dataToSubmit)
             .then((response) => {
               console.log(response, '프로젝트 생성 성공');
             })
@@ -96,8 +87,8 @@ export default function ProjectCreationForm() {
 
   const SetSelections = async () => {
     // 기술테크, 포지션 리스트 불러오기
-    const techUrl = '/tech';
-    const positionUrl = 'https://620113cafdf509001724980b.mockapi.io/api/v1/position';
+    const techUrl = '/tech'; // http://127.26.1.146:8080/v1/tech
+    const positionUrl = '/position'; // http://127.26.1.146:8080/v1/position
     await axios
       .get(techUrl)
       .then((response) => {
@@ -117,6 +108,28 @@ export default function ProjectCreationForm() {
       .catch((error) => {
         console.log(error, '테크 불러오기 실패');
       });
+    await axios
+      .get(positionUrl)
+      .then((response) => {
+        console.log(response.data.message);
+        return response.data.data;
+      })
+      .then((dataList) => {
+        const allPos = dataList.reduce((total, data, i) => {
+          total = [
+            ...total,
+            { value: i, label: data.detailPositionName, positionName: data.positionName }
+          ];
+          return total;
+        }, []);
+        return allPos;
+      })
+      .then((allPos) => {
+        setAllPosition(allPos);
+      })
+      .catch((error) => {
+        console.log(error, '포지션 불러오기 실패');
+      });
   };
 
   // 초기 렌더링
@@ -129,15 +142,6 @@ export default function ProjectCreationForm() {
   const [techList, setTech] = useState([]);
   const [positionList, setPosition] = useState([]);
   const [positionCnt, setPositionCnt] = useState('');
-
-  const addPosition = (newPosition) => {
-    if (positionList.includes(newPosition)) {
-      console.log('이미 있음');
-    } else {
-      setPosition([...positionList, newPosition]);
-      console.log(positionList, '추가됨');
-    }
-  };
 
   // MemberCntList는 포지션별 멤버 수
   const MemberCntList = [...Array(10).keys()].map((key) => key + 1);
@@ -170,33 +174,84 @@ export default function ProjectCreationForm() {
   );
 
   // selected values, initially it lists all options in order
-  const [value, setValue] = useState(orderOptions(allTechList));
+  const [techValue, setTechValue] = useState(orderOptions(allTechList));
+  const [positionValue, setPositionValue] = useState(orderOptions(allPositionList));
 
-  // handler for changes
+  // handler for Tech changes
   const handleTechs = useCallback(
     (inputValue, { action, removedValue }) => {
       switch (action) {
         case 'remove-value': // delete with 'x'
           setTech(orderOptions(techList.filter((tech) => tech !== removedValue)));
           return;
-        case 'pop-value': // delete with backspace
+
+        case 'pop-value': {
+          // delete with backspace
           if (removedValue.isFixed) {
             setTech(orderOptions([...inputValue, removedValue]));
+          }
+          return;
+        }
+
+        case 'clear': // clear button is clicked
+          setTech(techList.filter((v) => v.isFixed));
+          return;
+
+        case 'select-option': {
+          const newInput = inputValue.reduce((total, data, i) => {
+            const ret = [...total, data.value];
+            return ret;
+          }, []);
+          setTech(newInput);
+          return;
+        }
+
+        default:
+          setTechValue(inputValue);
+      }
+    },
+    [techList, orderOptions]
+  );
+
+  // handler for Position changes
+  const handlePositions = useCallback(
+    (inputValue, { action, removedValue }) => {
+      switch (action) {
+        case 'remove-value': // delete with 'x'
+          setPosition(orderOptions(positionList.filter((tech) => tech !== removedValue)));
+          return;
+        case 'pop-value': // delete with backspace
+          if (removedValue.isFixed) {
+            setPosition(orderOptions([...inputValue, removedValue]));
             return;
           }
           break;
         case 'clear': // clear button is clicked
-          setTech(techList.filter((v) => v.isFixed));
+          setPosition(positionList.filter((v) => v.isFixed));
           return;
-        case 'select-option':
-          setTech(inputValue);
+        case 'select-option': {
+          const newInput = inputValue.reduce((total, data, i) => {
+            const ret = [
+              ...total,
+              {
+                position: {
+                  detailPositionName: data.label,
+                  positionName: data.positionName
+                },
+                positionRecruitCnt: 10
+              }
+            ];
+            return ret;
+          }, []);
+          console.log(newInput);
+          setPosition(newInput);
           return;
+        }
         default:
       }
-      setValue(inputValue);
+      setPositionValue(inputValue);
     },
-    [techList, orderOptions],
-    console.log(techList)
+    [positionList, orderOptions]
   );
 
   return (
@@ -206,9 +261,9 @@ export default function ProjectCreationForm() {
           <TextField
             fullWidth
             label="Name"
-            {...getFieldProps('team_name')}
-            error={Boolean(touched.team_name && errors.team_name)}
-            helperText={touched.team_name && errors.team_name}
+            {...getFieldProps('teamName')}
+            error={Boolean(touched.teamName && errors.teamName)}
+            helperText={touched.teamName && errors.teamName}
           />
 
           <TextField
@@ -216,9 +271,9 @@ export default function ProjectCreationForm() {
             multiline
             rows={5}
             label="desc"
-            {...getFieldProps('team_desc')}
-            error={Boolean(touched.team_desc && errors.team_desc)}
-            helperText={touched.team_desc && errors.team_desc}
+            {...getFieldProps('teamDesc')}
+            error={Boolean(touched.teamDesc && errors.teamDesc)}
+            helperText={touched.teamDesc && errors.teamDesc}
           />
 
           <Box sx={7}>
@@ -239,74 +294,19 @@ export default function ProjectCreationForm() {
 
           <Box sx={7}>
             <Select
-              isMulti // show multiple options
-              components={animatedComponents} // animate builtin components
-              isClearable={positionList.some((v) => !v.isFixed)} // clear button shows conditionally
-              styles={styles} // styles that do not show 'x' for fixed options
-              options={SetSelections.allPositionList} // all options
-              value={positionList} // selected values
-              onChange={addPosition} // handler for changes
+              // closeMenuOnSelect={false}
+              components={animatedComponents}
+              isMulti
+              options={allPositionList}
               placeholder="포지션 추가"
-              // error={Boolean(touched.team_position && errors.team_position)}
-              // helperText={touched.team_position && errors.team_position}
+              // // isClearable={techList.some((v) => !v.isFixed)} // clear button shows conditionally
+              styles={styles} // styles that do not show 'x' for fixed options
+              // value={addTech(value)} // selected values
+              onChange={handlePositions} // handler for changes
+              // // error={Boolean(touched.team_position && errors.team_position)}
+              // // helperText={touched.team_position && errors.team_position}
             />
           </Box>
-
-          {/* <TextField
-            // fullWidth
-            select
-            // autoComplete="techs"
-            // type="email"
-            label="team_position"
-            onChange={addPosition}
-            {...getFieldProps('team_position')}
-            error={Boolean(touched.team_position && errors.team_position)}
-            helperText={touched.team_position && errors.team_position}
-          >
-            {positionList.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField> */}
-
-          {/* added poistions */}
-          <div>
-            {positionList.map((position, idx) => (
-              <div key={idx}>
-                {position}
-                {position.position_recruit_cnt}
-                {position.position_member_cnt}
-                <TextField
-                  // fullWidth
-                  select
-                  // autoComplete="techs"
-                  // type="email"
-                  label="team_position_recruit_cnt"
-                  onChange={setPositionCnt}
-                  {...getFieldProps('team_position_recruit_cnt')}
-                  error={Boolean(
-                    touched.team_position_recruit_cnt && errors.team_position_recruit_cnt
-                  )}
-                  helperText={touched.team_position_recruit_cnt && errors.team_position_recruit_cnt}
-                >
-                  {MemberCntList.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <LoadingButton
-                  size="small"
-                  type="submit"
-                  variant="contained"
-                  loading={isSubmitting}
-                >
-                  생성
-                </LoadingButton>
-              </div>
-            ))}
-          </div>
 
           <LoadingButton
             fullWidth

@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import { Icon } from '@iconify/react';
 import eyeFill from '@iconify/icons-eva/eye-fill';
-import { useState, useCallback } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import shareFill from '@iconify/icons-eva/share-fill';
 import messageCircleFill from '@iconify/icons-eva/message-circle-fill';
@@ -52,41 +51,21 @@ const CoverImgStyle = styled('img')({
 
 // ----------------------------------------------------------------------
 
-MentorCard.propTypes = {
-  post: PropTypes.object.isRequired,
-  index: PropTypes.number
-};
-
-export default function MentorCard({ post, index }) {
-  console.log(post);
-  console.log(index);
-  const { stack, mentorname, tier, mentorcarrer } = post;
-  console.log(`tier:${tier}`);
-  const latestPostLarge = index === 0;
-  const latestPost = index === 1 || index === 2;
-
-  const POST_INFO = [{ text: tier, icon: messageCircleFill }];
-
+export default function PossibleTime({}) {
   return (
     <Grid item xs={0} sm={0} md={0}>
       {' '}
       <Card sx={{ position: 'relative' }}>
         <CardContent>
-          <Typography gutterBottom variant="caption">
-            {mentorcarrer}
-          </Typography>
           <TitleStyle
-            to="/"
+            to="#"
             color="inherit"
             variant="subtitle2"
             underline="hover"
             component={RouterLink}
           >
-            {mentorname}
+            가능한 시간
           </TitleStyle>
-          <Typography gutterBottom variant="caption">
-            {stack}
-          </Typography>
         </CardContent>
       </Card>
     </Grid>

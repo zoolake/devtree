@@ -12,3 +12,4 @@ export const UPDATE_USER = 'update_user';
 export const GET_MENTORS = 'get_mentors';
 export const MENTOR_DETAIL = 'mentor_detail';
 export const GET_REVIEWS = 'get_review';
+export const GET_TEAM = 'get_team';

@@ -43,7 +43,6 @@ export default function MentorStack() {
     []
   );
 
-  // styles that do not show 'x' for fixed options
   const styles = useMemo(
     () => ({
       multiValueRemove: (base, state) => (state.data.isFixed ? { ...base, display: 'none' } : base)

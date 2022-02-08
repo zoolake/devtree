@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { Icon } from '@iconify/react';
-import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import { Grid, Card, Button, Container, Stack, Typography } from '@mui/material';
@@ -25,13 +23,7 @@ import {
 } from '../../components/Profile';
 // ----------------------------------------------------------------------
 const ismentor = 'true';
-const SORT_OPTIONS = [
-  { value: 'detail', label: '내 프로필' },
-  { value: 'detaillist', label: '활동내역' },
-  { value: 'passwordUpdate', label: '비밀번호 수정' },
-  { value: 'mentordetail', label: '멘토 프로필' },
-  { value: 'like', label: '즐겨찾기' }
-];
+
 const Tab = [
   {
     title: '내 프로필',

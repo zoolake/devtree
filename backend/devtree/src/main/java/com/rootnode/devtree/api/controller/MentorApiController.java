@@ -46,6 +46,17 @@ public class MentorApiController {
     }
 
     /**
+     * 기능: 멘토 프로필 조회 (자신이 보는)
+     */
+    @GetMapping("/v1/user/mentor/{mentorSeq}")
+    public ResponseEntity<Result> mentorSelfDetail(@PathVariable Long mentorSeq) {
+        MentorSelfDetailSelfResponseDto responseDto = mentorService.findMentorSelf(mentorSeq);
+        return ResponseEntity
+                .status(200)
+                .body(new Result(responseDto, 200, "멘토 프로필 조회에 성공하였습니다."));
+    }
+
+    /**
      * 기능: 멘토 가능 스케줄 설정
      */
     @PutMapping("/v1/mentor/{mentorSeq}/available")

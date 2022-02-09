@@ -14,6 +14,7 @@ import java.util.Set;
 @NoArgsConstructor @AllArgsConstructor
 public class MentorDetailResponseDto {
     private String mentorNickname;
+    private String mentorCareer;
     private List<MentorTechInfoDto> mentorTechList;
     private String mentorDesc;
     private String mentorEmail;

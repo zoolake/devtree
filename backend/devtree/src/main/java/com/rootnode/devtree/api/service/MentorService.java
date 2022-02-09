@@ -86,6 +86,7 @@ public class MentorService {
         });
 
         return MentorDetailResponseDto.builder()
+                .mentorCareer(mentor.getMentorCareer())
                 .mentorDesc(mentor.getMentorDesc())
                 .mentorEmail(user.getUserEmail())
                 .mentorNickname(user.getUserNickname())

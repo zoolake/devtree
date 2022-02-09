@@ -325,6 +325,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(mentorSeq).get();
 
         mentorRepository.save(requestDto.toEntity(user));
-        return new CommonResponseDto(201, "멘토링 인증을 완료하였습니다.");
+        return new CommonResponseDto(201, "멘토 인증을 완료하였습니다.");
     }
 }

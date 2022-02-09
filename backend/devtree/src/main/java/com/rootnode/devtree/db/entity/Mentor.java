@@ -41,4 +41,7 @@ public class Mentor {
 
     @OneToMany(mappedBy = "mentor")
     private List<MentorTech> techList;
+
+    public void changeMentorCareer(String mentorCareer) { this.mentorCareer = mentorCareer; }
+    public void changeMentorDesc(String mentorDesc) { this.mentorDesc = mentorDesc; }
 }

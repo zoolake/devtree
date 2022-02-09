@@ -1,6 +1,7 @@
 package com.rootnode.devtree.api.controller;
 
 import com.rootnode.devtree.api.request.MentorScheduleRequestDto;
+import com.rootnode.devtree.api.request.MentorUpdateRequestDto;
 import com.rootnode.devtree.api.request.MentoringApplyRequestDto;
 import com.rootnode.devtree.api.request.MentoringAvailableTimeRequestDto;
 import com.rootnode.devtree.api.response.*;
@@ -36,7 +37,6 @@ public class MentorApiController {
     /**
      * 기능: 멘토 프로필 조회 (남이 보는)
      */
-
     @GetMapping("/v1/mentor/{mentorSeq}")
     public ResponseEntity<Result> mentorDetail(@PathVariable Long mentorSeq) {
         MentorDetailResponseDto responseDto = mentorService.findMentor(mentorSeq);
@@ -54,6 +54,15 @@ public class MentorApiController {
         return ResponseEntity
                 .status(200)
                 .body(new Result(responseDto, 200, "멘토 프로필 조회에 성공하였습니다."));
+    }
+
+    /**
+     * 기능 : 멘토 정보 수정
+     */
+    @PutMapping("/v1/mentor/{mentorSeq}")
+    public CommonResponseDto mentorUpdate(@PathVariable Long mentorSeq,
+                                          @RequestBody MentorUpdateRequestDto requestDto){
+        return mentorService.updateMentor(mentorSeq, requestDto);
     }
 
     /**

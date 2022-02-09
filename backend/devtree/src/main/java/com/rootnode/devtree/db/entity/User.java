@@ -43,4 +43,7 @@ public class User{
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     String user_password;
 
+
+    public void changeUserNickName(String userNickname) { this.userNickname = userNickname; }
+    public void changeUserEmail(String userEmail) { this.userEmail = userEmail; }
 }

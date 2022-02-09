@@ -1,16 +1,18 @@
 package com.rootnode.devtree.api.service;
 
-import com.rootnode.devtree.api.request.MentorScheduleRequestDto;
-import com.rootnode.devtree.api.request.MentoringApplyRequestDto;
-import com.rootnode.devtree.api.request.MentoringAvailableTimeRequestDto;
+import com.rootnode.devtree.api.request.*;
 import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.db.entity.*;
+import com.rootnode.devtree.db.entity.compositeKey.MentorTechId;
+import com.rootnode.devtree.db.entity.compositeKey.TeamTechId;
 import com.rootnode.devtree.db.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,6 +29,7 @@ public class MentorService {
     private final MentoringCommentRepository mentoringCommentRepository;
     private final MentorScheduleRepository mentorScheduleRepository;
     private final TeamRepository teamRepository;
+    private final TechRepository techRepository;
 
     public Page<MentorListResponseDto> findMentors(Pageable pageable) {
         Page<Mentor> mentors = mentorRepository.findAllWithPagination(pageable);
@@ -42,7 +45,9 @@ public class MentorService {
                 .collect(Collectors.toList()));
     }
 
-
+    /**
+     * 남이 보는 멘토 프로필
+     */
     public MentorDetailResponseDto findMentor(Long mentorSeq) {
         // 1. mentor 찾기
         Mentor mentor = mentorRepository.findById(mentorSeq).get();
@@ -96,6 +101,9 @@ public class MentorService {
                 .build();
     }
 
+    /**
+     * 내가 보는 멘토 프로필
+     */
     public MentorSelfDetailSelfResponseDto findMentorSelf(Long mentorSeq) {
         // 1. mentor 찾기
         Mentor mentor = mentorRepository.findById(mentorSeq).get();
@@ -152,6 +160,51 @@ public class MentorService {
                 .mentoringInfoList(mentoringInfoList)
                 .mentoringReviewList(reviewDtoList)
                 .build();
+    }
+
+
+    // 멘토 정보 수정
+    @Transactional
+    public CommonResponseDto updateMentor(Long mentorSeq, MentorUpdateRequestDto requestDto) {
+        // 멘토 정보, 유저 정보, 멘토 기술 정보 찾기
+        Mentor mentor = mentorRepository.findById(mentorSeq).get();
+        User user = userRepository.findById(mentorSeq).get();
+
+        // 멘토 닉네임 == 유저 닉네임 변경
+        if(StringUtils.hasText(requestDto.getMentorNickName())) {
+            user.changeUserNickName(requestDto.getMentorNickName());
+        }
+
+        // 멘토 커리어 변경
+        if(StringUtils.hasText(requestDto.getMentorCareer())) {
+            mentor.changeMentorCareer(requestDto.getMentorCareer());
+        }
+
+        // 멘토 설명 변경
+        if(StringUtils.hasText(requestDto.getMentorDesc())) {
+            mentor.changeMentorDesc(requestDto.getMentorDesc());
+        }
+
+        // 멘토 이메일 == 유저 이메일 변경
+        if(StringUtils.hasText(requestDto.getMentorEmail())) {
+            user.changeUserEmail(requestDto.getMentorEmail());
+        }
+
+        // 멘토 기술 스택 변경
+        if(!Objects.isNull(requestDto.getMentorTech())) {
+            // 삭제
+            mentorTechRepository.deleteByMentorSeq(mentorSeq);
+
+            // 새로 삽입
+            requestDto.getMentorTech().forEach(techSeq -> {
+                mentorTechRepository.save(MentorTech.builder()
+                        .mentorTechId(new MentorTechId(mentorSeq, techSeq))
+                        .mentor(mentor)
+                        .tech(techRepository.findById(techSeq).get())
+                        .build());
+            });
+        }
+        return new CommonResponseDto(201, "멘토 정보 수정에 성공하였습니다.");
     }
 
     public CommonResponseDto changeSchedule(Long mentorSeq, List<MentorScheduleRequestDto> requestDtos) {

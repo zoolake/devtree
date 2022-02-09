@@ -116,7 +116,7 @@ public class MentorApiController {
     public CommonResponseDto mentoringApplyResponse(@PathVariable Long mentorSeq,
                                                     @PathVariable Long mentoringSeq,
                                                     @RequestBody MentoringApplyRespondRequestDto requestDto) {
-        return null;
+        return mentorService.respondMentoring(mentorSeq, mentoringSeq, requestDto);
     }
 
 

@@ -250,4 +250,20 @@ public class MentorService {
                 .sorted(Comparator.comparing(MentoringApplyListResponseDto::getMentoringStartTime).thenComparing(MentoringApplyListResponseDto::getMentoringCreateTime))
                 .collect(Collectors.toList());
     }
+
+    public CommonResponseDto respondMentoring(Long mentorSeq, Long mentoringSeq, MentoringApplyRespondRequestDto requestDto) {
+        ResponseType responseType = requestDto.getResponseType();
+        // 수락하는 경우
+        if(ResponseType.ACCEPT.equals(responseType)) {
+            // 상태를 ACCEPT으로 바꿔줌
+            mentoringRepository.acceptMentoring(mentoringSeq);
+        }
+
+        // 거절하는 경우
+        if(ResponseType.REJECT.equals(responseType)) {
+            // 디비에서 삭제
+            mentoringRepository.deleteByMentoringSeq(mentoringSeq);
+        }
+        return new CommonResponseDto(201, "멘토링 요청 응답에 성공하였습니다.");
+    }
 }

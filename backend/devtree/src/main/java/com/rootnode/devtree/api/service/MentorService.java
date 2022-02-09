@@ -74,21 +74,16 @@ public class MentorService {
         });
 
         // 5. 멘토링 후기 찾기
-        List<MentoringReviewDto> reviewDtoList = new ArrayList<>();
+        List<MentoringCommentInfoDto> reviewDtoList = new ArrayList<>();
         mentoringList.forEach(mentoring -> {
-            List<MentoringComment> mentoringCommentList = mentoringCommentRepository.findByMentoringSeq(mentoring.getMentoringSeq());
-            List<MentoringCommentInfoDto> mentoringCommentInfoDtoList = mentoringCommentList.stream()
-                    .map(mentoringComment -> new MentoringCommentInfoDto(userRepository.getById(mentoringComment.getMentoringUser().getMentoringUserID().getUserSeq()), mentoringComment))
-                    .collect(Collectors.toList());
+            Long mentoringSeq = mentoring.getMentoringSeq();
 
-            Team team = mentoring.getTeam();
-            List<TechInfoDto> techInfoDtoList = team.getTeamTechList().stream()
-                    .map(teamTech -> new TechInfoDto(teamTech.getTech()))
-                    .collect(Collectors.toList());
+            List<MentoringComment> mentoringCommentList = mentoringCommentRepository.findByMentoringSeq(mentoringSeq);
+            mentoringCommentList.forEach(mentoringComment -> {
+                reviewDtoList.add(new MentoringCommentInfoDto(userRepository.findById(mentoringComment.getMentoringUser().getUser().getUserSeq()).get(), mentoringComment));
+            });
 
-            reviewDtoList.add(new MentoringReviewDto(team.getTeamType(), techInfoDtoList, mentoringCommentInfoDtoList));
         });
-
 
         return MentorDetailResponseDto.builder()
                 .mentorDesc(mentor.getMentorDesc())
@@ -121,7 +116,7 @@ public class MentorService {
             // 해당 날짜의 가능 스케줄을 서치하기 위해 가져온 날짜 정보
             String mentorTime = requestDto.getMentorTime();
 
-            if(availableTime.equals(mentorTime)) {
+            if (availableTime.equals(mentorTime)) {
                 timeList.add(new MentoringAvailableTimeResponseDto(time));
             }
         });

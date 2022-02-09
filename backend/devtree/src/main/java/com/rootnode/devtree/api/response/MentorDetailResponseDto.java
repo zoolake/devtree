@@ -18,5 +18,5 @@ public class MentorDetailResponseDto {
     private String mentorDesc;
     private String mentorEmail;
     private List<MentoringInfoDto> mentoringInfoList;
-    private List<MentoringReviewDto> mentoringReviewList;
+    private List<MentoringCommentInfoDto> mentoringReviewList;
 }

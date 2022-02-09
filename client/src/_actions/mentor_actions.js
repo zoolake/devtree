@@ -17,19 +17,24 @@ export function detailMentor(id) {
 
 export function getSchedule(dataToSubmit) {
   const request = axios
-    .get(`https://61f649b22e1d7e0017fd6d42.mockapi.io/mentor`, dataToSubmit)
+    .get(`https://620113cafdf509001724980b.mockapi.io/api/v1/time`, dataToSubmit)
     .then((response) => response.data);
   return { type: MENTOR_DETAIL, payload: request };
 }
 
 export function getTeams(dataToSubmit) {
   const request = axios
-    .get(`https://61f649b22e1d7e0017fd6d42.mockapi.io/mentor`, dataToSubmit)
+    .get(`https://620113cafdf509001724980b.mockapi.io/api/v1/mentor_id`, dataToSubmit)
     .then((response) => response.data);
   return { type: GET_TEAM, payload: request };
 }
 
 export function getReview(id) {
+  const request = axios.get(``).then((response) => response.data);
+  return { type: GET_REVIEWS, payload: request };
+}
+
+export function submitMentoring(dataToSubmit) {
   const request = axios.get(``).then((response) => response.data);
   return { type: GET_REVIEWS, payload: request };
 }

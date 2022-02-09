@@ -23,7 +23,6 @@ import {
 } from '../../components/Profile';
 // ----------------------------------------------------------------------
 const ismentor = 'true';
-
 const Tab = [
   {
     title: '내 프로필',

@@ -10,7 +10,6 @@ import {
 } from '../../components/_dashboard/mentor';
 
 function MentoringReservation() {
-  const { id } = useParams();
   const now = new Date();
   const todayWeak = now.getDay() + 1;
   const today = now.getDate() + 1;

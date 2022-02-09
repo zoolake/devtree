@@ -250,8 +250,6 @@ public class UserServiceImpl implements UserService {
                 .map(teamSeq -> {
                     Team team = teamRepository.findById(teamSeq).get();
                     List<ProjectPosition> projectPosition = projectPositionRepository.findByTeamSeq(teamSeq);
-                    System.out.println("team = " + team.getTeamName());
-                    System.out.println("projectPosition.get(0) = " + projectPosition.get(0).getPosition().getDetailPositionName());
                     return new UserProjectActivitiesListResponseDto(team, projectPosition);
                 })
                 .collect(Collectors.toList());

@@ -19,7 +19,7 @@ import { fDateTime } from '../../utils/formatTime';
 import { detailUser } from '../../_actions/user_actions';
 
 // -
-export default function MentoringReview() {
+export default function MentoringTime() {
   useEffect(() => {}, []);
 
   return (

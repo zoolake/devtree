@@ -7,7 +7,6 @@ import Page from '../../components/Page';
 import { AppNewsUpdate } from '../../components/_dashboard/app';
 import {
   Mentoring,
-  MentoringReview,
   MentoringStack,
   MentoringTime,
   ProjectChart,
@@ -21,6 +20,7 @@ import {
   PasswordUpdate,
   MentorAuth
 } from '../../components/Profile';
+import { MentorReviewList } from '../../components/_dashboard/mentor';
 // ----------------------------------------------------------------------
 const ismentor = 'true';
 const Tab = [
@@ -82,7 +82,7 @@ const Tab = [
             <MentoringTime />
           </Grid>
           <Grid item xs={12} md={6} lg={12}>
-            <MentoringReview />
+            <MentorReviewList />
           </Grid>
         </Grid>
       ) : (

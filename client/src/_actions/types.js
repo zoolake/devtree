@@ -14,3 +14,4 @@ export const MENTOR_DETAIL = 'mentor_detail';
 export const GET_REVIEWS = 'get_review';
 export const GET_TEAM = 'get_team';
 export const submitMentoring = 'submit_mentoring';
+export const Update_MentorProfile = 'update_MentorProfile';

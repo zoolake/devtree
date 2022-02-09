@@ -11,32 +11,28 @@ import {
   Card,
   Typography,
   CardHeader,
-  CardContent,
-  Button
+  CardContent
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // utils
 import { fDateTime } from '../../utils/formatTime';
 import { detailUser } from '../../_actions/user_actions';
-
-// ---------------------------------------------------------------------
-
 // ----------------------------------------------------------------------
 
-export default function MyProfile() {
+export default function MentorProfileUpdate() {
   const [visible, setVisible] = useState(false);
-  const [users, setUsers] = useState(null);
+  const [mentor, setMentor] = useState(null);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const userDetail = async () => {
-    setUsers(null);
+    setMentor(null);
     // loading 상태를 true 로 바꿉니다.
     setLoading(true);
     await dispatch(detailUser())
       .then((response) => {
         if (response) {
-          setUsers(response.payload);
-          console.log(users.userId);
+          console.log('test');
+          setMentor(response.payload.data.user);
         }
       })
       .catch((err) => {
@@ -49,22 +45,40 @@ export default function MyProfile() {
     userDetail();
   }, []);
 
-  const flag = () => {
-    setVisible((e) => !e);
-  };
   if (loading) return <div>로딩중..</div>;
-  if (!users) {
+  if (!mentor) {
     return null;
   }
 
   return (
     <div>
-      <CardHeader title="멘토를 인증해주세요" />
+      <CardHeader title="멘토 프로필 정보" />
       <Box sx={{ p: 3 }}>
-        이름
-        <TextField disabled={!visible} fullWidth type="text" value={users.userName} />
-        멘토 인증하는 내용
-        <Button>TEST :멘토 되기</Button>
+        내 경험치
+        <TextField disabled={!visible} fullWidth type="text" value={mentor.mentorTier} />
+        내 티어
+        <TextField disabled={!visible} fullWidth type="text" value={mentor.mentorTier} />
+        멘토 닉네임
+        <TextField disabled={!visible} fullWidth type="text" value={mentor.mentorNickname} />
+        멘토 커리어
+        <TextField disabled={!visible} fullWidth type="text" value={mentor.mentorCareer} />
+        멘토 이메일
+        <TextField
+          disabled={!visible}
+          fullWidth
+          autoComplete="username"
+          type="text"
+          value={mentor.mentorEmail}
+        />
+        멘토 자기소개
+        <TextField
+          id="filled-textarea"
+          disabled={!visible}
+          multiline
+          fullWidth
+          variant="filled"
+          value={mentor.mentorDesc}
+        />
         <Divider />
       </Box>
     </div>

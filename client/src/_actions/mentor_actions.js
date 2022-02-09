@@ -29,8 +29,10 @@ export function getTeams(dataToSubmit) {
   return { type: GET_TEAM, payload: request };
 }
 
-export function getReview(id) {
-  const request = axios.get(``).then((response) => response.data);
+export function getReview(dataToSubmit) {
+  const request = axios
+    .get(`https://620113cafdf509001724980b.mockapi.io/api/v1/review`, dataToSubmit)
+    .then((response) => response.data);
   return { type: GET_REVIEWS, payload: request };
 }
 

@@ -21,7 +21,7 @@ function MentorDetail() {
         <MentorStack />
       </Grid>{' '}
       <Grid item xs={12} md={6} lg={10}>
-        <MentorReviewList />
+        <MentorReviewList mentor_id={id} />
       </Grid>
     </Grid>
   );

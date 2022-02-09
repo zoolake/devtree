@@ -1,6 +1,7 @@
 package com.rootnode.devtree.api.controller;
 
 import com.rootnode.devtree.api.request.MentorScheduleRequestDto;
+import com.rootnode.devtree.api.request.MentoringApplyRequestDto;
 import com.rootnode.devtree.api.request.MentoringAvailableTimeRequestDto;
 import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.api.service.MentorService;
@@ -66,6 +67,14 @@ public class MentorApiController {
                         .status(200)
                         .message("멘토 스케줄 조회 완료")
                         .build());
+    }
+
+    /**
+     * 기능: 멘토링 신청
+     */
+    @PostMapping("/v1/mentoring/apply")
+    public CommonResponseDto mentoringApply(@RequestBody MentoringApplyRequestDto requestDto) {
+        return mentorService.applyMentoring(requestDto);
     }
 
 

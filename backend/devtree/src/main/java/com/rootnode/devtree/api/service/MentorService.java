@@ -1,6 +1,7 @@
 package com.rootnode.devtree.api.service;
 
 import com.rootnode.devtree.api.request.MentorScheduleRequestDto;
+import com.rootnode.devtree.api.request.MentoringApplyRequestDto;
 import com.rootnode.devtree.api.request.MentoringAvailableTimeRequestDto;
 import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.db.entity.*;
@@ -25,6 +26,7 @@ public class MentorService {
     private final MentoringRepository mentoringRepository;
     private final MentoringCommentRepository mentoringCommentRepository;
     private final MentorScheduleRepository mentorScheduleRepository;
+    private final TeamRepository teamRepository;
 
     public Page<MentorListResponseDto> findMentors(Pageable pageable) {
         Page<Mentor> mentors = mentorRepository.findAllWithPagination(pageable);
@@ -124,5 +126,12 @@ public class MentorService {
             }
         });
         return timeList.stream().sorted(Comparator.comparing(MentoringAvailableTimeResponseDto::getHhmmTime)).collect(Collectors.toList());
+    }
+
+    public CommonResponseDto applyMentoring(MentoringApplyRequestDto requestDto) {
+        Team team = teamRepository.findById(requestDto.getTeamSeq()).get();
+        Mentor mentor = mentorRepository.findById(requestDto.getMentorSeq()).get();
+        Mentoring mentoring = mentoringRepository.save(requestDto.toEntity(team, mentor));
+        return new CommonResponseDto(201, "멘토링 신청을 완료하였습니다.");
     }
 }

@@ -1,9 +1,6 @@
 package com.rootnode.devtree.api.controller;
 
-import com.rootnode.devtree.api.request.MentorScheduleRequestDto;
-import com.rootnode.devtree.api.request.MentorUpdateRequestDto;
-import com.rootnode.devtree.api.request.MentoringApplyRequestDto;
-import com.rootnode.devtree.api.request.MentoringAvailableTimeRequestDto;
+import com.rootnode.devtree.api.request.*;
 import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.api.service.MentorService;
 import lombok.AllArgsConstructor;
@@ -95,6 +92,31 @@ public class MentorApiController {
     @PostMapping("/v1/mentoring/apply")
     public CommonResponseDto mentoringApply(@RequestBody MentoringApplyRequestDto requestDto) {
         return mentorService.applyMentoring(requestDto);
+    }
+
+    /**
+     * 기능: 멘토링 신청 조회 (멘토)
+     */
+    @GetMapping("/v1/mentoring/apply/{mentorSeq}")
+    public ResponseEntity<Result> mentoringApplyList(@PathVariable Long mentorSeq) {
+        List<MentoringApplyListResponseDto> responseDto = mentorService.findMentoringApplyList(mentorSeq);
+        return ResponseEntity
+                .status(200)
+                .body(Result.builder()
+                        .data(responseDto)
+                        .status(200)
+                        .message("멘토링 신청목록 조회 완료")
+                        .build());
+    }
+
+    /**
+     * 기능: 멘토링 신청 응답
+     */
+    @PostMapping("/v1/mentoring/apply/{mentorSeq}/{mentoringSeq}")
+    public CommonResponseDto mentoringApplyResponse(@PathVariable Long mentorSeq,
+                                                    @PathVariable Long mentoringSeq,
+                                                    @RequestBody MentoringApplyRespondRequestDto requestDto) {
+        return null;
     }
 
 

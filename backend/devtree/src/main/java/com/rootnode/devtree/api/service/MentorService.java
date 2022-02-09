@@ -240,4 +240,14 @@ public class MentorService {
         Mentoring mentoring = mentoringRepository.save(requestDto.toEntity(team, mentor));
         return new CommonResponseDto(201, "멘토링 신청을 완료하였습니다.");
     }
+
+    public List<MentoringApplyListResponseDto> findMentoringApplyList(Long mentorSeq) {
+        // 멘토링 정보 찾기
+        List<Mentoring> mentoringList = mentoringRepository.findByMentorMentorSeqAndMentoringState(mentorSeq, MentoringState.WAIT);
+        // 멘토링 시작 시간 순 정렬 -> 멘토링 신청 시간 순 정렬
+        return mentoringList.stream()
+                .map(mentoring -> new MentoringApplyListResponseDto(mentoring))
+                .sorted(Comparator.comparing(MentoringApplyListResponseDto::getMentoringStartTime).thenComparing(MentoringApplyListResponseDto::getMentoringCreateTime))
+                .collect(Collectors.toList());
+    }
 }

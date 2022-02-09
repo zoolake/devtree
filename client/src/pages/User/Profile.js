@@ -30,13 +30,13 @@ const Tab = [
       <Grid container spacing={1}>
         <Grid item xs={12} md={6} lg={10}>
           <UserProfile />
-        </Grid>{' '}
+        </Grid>
         <Grid item xs={12} md={6} lg={10}>
           <UserStack />
-        </Grid>{' '}
+        </Grid>
         <Grid item xs={12} md={6} lg={10}>
           <UserDelete />
-        </Grid>{' '}
+        </Grid>
       </Grid>
     )
   },
@@ -46,7 +46,7 @@ const Tab = [
       <Grid container spacing={1}>
         <Grid item xs={12} md={6} lg={12}>
           <StudyList />
-        </Grid>{' '}
+        </Grid>
         <Grid item xs={12} md={6} lg={12}>
           <StudyChart />
         </Grid>

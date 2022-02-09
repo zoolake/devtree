@@ -17,9 +17,7 @@ import {
 import { LoadingButton } from '@mui/lab';
 // utils
 import { fDateTime } from '../../utils/formatTime';
-import { detailUser } from '../../_actions/user_actions';
-
-// ---------------------------------------------------------------------
+import { setMentor } from '../../_actions/mentor_actions';
 
 // ----------------------------------------------------------------------
 
@@ -28,15 +26,11 @@ export default function MyProfile() {
   const [users, setUsers] = useState(null);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const userDetail = async () => {
-    setUsers(null);
-    // loading 상태를 true 로 바꿉니다.
-    setLoading(true);
-    await dispatch(detailUser())
+  const setmentor = async () => {
+    await dispatch(setMentor())
       .then((response) => {
         if (response) {
           setUsers(response.payload);
-          console.log(users.userId);
         }
       })
       .catch((err) => {
@@ -45,26 +39,14 @@ export default function MyProfile() {
     setLoading(false);
   };
 
-  useEffect(() => {
-    userDetail();
-  }, []);
-
-  const flag = () => {
-    setVisible((e) => !e);
+  const mentortest = () => {
+    setmentor();
   };
-  if (loading) return <div>로딩중..</div>;
-  if (!users) {
-    return null;
-  }
-
   return (
     <div>
       <CardHeader title="멘토를 인증해주세요" />
       <Box sx={{ p: 3 }}>
-        이름
-        <TextField disabled={!visible} fullWidth type="text" value={users.userName} />
-        멘토 인증하는 내용
-        <Button>TEST :멘토 되기</Button>
+        <Button onClick={mentortest}>TEST :멘토 되기</Button>
         <Divider />
       </Box>
     </div>

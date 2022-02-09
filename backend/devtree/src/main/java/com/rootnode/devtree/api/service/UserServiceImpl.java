@@ -1,5 +1,6 @@
 package com.rootnode.devtree.api.service;
 
+import com.rootnode.devtree.api.request.MentorCertificationRequestDto;
 import com.rootnode.devtree.api.request.UserRegisterPostReq;
 import com.rootnode.devtree.api.request.UserUpdateRequestDto;
 import com.rootnode.devtree.api.response.*;
@@ -9,8 +10,8 @@ import com.rootnode.devtree.db.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,8 +31,9 @@ public class UserServiceImpl implements UserService {
     private final StudyUserRepository studyUserRepository;
     private final ProjectPositionUserRepository projectPositionUserRepository;
     private final ProjectPositionRepository projectPositionRepository;
-
+    private final MentorRepository mentorRepository;
     private final MentoringRepository mentoringRepository;
+
 //
 //    @Autowired
 //    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -313,5 +315,16 @@ public class UserServiceImpl implements UserService {
         return teamRepository.findTeamByManagerSeq(managerSeq).stream()
                 .map(team -> new TeamInfoDto(team))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public CommonResponseDto certificationMentor(MentorCertificationRequestDto requestDto) {
+        Long mentorSeq = requestDto.getUserSeq();
+        userRepository.certifyMentor(mentorSeq);
+        User user = userRepository.findById(mentorSeq).get();
+
+        mentorRepository.save(requestDto.toEntity(user));
+        return new CommonResponseDto(201, "멘토링 인증을 완료하였습니다.");
     }
 }

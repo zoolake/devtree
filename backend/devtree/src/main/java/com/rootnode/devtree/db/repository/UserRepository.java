@@ -2,6 +2,7 @@ package com.rootnode.devtree.db.repository;
 
 import com.rootnode.devtree.db.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -20,4 +21,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUserSeq(Long user_seq);
 
     List<User> findAll();
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query(value = "update User u set u.userRole='MENTOR' where u.userSeq = :mentorSeq")
+    void certifyMentor(Long mentorSeq);
 }

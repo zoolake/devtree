@@ -1,7 +1,6 @@
 package com.rootnode.devtree.api.controller;
 
-import com.rootnode.devtree.api.request.MentorScheduleRequestDto;
-import com.rootnode.devtree.api.request.MentoringAvailableTimeRequestDto;
+import com.rootnode.devtree.api.request.*;
 import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.api.service.MentorService;
 import lombok.AllArgsConstructor;
@@ -13,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalTime;
 import java.util.List;
 
 
@@ -35,7 +35,6 @@ public class MentorApiController {
     /**
      * 기능: 멘토 프로필 조회 (남이 보는)
      */
-
     @GetMapping("/v1/mentor/{mentorSeq}")
     public ResponseEntity<Result> mentorDetail(@PathVariable Long mentorSeq) {
         MentorDetailResponseDto responseDto = mentorService.findMentor(mentorSeq);
@@ -45,11 +44,31 @@ public class MentorApiController {
     }
 
     /**
+     * 기능: 멘토 프로필 조회 (자신이 보는)
+     */
+    @GetMapping("/v1/user/mentor/{mentorSeq}")
+    public ResponseEntity<Result> mentorSelfDetail(@PathVariable Long mentorSeq) {
+        MentorSelfDetailSelfResponseDto responseDto = mentorService.findMentorSelf(mentorSeq);
+        return ResponseEntity
+                .status(200)
+                .body(new Result(responseDto, 200, "멘토 프로필 조회에 성공하였습니다."));
+    }
+
+    /**
+     * 기능 : 멘토 정보 수정
+     */
+    @PutMapping("/v1/mentor/{mentorSeq}")
+    public CommonResponseDto mentorUpdate(@PathVariable Long mentorSeq,
+                                          @RequestBody MentorUpdateRequestDto requestDto){
+        return mentorService.updateMentor(mentorSeq, requestDto);
+    }
+
+    /**
      * 기능: 멘토 가능 스케줄 설정
      */
     @PutMapping("/v1/mentor/{mentorSeq}/available")
     public CommonResponseDto mentorSchedule(@PathVariable Long mentorSeq,
-                                            @RequestBody List<MentorScheduleRequestDto> requestDto) {
+                                            @RequestBody MentorScheduleRequestDto requestDto) {
         return mentorService.changeSchedule(mentorSeq, requestDto);
     }
 
@@ -57,8 +76,9 @@ public class MentorApiController {
      * 기능: 멘토링 가능 스케줄 조회
      */
     @PostMapping("/v1/mentoring/{mentorSeq}")
-    public ResponseEntity<Result> mentorAvailableSchedule(@PathVariable Long mentorSeq, @RequestBody MentoringAvailableTimeRequestDto requestDto) {
-        List<MentoringAvailableTimeResponseDto> responseDto = mentorService.findAvailableTime(mentorSeq, requestDto);
+    public ResponseEntity<Result> mentorAvailableSchedule(@PathVariable Long mentorSeq,
+                                                          @RequestBody MentoringAvailableTimeRequestDto requestDto) {
+        List<LocalTime> responseDto = mentorService.findAvailableTime(mentorSeq, requestDto);
         return ResponseEntity
                 .status(200)
                 .body(Result.builder()
@@ -66,6 +86,39 @@ public class MentorApiController {
                         .status(200)
                         .message("멘토 스케줄 조회 완료")
                         .build());
+    }
+
+    /**
+     * 기능: 멘토링 신청
+     */
+    @PostMapping("/v1/mentoring/apply")
+    public CommonResponseDto mentoringApply(@RequestBody MentoringApplyRequestDto requestDto) {
+        return mentorService.applyMentoring(requestDto);
+    }
+
+    /**
+     * 기능: 멘토링 신청 조회 (멘토)
+     */
+    @GetMapping("/v1/mentoring/apply/{mentorSeq}")
+    public ResponseEntity<Result> mentoringApplyList(@PathVariable Long mentorSeq) {
+        List<MentoringApplyListResponseDto> responseDto = mentorService.findMentoringApplyList(mentorSeq);
+        return ResponseEntity
+                .status(200)
+                .body(Result.builder()
+                        .data(responseDto)
+                        .status(200)
+                        .message("멘토링 신청목록 조회 완료")
+                        .build());
+    }
+
+    /**
+     * 기능: 멘토링 신청 응답
+     */
+    @PostMapping("/v1/mentoring/apply/{mentorSeq}/{mentoringSeq}")
+    public CommonResponseDto mentoringApplyResponse(@PathVariable Long mentorSeq,
+                                                    @PathVariable Long mentoringSeq,
+                                                    @RequestBody MentoringApplyRespondRequestDto requestDto) {
+        return mentorService.respondMentoring(mentorSeq, mentoringSeq, requestDto);
     }
 
 

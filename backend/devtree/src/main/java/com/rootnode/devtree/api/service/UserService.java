@@ -1,5 +1,6 @@
 package com.rootnode.devtree.api.service;
 
+import com.rootnode.devtree.api.request.MentorCertificationRequestDto;
 import com.rootnode.devtree.api.request.UserRegisterPostReq;
 import com.rootnode.devtree.api.request.UserUpdateRequestDto;
 import com.rootnode.devtree.api.response.*;
@@ -33,4 +34,8 @@ public interface UserService {
 
 	List<TeamInfoDto> findUserTeam(Long userSeq);
 	List<TeamInfoDto> findManagerTeam(Long managerSeq);
+	CommonResponseDto certificationMentor(MentorCertificationRequestDto requestDto);
+
+	List<NotificationListResponseDto> findUserNotification(Long userSeq);
+	CommonResponseDto checkUserNotification(Long notificationSeq);
 }

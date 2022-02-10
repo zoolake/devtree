@@ -12,5 +12,6 @@ import java.util.Optional;
 
 public interface UserTechRepository extends JpaRepository<UserTech, UserTechId> {
 //    @Query(value = "select u.userTechId.tech from UserTech u where u.userSeq = :user_seq")
-    List<UserTech> findByUserTechIdUserSeq(Long user_seq);
+    List<UserTech> findByUserTechIdUserSeq(Long userSeq);
+    void deleteByUserTechIdUserSeq(Long userSeq);
 }

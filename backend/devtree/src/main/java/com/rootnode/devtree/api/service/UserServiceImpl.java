@@ -1,5 +1,6 @@
 package com.rootnode.devtree.api.service;
 
+import com.rootnode.devtree.api.request.MentorCertificationRequestDto;
 import com.rootnode.devtree.api.request.UserRegisterPostReq;
 import com.rootnode.devtree.api.request.UserUpdateRequestDto;
 import com.rootnode.devtree.api.response.*;
@@ -9,8 +10,8 @@ import com.rootnode.devtree.db.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,8 +31,10 @@ public class UserServiceImpl implements UserService {
     private final StudyUserRepository studyUserRepository;
     private final ProjectPositionUserRepository projectPositionUserRepository;
     private final ProjectPositionRepository projectPositionRepository;
-
+    private final MentorRepository mentorRepository;
     private final MentoringRepository mentoringRepository;
+    private final NotificationRepository notificationRepository;
+
 //
 //    @Autowired
 //    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -74,20 +77,10 @@ public class UserServiceImpl implements UserService {
     public void updateUser(Long userSeq, UserUpdateRequestDto userUpdateRequestDto) {
 
         Optional<User>Ouser = userRepository.findByUserSeq(userSeq);
-//이름 닉네임 설명 테크
+//      이름 닉네임 설명 테크
         if(Ouser.isPresent()){
             Tech tech;
             User user= Ouser.get();
-
-            //기존 유저 + 새로운 유저 정보
-            //빌더패턴으로 새로운 필드만 변경 가능?
-            //setter를 사용하면 ?
-            /*
-                  private String user_name;
-                  private String user_nickname;
-                  private String user_desc;
-                  private List<Long> user_tech;
-             */
             user = User.builder()
                     .userSeq(user.getUserSeq())
                     .userId(user.getUserId())
@@ -99,19 +92,12 @@ public class UserServiceImpl implements UserService {
                     .userNickname(userUpdateRequestDto.getUser_nickname())
                     .build();
             userRepository.save(user);
-
+            userTechRepository.deleteByUserTechIdUserSeq(user.getUserSeq());
             //기술 스택 관련 정보(사용자 기술스택)먼저  save 해야한다.
             for (Long t : userUpdateRequestDto.getUser_tech()){
                 System.out.println(t);
-                /**
-                 * user와 tech를 먼저 넣어준뒤 UserTech를 넣어주자
-                 * 왜 구현을 이렇게 해야했는지 관계가 이렇게 되엇는지 (다대다) 알 수 있는 부분
-                 * tech가 null이어도 되는 이유..
-                 */
-                userTechRepository.save(new UserTech(new UserTechId(user.getUserSeq(),t),null,null));
+                userTechRepository.save(new UserTech(new UserTechId(user.getUserSeq(),t),user,techRepository.findByTechSeq(t)));
             }
-
-
 
         }
     }
@@ -248,8 +234,6 @@ public class UserServiceImpl implements UserService {
                 .map(teamSeq -> {
                     Team team = teamRepository.findById(teamSeq).get();
                     List<ProjectPosition> projectPosition = projectPositionRepository.findByTeamSeq(teamSeq);
-                    System.out.println("team = " + team.getTeamName());
-                    System.out.println("projectPosition.get(0) = " + projectPosition.get(0).getPosition().getDetailPositionName());
                     return new UserProjectActivitiesListResponseDto(team, projectPosition);
                 })
                 .collect(Collectors.toList());
@@ -313,5 +297,36 @@ public class UserServiceImpl implements UserService {
         return teamRepository.findTeamByManagerSeq(managerSeq).stream()
                 .map(team -> new TeamInfoDto(team))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public CommonResponseDto certificationMentor(MentorCertificationRequestDto requestDto) {
+        Long mentorSeq = requestDto.getUserSeq();
+        userRepository.certifyMentor(mentorSeq);
+        User user = userRepository.findById(mentorSeq).get();
+
+        mentorRepository.save(requestDto.toEntity(user));
+        return new CommonResponseDto(201, "멘토 인증을 완료하였습니다.");
+    }
+
+    @Override
+    public List<NotificationListResponseDto> findUserNotification(Long userSeq) {
+        List<Notification> notificationList = notificationRepository.findNotificationByUserSeq(userSeq);
+        List<NotificationListResponseDto> responseDto = new ArrayList<>();
+        notificationList.forEach(notification -> {
+            Long sendUserSeq = notification.getNotificationSendUserSeq();
+            String sendUserName = userRepository.findByUserSeq(sendUserSeq).get().getUserName();
+            responseDto.add(new NotificationListResponseDto(notification, sendUserName));
+        });
+        return responseDto;
+    }
+
+    @Override
+    @Transactional
+    public CommonResponseDto checkUserNotification(Long notificationSeq) {
+        Notification notification = notificationRepository.findById(notificationSeq).get();
+        notification.changeIsCheck();
+        return new CommonResponseDto(200, "알림을 확인하였습니다.");
     }
 }

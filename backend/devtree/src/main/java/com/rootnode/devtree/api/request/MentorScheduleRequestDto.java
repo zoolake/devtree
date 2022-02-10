@@ -9,7 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,14 +19,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class MentorScheduleRequestDto {
-    private int mentorDay;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
-    private LocalDateTime mentorTime;
-
-    public MentorSchedule toEntity(Mentor mentor) {
-        return new MentorSchedule(
-                new MentorScheduleId(this.mentorDay, this.mentorTime, mentor.getMentorSeq()), mentor);
-    }
-
+    private LocalDate mentorDate;
+    private List<LocalTime> mentorTime;
 }

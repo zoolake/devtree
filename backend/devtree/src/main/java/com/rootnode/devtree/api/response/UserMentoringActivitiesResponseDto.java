@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @NoArgsConstructor
@@ -15,8 +17,8 @@ public class UserMentoringActivitiesResponseDto {
     private String mentorName;
     private Long teamSeq;
     private TeamType teamType;
-    private LocalDateTime mentoringStartTime;
-    private int mentoringStartDay;
+    private LocalDate mentoringStartDate;
+    private LocalTime mentoringStartTime;
     private LocalDateTime mentoringCreateTime;
     private String mentoringState;
 
@@ -25,8 +27,8 @@ public class UserMentoringActivitiesResponseDto {
         this.mentorName = mentoring.getMentor().getUser().getUserName();
         this.teamSeq = mentoring.getTeam().getTeamSeq();
         this.teamType = teamType;
+        this.mentoringStartDate = mentoring.getMentoringStartDate();
         this.mentoringStartTime = mentoring.getMentoringStartTime();
-        this.mentoringStartDay = mentoring.getMentoringStartDay();
         this.mentoringCreateTime = mentoring.getMentoringCreateTime();
         this.mentoringState = mentoring.getMentoringState().name();
     }

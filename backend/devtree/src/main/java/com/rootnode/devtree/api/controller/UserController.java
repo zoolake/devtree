@@ -3,12 +3,14 @@ package com.rootnode.devtree.api.controller;
 import com.rootnode.devtree.api.request.UserRegisterPostReq;
 import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.api.service.UserService;
+import com.rootnode.devtree.common.auth.UserDetail;
 import com.rootnode.devtree.db.entity.MentoringState;
 import com.rootnode.devtree.db.entity.TeamState;
 import com.rootnode.devtree.db.entity.User;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -58,11 +60,13 @@ public class UserController {
 	}
 
 	/**
-	 *  기능 : 유저의 스터디 기록 내역 (기술 당 스터디를 몇 번 했는지)
+	 *  기능 : 유저의 스터디 기록 내역 (기술 당 스터디를 몇 번 했는지) /
+	 *  수정 : user_seq - > Authentication
 	 */
-	@GetMapping("/v1/user/study/{user_seq}/count")
-	public ResponseEntity<Result> userStudyCount(@PathVariable Long user_seq) {
-		List<UserActivitiesTechCntResponseDto> responseDto = userService.findStudyCount(user_seq);
+	@GetMapping("/v1/user/study/count")
+	public ResponseEntity<Result> userStudyCount(Authentication authentication) {
+		UserDetail userDetail = (UserDetail) authentication.getDetails();
+		List<UserActivitiesTechCntResponseDto> responseDto = userService.findStudyCount(userDetail.getUser().getUserSeq());
 		return ResponseEntity
 				.status(200)
 				.body(Result.builder()
@@ -73,11 +77,13 @@ public class UserController {
 	}
 
 	/**
-	 *  기능 : 유저의 스터디 전체 활동 내역
+	 *  기능 : 유저의 스터디 전체 활동 내역 /
+	 *  수정 : user_seq - > Authentication
 	 */
-	@GetMapping("/v1/user/study/{user_seq}")
-	public ResponseEntity<Result> userStudyListAll(@PathVariable Long user_seq) {
-		List<UserStudyActivitiesListResponseDto> responseDto = userService.findStudyListAll(user_seq);
+	@GetMapping("/v1/user/study")
+	public ResponseEntity<Result> userStudyListAll(Authentication authentication) {
+		UserDetail userDetail = (UserDetail) authentication.getDetails();
+		List<UserStudyActivitiesListResponseDto> responseDto = userService.findStudyListAll(userDetail.getUser().getUserSeq());
 		return ResponseEntity
 				.status(200)
 				.body(Result.builder()
@@ -89,11 +95,13 @@ public class UserController {
 
 	/**
 	 *  기능 : 유저의 스터디 상태 활동 내역
+	 *  수정 : user_seq - > Authentication
 	 */
-	@GetMapping("/v1/user/study/{user_seq}/{team_state}")
-	public ResponseEntity<Result> userStudyListState(@PathVariable Long user_seq,
+	@GetMapping("/v1/user/study/{team_state}")
+	public ResponseEntity<Result> userStudyListState(Authentication authentication,
 													 @PathVariable TeamState team_state) {
-		List<UserStudyActivitiesListResponseDto> responseDto = userService.findStudyListState(user_seq, team_state);
+		UserDetail userDetail = (UserDetail) authentication.getDetails();
+		List<UserStudyActivitiesListResponseDto> responseDto = userService.findStudyListState(userDetail.getUser().getUserSeq(), team_state);
 		return ResponseEntity
 				.status(200)
 				.body(Result.builder()
@@ -105,10 +113,12 @@ public class UserController {
 
 	/**
 	 *  기능 : 유저의 프로젝트 기록 내역 (포지션 당 프로젝트를 몇 번 했는지)
+	 *  수정 : user_seq - > Authentication
 	 */
-	@GetMapping("/v1/user/project/{user_seq}/count")
-	public ResponseEntity<Result> userProjectCount(@PathVariable Long user_seq) {
-		List<UserActivitiesPositionCntResponseDto> responseDto = userService.findProjectCount(user_seq);
+	@GetMapping("/v1/user/project/count")
+	public ResponseEntity<Result> userProjectCount(Authentication authentication) {
+		UserDetail userDetail = (UserDetail) authentication.getDetails();
+		List<UserActivitiesPositionCntResponseDto> responseDto = userService.findProjectCount(userDetail.getUser().getUserSeq());
 		return ResponseEntity
 				.status(200)
 				.body(Result.builder()
@@ -120,10 +130,12 @@ public class UserController {
 
 	/**
 	 *  기능 : 유저의 프로젝트 전체 활동 내역
+	 *  수정 : user_seq - > Authentication
 	 */
-	@GetMapping("/v1/user/project/{user_seq}")
-	public ResponseEntity<Result> userProjectListAll(@PathVariable Long user_seq) {
-		List<UserProjectActivitiesListResponseDto> responseDto = userService.findProjectListAll(user_seq);
+	@GetMapping("/v1/user/project")
+	public ResponseEntity<Result> userProjectListAll(Authentication authentication) {
+		UserDetail userDetail = (UserDetail) authentication.getDetails();
+		List<UserProjectActivitiesListResponseDto> responseDto = userService.findProjectListAll(userDetail.getUser().getUserSeq());
 		return ResponseEntity
 				.status(200)
 				.body(Result.builder()
@@ -135,11 +147,13 @@ public class UserController {
 
 	/**
 	 *  기능 : 유저의 프로젝트 상태 활동 내역
+	 *  수정 : user_seq - > Authentication
 	 */
-	@GetMapping("/v1/user/project/{user_seq}/{team_state}")
-	public ResponseEntity<Result> userProjectListState(@PathVariable Long user_seq,
+	@GetMapping("/v1/user/project/{team_state}")
+	public ResponseEntity<Result> userProjectListState(Authentication authentication,
 													   @PathVariable TeamState team_state) {
-		List<UserProjectActivitiesListResponseDto> responseDto = userService.findProjectListState(user_seq, team_state);
+		UserDetail userDetail = (UserDetail) authentication.getDetails();
+		List<UserProjectActivitiesListResponseDto> responseDto = userService.findProjectListState(userDetail.getUser().getUserSeq(), team_state);
 		return ResponseEntity
 				.status(200)
 				.body(Result.builder()
@@ -151,10 +165,13 @@ public class UserController {
 
 	/**
 	 *  기능 : 유저의 멘토링 전체 활동 내역
+	 *  수정 : user_seq - > Authentication
 	 */
-	@GetMapping("/v1/user/mentor/{user_seq}")
-	public ResponseEntity<Result> userMentoringListAll(@PathVariable Long user_seq) {
-		List<UserMentoringActivitiesResponseDto> responseDto = userService.findMentoringListAll(user_seq);
+	@GetMapping("/v1/user/mentor")
+	public ResponseEntity<Result> userMentoringListAll(Authentication authentication) {
+		UserDetail userDetail = (UserDetail) authentication.getDetails();
+
+		List<UserMentoringActivitiesResponseDto> responseDto = userService.findMentoringListAll(userDetail.getUser().getUserSeq());
 		return ResponseEntity
 				.status(200)
 				.body(Result.builder()
@@ -166,11 +183,14 @@ public class UserController {
 
 	/**
 	 *  기능 : 유저의 멘토링 상태 활동 내역
+	 *  수정 : user_seq - > Authentication
 	 */
-	@GetMapping("/v1/user/mentor/{user_seq}/{mentoring_state}")
-	public ResponseEntity<Result> userMentoringListState(@PathVariable Long user_seq,
+	@GetMapping("/v1/user/mentor/{mentoring_state}")
+	public ResponseEntity<Result> userMentoringListState(Authentication authentication,
 														 @PathVariable MentoringState mentoring_state) {
-		List<UserMentoringActivitiesResponseDto> responseDto = userService.findMentoringListState(user_seq, mentoring_state);
+		UserDetail userDetail = (UserDetail) authentication.getDetails();
+
+		List<UserMentoringActivitiesResponseDto> responseDto = userService.findMentoringListState(userDetail.getUser().getUserSeq(), mentoring_state);
 		return ResponseEntity
 				.status(200)
 				.body(Result.builder()

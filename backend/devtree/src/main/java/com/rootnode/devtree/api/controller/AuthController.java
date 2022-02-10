@@ -60,7 +60,8 @@ public class AuthController {
 //		userdetail에서는 getusername 이 userid 를 가져오는것
         String userId = userDetails.getUsername();
 
-        return ResponseEntity.status(200).body(new Result(userService.getUserDetailByUserId(userId),200,"성공"));
+//        return ResponseEntity.status(200).body(new Result(userService.getUserDetailByUserId(userId),200,"성공"));
+        return ResponseEntity.status(200).body(new Result(userDetails.getUser(),200,"성공"));
     }
 
 

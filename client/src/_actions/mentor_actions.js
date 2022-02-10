@@ -7,8 +7,23 @@ import {
   GET_TEAM,
   Update_MentorProfile,
   GET_TIMELIST,
-  GET_RESERVEDLIST
+  GET_RESERVEDLIST,
+  GET_MENTORINGLIST
 } from './types';
+
+export function getMentoringlist() {
+  const request = axios
+    .get(`https://62049a60c6d8b20017dc35c3.mockapi.io/mentoringlist`)
+    .then((response) => response.data);
+  return { type: GET_MENTORINGLIST, payload: request };
+}
+
+export function setMentor() {
+  const request = axios
+    .get(`https://61f649b22e1d7e0017fd6d42.mockapi.io/mentor`)
+    .then((response) => response.data);
+  return { type: SET_MENTOR, payload: request };
+}
 
 export function saveMentoringTime() {
   const request = axios
@@ -36,13 +51,6 @@ export function getMentors() {
     .get(`https://61f649b22e1d7e0017fd6d42.mockapi.io/mentor`)
     .then((response) => response.data);
   return { type: GET_MENTORS, payload: request };
-}
-
-export function setMentor() {
-  const request = axios
-    .get(`https://61f649b22e1d7e0017fd6d42.mockapi.io/mentor`)
-    .then((response) => response.data);
-  return { type: SET_MENTOR, payload: request };
 }
 
 export function detailMentor(id) {

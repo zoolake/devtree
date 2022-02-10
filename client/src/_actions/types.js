@@ -18,3 +18,4 @@ export const Update_MentorProfile = 'update_MentorProfile';
 export const SET_MENTOR = 'set_Mentor';
 export const GET_TIMELIST = 'get_timelist';
 export const GET_RESERVEDLIST = 'get_reservedlist';
+export const GET_MENTORINGLIST = 'get_mentoringlist';

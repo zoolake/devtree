@@ -9,7 +9,7 @@ import MainPage from './pages/Main/MainPage';
 import Products from './pages/Products';
 import Profile from './pages/User/Profile';
 // project
-import Project from './pages/Project/ProjectMain';
+import ProjectMain from './pages/Project/ProjectMain';
 import ProjectDetail from './pages/Project/ProjectDetail';
 import ProjectCreate from './pages/Project/ProjectCreate';
 import ProjectUpdate from './pages/Project/ProjectUpdate';
@@ -68,7 +68,7 @@ export default function Router() {
       path: '/project',
       element: <DashboardLayout />,
       children: [
-        { path: '', element: <Project /> },
+        { path: '', element: <ProjectMain /> },
         { path: ':id', element: <ProjectDetail /> },
         { path: 'create', element: <ProjectCreate /> },
         { path: ':id/update', element: <ProjectUpdate /> },

@@ -33,6 +33,7 @@ export default function ProjectDetail() {
 
   useEffect(() => {
     getProjectDetail();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (loading || projectDetail.length === 0) return null;
@@ -68,11 +69,14 @@ export default function ProjectDetail() {
           {pjtPosition}
         </ul>
       </ul>
-      <Button variant="contained" component={RouterLink} to="update">
+      <Button variant="contained" component={RouterLink} to="update" project={projectDetail}>
         프로젝트 수정
       </Button>
       <Button variant="contained" component={RouterLink} to="delete">
         프로젝트 삭제
+      </Button>
+      <Button variant="contained" to="join">
+        프로젝트 신청
       </Button>
     </div>
   );

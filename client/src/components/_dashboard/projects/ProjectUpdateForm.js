@@ -8,10 +8,11 @@ import { Stack, TextField, MenuItem } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
 ProjectUpdateForm.propTypes = {
-  projects: PropTypes.array.isRequired
+  project: PropTypes.array.isRequired
 };
 
-export default function ProjectUpdateForm(project) {
+export default function ProjectUpdateForm({ project }) {
+  console.log(project);
   const RegisterSchema = Yup.object().shape({
     team_name: Yup.string()
       .required('프로젝트 제목은 필수 값 입니다.')

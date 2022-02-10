@@ -15,7 +15,7 @@ ProjectListCard.propTypes = {
   index: PropTypes.number
 };
 
-export default function ProjectListCard({ project, index }) {
+export default function ProjectListCard({ project }) {
   return (
     <div>
       <TitleStyle
@@ -25,7 +25,7 @@ export default function ProjectListCard({ project, index }) {
         underline="hover"
         component={RouterLink}
       >
-        {index}) 프로젝트 이름: {project.teamName}
+        {project.teamSeq}) 프로젝트 이름: {project.teamName}
       </TitleStyle>
       <p>{project.teamDesc}</p>
       <br />

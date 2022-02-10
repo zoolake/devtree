@@ -7,29 +7,21 @@ import { useDispatch } from 'react-redux';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 // material
-import { alpha, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import {
   FormLabel,
-  RadioGroup,
   FormControl,
   FormControlLabel,
-  Radio,
   Checkbox,
-  Stack,
-  Box,
   Link,
   Card,
   Grid,
-  Avatar,
-  Typography,
   CardContent,
   Button
 } from '@mui/material';
-// utils
-import { fDate } from '../../../utils/formatTime';
-import { fShortenNumber } from '../../../utils/formatNumber';
-import { PossibleTime } from '.';
-import { getSchedule, getTeams, submitMentoring } from '../../../_actions/mentor_actions';
+import { fDate } from '../../utils/formatTime';
+import { fShortenNumber } from '../../utils/formatNumber';
+import { getSchedule, getTeams, submitMentoring } from '../../_actions/mentor_actions';
 
 const TitleStyle = styled(Link)({
   height: 44,
@@ -39,7 +31,7 @@ const TitleStyle = styled(Link)({
   WebkitBoxOrient: 'vertical'
 });
 
-export default function WeekdayReserv({ week, day, date }) {
+export default function MentorWeeklySetting({ week, day, date }) {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [teams, setTeams] = useState([]);
@@ -56,9 +48,6 @@ export default function WeekdayReserv({ week, day, date }) {
     setSelectedTeam(event.target.value);
     console.log(event.target.value);
   };
-  console.log('--mentorseq--');
-  console.log(id);
-  console.log('-----------');
   const getTime = async () => {
     const dataToSubmit = {
       mentor_time: date,
@@ -117,64 +106,28 @@ export default function WeekdayReserv({ week, day, date }) {
 
   useEffect(() => {
     getTime();
-
-    console.log('=================check=');
-    console.log(teams);
-    getTeam();
     console.log(times);
   }, []);
   return (
     <Grid item xs={0} sm={0} md={0}>
-      <Card sx={{ minWidth: 275 }}>
+      <Card sx={{ minWidth: 300 }}>
         <CardContent>{day}일 예약 일정</CardContent>
         <CardContent>
-          {!times && <CardContent>가능한 시간이 없습니다.</CardContent>}
-          {times && (
-            <FormControl>
-              <FormLabel id="demo-row-radio-buttons-group-label">팀 선택</FormLabel>
-              <RadioGroup
-                row
-                aria-labelledby="demo-row-radio-buttons-group-label"
-                name="row-radio-buttons-group"
-              >
-                {times.map((post, index) => (
-                  <FormControlLabel
-                    onChange={handleTimeChange}
-                    control={<Radio />}
-                    value={post.mentor_time}
-                    label={post.mentor_time}
-                  />
-                ))}
-              </RadioGroup>
-            </FormControl>
-          )}
-        </CardContent>
-      </Card>{' '}
-      <Card sx={{ minWidth: 275 }}>
-        <CardContent>멘토링 할 스터디 / 프로젝트 </CardContent>
-        <CardContent>
-          {!teams && <CardContent>멘토링을 신청할 수 있는 팀이 없습니다.</CardContent>}
-          {teams && (
-            <FormControl>
-              <FormLabel id="demo-row-radio-buttons-group-label">팀 선택</FormLabel>
-              <RadioGroup
-                row
-                aria-labelledby="demo-row-radio-buttons-group-label"
-                name="row-radio-buttons-group"
-              >
-                {teams.map((post, index) => (
-                  <FormControlLabel
-                    control={<Radio onChange={handleTeamChange} />}
-                    value={post.team_seq}
-                    label={post.team_name}
-                  />
-                ))}
-              </RadioGroup>
-            </FormControl>
-          )}
+          <FormControl>
+            <FormLabel id="demo-row-radio-buttons-group-label">시간 선택</FormLabel>
+            {times.map((post, index) => (
+              // eslint-disable-next-line react/jsx-key
+              <FormControlLabel
+                onChange={handleTimeChange}
+                control={<Checkbox />}
+                value={post.mentor_time}
+                label={post.mentor_time}
+              />
+            ))}
+          </FormControl>
         </CardContent>
       </Card>
-      {selectedTeam && selectedTime && <Button onClick={submit}>신청하기</Button>}
+      <Button onClick={submit}>신청하기</Button>
     </Grid>
   );
 }

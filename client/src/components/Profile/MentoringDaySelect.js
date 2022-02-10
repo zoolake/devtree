@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link as RouterLink, useParams } from 'react-router-dom';
 import { Grid, Card, Button, Container, Stack, Typography } from '@mui/material';
-import Page from '../../components/Page';
-import {
-  WeekdayReserv,
-  MentorStack,
-  MentorProfile,
-  MentorReviewList
-} from '../../components/_dashboard/mentor';
+import Page from '../Page';
+import { WeekdayReserv, MentorStack, MentorProfile, MentorReviewList } from '../_dashboard/mentor';
+import { MentorWeeklySetting } from '.';
 
 function MentoringReservation() {
   const now = new Date();
@@ -84,7 +80,7 @@ function MentoringReservation() {
       content: (
         <Grid container spacing={1}>
           <Grid item xs={12} md={6} lg={8}>
-            <WeekdayReserv week={weeknum[0]} day={daylist[0]} date={addDays(now, 1)} />
+            <MentorWeeklySetting week={weeknum[0]} day={daylist[0]} date={addDays(now, 1)} />
           </Grid>
         </Grid>
       )
@@ -94,7 +90,7 @@ function MentoringReservation() {
       content: (
         <Grid container spacing={1}>
           <Grid item xs={12} md={6} lg={8}>
-            <WeekdayReserv week={weeknum[1]} day={daylist[1]} date={addDays(now, 2)} />
+            <MentorWeeklySetting week={weeknum[1]} day={daylist[1]} date={addDays(now, 2)} />
           </Grid>
         </Grid>
       )
@@ -103,7 +99,7 @@ function MentoringReservation() {
       title: `${weeklist[2]} / ${daylist[2]}일`,
       content: (
         <Grid item xs={12} md={6} lg={8}>
-          <WeekdayReserv week={weeknum[2]} day={daylist[2]} date={addDays(now, 3)} />
+          <MentorWeeklySetting week={weeknum[2]} day={daylist[2]} date={addDays(now, 3)} />
         </Grid>
       )
     },
@@ -111,7 +107,7 @@ function MentoringReservation() {
       title: `${weeklist[3]} / ${daylist[3]}일`,
       content: (
         <Grid item xs={12} md={6} lg={8}>
-          <WeekdayReserv week={weeknum[3]} day={daylist[3]} date={addDays(now, 4)} />
+          <MentorWeeklySetting week={weeknum[3]} day={daylist[3]} date={addDays(now, 4)} />
         </Grid>
       )
     },
@@ -119,7 +115,7 @@ function MentoringReservation() {
       title: `${weeklist[4]} / ${daylist[4]}일`,
       content: (
         <Grid item xs={12} md={6} lg={8}>
-          <WeekdayReserv week={weeknum[4]} day={daylist[4]} date={addDays(now, 5)} />
+          <MentorWeeklySetting week={weeknum[4]} day={daylist[4]} date={addDays(now, 5)} />
         </Grid>
       )
     },
@@ -127,7 +123,7 @@ function MentoringReservation() {
       title: `${weeklist[5]} / ${daylist[5]}일`,
       content: (
         <Grid item xs={12} md={6} lg={8}>
-          <WeekdayReserv week={weeknum[5]} day={daylist[5]} date={addDays(now, 6)} />
+          <MentorWeeklySetting week={weeknum[5]} day={daylist[5]} date={addDays(now, 6)} />
         </Grid>
       )
     },
@@ -135,7 +131,7 @@ function MentoringReservation() {
       title: `${weeklist[6]} / ${daylist[6]}일`,
       content: (
         <Grid item xs={12} md={6} lg={8}>
-          <WeekdayReserv week={weeknum[6]} day={daylist[6]} date={addDays(now, 7)} />
+          <MentorWeeklySetting week={weeknum[6]} day={daylist[6]} date={addDays(now, 7)} />
         </Grid>
       )
     }
@@ -162,11 +158,6 @@ function MentoringReservation() {
   return (
     <Page title="profile">
       <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            멘토링 예약
-          </Typography>
-        </Stack>
         <div>
           {Tab.map((e, index) => (
             <button key={index} onClick={(e) => changeItem(index)}>

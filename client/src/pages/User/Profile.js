@@ -7,7 +7,6 @@ import Page from '../../components/Page';
 import { AppNewsUpdate } from '../../components/_dashboard/app';
 import {
   Mentoring,
-  MentoringReview,
   MentoringStack,
   MentoringTime,
   ProjectChart,
@@ -21,9 +20,9 @@ import {
   PasswordUpdate,
   MentorAuth
 } from '../../components/Profile';
+import { MentorReviewList } from '../../components/_dashboard/mentor';
 // ----------------------------------------------------------------------
 const ismentor = 'true';
-
 const Tab = [
   {
     title: '내 프로필',
@@ -31,13 +30,13 @@ const Tab = [
       <Grid container spacing={1}>
         <Grid item xs={12} md={6} lg={10}>
           <UserProfile />
-        </Grid>{' '}
+        </Grid>
         <Grid item xs={12} md={6} lg={10}>
           <UserStack />
-        </Grid>{' '}
+        </Grid>
         <Grid item xs={12} md={6} lg={10}>
           <UserDelete />
-        </Grid>{' '}
+        </Grid>
       </Grid>
     )
   },
@@ -47,7 +46,7 @@ const Tab = [
       <Grid container spacing={1}>
         <Grid item xs={12} md={6} lg={12}>
           <StudyList />
-        </Grid>{' '}
+        </Grid>
         <Grid item xs={12} md={6} lg={12}>
           <StudyChart />
         </Grid>
@@ -83,7 +82,7 @@ const Tab = [
             <MentoringTime />
           </Grid>
           <Grid item xs={12} md={6} lg={12}>
-            <MentoringReview />
+            <MentorReviewList />
           </Grid>
         </Grid>
       ) : (

@@ -44,4 +44,7 @@ public class Mentor {
 
     public void changeMentorCareer(String mentorCareer) { this.mentorCareer = mentorCareer; }
     public void changeMentorDesc(String mentorDesc) { this.mentorDesc = mentorDesc; }
+    public void changeMentorExp(Long mentorExp){this.mentorExp = mentorExp;}
+    public void changeMentorCount(int mentoringCnt){this.mentoringCnt = mentoringCnt;}
+
 }

@@ -1,5 +1,6 @@
 package com.rootnode.devtree.api.response;
 
+import com.rootnode.devtree.db.entity.Tier;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class MentorSelfDetailSelfResponseDto {
     private String mentorCareer;
     private String mentorDesc;
     private String mentorEmail;
+    private Tier tier;
     private List<MentorTechInfoDto> mentorTechList;
 
 //    private List<LocalDateTime> mentoringAvailableTimeList;

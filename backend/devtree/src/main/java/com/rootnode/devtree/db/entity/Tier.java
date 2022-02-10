@@ -18,7 +18,7 @@ public class Tier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "")
-    private Long tier_seq;
+    private Long tierSeq;
 
     @Column(name = "tier_name")
     private String tierName;

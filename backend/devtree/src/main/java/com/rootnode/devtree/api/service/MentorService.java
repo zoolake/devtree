@@ -33,7 +33,7 @@ public class MentorService {
     private final MentorScheduleRepository mentorScheduleRepository;
     private final TeamRepository teamRepository;
     private final TechRepository techRepository;
-
+    private final TierRepository tierRepository;
     public Page<MentorListResponseDto> findMentors(Pageable pageable) {
         Page<Mentor> mentors = mentorRepository.findAllWithPagination(pageable);
         return new PageImpl(mentors.stream()
@@ -93,6 +93,8 @@ public class MentorService {
             });
 
         });
+        // 6. 멘토 티어
+        Tier tier =tierRepository.findByTierMaxExpGreaterThanEqualAndTierMinExpLessThanEqual(mentor.getMentorExp(),mentor.getMentorExp());
 
         return MentorDetailResponseDto.builder()
                 .mentorCareer(mentor.getMentorCareer())
@@ -102,6 +104,7 @@ public class MentorService {
                 .mentorTechList(mentorTechInfoDtoList)
                 .mentoringInfoList(mentoringInfoList)
                 .mentoringReviewList(reviewDtoList)
+                .tier(tier)
                 .build();
     }
 
@@ -164,6 +167,7 @@ public class MentorService {
                 .mentorTechList(mentorTechInfoDtoList)
                 .mentoringInfoList(mentoringInfoList)
                 .mentoringReviewList(reviewDtoList)
+                .tier(tierRepository.findByTierMaxExpGreaterThanEqualAndTierMinExpLessThanEqual(mentor.getMentorSeq(),mentor.getMentorExp()))
                 .build();
     }
 
@@ -264,11 +268,21 @@ public class MentorService {
         ResponseType responseType = requestDto.getResponseType();
         LocalDate mentoringDate = mentoringRepository.findById(mentoringSeq).get().getMentoringStartDate();
         LocalTime mentoringTime = mentoringRepository.findById(mentoringSeq).get().getMentoringStartTime();
+        Mentor mentor = mentorRepository.findById(mentorSeq).get();
         // 수락하는 경우
         if(ResponseType.ACCEPT.equals(responseType)) {
             // 상태를 ACCEPT으로 바꿔줌
             mentoringRepository.acceptMentoring(mentoringSeq);
             mentorScheduleRepository.deleteByDateAndTime(mentoringDate, mentoringTime);
+            int mCount = mentor.getMentoringCnt() + 1;
+            //횟수 증가
+            mentor.changeMentorCount(mCount);
+            //현재 팀
+            Team team = mentoringRepository.findById(mentoringSeq).get().getTeam();
+            //현재팀과
+            int Count = mentoringRepository.countByTeamTeamSeqAndMentorMentorSeq(team.getTeamSeq(),mentorSeq);
+            //맨토링을 할때마다 기본으로 100, 같은 팀이라면 +20 ~ +30 ~ +40  +50
+            mentor.changeMentorExp(mCount*100L+10+10*Count);
 
         }
 

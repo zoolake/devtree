@@ -2,6 +2,7 @@ package com.rootnode.devtree.db.repository;
 
 import com.rootnode.devtree.db.entity.Mentoring;
 import com.rootnode.devtree.db.entity.MentoringState;
+import com.rootnode.devtree.db.entity.Team;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -25,4 +26,5 @@ public interface MentoringRepository extends JpaRepository<Mentoring, Long> {
     @Query(value = "delete from Mentoring m where m.mentoringSeq = :mentoringSeq")
     void deleteByMentoringSeq(Long mentoringSeq);
 
+    int countByTeamTeamSeqAndMentorMentorSeq(Long TeamSeq, Long mentorSeq);
 }

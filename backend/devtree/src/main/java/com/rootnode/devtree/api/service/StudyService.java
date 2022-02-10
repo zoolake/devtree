@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -30,6 +31,7 @@ public class StudyService {
     private final TeamRepository teamRepository;
     private final TeamTechRepository teamTechRepository;
     private final TechRepository techRepository;
+    private final NotificationRepository notificationRepository;
 
     private final StudyReservationRepository studyReservationRepository;
     private final StudyUserRepository studyUserRepository;
@@ -98,6 +100,15 @@ public class StudyService {
         // 3. 저장
         studyReservationRepository.save(requestDto.toEntity(teamSeq, team, user));
 
+        // 4. 스터디 신청 알림 보내기
+        // 알림 내용
+        String content = user.getUserName() + "님이 " + team.getTeamName() + "팀 스터디에 신청 요청을 보냈습니다";
+        //sendUserSeq, receiveUserSeq, teamSeq, sendTime, content, notificationType
+        Notification notification = new Notification(userSeq, team.getTeamManagerSeq(), teamSeq,
+                LocalDateTime.now(), content,NotificationType.STUDY);
+        // 5. 알림 테이블에 저장
+        notificationRepository.save(notification);
+
         return new CommonResponseDto(201, "스터디 신청에 성공하였습니다.");
     }
 
@@ -118,15 +129,35 @@ public class StudyService {
             teamRepository.findById(teamSeq).get().addTeamMember();
             // 3. Study_Reservation_Repository 에 있는 (userSeq, teamSeq) 데이터 삭제
             studyReservationRepository.deleteById(new StudyReservationId(userSeq, teamSeq));
+
+            // 4. 스터디 신청 수락 알림 보내기
+            // 알림 내용
+            Long teamManagerSeq = team.getTeamManagerSeq();
+            String content = team.getTeamName() + "팀 스터디 신청이 수락되었습니다!";
+            //sendUserSeq, receiveUserSeq, teamSeq, sendTime, content, notificationType
+            Notification notification = new Notification(teamManagerSeq, userSeq, teamSeq,
+                    LocalDateTime.now(), content,NotificationType.STUDY);
+            // 5. 알림 테이블에 저장
+            notificationRepository.save(notification);
         }
 
         // 2. 거절을 하는 경우
         if (ResponseType.REJECT.equals(responseType)) {
             // 1. 해당 신청 기록을 Study_Reservation_Repository 에서 삭제
             studyReservationRepository.deleteById(new StudyReservationId(userSeq, teamSeq));
-        }
 
-        return new CommonResponseDto(201, "스터디 요청 응답에 성공하였습니다.");
+            // 2. 스터디 신청 거절 알림 보내기
+            // 알림 내용
+            Long teamManagerSeq = team.getTeamManagerSeq();
+            String content = team.getTeamName() + "팀 스터디 신청이 거절되었습니다.";
+            //sendUserSeq, receiveUserSeq, teamSeq, sendTime, content, notificationType
+            Notification notification = new Notification(teamManagerSeq, userSeq, teamSeq,
+                    LocalDateTime.now(), content,NotificationType.STUDY);
+            // 5. 알림 테이블에 저장
+            notificationRepository.save(notification);
+            return new CommonResponseDto(201, "스터디 요청을 거절하였습니다.");
+        }
+        return new CommonResponseDto(201, "스터디 요청을 수락하였습니다.");
     }
 
     // 스터디 신청 조회

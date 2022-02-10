@@ -29,13 +29,26 @@ public class Notification {
     @Column(name = "notification_send_time")
     private LocalDateTime notificationSendTime;
 
-    @Column(name = "notification_detail_position_name")
-    private String notificationDetailPositionName;
+    @Column(name = "notification_team_seq")
+    private Long notificationTeamSeq;
 
     @Column(name = "notification_content")
     private String notificationContent;
-//
-//    @Enumerated(EnumType.STRING)
-//    private NotificationType notificationType;
 
+    @Column(name = "is_check")
+    private boolean notificationIsCheck;
+
+    @Enumerated(EnumType.STRING)
+    private NotificationType notificationType;
+
+    public Notification(Long sendUserSeq, Long receiveUserSeq, Long teamSeq, LocalDateTime sendTime,
+                        String content, NotificationType notificationType) {
+        this.notificationSendUserSeq = sendUserSeq;
+        this.notificationReceiveUserSeq = receiveUserSeq;
+        this.notificationTeamSeq = teamSeq;
+        this.notificationSendTime = sendTime;
+        this.notificationContent = content;
+        this.notificationIsCheck = false;
+        this.notificationType = notificationType;
+    }
 }

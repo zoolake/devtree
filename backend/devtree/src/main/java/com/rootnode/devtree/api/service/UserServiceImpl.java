@@ -321,4 +321,12 @@ public class UserServiceImpl implements UserService {
         });
         return responseDto;
     }
+
+    @Override
+    @Transactional
+    public CommonResponseDto checkUserNotification(Long notificationSeq) {
+        Notification notification = notificationRepository.findById(notificationSeq).get();
+        notification.changeIsCheck();
+        return new CommonResponseDto(200, "알림을 확인하였습니다.");
+    }
 }

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalTime;
 import java.util.List;
 
 
@@ -67,7 +68,7 @@ public class MentorApiController {
      */
     @PutMapping("/v1/mentor/{mentorSeq}/available")
     public CommonResponseDto mentorSchedule(@PathVariable Long mentorSeq,
-                                            @RequestBody List<MentorScheduleRequestDto> requestDto) {
+                                            @RequestBody MentorScheduleRequestDto requestDto) {
         return mentorService.changeSchedule(mentorSeq, requestDto);
     }
 
@@ -75,8 +76,9 @@ public class MentorApiController {
      * 기능: 멘토링 가능 스케줄 조회
      */
     @PostMapping("/v1/mentoring/{mentorSeq}")
-    public ResponseEntity<Result> mentorAvailableSchedule(@PathVariable Long mentorSeq, @RequestBody MentoringAvailableTimeRequestDto requestDto) {
-        List<MentoringAvailableTimeResponseDto> responseDto = mentorService.findAvailableTime(mentorSeq, requestDto);
+    public ResponseEntity<Result> mentorAvailableSchedule(@PathVariable Long mentorSeq,
+                                                          @RequestBody MentoringAvailableTimeRequestDto requestDto) {
+        List<LocalTime> responseDto = mentorService.findAvailableTime(mentorSeq, requestDto);
         return ResponseEntity
                 .status(200)
                 .body(Result.builder()

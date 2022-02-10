@@ -7,18 +7,21 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Data
 @NoArgsConstructor @AllArgsConstructor
 @Embeddable
 public class MentorScheduleId implements Serializable {
 
-    @Column(name = "mentor_day")
-    private int mentorDay;      // 원래 Long으로 되어있었음
+    // 2022-02-10
+    @Column(name = "mentor_date")
+    private LocalDate mentorDate;      // 원래 Long으로 되어있었음 (day -> date)
 
+    // 14:00:00
     @Column(name ="mentor_time" )
-    private LocalDateTime mentorTime;   // 원래 LocalDateTime으로 되어있었음
+    private LocalTime mentorTime;   // 원래 LocalDateTime으로 되어있었음
 
     @Column(name = "mentor_seq")
     private Long mentorSeq;

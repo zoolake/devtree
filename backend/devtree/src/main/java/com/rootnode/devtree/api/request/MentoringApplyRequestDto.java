@@ -9,7 +9,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @NoArgsConstructor
@@ -18,14 +20,14 @@ import java.time.LocalDateTime;
 public class MentoringApplyRequestDto {
     private Long mentorSeq;
     private Long teamSeq;
-    private int selectedDay;
-    private LocalDateTime selectedTime;
+    private LocalDate selectedDate;
+    private LocalTime selectedTime;
 
     public Mentoring toEntity(Team team, Mentor mentor) {
         return Mentoring.builder()
                 .team(team)
                 .mentor(mentor)
-                .mentoringStartDay(selectedDay)
+                .mentoringStartDate(selectedDate)
                 .mentoringStartTime(selectedTime)
                 .mentoringCreateTime(LocalDateTime.now())
                 .mentoringState(MentoringState.WAIT)

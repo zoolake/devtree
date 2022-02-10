@@ -5,10 +5,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class MentoringAvailableTimeRequestDto {
-    private String mentorTime;
+    private LocalDate selectedDate;
 }

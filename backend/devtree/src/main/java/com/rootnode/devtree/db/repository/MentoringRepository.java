@@ -14,7 +14,7 @@ public interface MentoringRepository extends JpaRepository<Mentoring, Long> {
 
 	@Query(value = "select m from Mentoring m where m.team.teamSeq = :teamSeq")
     List<Mentoring> findMentoringByTeamSeq(Long teamSeq);
-    
+
     @Transactional
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(value = "update Mentoring m set m.mentoringState='ACCEPT' where m.mentoringSeq = :mentoringSeq")

@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Getter
@@ -13,5 +14,6 @@ import java.util.List;
 public class MentoringInfoDto {
     private String teamName;
     private List<String> techNameList;
-    private LocalDateTime mentoringStartTime;
+    private LocalDate mentoringStartDate;
+    private LocalTime mentoringStartTime;
 }

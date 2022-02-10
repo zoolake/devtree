@@ -3,6 +3,7 @@ package com.rootnode.devtree.api.service;
 import com.rootnode.devtree.api.request.*;
 import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.db.entity.*;
+import com.rootnode.devtree.db.entity.compositeKey.MentorScheduleId;
 import com.rootnode.devtree.db.entity.compositeKey.MentorTechId;
 import com.rootnode.devtree.db.entity.compositeKey.TeamTechId;
 import com.rootnode.devtree.db.repository.*;
@@ -14,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -67,7 +70,8 @@ public class MentorService {
         mentoringList.forEach(mentoring -> {
             Team team = mentoring.getTeam();
             List<TeamTech> teamTechList = team.getTeamTechList();
-            LocalDateTime mentoringStartTime = mentoring.getMentoringStartTime();
+            LocalDate mentoringStartDate = mentoring.getMentoringStartDate();
+            LocalTime mentoringStartTime = mentoring.getMentoringStartTime();
 
             List<String> techNameList = teamTechList.stream()
                     .map(teamTech -> {
@@ -75,7 +79,7 @@ public class MentorService {
                     })
                     .collect(Collectors.toList());
 
-            mentoringInfoList.add(new MentoringInfoDto(team.getTeamName(), techNameList, mentoringStartTime));
+            mentoringInfoList.add(new MentoringInfoDto(team.getTeamName(), techNameList, mentoringStartDate, mentoringStartTime));
         });
 
         // 5. 멘토링 후기 찾기
@@ -123,7 +127,8 @@ public class MentorService {
         mentoringList.forEach(mentoring -> {
             Team team = mentoring.getTeam();
             List<TeamTech> teamTechList = team.getTeamTechList();
-            LocalDateTime mentoringStartTime = mentoring.getMentoringStartTime();
+            LocalDate mentoringStartDate = mentoring.getMentoringStartDate();
+            LocalTime mentoringStartTime = mentoring.getMentoringStartTime();
 
             List<String> techNameList = teamTechList.stream()
                     .map(teamTech -> {
@@ -131,7 +136,7 @@ public class MentorService {
                     })
                     .collect(Collectors.toList());
 
-            mentoringInfoList.add(new MentoringInfoDto(team.getTeamName(), techNameList, mentoringStartTime));
+            mentoringInfoList.add(new MentoringInfoDto(team.getTeamName(), techNameList, mentoringStartDate, mentoringStartTime));
         });
 
         // 5. 멘토링 후기 찾기
@@ -147,7 +152,7 @@ public class MentorService {
         });
 
         // 6. 멘토의 가능 시간 찾기
-        List<LocalDateTime> availableTimeList = mentorScheduleRepository.findByMentorSeq(mentorSeq).stream().sorted().collect(Collectors.toList());
+        List<LocalTime> availableTimeList = mentorScheduleRepository.findByMentorSeq(mentorSeq).stream().sorted().collect(Collectors.toList());
 
         return MentorSelfDetailSelfResponseDto.builder()
                 .mentorName(user.getUserName())
@@ -155,7 +160,7 @@ public class MentorService {
                 .mentorDesc(mentor.getMentorDesc())
                 .mentorEmail(user.getUserEmail())
                 .mentorNickname(user.getUserNickname())
-                .mentoringAvailableTimeList(availableTimeList)
+//                .mentoringAvailableTimeList(availableTimeList)
                 .mentorTechList(mentorTechInfoDtoList)
                 .mentoringInfoList(mentoringInfoList)
                 .mentoringReviewList(reviewDtoList)
@@ -207,31 +212,34 @@ public class MentorService {
         return new CommonResponseDto(201, "멘토 정보 수정에 성공하였습니다.");
     }
 
-    public CommonResponseDto changeSchedule(Long mentorSeq, List<MentorScheduleRequestDto> requestDtos) {
+    public CommonResponseDto changeSchedule(Long mentorSeq, MentorScheduleRequestDto requestDto) {
         Mentor mentor = mentorRepository.findById(mentorSeq).get();
+        LocalDate mentorDate = requestDto.getMentorDate();
+        List<LocalTime> mentorTimeList = requestDto.getMentorTime();
 
-        mentorScheduleRepository.saveAll(requestDtos.stream()
-                .map(requestDto -> requestDto.toEntity(mentor))
-                .collect(Collectors.toList()));
-
+        mentorTimeList.forEach(mentorTime -> {
+            mentorScheduleRepository.save(new MentorSchedule(new MentorScheduleId(mentorDate, mentorTime, mentorSeq), mentor));
+        });
         return new CommonResponseDto(201, "스케줄 설정에 성공하였습니다.");
     }
 
     // 멘토링 가능 스케줄 조회
-    public List<MentoringAvailableTimeResponseDto> findAvailableTime(Long mentorSeq, MentoringAvailableTimeRequestDto requestDto) {
-        List<LocalDateTime> availableTimeList = mentorScheduleRepository.findByMentorSeq(mentorSeq);
-        List<MentoringAvailableTimeResponseDto> timeList = new ArrayList<>();
-        availableTimeList.forEach(t -> {
-            // 멘토 스케줄 테이블에서 가져오는 날짜
-            String availableTime = t.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            // 해당 날짜의 가능 스케줄을 서치하기 위해 가져온 날짜 정보
-            String mentorTime = requestDto.getMentorTime();
-
-            if (availableTime.equals(mentorTime)) {
-                timeList.add(new MentoringAvailableTimeResponseDto(t));
-            }
-        });
-        return timeList.stream().sorted(Comparator.comparing(MentoringAvailableTimeResponseDto::getHhmmTime)).collect(Collectors.toList());
+    public List<LocalTime> findAvailableTime(Long mentorSeq, MentoringAvailableTimeRequestDto requestDto) {
+        LocalDate selectedDate = requestDto.getSelectedDate();
+        List<LocalTime> availableTimeList = mentorScheduleRepository.findByMentorSeqAndDate(mentorSeq, selectedDate);
+//        List<MentoringAvailableTimeResponseDto> timeList = new ArrayList<>();
+//        availableTimeList.forEach(t -> {
+//            // 멘토 스케줄 테이블에서 가져오는 날짜
+//            String availableTime = t.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+//            // 해당 날짜의 가능 스케줄을 서치하기 위해 가져온 날짜 정보
+//            LocalDate mentorTime = requestDto.getSelectedDate();
+//
+//            if (availableTime.equals(mentorTime)) {
+//                timeList.add(new MentoringAvailableTimeResponseDto(t));
+//            }
+//        });
+//        return timeList.stream().sorted(Comparator.comparing(MentoringAvailableTimeResponseDto::getHhmmTime)).collect(Collectors.toList());
+        return availableTimeList;
     }
 
     public CommonResponseDto applyMentoring(MentoringApplyRequestDto requestDto) {
@@ -241,22 +249,27 @@ public class MentorService {
         return new CommonResponseDto(201, "멘토링 신청을 완료하였습니다.");
     }
 
+    // 멘토의 멘토링 모든 정보 찾기
     public List<MentoringApplyListResponseDto> findMentoringApplyList(Long mentorSeq) {
         // 멘토링 정보 찾기
         List<Mentoring> mentoringList = mentoringRepository.findByMentorMentorSeqAndMentoringState(mentorSeq, MentoringState.WAIT);
-        // 멘토링 시작 시간 순 정렬 -> 멘토링 신청 시간 순 정렬
+        // 멘토링 시작 날짜 순 정렬 -> 시작 시간 순 정렬 -> 신청 시간 순 정렬
         return mentoringList.stream()
                 .map(mentoring -> new MentoringApplyListResponseDto(mentoring))
-                .sorted(Comparator.comparing(MentoringApplyListResponseDto::getMentoringStartTime).thenComparing(MentoringApplyListResponseDto::getMentoringCreateTime))
+                .sorted(Comparator.comparing(MentoringApplyListResponseDto::getMentoringStartDate).thenComparing(MentoringApplyListResponseDto::getMentoringStartTime).thenComparing(MentoringApplyListResponseDto::getMentoringCreateTime))
                 .collect(Collectors.toList());
     }
 
     public CommonResponseDto respondMentoring(Long mentorSeq, Long mentoringSeq, MentoringApplyRespondRequestDto requestDto) {
         ResponseType responseType = requestDto.getResponseType();
+        LocalDate mentoringDate = mentoringRepository.findById(mentoringSeq).get().getMentoringStartDate();
+        LocalTime mentoringTime = mentoringRepository.findById(mentoringSeq).get().getMentoringStartTime();
         // 수락하는 경우
         if(ResponseType.ACCEPT.equals(responseType)) {
             // 상태를 ACCEPT으로 바꿔줌
             mentoringRepository.acceptMentoring(mentoringSeq);
+            mentorScheduleRepository.deleteByDateAndTime(mentoringDate, mentoringTime);
+
         }
 
         // 거절하는 경우

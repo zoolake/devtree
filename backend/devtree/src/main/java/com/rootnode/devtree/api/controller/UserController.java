@@ -236,6 +236,15 @@ public class UserController {
 						.build());
 	}
 
+	/**
+	 *  기능 : 유저의 알림 확인
+	 */
+	@GetMapping("/v1/user/notification/{userSeq}/{notificationSeq}")
+	public CommonResponseDto userNotificationCheck(@PathVariable Long userSeq,
+												   @PathVariable Long notificationSeq) {
+		return userService.checkUserNotification(notificationSeq);
+	}
+
 
 
 	/**

@@ -37,4 +37,5 @@ public interface UserService {
 	CommonResponseDto certificationMentor(MentorCertificationRequestDto requestDto);
 
 	List<NotificationListResponseDto> findUserNotification(Long userSeq);
+	CommonResponseDto checkUserNotification(Long notificationSeq);
 }

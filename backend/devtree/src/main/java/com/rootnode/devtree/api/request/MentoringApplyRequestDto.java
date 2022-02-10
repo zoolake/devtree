@@ -22,6 +22,7 @@ public class MentoringApplyRequestDto {
     private Long teamSeq;
     private LocalDate selectedDate;
     private LocalTime selectedTime;
+    private String applyComment;
 
     public Mentoring toEntity(Team team, Mentor mentor) {
         return Mentoring.builder()
@@ -29,6 +30,7 @@ public class MentoringApplyRequestDto {
                 .mentor(mentor)
                 .mentoringStartDate(selectedDate)
                 .mentoringStartTime(selectedTime)
+                .mentoringApplicationComment(applyComment)
                 .mentoringCreateTime(LocalDateTime.now())
                 .mentoringState(MentoringState.WAIT)
                 .build();

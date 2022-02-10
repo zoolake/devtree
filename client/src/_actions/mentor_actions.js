@@ -5,8 +5,31 @@ import {
   SET_MENTOR,
   GET_REVIEWS,
   GET_TEAM,
-  Update_MentorProfile
+  Update_MentorProfile,
+  GET_TIMELIST,
+  GET_RESERVEDLIST
 } from './types';
+
+export function saveMentoringTime() {
+  const request = axios
+    .get(`https://620113cafdf509001724980b.mockapi.io/api/v1/Possibletime`)
+    .then((response) => response.data);
+  return { type: GET_TIMELIST, payload: request };
+}
+
+export function getCheckedtimeList() {
+  const request = axios
+    .get(`https://620113cafdf509001724980b.mockapi.io/api/v1/Possibletime`)
+    .then((response) => response.data);
+  return { type: GET_TIMELIST, payload: request };
+}
+
+export function getReservedList() {
+  const request = axios
+    .get(`https://62049a60c6d8b20017dc35c3.mockapi.io/reserved`)
+    .then((response) => response.data);
+  return { type: GET_RESERVEDLIST, payload: request };
+}
 
 export function getMentors() {
   const request = axios

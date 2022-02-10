@@ -92,7 +92,7 @@ const Tab = [
       )
   },
   {
-    title: '즐겨찾기',
+    title: '임시',
     content: (
       <Grid item xs={12} md={6} lg={8}>
         <AppNewsUpdate />

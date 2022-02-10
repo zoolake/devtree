@@ -35,4 +35,6 @@ public interface UserService {
 	List<TeamInfoDto> findUserTeam(Long userSeq);
 	List<TeamInfoDto> findManagerTeam(Long managerSeq);
 	CommonResponseDto certificationMentor(MentorCertificationRequestDto requestDto);
+
+	List<NotificationListResponseDto> findUserNotification(Long userSeq);
 }

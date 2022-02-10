@@ -8,6 +8,7 @@ import com.rootnode.devtree.db.entity.compositeKey.MentorTechId;
 import com.rootnode.devtree.db.entity.compositeKey.TeamTechId;
 import com.rootnode.devtree.db.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +35,8 @@ public class MentorService {
     private final TeamRepository teamRepository;
     private final TechRepository techRepository;
     private final TierRepository tierRepository;
+    private final NotificationRepository notificationRepository;
+
     public Page<MentorListResponseDto> findMentors(Pageable pageable) {
         Page<Mentor> mentors = mentorRepository.findAllWithPagination(pageable);
         return new PageImpl(mentors.stream()
@@ -179,7 +182,11 @@ public class MentorService {
                 availableTimeList.add(new MentorTimeInfoDto(date, timeList));
             }
         });
-//        List<LocalTime> availableTimeList = mentorScheduleRepository.findByMentorSeq(mentorSeq).stream().sorted().collect(Collectors.toList());
+        availableTimeList.stream().sorted(Comparator.comparing(MentorTimeInfoDto::getMentorDate)).collect(Collectors.toList());
+        availableTimeList.forEach(availableTime->{
+            List<LocalTime> timeList = availableTime.getMentorTime();
+            Collections.sort(timeList);
+        });
 
         return MentorSelfDetailSelfResponseDto.builder()
                 .mentorName(user.getUserName())
@@ -258,10 +265,21 @@ public class MentorService {
         return availableTimeList;
     }
 
+    // 멘토링 신청
     public CommonResponseDto applyMentoring(MentoringApplyRequestDto requestDto) {
         Team team = teamRepository.findById(requestDto.getTeamSeq()).get();
         Mentor mentor = mentorRepository.findById(requestDto.getMentorSeq()).get();
         Mentoring mentoring = mentoringRepository.save(requestDto.toEntity(team, mentor));
+
+        // 멘토링 신청 알림 보내기
+        // 알림 내용
+        String content = team.getTeamName() + "팀("+ team.getTeamType() +")이 멘토링 신청 요청을 보냈습니다";
+        //sendUserSeq, receiveUserSeq, teamSeq, sendTime, content, notificationType
+        Notification notification = new Notification(team.getTeamManagerSeq(), mentor.getMentorSeq(), team.getTeamSeq(),
+                LocalDateTime.now(), content,NotificationType.MENTORING);
+        // 5. 알림 테이블에 저장
+        notificationRepository.save(notification);
+
         return new CommonResponseDto(201, "멘토링 신청을 완료하였습니다.");
     }
 
@@ -276,11 +294,17 @@ public class MentorService {
                 .collect(Collectors.toList());
     }
 
+    // 멘토링 응답
     public CommonResponseDto respondMentoring(Long mentorSeq, Long mentoringSeq, MentoringApplyRespondRequestDto requestDto) {
         ResponseType responseType = requestDto.getResponseType();
         LocalDate mentoringDate = mentoringRepository.findById(mentoringSeq).get().getMentoringStartDate();
         LocalTime mentoringTime = mentoringRepository.findById(mentoringSeq).get().getMentoringStartTime();
+
         Mentor mentor = mentorRepository.findById(mentorSeq).get();
+        Mentoring mentoring = mentoringRepository.findById(mentoringSeq).get();
+        Team team = teamRepository.findById(mentoring.getTeam().getTeamSeq()).get();
+
+
         // 수락하는 경우
         if(ResponseType.ACCEPT.equals(responseType)) {
             // 상태를 ACCEPT으로 바꿔줌
@@ -292,18 +316,35 @@ public class MentorService {
             //횟수 증가
             mentor.changeMentorCount(mCount);
             //현재 팀
-            Team team = mentoringRepository.findById(mentoringSeq).get().getTeam();
+            Team CurTeam = mentoringRepository.findById(mentoringSeq).get().getTeam();
             //현재팀과
-            int Count = mentoringRepository.countByTeamTeamSeqAndMentorMentorSeq(team.getTeamSeq(),mentorSeq);
+            int Count = mentoringRepository.countByTeamTeamSeqAndMentorMentorSeq(CurTeam.getTeamSeq(),mentorSeq);
             //맨토링을 할때마다 기본으로 100, 같은 팀이라면 +20 ~ +30 ~ +40  +50
             mentor.changeMentorExp(mCount*100L+10+10*Count);
 
+            // 멘토링 신청 알림 보내기
+            // 알림 내용
+            String content = userRepository.findByUserSeq(mentorSeq).get().getUserNickname() + "멘토님이"+ team.getTeamName() +"팀이 멘토링 요청을 수락하였습니다!";
+            //sendUserSeq, receiveUserSeq, teamSeq, sendTime, content, notificationType
+            Notification notification = new Notification(mentorSeq, team.getTeamManagerSeq(), team.getTeamSeq(),
+                    LocalDateTime.now(), content,NotificationType.MENTORING);
+            // 5. 알림 테이블에 저장
+            notificationRepository.save(notification);
         }
 
         // 거절하는 경우
         if(ResponseType.REJECT.equals(responseType)) {
             // 디비에서 삭제
             mentoringRepository.deleteByMentoringSeq(mentoringSeq);
+
+            // 멘토링 신청 알림 보내기
+            // 알림 내용
+            String content = userRepository.findByUserSeq(mentorSeq).get().getUserNickname() + " 멘토님이 "+ team.getTeamName() +" 팀 멘토링 요청을 거절하였습니다.";
+            //sendUserSeq, receiveUserSeq, teamSeq, sendTime, content, notificationType
+            Notification notification = new Notification(mentorSeq, team.getTeamManagerSeq(), team.getTeamSeq(),
+                    LocalDateTime.now(), content,NotificationType.MENTORING);
+            // 5. 알림 테이블에 저장
+            notificationRepository.save(notification);
         }
         return new CommonResponseDto(201, "멘토링 요청 응답에 성공하였습니다.");
     }

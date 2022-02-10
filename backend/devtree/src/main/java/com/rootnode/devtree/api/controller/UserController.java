@@ -10,6 +10,7 @@ import com.rootnode.devtree.db.entity.User;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -218,6 +219,23 @@ public class UserController {
 	public CommonResponseDto userCertification(@RequestBody MentorCertificationRequestDto requestDto) {
 		return userService.certificationMentor(requestDto);
 	}
+
+
+	/**
+	 *  기능 : 유저의 알림 조회
+	 */
+	@GetMapping("/v1/user/notification/{userSeq}")
+	public ResponseEntity<Result> userNotification(@PathVariable Long userSeq) {
+		List<NotificationListResponseDto> responseDto = userService.findUserNotification(userSeq);
+		return ResponseEntity
+				.status(200)
+				.body(Result.builder()
+						.data(responseDto)
+						.status(200)
+						.message("알림 조회 성공")
+						.build());
+	}
+
 
 
 	/**

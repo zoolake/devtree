@@ -33,6 +33,7 @@ public class UserServiceImpl implements UserService {
     private final ProjectPositionRepository projectPositionRepository;
     private final MentorRepository mentorRepository;
     private final MentoringRepository mentoringRepository;
+    private final NotificationRepository notificationRepository;
 
 //
 //    @Autowired
@@ -307,5 +308,17 @@ public class UserServiceImpl implements UserService {
 
         mentorRepository.save(requestDto.toEntity(user));
         return new CommonResponseDto(201, "멘토 인증을 완료하였습니다.");
+    }
+
+    @Override
+    public List<NotificationListResponseDto> findUserNotification(Long userSeq) {
+        List<Notification> notificationList = notificationRepository.findNotificationByUserSeq(userSeq);
+        List<NotificationListResponseDto> responseDto = new ArrayList<>();
+        notificationList.forEach(notification -> {
+            Long sendUserSeq = notification.getNotificationSendUserSeq();
+            String sendUserName = userRepository.findByUserSeq(sendUserSeq).get().getUserName();
+            responseDto.add(new NotificationListResponseDto(notification, sendUserName));
+        });
+        return responseDto;
     }
 }

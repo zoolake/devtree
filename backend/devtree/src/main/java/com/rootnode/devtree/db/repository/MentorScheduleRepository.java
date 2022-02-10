@@ -19,6 +19,9 @@ public interface MentorScheduleRepository extends JpaRepository<MentorSchedule, 
     @Query(value = "select m.mentorScheduleId.mentorTime from MentorSchedule m where m.mentorScheduleId.mentorSeq = :mentorSeq and m.mentorScheduleId.mentorDate = :selectedDate")
     List<LocalTime> findByMentorSeqAndDate(Long mentorSeq, LocalDate selectedDate);
 
+    @Query(value = "select m.mentorScheduleId from MentorSchedule m where m.mentorScheduleId.mentorSeq = :mentorSeq and m.mentorScheduleId.mentorDate >= :currentDate")
+    List<MentorScheduleId> findAfterNowByMentorSeq(Long mentorSeq, LocalDate currentDate);
+
     @Transactional
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(value = "delete from MentorSchedule s where s.mentorScheduleId.mentorDate = :mentoringDate and s.mentorScheduleId.mentorTime = :mentoringTime")

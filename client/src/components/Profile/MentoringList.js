@@ -5,6 +5,8 @@ import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import moment from 'moment';
+import Moment from 'react-moment';
+import { useInterval } from 'react-use';
 import 'moment/locale/ko';
 // material
 import {
@@ -27,7 +29,7 @@ import Label from '../Label';
 import Scrollbar from '../Scrollbar';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../_dashboard/profileHistory';
 
-import { getMentoringlist } from '../../_actions/mentor_actions';
+import { getMentoringlist, rejectMentoring, acceptMentoring } from '../../_actions/mentor_actions';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -73,9 +75,10 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function ProjectList() {
+export default function MentoringList() {
+  const [seconds, setSeconds] = useState(Date.now());
   const [projectList, setProjectList] = useState([]);
-  const getProjectList = async () => {
+  const getMentoringLists = async () => {
     dispatch(getMentoringlist())
       .then((response) => {
         if (response) {
@@ -87,9 +90,17 @@ export default function ProjectList() {
         setTimeout(() => {}, 3000);
       });
   };
+  useInterval(() => {
+    setSeconds(Date.now());
+  }, 1000);
+
+  const startTime = new Date('2022-02-14T18:00:00');
+  const nowTimeFormat = new Date(seconds);
+
   useEffect(() => {
-    getProjectList();
+    getMentoringLists();
   }, []);
+
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -145,6 +156,40 @@ export default function ProjectList() {
     setFilterName(event.target.value);
   };
 
+  const accept = () => {
+    dispatch(acceptMentoring())
+      .then((response) => {
+        if (response) {
+          console.log(response.payload);
+        }
+      })
+      .catch((err) => {
+        setTimeout(() => {}, 3000);
+      });
+  };
+  const reject = () => {
+    dispatch(rejectMentoring())
+      .then((response) => {
+        if (response) {
+          console.log(response.payload);
+        }
+      })
+      .catch((err) => {
+        setTimeout(() => {}, 3000);
+      });
+  };
+  const createSession = () => {
+    dispatch(rejectMentoring())
+      .then((response) => {
+        if (response) {
+          console.log(response.payload);
+        }
+      })
+      .catch((err) => {
+        setTimeout(() => {}, 3000);
+      });
+  };
+
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - projectList.length) : 0;
   const filteredUsers = applySortFilter(projectList, getComparator(order, orderBy), filterName);
   return (
@@ -171,6 +216,7 @@ export default function ProjectList() {
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
+
                 <TableBody>
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -187,6 +233,7 @@ export default function ProjectList() {
                         mentoringmsg,
                         mentoringState
                       } = row;
+                      const time = new Date(`${mentoringStartDate}T${mentoringStartTime}`);
 
                       return (
                         <TableRow hover key={id} tabIndex={-1}>
@@ -214,13 +261,20 @@ export default function ProjectList() {
                           <TableCell align="left">
                             {mentoringState === 'WAIT' ? (
                               <div>
-                                <Button>수락</Button>
-                                <Button>거절</Button>
+                                <Button onClick={accept}>수락</Button>
+                                <Button onClick={reject}>거절</Button>
                               </div>
                             ) : null}
                             {mentoringState === 'ACCEPT' ? (
                               <div>
-                                <Button>대기중</Button>
+                                {time - nowTimeFormat > 0 ? (
+                                  <>
+                                    <Moment fromNow>{time}</Moment>
+                                    &nbsp;멘토링
+                                  </>
+                                ) : (
+                                  <Button onClick={createSession}>세션생성하기</Button>
+                                )}
                               </div>
                             ) : null}
                             {mentoringState === 'ACTIVATE' ? <Button>세션생성</Button> : null}

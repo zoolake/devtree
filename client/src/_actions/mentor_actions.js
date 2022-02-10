@@ -11,6 +11,20 @@ import {
   GET_MENTORINGLIST
 } from './types';
 
+export function rejectMentoring(dataToSubmit) {
+  const request = axios
+    .get(`https://62049a60c6d8b20017dc35c3.mockapi.io/mentoringlist`)
+    .then((response) => response.data);
+  return { type: GET_MENTORINGLIST, payload: request };
+}
+
+export function acceptMentoring(dataToSubmit) {
+  const request = axios
+    .get(`https://62049a60c6d8b20017dc35c3.mockapi.io/mentoringlist`)
+    .then((response) => response.data);
+  return { type: GET_MENTORINGLIST, payload: request };
+}
+
 export function getMentoringlist() {
   const request = axios
     .get(`https://62049a60c6d8b20017dc35c3.mockapi.io/mentoringlist`)

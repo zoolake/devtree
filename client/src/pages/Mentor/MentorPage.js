@@ -20,8 +20,6 @@ const SORT_OPTIONS = [
   { value: 'oldest', label: 'Oldest' }
 ];
 
-// ----------------------------------------------------------------------
-
 export default function Mentor() {
   const dispatch = useDispatch();
   const [mentorlist, setMentorList] = useState([]);

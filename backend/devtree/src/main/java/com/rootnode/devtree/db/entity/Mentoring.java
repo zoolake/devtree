@@ -30,6 +30,9 @@ public class Mentoring {
     @JoinColumn(name = "mentor_seq")
     private Mentor mentor;
 
+    @Column(name = "mentoring_application_comment")
+    private String mentoringApplicationComment;
+
     // 2022-02-10
     @Column(name = "mentoring_start_date")
     private LocalDate mentoringStartDate;   // 원래는 int로 되어있었음

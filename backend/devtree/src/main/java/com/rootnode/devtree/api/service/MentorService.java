@@ -269,7 +269,7 @@ public class MentorService {
     public CommonResponseDto applyMentoring(MentoringApplyRequestDto requestDto) {
         Team team = teamRepository.findById(requestDto.getTeamSeq()).get();
         Mentor mentor = mentorRepository.findById(requestDto.getMentorSeq()).get();
-        Mentoring mentoring = mentoringRepository.save(requestDto.toEntity(team, mentor));
+        mentoringRepository.save(requestDto.toEntity(team, mentor));
 
         // 멘토링 신청 알림 보내기
         // 알림 내용

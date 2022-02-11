@@ -1,17 +1,18 @@
-import PropTypes from 'prop-types';
 import axios from 'axios';
-
 import * as Yup from 'yup';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { Stack, TextField, MenuItem } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { getProjectDetail } from '../../../_actions/project_actions';
 
-ProjectUpdateForm.propTypes = {
-  projects: PropTypes.array.isRequired
-};
-
-export default function ProjectUpdateForm(project) {
+export default function ProjectUpdateForm() {
+  // state
+  const teamSeq = useParams().id;
+  const [projectDetail, setProjectDetail] = useState([]);
+  const [loading, setLoading] = useState(false);
   const RegisterSchema = Yup.object().shape({
     team_name: Yup.string()
       .required('프로젝트 제목은 필수 값 입니다.')
@@ -22,187 +23,78 @@ export default function ProjectUpdateForm(project) {
       .min(10, '프로젝트 설명은 10자 이상이여야 합니다.')
   });
 
+  // axios
+  const dispatch = useDispatch();
+  // 해당 프로젝트 정보 불러오기
+  const getPjtDetail = async () => {
+    setLoading(true);
+    await dispatch(getProjectDetail(teamSeq))
+      .then((response) => {
+        console.log('프로젝트 상세 조회 성공');
+        const projectData = response.payload.data.data;
+        setProjectDetail(projectData);
+        return projectData;
+      })
+      .then(() => {
+        console.log(projectDetail);
+      })
+      .catch((error) => {
+        console.log(error, '프로젝트 상세 조회 실패');
+      });
+    setLoading(false);
+  };
+  // form handling
   const formik = useFormik({
     initialValues: {
-      team_type: 'project',
-      team_name: '',
-      team_state: '모집 중',
-      team_manager_seq: '', // 생성자의 seq
-      team_desc: '',
-      team_tech: '',
-      team_position: ''
+      teamManagerSeq: projectDetail.teamManagerSeq,
+      teamName: projectDetail.teamName,
+      teamDesc: projectDetail.teamDesc,
+      teamState: projectDetail.teamState,
+      teamType: projectDetail.teamType,
+      teamTech: projectDetail.teamTech,
+      teamPosition: projectDetail.teamPosition
     },
     validationSchema: RegisterSchema,
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
+        // 프로젝트 생성시 요청할 데이터
         const dataToSubmit = {
-          team_type: 'project',
-          team_name: values.team_name,
-          team_state: '모집 중',
-          team_manager_seq: '', // 생성자의 seq
-          team_desc: values.team_desc,
-          team_tech: values.team_tech,
-          team_position: values.team_position
+          teamManagerSeq: 1,
+          teamName: values.teamName,
+          teamDesc: values.teamDesc,
+          teamState: formik.initialValues.teamState, // RECRUIT, COMPLETED, FINISH
+          teamType: formik.initialValues.teamType // STUDY, PROJECT
+          // teamTech: myTechList,
+          // teamPosition: myPositionCnt
         };
-
-        // post
-        const createProject = async () => {
-          // api 받아오기
-          const url = 'http://localhost:3000/api/v1/project';
-          await axios
-            .post(url, {
-              dataToSubmit
-            })
-            .then((response) => {
-              console.log(response, '성공');
-            })
-            .catch((error) => {
-              console.log(error, '실패');
-            });
-        };
-        // dispatch(registerUser(dataToSubmit)).then((response) => {});
-
         setSubmitting(false);
       }, 500);
     }
   });
-
-  // 기술테크 리스트, 포지션 리스트 불러와야 함
-
-  const [techList, setTech] = useState([]);
-  const [positionList, setPosition] = useState([]);
-  const [positionCnt, setPositionCnt] = useState('');
-  const addTech = (newTech) => {
-    setTech([...techList, newTech]);
-  };
-  const addPosition = (newPosition) => {
-    setPosition([...positionList, newPosition]);
-  };
-  // MemberCntList는 포지션별 멤버 수
-  const MemberCntList = [...Array(10).keys()].map((key) => key + 1);
-
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
+  // render
+  useEffect(() => {
+    getPjtDetail();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // page
+  if (loading || projectDetail.length === 0 || formik.initialValues.teamName === undefined) {
+    console.log(formik.initialValues.teamName);
+    return <div>'로딩 중입니다'</div>;
+  }
   return (
     <FormikProvider value={formik}>
-      <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+      <Form autoComplete="off" noValidate>
         <Stack spacing={3}>
           <TextField
             fullWidth
-            label={project.team_name}
-            {...getFieldProps('team_name')}
-            error={Boolean(touched.team_name && errors.team_name)}
-            helperText={touched.team_name && errors.team_name}
+            label="Name"
+            {...getFieldProps('teamName')}
+            // error={Boolean(touched.teamName && errors.teamName)}
+            // helperText={touched.teamName && errors.teamName}
           />
-
-          <TextField
-            fullWidth
-            multiline
-            rows={5}
-            label={project.team_desc}
-            {...getFieldProps('team_desc')}
-            error={Boolean(touched.team_desc && errors.team_desc)}
-            helperText={touched.team_desc && errors.team_desc}
-          />
-
-          <TextField
-            fullWidth
-            select
-            // autoComplete="techs"
-            // type="email"
-            label="team_tech"
-            onChange={addTech}
-            {...getFieldProps('team_tech')}
-            error={Boolean(touched.team_tech && errors.team_tech)}
-            helperText={touched.team_tech && errors.team_tech}
-          >
-            {techList.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-
-          {/* techList 아이콘 */}
-          <div>
-            {techList.map((tech, idx) => (
-              <div key={idx}>{tech.tech.tech_image}</div>
-            ))}
-          </div>
-
-          <TextField
-            // fullWidth
-            select
-            // autoComplete="techs"
-            // type="email"
-            label="team_position"
-            onChange={addPosition}
-            {...getFieldProps('team_position')}
-            error={Boolean(touched.team_position && errors.team_position)}
-            helperText={touched.team_position && errors.team_position}
-          >
-            {positionList.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-
-          {/* added poistions */}
-          <div>
-            {positionList.map((position, idx) => (
-              <div key={idx}>
-                {position}
-                {position.position_recruit_cnt}
-                {position.position_member_cnt}
-                <TextField
-                  // fullWidth
-                  select
-                  // autoComplete="techs"
-                  // type="email"
-                  label="team_position_recruit_cnt"
-                  onChange={setPositionCnt}
-                  {...getFieldProps('team_position_recruit_cnt')}
-                  error={Boolean(
-                    touched.team_position_recruit_cnt && errors.team_position_recruit_cnt
-                  )}
-                  helperText={touched.team_position_recruit_cnt && errors.team_position_recruit_cnt}
-                >
-                  {MemberCntList.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <LoadingButton
-                  size="small"
-                  type="submit"
-                  variant="contained"
-                  loading={isSubmitting}
-                >
-                  추가
-                </LoadingButton>
-                <LoadingButton
-                  size="small"
-                  type="delete"
-                  variant="contained"
-                  loading={isSubmitting}
-                >
-                  x
-                </LoadingButton>
-              </div>
-            ))}
-          </div>
-
-          <LoadingButton
-            fullWidth
-            size="large"
-            type="submit"
-            variant="contained"
-            loading={isSubmitting}
-          >
-            생성
-          </LoadingButton>
         </Stack>
       </Form>
     </FormikProvider>

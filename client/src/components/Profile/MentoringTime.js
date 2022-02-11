@@ -15,19 +15,17 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // utils
-import { fDateTime } from '../../utils/formatTime';
-import { detailUser } from '../../_actions/user_actions';
+import { MentoringDaySelect, MentoringList } from '.';
 
-// -
-export default function MentoringReview() {
-  useEffect(() => {}, []);
-
+export default function MentoringTime() {
   return (
     <Card>
       <CardHeader title="멘토링 가능 시간" />
       <Box sx={{ p: 3 }}>
-        멘토링 가능 시간
-        <Divider />
+        <MentoringDaySelect />
+      </Box>{' '}
+      <Box sx={{ p: 3 }}>
+        <MentoringList />
       </Box>
     </Card>
   );

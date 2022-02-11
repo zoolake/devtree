@@ -18,7 +18,7 @@ export default function RegisterForm(props) {
   const [showPassword, setShowPassword] = useState(false);
   const RegisterSchema = Yup.object().shape({
     checkId: Yup.boolean(),
-    user_id: Yup.string()
+    userId: Yup.string()
       .required('ID는 필수 값 입니다.')
       .when('checkId', {
         is: true,
@@ -32,7 +32,7 @@ export default function RegisterForm(props) {
                   headers: {
                     'Content-Type': 'application/json'
                   },
-                  body: JSON.stringify({ user_id: values })
+                  body: JSON.stringify({ userId: values })
                 });
                 console.log(response);
                 if (response.ok) {
@@ -46,11 +46,11 @@ export default function RegisterForm(props) {
           }
         })
       }),
-    user_name: Yup.string(),
-    user_email: Yup.string()
+    userName: Yup.string(),
+    userEmail: Yup.string()
       .email('올바르지 않은 이메일입니다.')
       .required('이메일은 필수 값 입니다.'),
-    user_password: Yup.string()
+    userPassword: Yup.string()
       .min(8, '비밀번호는 8자 이상이여야 합니다.')
       .max(20, '비밀번호는 20자 이하이여야 합니다.')
       .required('비밀번호는 필수 값 입니다.')
@@ -59,16 +59,16 @@ export default function RegisterForm(props) {
         '비밀번호는 영어, 숫자, 특수문자가 포함되어야 합니다.'
       ),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref('user_password'), null], '비밀번호가 일치하지 않습니다.')
+      .oneOf([Yup.ref('userPassword'), null], '비밀번호가 일치하지 않습니다.')
       .required('비밀번호를 재입력해주세요')
   });
 
   const formik = useFormik({
     initialValues: {
-      user_id: '',
-      user_name: '',
-      user_email: '',
-      user_password: '',
+      userId: '',
+      userName: '',
+      userEmail: '',
+      userPassword: '',
       confirmPassword: '',
       checkId: true
     },
@@ -76,10 +76,10 @@ export default function RegisterForm(props) {
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
         const dataToSubmit = {
-          user_id: values.user_id,
-          user_email: values.user_email,
-          user_password: values.user_password,
-          user_name: values.user_name
+          userId: values.userId,
+          userEmail: values.userEmail,
+          userPassword: values.userPassword,
+          userName: values.userName
         };
 
         dispatch(registerUser(dataToSubmit)).then((response) => {
@@ -107,17 +107,17 @@ export default function RegisterForm(props) {
           <TextField
             fullWidth
             label="ID"
-            {...getFieldProps('user_id')}
-            error={Boolean(touched.user_id && errors.user_id)}
-            helperText={touched.user_id && errors.user_id}
+            {...getFieldProps('userId')}
+            error={Boolean(touched.userId && errors.userId)}
+            helperText={touched.userId && errors.userId}
           />
 
           <TextField
             fullWidth
             label="Name"
-            {...getFieldProps('user_name')}
-            error={Boolean(touched.user_name && errors.user_name)}
-            helperText={touched.user_name && errors.user_name}
+            {...getFieldProps('userName')}
+            error={Boolean(touched.userName && errors.userName)}
+            helperText={touched.userName && errors.userName}
           />
 
           <TextField
@@ -125,9 +125,9 @@ export default function RegisterForm(props) {
             autoComplete="username"
             type="email"
             label="Email address"
-            {...getFieldProps('user_email')}
-            error={Boolean(touched.user_email && errors.user_email)}
-            helperText={touched.user_email && errors.user_email}
+            {...getFieldProps('userEmail')}
+            error={Boolean(touched.userEmail && errors.userEmail)}
+            helperText={touched.userEmail && errors.userEmail}
           />
 
           <TextField
@@ -135,7 +135,7 @@ export default function RegisterForm(props) {
             autoComplete="current-password"
             type={showPassword ? 'text' : 'password'}
             label="Password"
-            {...getFieldProps('user_password')}
+            {...getFieldProps('userPassword')}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -145,8 +145,8 @@ export default function RegisterForm(props) {
                 </InputAdornment>
               )
             }}
-            error={Boolean(touched.user_password && errors.user_password)}
-            helperText={touched.user_password && errors.user_password}
+            error={Boolean(touched.userPassword && errors.userPassword)}
+            helperText={touched.userPassword && errors.userPassword}
           />
           <TextField
             fullWidth

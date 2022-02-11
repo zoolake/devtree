@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import { Icon } from '@iconify/react';
+import { useState } from 'react';
 import searchFill from '@iconify/icons-eva/search-fill';
 import { styled } from '@mui/material/styles';
-import { Box, TextField, Autocomplete, InputAdornment } from '@mui/material';
+import { Box, TextField, Autocomplete } from '@mui/material';
 
 const RootStyle = styled('div')(({ theme }) => ({
   '& .MuiAutocomplete-root': {
@@ -34,45 +35,34 @@ const RootStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 ProjectSearch.propTypes = {
-  projects: PropTypes.array.isRequired
+  pjtList: PropTypes.array.isRequired,
+  setFilterKeyword: PropTypes.func
 };
 
-export default function ProjectSearch({ projects }) {
+export default function ProjectSearch({ pjtList, setFilterKeyword }) {
+  // state
+  const [nameKeyword, setNameKeyword] = useState('zz');
+
+  // handle
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log(nameKeyword);
+  };
+  const myFilter = (params) => {
+    console.log('!!!!!!!!', params);
+  };
   return (
     <RootStyle>
-      <Autocomplete
-        size="small"
-        disablePortal
-        popupIcon={null}
-        options={projects}
-        getOptionLabel={(project) => project.title}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            placeholder="Search projects..."
-            InputProps={{
-              ...params.InputProps,
-              startAdornment: (
-                <>
-                  <InputAdornment position="start">
-                    <Box
-                      component={Icon}
-                      icon={searchFill}
-                      sx={{
-                        ml: 1,
-                        width: 20,
-                        height: 20,
-                        color: 'text.disabled'
-                      }}
-                    />
-                  </InputAdornment>
-                  {params.InputProps.startAdornment}
-                </>
-              )
-            }}
-          />
-        )}
+      <TextField
+        id="search-project-keyword"
+        label="Search project"
+        type="search"
+        variant="standard"
+        InputProps={{
+          nameKeyword
+        }}
       />
+      <button type="submit">검색</button>
     </RootStyle>
   );
 }

@@ -73,7 +73,7 @@ export default function StudyCreationForm() {
         return response.data.data;
       })
       .then((dataList) => {
-        const allTechs = dataList.reduce((total, data, i) => {
+        const allTechs = dataList.reduce((total, data) => {
           total = [...total, { value: data.techSeq, label: data.techName }];
           return total;
         }, []);

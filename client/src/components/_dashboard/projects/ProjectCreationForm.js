@@ -1,13 +1,21 @@
-import axios from 'axios';
 import * as Yup from 'yup';
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import Select from 'react-select';
+import { useDispatch } from 'react-redux';
 import makeAnimated from 'react-select/animated';
 import { Stack, TextField, Box } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { createProject, getTechList, getPositionList } from '../../../_actions/project_actions';
+import SelectPositionCnt from '../../team/SelectPositionCnt';
 
 export default function ProjectCreationForm() {
+  // state
+  const [allTechList, setAllTech] = useState([]);
+  const [allPositionList, setAllPosition] = useState([]);
+  const [myTechList, setMyTech] = useState([]);
+  const [myPositionList, setMyPosition] = useState([]);
+  const [myPositionCnt, setMyPositionCnt] = useState([]);
   const RegisterSchema = Yup.object().shape({
     teamName: Yup.string()
       .required('프로젝트 제목은 필수 값 입니다.')
@@ -18,34 +26,35 @@ export default function ProjectCreationForm() {
       .min(10, '프로젝트 설명은 10자 이상이여야 합니다.')
   });
 
+  // axios
+  const dispatch = useDispatch();
+
   const formik = useFormik({
     initialValues: {
       teamManagerSeq: '',
-      teamName: '',
+      teamName: 'hi',
       teamDesc: '',
       teamState: 'RECRUIT',
-      teamType: 'STUDY',
+      teamType: 'PROJECT',
       teamTech: [],
       teamPosition: []
     },
     validationSchema: RegisterSchema,
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
+        // 프로젝트 생성시 요청할 데이터
         const dataToSubmit = {
           teamManagerSeq: 1,
           teamName: values.teamName,
           teamDesc: values.teamDesc,
           teamState: formik.initialValues.teamState, // RECRUIT, COMPLETED, FINISH
           teamType: formik.initialValues.teamType, // STUDY, PROJECT
-          teamTech: techList,
-          teamPosition: positionList
+          teamTech: myTechList,
+          teamPosition: myPositionCnt
         };
-
-        const createProject = async () => {
-          console.log(dataToSubmit);
-          const createUrl = '/project'; // http://127.26.1.146:8080/v1/project
-          await axios
-            .post(createUrl, dataToSubmit)
+        // 프로젝트 생성 함수
+        const createPjt = async () => {
+          await dispatch(createProject(dataToSubmit))
             .then((response) => {
               console.log(response, '프로젝트 생성 성공');
             })
@@ -53,29 +62,18 @@ export default function ProjectCreationForm() {
               console.log(error, '프로젝트 생성 실패');
             });
         };
-        // dispatch(registerUser(dataToSubmit)).then((response) => {});
-        createProject();
-
+        createPjt();
         setSubmitting(false);
       }, 500);
     }
   });
 
-  const [allTechList, setAllTech] = useState([]);
-  const [allPositionList, setAllPosition] = useState([]);
-
   const SetSelections = async () => {
-    // 기술테크, 포지션 리스트 불러오기
-    const techUrl = '/tech'; // http://127.26.1.146:8080/v1/tech
-    const positionUrl = '/position'; // http://127.26.1.146:8080/v1/position
-    await axios
-      .get(techUrl)
+    // 기술스택 리스트 불러오기
+    await dispatch(getTechList())
       .then((response) => {
-        console.log(response.data.message);
-        return response.data.data;
-      })
-      .then((dataList) => {
-        const allTechs = dataList.reduce((total, data, i) => {
+        const techData = response.payload.data.data;
+        const allTechs = techData.reduce((total, data) => {
           total = [...total, { value: data.techSeq, label: data.techName }];
           return total;
         }, []);
@@ -87,14 +85,11 @@ export default function ProjectCreationForm() {
       .catch((error) => {
         console.log(error, '테크 불러오기 실패');
       });
-    await axios
-      .get(positionUrl)
+    // 포지션 리스트 불러오기
+    await dispatch(getPositionList())
       .then((response) => {
-        console.log(response.data.message);
-        return response.data.data;
-      })
-      .then((dataList) => {
-        const allPos = dataList.reduce((total, data, i) => {
+        const positionData = response.payload.data.data;
+        const allPos = positionData.reduce((total, data, i) => {
           total = [
             ...total,
             { value: i, label: data.detailPositionName, positionName: data.positionName }
@@ -111,19 +106,11 @@ export default function ProjectCreationForm() {
       });
   };
 
-  // 초기 렌더링
+  // render
   useEffect(() => {
     SetSelections();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // 사용자가 추가하기
-  const [techList, setTech] = useState([]);
-  const [positionList, setPosition] = useState([]);
-  const [positionCnt, setPositionCnt] = useState('');
-
-  // MemberCntList는 포지션별 멤버 수
-  const MemberCntList = [...Array(10).keys()].map((key) => key + 1);
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
@@ -156,60 +143,54 @@ export default function ProjectCreationForm() {
   const [techValue, setTechValue] = useState(orderOptions(allTechList));
   const [positionValue, setPositionValue] = useState(orderOptions(allPositionList));
 
-  // handler for Tech changes
+  // handle
+  // handle Tech Change
   const handleTechs = useCallback(
     (inputValue, { action, removedValue }) => {
       switch (action) {
         case 'remove-value': // delete with 'x'
-          setTech(orderOptions(techList.filter((tech) => tech !== removedValue)));
+          setMyTech(orderOptions(myTechList.filter((tech) => tech !== removedValue)));
           return;
-
         case 'pop-value': {
           // delete with backspace
           if (removedValue.isFixed) {
-            setTech(orderOptions([...inputValue, removedValue]));
+            setMyTech(orderOptions([...inputValue, removedValue]));
           }
           return;
         }
-
         case 'clear': // clear button is clicked
-          setTech(techList.filter((v) => v.isFixed));
+          setMyTech(myTechList.filter((v) => v.isFixed));
           return;
-
         case 'select-option': {
-          const newInput = inputValue.reduce((total, data, i) => {
-            const ret = [...total, data.value];
-            return ret;
-          }, []);
-          setTech(newInput);
+          setMyTech(inputValue.map((each) => each.value));
           return;
         }
-
         default:
-          setTechValue(inputValue);
       }
+      setTechValue(inputValue);
+      // console.log(techValue);
     },
-    [techList, orderOptions]
+    [myTechList, orderOptions]
   );
 
-  // handler for Position changes
+  // handle Position Change
   const handlePositions = useCallback(
     (inputValue, { action, removedValue }) => {
       switch (action) {
         case 'remove-value': // delete with 'x'
-          setPosition(orderOptions(positionList.filter((tech) => tech !== removedValue)));
+          setMyPosition(orderOptions(myPositionList.filter((tech) => tech !== removedValue)));
           return;
         case 'pop-value': // delete with backspace
           if (removedValue.isFixed) {
-            setPosition(orderOptions([...inputValue, removedValue]));
+            setMyPosition(orderOptions([...inputValue, removedValue]));
             return;
           }
           break;
         case 'clear': // clear button is clicked
-          setPosition(positionList.filter((v) => v.isFixed));
+          setMyPosition(myPositionList.filter((v) => v.isFixed));
           return;
         case 'select-option': {
-          const newInput = inputValue.reduce((total, data, i) => {
+          const newInput = inputValue.reduce((total, data) => {
             const ret = [
               ...total,
               {
@@ -223,15 +204,48 @@ export default function ProjectCreationForm() {
             return ret;
           }, []);
           console.log(newInput);
-          setPosition(newInput);
+          setMyPosition(newInput);
           return;
         }
         default:
       }
       setPositionValue(inputValue);
+      // console.log(positionValue);
     },
-    [positionList, orderOptions]
+    [myPositionList, orderOptions]
   );
+
+  const handleCallback = (childData) => {
+    console.log('childData', childData[0]);
+    const childkey = childData[0].position.position.detailPositionName;
+    if (myPositionCnt.length === 0) {
+      setMyPositionCnt([
+        ...myPositionCnt,
+        {
+          position: childData[0].position.position,
+          positionRecruitCnt: childData[0].cnt
+        }
+      ]);
+      console.log('없음');
+    } else if (
+      myPositionCnt.map((position) => position.position.detailPositionName).includes(childkey)
+    ) {
+      myPositionCnt[
+        myPositionCnt.map((position) => position.position.detailPositionName).indexOf(childkey)
+      ].positionRecruitCnt = childData[0].cnt;
+      console.log('있음');
+    } else {
+      setMyPositionCnt([
+        ...myPositionCnt,
+        {
+          position: childData[0].position.position,
+          positionRecruitCnt: childData[0].cnt
+        }
+      ]);
+      console.log('없음');
+    }
+    console.log(myPositionCnt);
+  };
 
   return (
     <FormikProvider value={formik}>
@@ -262,7 +276,7 @@ export default function ProjectCreationForm() {
               isMulti
               options={allTechList}
               placeholder="기술 스택 추가"
-              // // isClearable={techList.some((v) => !v.isFixed)} // clear button shows conditionally
+              // // isClearable={myTechList.some((v) => !v.isFixed)} // clear button shows conditionally
               styles={styles} // styles that do not show 'x' for fixed options
               // value={addTech(value)} // selected values
               onChange={handleTechs} // handler for changes
@@ -270,6 +284,9 @@ export default function ProjectCreationForm() {
               // // helperText={touched.team_position && errors.team_position}
             />
           </Box>
+          {/* {myTechList.map((tech, idx) => (
+            <div key={idx}>{tech.techName}</div>
+          ))} */}
 
           <Box sx={7}>
             <Select
@@ -278,7 +295,7 @@ export default function ProjectCreationForm() {
               isMulti
               options={allPositionList}
               placeholder="포지션 추가"
-              // // isClearable={techList.some((v) => !v.isFixed)} // clear button shows conditionally
+              // // isClearable={myTechList.some((v) => !v.isFixed)} // clear button shows conditionally
               styles={styles} // styles that do not show 'x' for fixed options
               // value={addTech(value)} // selected values
               onChange={handlePositions} // handler for changes
@@ -286,6 +303,20 @@ export default function ProjectCreationForm() {
               // // helperText={touched.team_position && errors.team_position}
             />
           </Box>
+
+          {myPositionList.map((position, idx) => (
+            <div key={idx}>
+              {position.position.detailPositionName}
+              <SelectPositionCnt
+                position={position}
+                myPositionCnt={myPositionCnt}
+                setMyPositionCnt={setMyPositionCnt}
+                onChange={handlePositions}
+                myPositionList={myPositionList}
+                parentCallback={handleCallback}
+              />
+            </div>
+          ))}
 
           <LoadingButton
             fullWidth

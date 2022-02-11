@@ -33,6 +33,7 @@ export default function StudyDetail() {
 
   useEffect(() => {
     getStudyDetail();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (loading || studyDetail.length === 0) return null;

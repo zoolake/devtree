@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Table(name = "tb_mentor")
@@ -30,6 +31,8 @@ public class Mentor {
     @Column(name = "mentor_desc")
     private String mentorDesc;
 
+    @Column(name = "verification_date")
+    private LocalDateTime verificationDate;
 
     /**
      * 일대일 매핑 고려

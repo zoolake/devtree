@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.*;
+import com.rootnode.devtree.db.entity.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -47,11 +48,12 @@ public class JwtTokenUtil {
                 .build();
     }
     
-    public static String getToken(String userId,Long userSeq) {
+    public static String getToken(String userId, Long userSeq, String userRole) {
     		Date expires = JwtTokenUtil.getTokenExpiration(expirationTime);
         return JWT.create()
                 .withSubject(userId)
                 .withClaim("userSeq",userSeq)
+                .withClaim("userRole",userRole)
                 .withExpiresAt(expires)
                 .withIssuer(ISSUER)
                 .withIssuedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))

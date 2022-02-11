@@ -24,8 +24,11 @@ public class ProjectApiController {
      * 기능: 프로젝트 생성
      */
     @PostMapping("/v1/project")
-    public ResponseEntity<ProjectCreateResponseDto> projectCreate(@RequestBody ProjectCreateRequestDto requestDto) {
-
+    public ResponseEntity<ProjectCreateResponseDto> projectCreate(Authentication authentication,
+                                                                  @RequestBody ProjectCreateRequestDto requestDto) {
+        UserDetail userDetail = (UserDetail)authentication.getDetails();
+        Long teamManagerSeq = userDetail.getUser().getUserSeq();
+        requestDto.setTeamManagerSeq(teamManagerSeq);
         ProjectCreateResponseDto responseDto = new ProjectCreateResponseDto(projectService.save(requestDto));
 
         return ResponseEntity
@@ -65,10 +68,15 @@ public class ProjectApiController {
      * 기능: 프로젝트 신청
      */
     @PostMapping("/v1/project/join/{team_seq}")
-    public ResponseEntity<CommonResponseDto> projectJoin(@PathVariable Long team_seq, @RequestBody ProjectJoinRequestDto requestDto) {
+    public ResponseEntity<CommonResponseDto> projectJoin(Authentication authentication,
+                                                         @PathVariable Long teamSeq,
+                                                         @RequestBody ProjectJoinRequestDto requestDto) {
+        UserDetail userDetail = (UserDetail)authentication.getDetails();
+        Long userSeq = userDetail.getUser().getUserSeq();
+
         return ResponseEntity
                 .status(201)
-                .body(projectService.joinProject(team_seq, requestDto));
+                .body(projectService.joinProject(userSeq,teamSeq, requestDto));
     }
 
     /**
@@ -77,8 +85,7 @@ public class ProjectApiController {
     @PostMapping("/v1/project/join/response/{team_seq}")
     public ResponseEntity<CommonResponseDto> projectJoinResponse(Authentication authentication,
                                                                  @PathVariable Long team_seq,
-                                                                 @RequestBody ProjectRespondRequestDto requestDto
-    ) {
+                                                                 @RequestBody ProjectRespondRequestDto requestDto) {
         UserDetail userDetails = (UserDetail)authentication.getDetails();
         Long user_seq = userDetails.getUser().getUserSeq();
         return ResponseEntity
@@ -110,8 +117,12 @@ public class ProjectApiController {
      * 기능: 프로젝트 정보 수정
      */
     @PutMapping("/v1/project/{team_seq}")
-    public ResponseEntity<CommonResponseDto> projectDetailUpdate(@PathVariable Long team_seq,
+    public ResponseEntity<CommonResponseDto> projectDetailUpdate(Authentication authentication,
+                                                                 @PathVariable Long team_seq,
                                                                  @RequestBody ProjectUpdateRequestDto requestDto) {
+        UserDetail userDetails = (UserDetail)authentication.getDetails();
+        Long userSeq = userDetails.getUser().getUserSeq();
+//      updateProject 안에서 userSeq를 사용하지 않는것 같다.
         return ResponseEntity
                 .status(201)
                 .body(projectService.updateProject(team_seq, requestDto));

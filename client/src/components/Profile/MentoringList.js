@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import moment from 'moment';
 import Moment from 'react-moment';
 import { useInterval } from 'react-use';
+import Swal from 'sweetalert2';
 import 'moment/locale/ko';
 // material
 import {
@@ -108,7 +109,6 @@ export default function MentoringList() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const dispatch = useDispatch();
-  useEffect(() => {}, []);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -156,27 +156,61 @@ export default function MentoringList() {
     setFilterName(event.target.value);
   };
 
-  const accept = () => {
-    dispatch(acceptMentoring())
-      .then((response) => {
-        if (response) {
-          console.log(response.payload);
-        }
-      })
-      .catch((err) => {
-        setTimeout(() => {}, 3000);
-      });
+  const accept = (event) => {
+    const dataToSubmit = {
+      mentoringseq: event.target.id
+    };
+    Swal.fire({
+      title: '멘토링 수락',
+      text: '멘토링을 수락하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(acceptMentoring(dataToSubmit))
+          .then((response) => {
+            console.log('멘토링 수락');
+            if (response) {
+              console.log(response.payload);
+            }
+          })
+          .catch((err) => {
+            setTimeout(() => {}, 3000);
+          });
+        Swal.fire('수락', '수락이 완료되었습니다.', 'success');
+      }
+    });
   };
-  const reject = () => {
-    dispatch(rejectMentoring())
-      .then((response) => {
-        if (response) {
-          console.log(response.payload);
-        }
-      })
-      .catch((err) => {
-        setTimeout(() => {}, 3000);
-      });
+  const reject = (event) => {
+    const dataToSubmit = {
+      mentoringseq: event.target.id
+    };
+    Swal.fire({
+      title: '멘토링 거절',
+      text: '멘토링을 거절하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(rejectMentoring(dataToSubmit))
+          .then((response) => {
+            console.log('멘토링 거절');
+            if (response) {
+              console.log(response.payload);
+            }
+          })
+          .catch((err) => {
+            setTimeout(() => {}, 3000);
+          });
+        Swal.fire('거절', '거절이 완료되었습니다.', 'success');
+      }
+    });
   };
   const createSession = () => {
     dispatch(rejectMentoring())
@@ -189,7 +223,6 @@ export default function MentoringList() {
         setTimeout(() => {}, 3000);
       });
   };
-
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - projectList.length) : 0;
   const filteredUsers = applySortFilter(projectList, getComparator(order, orderBy), filterName);
   return (
@@ -201,11 +234,6 @@ export default function MentoringList() {
           </Typography>
         </Stack>
         <Card>
-          <UserListToolbar
-            numSelected={selected.length}
-            filterName={filterName}
-            onFilterName={handleFilterByName}
-          />
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
@@ -223,20 +251,18 @@ export default function MentoringList() {
                     .map((row) => {
                       const {
                         mentoringCreateTime,
-                        id,
-
+                        mentoringSeq,
                         teamtype,
                         teamname,
                         mentoringStartDate,
                         mentoringStartTime,
-
                         mentoringmsg,
                         mentoringState
                       } = row;
                       const time = new Date(`${mentoringStartDate}T${mentoringStartTime}`);
 
                       return (
-                        <TableRow hover key={id} tabIndex={-1}>
+                        <TableRow hover key={mentoringSeq} tabIndex={-1}>
                           <TableCell align="left">{mentoringCreateTime}</TableCell>
                           <TableCell component="th" scope="row" padding="3px">
                             <Stack direction="row" alignItems="center" spacing={2}>
@@ -261,8 +287,12 @@ export default function MentoringList() {
                           <TableCell align="left">
                             {mentoringState === 'WAIT' ? (
                               <div>
-                                <Button onClick={accept}>수락</Button>
-                                <Button onClick={reject}>거절</Button>
+                                <Button id={mentoringSeq} onClick={accept}>
+                                  수락
+                                </Button>
+                                <Button id={mentoringSeq} onClick={reject}>
+                                  거절
+                                </Button>
                               </div>
                             ) : null}
                             {mentoringState === 'ACCEPT' ? (
@@ -277,9 +307,8 @@ export default function MentoringList() {
                                 )}
                               </div>
                             ) : null}
-                            {mentoringState === 'ACTIVATE' ? <Button>세션생성</Button> : null}
+                            {mentoringState === 'ACTIVATE' ? <Button>세션입장</Button> : null}
                             {mentoringState === 'FINISH' ? <Button>완료</Button> : null}
-                            {mentoringState}
                           </TableCell>
                         </TableRow>
                       );

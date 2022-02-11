@@ -16,3 +16,4 @@ export { default as MentorProfileUpdate } from './MentorProfileUpdate';
 export { default as MentoringDaySelect } from './MentoringDaySelect';
 export { default as MentorWeeklySetting } from './MentorWeeklySetting';
 export { default as MentoringList } from './MentoringList';
+export { default as Mentee_MentoringList } from './Mentee_MentoringList';

@@ -30,11 +30,16 @@ import Label from '../Label';
 import Scrollbar from '../Scrollbar';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../_dashboard/profileHistory';
 
-import { getMentoringlist, rejectMentoring, acceptMentoring } from '../../_actions/mentor_actions';
+import {
+  getMentoringlist,
+  rejectMentoring,
+  acceptMentoring,
+  mentee_mentoringList
+} from '../../_actions/mentor_actions';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'mentoringCreateTime', label: '신청일', alignRight: false },
+  { id: 'mentorname', label: '멘토이름', alignRight: false },
   { id: 'teamname', label: '팀이름', alignRight: false },
   { id: 'teamtype', label: '팀타입', alignRight: false },
   { id: 'mentoringStartDate', label: '멘토링 일정', alignRight: false },
@@ -75,11 +80,11 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function MentoringList() {
+export default function Mentee_MentoringList() {
   const [seconds, setSeconds] = useState(Date.now());
   const [projectList, setProjectList] = useState([]);
   const getMentoringLists = async () => {
-    dispatch(getMentoringlist())
+    dispatch(mentee_mentoringList())
       .then((response) => {
         if (response) {
           console.log(response.payload);
@@ -155,73 +160,6 @@ export default function MentoringList() {
     setFilterName(event.target.value);
   };
 
-  const accept = (event) => {
-    const dataToSubmit = {
-      mentoringseq: event.target.id
-    };
-    Swal.fire({
-      title: '멘토링 수락',
-      text: '멘토링을 수락하시겠습니까?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        dispatch(acceptMentoring(dataToSubmit))
-          .then((response) => {
-            console.log('멘토링 수락');
-            if (response) {
-              console.log(response.payload);
-            }
-          })
-          .catch((err) => {
-            setTimeout(() => {}, 3000);
-          });
-        Swal.fire('수락', '수락이 완료되었습니다.', 'success');
-      }
-    });
-  };
-  const reject = (event) => {
-    const dataToSubmit = {
-      mentoringseq: event.target.id
-    };
-    Swal.fire({
-      title: '멘토링 거절',
-      text: '멘토링을 거절하시겠습니까?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        dispatch(rejectMentoring(dataToSubmit))
-          .then((response) => {
-            console.log('멘토링 거절');
-            if (response) {
-              console.log(response.payload);
-            }
-          })
-          .catch((err) => {
-            setTimeout(() => {}, 3000);
-          });
-        Swal.fire('거절', '거절이 완료되었습니다.', 'success');
-      }
-    });
-  };
-  const createSession = () => {
-    dispatch(rejectMentoring())
-      .then((response) => {
-        if (response) {
-          console.log(response.payload);
-        }
-      })
-      .catch((err) => {
-        setTimeout(() => {}, 3000);
-      });
-  };
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - projectList.length) : 0;
   const filteredUsers = applySortFilter(projectList, getComparator(order, orderBy), filterName);
   return (
@@ -229,7 +167,7 @@ export default function MentoringList() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography variant="h4" gutterBottom>
-            멘토링 신청 리스트
+            멘토링 내역
           </Typography>
         </Stack>
         <Card>
@@ -249,7 +187,7 @@ export default function MentoringList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
                       const {
-                        mentoringCreateTime,
+                        mentoringCreateTime, // 이부분이 mentor 이름이여야함 수정해야함 api 요청할때
                         mentoringSeq,
                         teamtype,
                         teamname,
@@ -283,16 +221,12 @@ export default function MentoringList() {
                           <TableCell align="left">
                             {mentoringStartDate} {mentoringStartTime}
                           </TableCell>
+
                           <TableCell align="left">{mentoringmsg}</TableCell>
                           <TableCell align="left">
                             {mentoringState === 'WAIT' ? (
                               <div>
-                                <Button id={mentoringSeq} onClick={accept}>
-                                  수락
-                                </Button>
-                                <Button id={mentoringSeq} onClick={reject}>
-                                  거절
-                                </Button>
+                                <Button id={mentoringSeq}>수락대기중</Button>
                               </div>
                             ) : null}
                             {mentoringState === 'ACCEPT' ? (
@@ -303,7 +237,7 @@ export default function MentoringList() {
                                     &nbsp;멘토링
                                   </>
                                 ) : (
-                                  <Button onClick={createSession}>세션 생성하기</Button>
+                                  <Button>세션 대기중</Button>
                                 )}
                               </div>
                             ) : null}

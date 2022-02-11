@@ -1,4 +1,3 @@
-import axios from 'axios';
 import * as Yup from 'yup';
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useFormik, Form, FormikProvider } from 'formik';
@@ -61,7 +60,6 @@ export default function ProjectCreationForm() {
             })
             .catch((error) => {
               console.log(dataToSubmit);
-              console.log(myPositionCnt);
               console.log(error, '프로젝트 생성 실패');
             });
         };
@@ -76,7 +74,7 @@ export default function ProjectCreationForm() {
     await dispatch(getTechList())
       .then((response) => {
         const techData = response.payload.data.data;
-        const allTechs = techData.reduce((total, data, i) => {
+        const allTechs = techData.reduce((total, data) => {
           total = [...total, { value: data.techSeq, label: data.techName }];
           return total;
         }, []);
@@ -165,22 +163,13 @@ export default function ProjectCreationForm() {
           setMyTech(myTechList.filter((v) => v.isFixed));
           return;
         case 'select-option': {
-          const newInput = inputValue.reduce((total, data, i) => {
-            const ret = [
-              ...total,
-              {
-                techSeq: data.value,
-                techName: data.label
-              }
-            ];
-            return ret;
-          }, []);
-          setMyTech(newInput);
+          setMyTech(inputValue.map((each) => each.value));
           return;
         }
         default:
-          setTechValue(inputValue);
       }
+      setTechValue(inputValue);
+      // console.log(techValue);
     },
     [myTechList, orderOptions]
   );
@@ -202,7 +191,7 @@ export default function ProjectCreationForm() {
           setMyPosition(myPositionList.filter((v) => v.isFixed));
           return;
         case 'select-option': {
-          const newInput = inputValue.reduce((total, data, i) => {
+          const newInput = inputValue.reduce((total, data) => {
             const ret = [
               ...total,
               {
@@ -222,15 +211,41 @@ export default function ProjectCreationForm() {
         default:
       }
       setPositionValue(inputValue);
+      // console.log(positionValue);
     },
     [myPositionList, orderOptions]
   );
 
-  let state = {
-    name: ''
-  };
   const handleCallback = (childData) => {
-    state = { name: childData };
+    console.log('childData', childData[0]);
+    const childkey = childData[0].position.position.detailPositionName;
+    if (myPositionCnt.length === 0) {
+      setMyPositionCnt([
+        ...myPositionCnt,
+        {
+          position: childData[0].position.position,
+          positionRecruitCnt: childData[0].cnt
+        }
+      ]);
+      console.log('없음');
+    } else if (
+      myPositionCnt.map((position) => position.position.detailPositionName).includes(childkey)
+    ) {
+      myPositionCnt[
+        myPositionCnt.map((position) => position.position.detailPositionName).indexOf(childkey)
+      ].positionRecruitCnt = childData[0].cnt;
+      console.log('있음');
+    } else {
+      setMyPositionCnt([
+        ...myPositionCnt,
+        {
+          position: childData[0].position.position,
+          positionRecruitCnt: childData[0].cnt
+        }
+      ]);
+      console.log('없음');
+    }
+    console.log(myPositionCnt);
   };
 
   return (
@@ -270,9 +285,9 @@ export default function ProjectCreationForm() {
               // // helperText={touched.team_position && errors.team_position}
             />
           </Box>
-          {myTechList.map((tech, idx) => (
+          {/* {myTechList.map((tech, idx) => (
             <div key={idx}>{tech.techName}</div>
-          ))}
+          ))} */}
 
           <Box sx={7}>
             <Select
@@ -301,7 +316,6 @@ export default function ProjectCreationForm() {
                 myPositionList={myPositionList}
                 parentCallback={handleCallback}
               />
-              {state.name}
             </div>
           ))}
 

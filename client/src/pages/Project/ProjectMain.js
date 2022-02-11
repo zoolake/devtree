@@ -12,17 +12,16 @@ import {
 } from '../../components/_dashboard/projects';
 import { getProjectList } from '../../_actions/project_actions';
 
-const SORT_OPTIONS = [
-  { value: 'latest', label: 'Latest' },
-  { value: 'popular', label: 'Popular' },
-  { value: 'oldest', label: 'Oldest' }
-];
-
 export default function ProjectMain() {
   // state
   const [projectList, setProjectList] = useState(['hi']);
   const [loading, setLoading] = useState(false);
   const [filterKeyword, setFilterKeyword] = useState(null);
+  const SORT_OPTIONS = [
+    { value: 'latest', label: 'Latest' },
+    { value: 'popular', label: 'Popular' },
+    { value: 'oldest', label: 'Oldest' }
+  ];
 
   // axios
   const dispatch = useDispatch();

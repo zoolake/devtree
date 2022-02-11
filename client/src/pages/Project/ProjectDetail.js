@@ -1,29 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link as RouterLink } from 'react-router-dom';
-import axios from 'axios';
+import { useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
+import { getProjectDetail } from '../../_actions/project_actions';
 
 export default function ProjectDetail() {
-  const teamSeq = useParams();
+  // state
+  const teamSeq = useParams().id;
   const [projectDetail, setProjectDetail] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const getProjectDetail = async () => {
-    const projectDetailUrl = `/project/${teamSeq.id}`; // http://127.26.1.146:8080/v1/project/${teamSeq.id}
+  // axios
+  const dispatch = useDispatch();
+  const getPjtDetail = async () => {
     setLoading(true);
-    await axios
-      .get(projectDetailUrl)
+    await dispatch(getProjectDetail(teamSeq))
       .then((response) => {
-        if (response.data.message) {
-          console.log(response, response.data.message);
-        } else {
-          console.log(response, '프로젝트 상세 조회 성공');
-        }
-        const projectData = response.data.data;
-        return projectData;
-      })
-      .then((data) => {
-        setProjectDetail(data);
+        console.log('프로젝트 상세 조회 성공');
+        const projectData = response.payload.data.data;
+        setProjectDetail(projectData);
       })
       .catch((error) => {
         console.log(error, '프로젝트 상세 조회 실패');
@@ -31,13 +26,16 @@ export default function ProjectDetail() {
     setLoading(false);
   };
 
+  // render
   useEffect(() => {
-    getProjectDetail();
+    getPjtDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // condition
   if (loading || projectDetail.length === 0) return null;
-  console.log(projectDetail);
+
+  // page
   const pjtTech = projectDetail.teamTech.map((tech, idx) => (
     <li key={idx}>
       {tech.techName} {tech.techImage}

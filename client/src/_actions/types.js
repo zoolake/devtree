@@ -22,3 +22,5 @@ export const GET_PROJECT_LIST = 'get_proejct_list';
 export const CREATE_PROJECT = 'create_project';
 export const GET_TECH_LIST = 'get_tech_list';
 export const GET_POSITION_LIST = 'get_position_list';
+export const DELETE_PROJECT = 'delete_project';
+export const GET_PROJECT_DETAIL = 'get_project_detail';

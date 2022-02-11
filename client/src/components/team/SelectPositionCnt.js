@@ -1,54 +1,62 @@
-import { Button, TextField } from '@mui/material';
+import PropTypes from 'prop-types';
+import { TextField } from '@mui/material';
 import { useState } from 'react';
 
-export default function SelectPositionCnt({
-  position,
-  myPositionCnt,
-  setMyPositionCnt,
-  myPositionList,
-  parentCallback
-}) {
+SelectPositionCnt.propTypes = {
+  position: PropTypes.object.isRequired,
+  parentCallback: PropTypes.func.isRequired
+};
+
+export default function SelectPositionCnt({ position, parentCallback }) {
   // state
-  const [thisPositionCnt, setThisPositionCnt] = useState();
+  const [positionCnt, setPositionCnt] = useState(0);
 
   // handle
   const handleValue = (event) => {
-    setThisPositionCnt(event.target.valueAsNumber);
-    console.log(thisPositionCnt);
+    setPositionCnt(event.target.valueAsNumber);
+    if (isNaN(event.target.valueAsNumber)) {
+      console.log('Nan!!!');
+      const sendData = [{ position, cnt: 0 }];
+      parentCallback(sendData);
+    } else {
+      const sendData = [{ position, cnt: event.target.valueAsNumber }];
+      parentCallback(sendData);
+    }
   };
 
-  function Submitting(event) {
-    event.preventDefault();
-    console.log('!!!!!', event);
-    parentCallback(thisPositionCnt);
-    // console.log('onSubmit', position);
-    // setMyPositionCnt([
-    //   ...myPositionCnt,
-    //   {
-    //     position: {
-    //       detailPositionName: position.position.detailPositionName,
-    //       positionName: position.position.positionName
-    //     },
-    //     positionRecruitCnt: thisPositionCnt
-    //   }
-    // ]);
-  }
-  // setMyPositionCnt([...myPositionCnt, { position: value }]);
-
   // page
+  if (isNaN(positionCnt))
+    return (
+      <div>
+        <TextField
+          id="outlined-number"
+          label="Number"
+          type="number"
+          value={positionCnt}
+          onChange={handleValue}
+          // InputLabelProps={{
+          //   shrink: true
+          // }}
+        />
+        {position.position.detailPositionName}
+        {0}
+      </div>
+    );
+
   return (
-    <form onSubmit={Submitting}>
+    <div>
       <TextField
         id="outlined-number"
         label="Number"
         type="number"
-        value={thisPositionCnt}
+        value={positionCnt}
         onChange={handleValue}
         // InputLabelProps={{
         //   shrink: true
         // }}
       />
-      <Button type="submit">확정</Button>
-    </form>
+      {position.position.detailPositionName}
+      {positionCnt}
+    </div>
   );
 }

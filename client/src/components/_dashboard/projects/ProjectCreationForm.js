@@ -32,7 +32,7 @@ export default function ProjectCreationForm() {
   const formik = useFormik({
     initialValues: {
       teamManagerSeq: '',
-      teamName: 'hi',
+      teamName: '',
       teamDesc: '',
       teamState: 'RECRUIT',
       teamType: 'PROJECT',

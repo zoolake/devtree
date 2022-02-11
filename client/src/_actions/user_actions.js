@@ -151,7 +151,7 @@ export function auth() {
   };
 }
 
-//안씀
+// 안씀
 export function logoutUser() {
   const request = axios.get(`${USER_SERVER}/logout`).then((response) => response.data);
 

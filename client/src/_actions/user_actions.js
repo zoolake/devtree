@@ -8,11 +8,19 @@ import {
   DETAIL_USER,
   PASSWORD_UPDATE,
   DELETE_USER,
-  UPDATE_USER
+  UPDATE_USER,
+  GET_RANK
 } from './types';
 import { USER_SERVER } from '../components/config';
 import setAuthorizationToken from '../utils/setAuthorizationToken';
 
+export function getRank() {
+  const request = axios
+    .get(`https://61f649b22e1d7e0017fd6d42.mockapi.io/project`)
+    .then((response) => response.data);
+
+  return { type: GET_RANK, payload: request };
+}
 export function getStudy() {
   const request = axios
     .get(`https://61f649b22e1d7e0017fd6d42.mockapi.io/project`)

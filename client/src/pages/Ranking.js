@@ -1,9 +1,9 @@
 import { filter } from 'lodash';
 import { Icon } from '@iconify/react';
-import { sentenceCase } from 'change-case';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 // material
 import {
   Card,
@@ -11,7 +11,6 @@ import {
   Stack,
   Avatar,
   Button,
-  Checkbox,
   TableRow,
   TableBody,
   TableCell,
@@ -24,37 +23,23 @@ import {
 import Page from '../components/Page';
 import Label from '../components/Label';
 import Scrollbar from '../components/Scrollbar';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
-//
-import USERLIST from '../_mocks_/user';
+import {
+  UserListHead,
+  UserListToolbar,
+  UserMoreMenu
+} from '../components/_dashboard/profileHistory';
 
+import { getStudy, getRank } from '../_actions/user_actions';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Company', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false }
+  { id: 'name', label: 'Rank', alignRight: false },
+  { id: 'starttime', label: 'Name', alignRight: false },
+  { id: 'role', label: '티어', alignRight: false },
+  { id: 'status', label: '경험치', alignRight: false }
 ];
 
-// ----------------------------------------------------------------------
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
+// ---------------------------------------------------------------------
 
 function applySortFilter(array, comparator, query) {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -69,13 +54,36 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function User() {
+export default function StudyList() {
+  const [studyList, setStudyList] = useState([]);
+  const getUserist = async () => {
+    dispatch(getRank())
+      .then((response) => {
+        if (response) {
+          console.log(response.payload);
+          const data = response.payload;
+          // eslint-disable-next-line guard-for-in
+          for (const i in data) {
+            data[i].rank = i;
+          }
+          setStudyList(response.payload);
+        }
+      })
+      .catch((err) => {
+        setTimeout(() => {}, 3000);
+      });
+  };
+  useEffect(() => {
+    getUserist();
+  }, []);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
+  const dispatch = useDispatch();
+  useEffect(() => {}, []);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -85,7 +93,7 @@ export default function User() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      const newSelecteds = studyList.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -123,77 +131,46 @@ export default function User() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
-
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - studyList.length) : 0;
 
   return (
     <Page title="User">
       <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography variant="h4" gutterBottom>
-            user
+            Ranking
           </Typography>
         </Stack>
 
         <Card>
+          <UserListToolbar
+            numSelected={selected.length}
+            filterName={filterName}
+            onFilterName={handleFilterByName}
+          />
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
                 <UserListHead
-                  order={order}
-                  orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
-                  numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredUsers
+                  {studyList
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => {
-                      const { id, name, role, status, company, avatarUrl, isVerified } = row;
-                      const isItemSelected = selected.indexOf(name) !== -1;
-
+                    .map((row, index) => {
+                      const { id, rank, name, role, status, starttime, endtime } = row;
                       return (
-                        <TableRow
-                          hover
-                          key={id}
-                          tabIndex={-1}
-                          role="checkbox"
-                          selected={isItemSelected}
-                          aria-checked={isItemSelected}
-                        >
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              checked={isItemSelected}
-                              onChange={(event) => handleClick(event, name)}
-                            />
-                          </TableCell>
-                          <TableCell component="th" scope="row" padding="none">
+                        <TableRow hover key={id} tabIndex={-1}>
+                          <TableCell component="th" scope="row" padding="3px">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              <Avatar alt={name} src={avatarUrl} />
-                              <Typography variant="subtitle2" noWrap>
-                                {name}
-                              </Typography>
+                              <TableCell align="left">{index + 1}</TableCell>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{company}</TableCell>
+                          <TableCell align="left">{starttime}</TableCell>
+                          <TableCell align="left">{endtime}</TableCell>
                           <TableCell align="left">{role}</TableCell>
-                          <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
-                          <TableCell align="left">
-                            <Label
-                              variant="ghost"
-                              color={(status === 'banned' && 'error') || 'success'}
-                            >
-                              {sentenceCase(status)}
-                            </Label>
-                          </TableCell>
-
-                          <TableCell align="right">
-                            <UserMoreMenu />
-                          </TableCell>
                         </TableRow>
                       );
                     })}
@@ -210,7 +187,7 @@ export default function User() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={USERLIST.length}
+            count={studyList.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

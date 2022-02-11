@@ -22,7 +22,7 @@ import StudyUpdate from './pages/Study/StudyUpdate';
 import StudyDelete from './pages/Study/StudyDelete';
 
 import Blog from './pages/Blog';
-import User from './pages/User';
+import Ranking from './pages/Ranking';
 import MentorPage from './pages/Mentor/MentorPage';
 import MentorDetail from './pages/Mentor/MentorDetail';
 import MentoringReservation from './pages/Mentor/MentoringReservation';
@@ -58,7 +58,7 @@ export default function Router() {
       children: [
         { element: <Navigate to="/MainPage/app" replace /> },
         { path: 'app', element: <MainPage /> },
-        { path: 'user', element: <User /> },
+        { path: 'ranking', element: <Ranking /> },
         { path: 'products', element: <Products /> },
         { path: 'blog', element: <Blog /> },
         { path: 'profile', element: <Profile /> }

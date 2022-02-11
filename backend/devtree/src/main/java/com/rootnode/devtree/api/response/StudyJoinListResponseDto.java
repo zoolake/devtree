@@ -16,6 +16,6 @@ public class StudyJoinListResponseDto {
     public StudyJoinListResponseDto(StudyReservation entity) {
         this.userSeq = entity.getUser().getUserSeq();
         this.userId = entity.getUser().getUserId();
-        this.reservationTime = entity.getStudy_reservation_create_time();
+        this.reservationTime = entity.getStudyReservationCreateTime();
     }
 }

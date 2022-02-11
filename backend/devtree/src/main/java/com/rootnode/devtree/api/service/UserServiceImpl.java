@@ -1,5 +1,7 @@
 package com.rootnode.devtree.api.service;
 
+import com.rootnode.devtree.api.request.EmailConfirmRequestDto;
+import com.rootnode.devtree.api.request.MentorCertificationRequestDto;
 import com.rootnode.devtree.api.request.UserRegisterPostReq;
 import com.rootnode.devtree.api.request.UserUpdateRequestDto;
 import com.rootnode.devtree.api.response.*;
@@ -9,8 +11,9 @@ import com.rootnode.devtree.db.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,8 +33,10 @@ public class UserServiceImpl implements UserService {
     private final StudyUserRepository studyUserRepository;
     private final ProjectPositionUserRepository projectPositionUserRepository;
     private final ProjectPositionRepository projectPositionRepository;
-
+    private final MentorRepository mentorRepository;
     private final MentoringRepository mentoringRepository;
+    private final NotificationRepository notificationRepository;
+
 //
 //    @Autowired
 //    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -41,12 +46,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(UserRegisterPostReq userRegisterInfo) {
+        System.out.println("userRegisterInfo = " + userRegisterInfo.toString());
         User user = User.builder()
-                .userId(userRegisterInfo.getUser_id())
+                .userId(userRegisterInfo.getUserId())
                 // 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
-                .user_password(passwordEncoder.encode(userRegisterInfo.getUser_password()))
-                .userName(userRegisterInfo.getUser_name())
-                .userEmail(userRegisterInfo.getUser_email())
+                .userPassword(passwordEncoder.encode(userRegisterInfo.getUserPassword()))
+                .userName(userRegisterInfo.getUserName())
+                .userEmail(userRegisterInfo.getUserEmail())
                 .userRole(UserRole.USER)
                 .build();
         return userRepository.save(user);
@@ -74,24 +80,14 @@ public class UserServiceImpl implements UserService {
     public void updateUser(Long userSeq, UserUpdateRequestDto userUpdateRequestDto) {
 
         Optional<User>Ouser = userRepository.findByUserSeq(userSeq);
-//이름 닉네임 설명 테크
+//      이름 닉네임 설명 테크
         if(Ouser.isPresent()){
             Tech tech;
             User user= Ouser.get();
-
-            //기존 유저 + 새로운 유저 정보
-            //빌더패턴으로 새로운 필드만 변경 가능?
-            //setter를 사용하면 ?
-            /*
-                  private String user_name;
-                  private String user_nickname;
-                  private String user_desc;
-                  private List<Long> user_tech;
-             */
             user = User.builder()
                     .userSeq(user.getUserSeq())
                     .userId(user.getUserId())
-                    .user_password(user.getUser_password())
+                    .userPassword(user.getUserPassword())
                     .userEmail(user.getUserEmail())
                     .userRole(user.getUserRole())
                     .userDesc(userUpdateRequestDto.getUser_desc())
@@ -99,19 +95,12 @@ public class UserServiceImpl implements UserService {
                     .userNickname(userUpdateRequestDto.getUser_nickname())
                     .build();
             userRepository.save(user);
-
+            userTechRepository.deleteByUserTechIdUserSeq(user.getUserSeq());
             //기술 스택 관련 정보(사용자 기술스택)먼저  save 해야한다.
             for (Long t : userUpdateRequestDto.getUser_tech()){
                 System.out.println(t);
-                /**
-                 * user와 tech를 먼저 넣어준뒤 UserTech를 넣어주자
-                 * 왜 구현을 이렇게 해야했는지 관계가 이렇게 되엇는지 (다대다) 알 수 있는 부분
-                 * tech가 null이어도 되는 이유..
-                 */
-                userTechRepository.save(new UserTech(new UserTechId(user.getUserSeq(),t),null,null));
+                userTechRepository.save(new UserTech(new UserTechId(user.getUserSeq(),t),user,techRepository.findByTechSeq(t)));
             }
-
-
 
         }
     }
@@ -248,8 +237,6 @@ public class UserServiceImpl implements UserService {
                 .map(teamSeq -> {
                     Team team = teamRepository.findById(teamSeq).get();
                     List<ProjectPosition> projectPosition = projectPositionRepository.findByTeamSeq(teamSeq);
-                    System.out.println("team = " + team.getTeamName());
-                    System.out.println("projectPosition.get(0) = " + projectPosition.get(0).getPosition().getDetailPositionName());
                     return new UserProjectActivitiesListResponseDto(team, projectPosition);
                 })
                 .collect(Collectors.toList());
@@ -263,20 +250,10 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    // 유저의 멘토링 활동 내역 (전체)
     @Override
     public List<UserMentoringActivitiesResponseDto> findMentoringListAll(Long userSeq) {
-        // 1. study_user 테이블, project_position_user 테이블에서 user_seq로 속한 팀(스터디 + 프로젝트) 리스트 찾기
-        List<Long> studyTeamList = studyUserRepository.findTeamSeqByUserSeq(userSeq);
-        List<Long> projectTeamList = projectPositionUserRepository.findTeamSeqByUserSeq(userSeq);
-
-        // 2. 팀 리스트에 팀 일련련번호와 팀 타 추가
-        List<TeamListDto> teamList = new ArrayList<>();
-        studyTeamList.forEach(teamSeq -> {
-            teamList.add(new TeamListDto(teamSeq, TeamType.STUDY));
-        });
-        projectTeamList.forEach(teamSeq -> {
-            teamList.add(new TeamListDto(teamSeq, TeamType.PROJECT));
-        });
+        List<TeamInfoDto> teamList = findUserTeam(userSeq);
 
         List<UserMentoringActivitiesResponseDto> mentoringActivitiesList = new ArrayList<>();
         // 2. mentoring_reservation 테이블에서 team_seq로 속한 멘토링 찾기
@@ -290,6 +267,7 @@ public class UserServiceImpl implements UserService {
         return mentoringActivitiesList;
     }
 
+    // 유저의 멘토링 활동 내역 (상태)
     @Override
     public List<UserMentoringActivitiesResponseDto> findMentoringListState(Long userSeq, MentoringState mentoringState) {
         return findMentoringListAll(userSeq).stream()
@@ -297,4 +275,75 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    // 사용자가 속한 팀 찾기
+    @Override
+    public List<TeamInfoDto> findUserTeam(Long userSeq) {
+        // 1. study_user 테이블, project_position_user 테이블에서 user_seq로 속한 팀(스터디 + 프로젝트) 리스트 찾기
+        List<Long> studyTeamList = studyUserRepository.findTeamSeqByUserSeq(userSeq).stream().sorted().collect(Collectors.toList());
+        List<Long> projectTeamList = projectPositionUserRepository.findTeamSeqByUserSeq(userSeq).stream().sorted().collect(Collectors.toList());
+
+        // 2. 팀 리스트에 팀 일련련번호와 팀 타 추가
+        List<TeamInfoDto> teamList = new ArrayList<>();
+        studyTeamList.forEach(teamSeq -> {
+            Team team = teamRepository.findById(teamSeq).get();
+            teamList.add(new TeamInfoDto(team));
+        });
+        projectTeamList.forEach(teamSeq -> {
+            Team team = teamRepository.findById(teamSeq).get();
+            teamList.add(new TeamInfoDto(team));
+        });
+        return teamList;
+    }
+
+    @Override
+    public List<TeamInfoDto> findManagerTeam(Long managerSeq) {
+        return teamRepository.findTeamByManagerSeq(managerSeq).stream()
+                .map(team -> new TeamInfoDto(team))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public CommonResponseDto certificationMentor(Long mentorSeq,MentorCertificationRequestDto requestDto) {
+        userRepository.certifyMentor(mentorSeq);
+        User user = userRepository.findById(mentorSeq).get();
+
+        mentorRepository.save(requestDto.toEntity(user));
+        return new CommonResponseDto(201, "멘토 인증을 완료하였습니다.");
+    }
+
+    @Override
+    public List<NotificationListResponseDto> findUserNotification(Long userSeq) {
+        List<Notification> notificationList = notificationRepository.findNotificationByUserSeq(userSeq);
+        List<NotificationListResponseDto> responseDto = new ArrayList<>();
+        notificationList.forEach(notification -> {
+            Long sendUserSeq = notification.getNotificationSendUserSeq();
+            String sendUserName = userRepository.findByUserSeq(sendUserSeq).get().getUserName();
+            responseDto.add(new NotificationListResponseDto(notification, sendUserName));
+        });
+        return responseDto;
+    }
+
+    @Override
+    @Transactional
+    public CommonResponseDto checkUserNotification(Long notificationSeq) {
+        Notification notification = notificationRepository.findById(notificationSeq).get();
+        notification.changeIsCheck();
+        return new CommonResponseDto(200, "알림을 확인하였습니다.");
+    }
+
+    @Override
+    public CommonResponseDto confirmVerificationCode(User user, EmailConfirmRequestDto requestDto) {
+        String enteredCode = requestDto.getEnteredCode();
+        String verificationCode = userRepository.findVerificaionCodeByUserSeq(user.getUserSeq());
+
+        if(verificationCode.equals(enteredCode)) {
+            user.changeUserRole(UserRole.MENTOR);
+            user.changeVerificationCode("");
+            mentorRepository.save(Mentor.builder().user(user).mentorSeq(user.getUserSeq()).verificationDate(LocalDateTime.now()).build());
+            return new CommonResponseDto(200, "멘토인증이 완료되었습니다.");
+        } else {
+            return new CommonResponseDto(400, "멘토인증 실패");
+        }
+    }
 }

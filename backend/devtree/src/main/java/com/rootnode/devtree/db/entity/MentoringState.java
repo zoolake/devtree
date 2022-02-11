@@ -1,5 +1,5 @@
 package com.rootnode.devtree.db.entity;
 
 public enum MentoringState {
-    WAIT, ACCEPT, FINISH
+    WAIT, ACCEPT, ACTIVATE,FINISH
 }

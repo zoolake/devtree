@@ -1,5 +1,7 @@
 package com.rootnode.devtree.api.service;
 
+import com.rootnode.devtree.api.request.EmailConfirmRequestDto;
+import com.rootnode.devtree.api.request.MentorCertificationRequestDto;
 import com.rootnode.devtree.api.request.UserRegisterPostReq;
 import com.rootnode.devtree.api.request.UserUpdateRequestDto;
 import com.rootnode.devtree.api.response.*;
@@ -30,4 +32,12 @@ public interface UserService {
 
 	List<UserMentoringActivitiesResponseDto> findMentoringListAll(Long userSeq);
 	List<UserMentoringActivitiesResponseDto> findMentoringListState(Long userSeq, MentoringState mentoringState);
+
+	List<TeamInfoDto> findUserTeam(Long userSeq);
+	List<TeamInfoDto> findManagerTeam(Long managerSeq);
+	CommonResponseDto certificationMentor(Long mentorSeq,MentorCertificationRequestDto requestDto);
+
+	List<NotificationListResponseDto> findUserNotification(Long userSeq);
+	CommonResponseDto checkUserNotification(Long notificationSeq);
+	CommonResponseDto confirmVerificationCode(User user, EmailConfirmRequestDto requestDto);
 }

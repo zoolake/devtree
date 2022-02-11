@@ -27,6 +27,9 @@ public class ProjectCreateRequestDto {
     private List<Long> teamTech;
     private List<PositionMember> teamPosition;
 
+    public void setTeamManagerSeq(Long teamManagerSeq){
+        this.teamManagerSeq = teamManagerSeq;
+    }
 
     public Team toEntity() {
         int teamRecruitCnt = teamPosition.stream()

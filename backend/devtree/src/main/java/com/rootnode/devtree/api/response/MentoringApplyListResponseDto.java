@@ -1,8 +1,8 @@
 package com.rootnode.devtree.api.response;
 
-import com.rootnode.devtree.db.entity.Mentoring;
-import com.rootnode.devtree.db.entity.TeamType;
+import com.rootnode.devtree.db.entity.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,25 +11,29 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter
-@NoArgsConstructor
-public class UserMentoringActivitiesResponseDto {
-    private Long mentorSeq;
-    private String mentorName;
+@NoArgsConstructor @AllArgsConstructor
+@Builder
+public class MentoringApplyListResponseDto {
+    private Long mentoringSeq;
     private Long teamSeq;
+    private String teamName;
     private TeamType teamType;
+    private String mentoringApplyComment;
     private LocalDate mentoringStartDate;
     private LocalTime mentoringStartTime;
     private LocalDateTime mentoringCreateTime;
-    private String mentoringState;
+    private MentoringState mentoringState;
 
-    public UserMentoringActivitiesResponseDto(Mentoring mentoring, TeamType teamType) {
-        this.mentorSeq = mentoring.getMentor().getMentorSeq();
-        this.mentorName = mentoring.getMentor().getUser().getUserName();
+    public MentoringApplyListResponseDto(Mentoring mentoring) {
+        this.mentoringSeq = mentoring.getMentoringSeq();
         this.teamSeq = mentoring.getTeam().getTeamSeq();
-        this.teamType = teamType;
         this.mentoringStartDate = mentoring.getMentoringStartDate();
         this.mentoringStartTime = mentoring.getMentoringStartTime();
+        this.mentoringApplyComment = mentoring.getMentoringApplicationComment();
         this.mentoringCreateTime = mentoring.getMentoringCreateTime();
-        this.mentoringState = mentoring.getMentoringState().name();
+        this.mentoringState = mentoring.getMentoringState();
+
+        this.teamName = mentoring.getTeam().getTeamName();
+        this.teamType = mentoring.getTeam().getTeamType();
     }
 }

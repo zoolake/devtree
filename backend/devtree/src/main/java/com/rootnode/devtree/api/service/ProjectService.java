@@ -9,10 +9,12 @@ import com.rootnode.devtree.db.entity.compositeKey.ProjectPositionUserId;
 import com.rootnode.devtree.db.entity.compositeKey.TeamTechId;
 import com.rootnode.devtree.db.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -25,6 +27,7 @@ public class ProjectService {
     private final TeamRepository teamRepository;
     private final TeamTechRepository teamTechRepository;
     private final TechRepository techRepository;
+    private final NotificationRepository notificationRepository;
 
     private final PositionRepository positionRepository;
     private final ProjectPositionReservationRepository projectPositionReservationRepository;
@@ -94,45 +97,77 @@ public class ProjectService {
     }
 
     @Transactional
-    public CommonResponseDto joinProject(Long team_seq, ProjectJoinRequestDto requestDto) {
-        Long user_seq = requestDto.getUserSeq();
-        String detail_position_name = requestDto.getDetailPositionName();
+    public CommonResponseDto joinProject(Long userSeq,Long teamSeq, ProjectJoinRequestDto requestDto) {
+        String detailPositionName = requestDto.getDetailPositionName();
 
         // 1. User 객체를 찾는다.
-        User user = userRepository.findById(user_seq).get();
+        User user = userRepository.findById(userSeq).get();
         // 2. ProjectPosition 객체를 찾는다.
-        ProjectPosition projectPosition = projectPositionRepository.findById(new ProjectPositionId(team_seq, detail_position_name)).get();
+        ProjectPosition projectPosition = projectPositionRepository.findById(new ProjectPositionId(teamSeq, detailPositionName)).get();
         // 3. 저장
-        projectPositionReservationRepository.save(requestDto.toEntity(team_seq, user, projectPosition));
+        projectPositionReservationRepository.save(requestDto.toEntity(teamSeq, user, projectPosition));
+
+        // 4. 프로젝트 신청 알림 보내기
+        // 알림 내용
+        Team team = teamRepository.findById(teamSeq).get();
+        Long teamManagerSeq = team.getTeamManagerSeq();
+        String content = user.getUserName() + "님이 " + team.getTeamName() + "팀 프로젝트의 "+ detailPositionName +" 에 신청 요청을 보냈습니다";
+        //sendUserSeq, receiveUserSeq, teamSeq, sendTime, content, notificationType
+        Notification notification = new Notification(userSeq, teamManagerSeq, teamSeq,
+                LocalDateTime.now(), content,NotificationType.PROJECT);
+        // 5. 알림 테이블에 저장
+        notificationRepository.save(notification);
 
         return new CommonResponseDto(201, "프로젝트 참여 요청에 성공하였습니다.");
     }
 
     @Transactional
-    public CommonResponseDto respondPosition(Long team_seq, Long user_seq, ProjectRespondRequestDto requestDto) {
+    public CommonResponseDto respondPosition(Long teamSeq, Long userSeq, ProjectRespondRequestDto requestDto) {
 
-        String detail_position_name = requestDto.getDetailPositionName();
-        ResponseType response_type = requestDto.getResponseType();
+        String detailPositionName = requestDto.getDetailPositionName();
+        ResponseType responseType = requestDto.getResponseType();
 
-        ProjectPositionUserId projectPositionUserId = new ProjectPositionUserId(user_seq, new ProjectPositionId(team_seq, detail_position_name));
-        ProjectPosition projectPosition = projectPositionRepository.findById(new ProjectPositionId(team_seq, detail_position_name)).get();
-        User user = userRepository.findById(user_seq).get();
+        ProjectPositionUserId projectPositionUserId = new ProjectPositionUserId(userSeq, new ProjectPositionId(teamSeq, detailPositionName));
+        ProjectPosition projectPosition = projectPositionRepository.findById(new ProjectPositionId(teamSeq, detailPositionName)).get();
+        User user = userRepository.findById(userSeq).get();
 
         // 1. 수락을 하는 경우
-        if (ResponseType.ACCEPT.equals(response_type)) {
+        if (ResponseType.ACCEPT.equals(responseType)) {
             // 1. Project_Position_User_Repository 에 insert (해당 포지션 현재원 1 증가, 해당 팀 현재원 1 증가)
             projectPositionUserRepository.save(new ProjectPositionUser(projectPositionUserId, projectPosition, user));
             projectPosition.addMemberCount();
-            teamRepository.findById(team_seq).get().addTeamMember();
+            teamRepository.findById(teamSeq).get().addTeamMember();
 
             // 2. Project_position_Reservation_Repository 에 있는 (user_seq, team_seq) 데이터를 모두 지워준다.
-            projectPositionReservationRepository.deleteAllByUserSeqAndTeamSeq(user_seq, team_seq);
+            projectPositionReservationRepository.deleteAllByUserSeqAndTeamSeq(userSeq, teamSeq);
+
+            // 3. 프로젝트 신청 수락 알림 보내기
+            // 알림 내용
+            Team team = teamRepository.findById(teamSeq).get();
+            Long teamManagerSeq = team.getTeamManagerSeq();
+            String content = team.getTeamName() + "팀 프로젝트 신청이 수락되었습니다!";
+            //sendUserSeq, receiveUserSeq, teamSeq, sendTime, content, notificationType
+            Notification notification = new Notification(teamManagerSeq, userSeq, teamSeq,
+                    LocalDateTime.now(), content,NotificationType.PROJECT);
+            // 5. 알림 테이블에 저장
+            notificationRepository.save(notification);
         }
 
         // 2. 거절을 하는 경우
-        if (ResponseType.REJECT.equals(response_type)) {
+        if (ResponseType.REJECT.equals(responseType)) {
             // 1. 해당 신청 기록을 Project_Position_Reservation_Repostiory 에서 지워준다.
-            projectPositionReservationRepository.deleteById(new ProjectPositionReservationId(user_seq, new ProjectPositionId(team_seq, detail_position_name)));
+            projectPositionReservationRepository.deleteById(new ProjectPositionReservationId(userSeq, new ProjectPositionId(teamSeq, detailPositionName)));
+
+            // 2. 프로젝트 신청 거절 알림 보내기
+            // 알림 내용
+            Team team = teamRepository.findById(teamSeq).get();
+            Long teamManagerSeq = team.getTeamManagerSeq();
+            String content = team.getTeamName() + "팀 프로젝트 신청이 거절되었습니다.";
+            //sendUserSeq, receiveUserSeq, teamSeq, sendTime, content, notificationType
+            Notification notification = new Notification(teamManagerSeq, userSeq, teamSeq,
+                    LocalDateTime.now(), content,NotificationType.PROJECT);
+            // 5. 알림 테이블에 저장
+            notificationRepository.save(notification);
         }
 
         return new CommonResponseDto(201, "프로젝트 참여 요청 응답에 성공하였습니다.");

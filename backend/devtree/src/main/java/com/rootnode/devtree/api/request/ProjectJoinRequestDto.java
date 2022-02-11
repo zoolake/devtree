@@ -23,11 +23,11 @@ public class ProjectJoinRequestDto {
     public ProjectPositionReservation toEntity(Long teamSeq, User user, ProjectPosition projectPosition) {
         return ProjectPositionReservation.builder()
                 .projectPositionReservationID(
-                        new ProjectPositionReservationId(this.userSeq, new ProjectPositionId(teamSeq, this.detailPositionName)))
+                        new ProjectPositionReservationId(user.getUserSeq(), new ProjectPositionId(teamSeq, this.detailPositionName)))
                 .projectPosition(projectPosition)
                 .user(user)
                 .projectReservationCreateTime(LocalDateTime.now())
                 .build();
-
     }
+
 }

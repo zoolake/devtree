@@ -7,12 +7,14 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class TeamListDto {
+public class TeamInfoDto {
     private Long teamSeq;
+    private String teamName;
     private TeamType teamType;
 
-    public TeamListDto(Long teamSeq, TeamType teamType) {
-        this.teamSeq = teamSeq;
-        this.teamType = teamType;
+    public TeamInfoDto(Team team) {
+        this.teamSeq = team.getTeamSeq();
+        this.teamName = team.getTeamName();
+        this.teamType = team.getTeamType();
     }
 }

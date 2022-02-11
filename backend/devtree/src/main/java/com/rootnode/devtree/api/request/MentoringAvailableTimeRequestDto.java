@@ -5,20 +5,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.time.LocalDate;
 
-/**
- *
- */
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserUpdateRequestDto {
-
-    private String userName;
-    private String userNickname;
-    private String userDesc;
-    private List<Long> userTech;
-
+public class MentoringAvailableTimeRequestDto {
+    private LocalDate selectedDate;
 }

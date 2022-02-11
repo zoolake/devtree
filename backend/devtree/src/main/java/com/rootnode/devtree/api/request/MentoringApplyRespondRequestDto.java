@@ -1,24 +1,16 @@
 package com.rootnode.devtree.api.request;
 
+import com.rootnode.devtree.db.entity.MentoringState;
+import com.rootnode.devtree.db.entity.ResponseType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
-/**
- *
- */
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserUpdateRequestDto {
-
-    private String userName;
-    private String userNickname;
-    private String userDesc;
-    private List<Long> userTech;
-
+public class MentoringApplyRespondRequestDto {
+    private ResponseType responseType;
 }

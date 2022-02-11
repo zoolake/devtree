@@ -6,20 +6,21 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 @Getter
 @Builder
 @NoArgsConstructor @AllArgsConstructor
-public class MentorDetailResponseDto {
+public class MentorSelfDetailSelfResponseDto {
+    private String mentorName;
     private String mentorNickname;
     private String mentorCareer;
-    private List<MentorTechInfoDto> mentorTechList;
     private String mentorDesc;
     private String mentorEmail;
+    private Tier tier;
+    private List<MentorTechInfoDto> mentorTechList;
+    private List<MentorTimeInfoDto> mentorTimeList;
     private List<MentoringInfoDto> mentoringInfoList;
     private List<MentoringCommentInfoDto> mentoringReviewList;
-    private Tier tier;
 }

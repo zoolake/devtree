@@ -1,24 +1,17 @@
 package com.rootnode.devtree.api.request;
 
+import com.rootnode.devtree.db.entity.EmailDomain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
-/**
- *
- */
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserUpdateRequestDto {
-
-    private String userName;
-    private String userNickname;
-    private String userDesc;
-    private List<Long> userTech;
-
+public class EmailRequestDto {
+    private Long userSeq;
+    private String userEmailId;
+    private EmailDomain userEmailDomain;
 }

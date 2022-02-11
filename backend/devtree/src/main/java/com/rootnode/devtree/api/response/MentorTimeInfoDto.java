@@ -1,6 +1,7 @@
 package com.rootnode.devtree.api.response;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,11 +10,9 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class MentoringInfoDto {
-    private String teamName;
-    private List<String> techNameList;
-    private LocalDate mentoringStartDate;
-    private LocalTime mentoringStartTime;
+@NoArgsConstructor @AllArgsConstructor
+@Builder
+public class MentorTimeInfoDto {
+    private LocalDate mentorDate;
+    private List<LocalTime> mentorTime;
 }

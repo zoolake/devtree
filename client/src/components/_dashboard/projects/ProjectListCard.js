@@ -11,8 +11,7 @@ const TitleStyle = styled(Link)({
 });
 
 ProjectListCard.propTypes = {
-  project: PropTypes.object.isRequired,
-  index: PropTypes.number
+  project: PropTypes.object.isRequired
 };
 
 export default function ProjectListCard({ project }) {

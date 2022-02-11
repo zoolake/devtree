@@ -20,6 +20,8 @@ export const GET_TIMELIST = 'get_timelist';
 export const GET_RESERVEDLIST = 'get_reservedlist';
 export const GET_MENTORINGLIST = 'get_mentoringlist';
 export const GET_RANK = 'get_rank';
+
+// project
 export const GET_PROJECT_LIST = 'get_proejct_list';
 export const CREATE_PROJECT = 'create_project';
 export const GET_TECH_LIST = 'get_tech_list';

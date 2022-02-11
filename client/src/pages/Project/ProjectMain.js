@@ -8,7 +8,8 @@ import Page from '../../components/Page';
 import {
   ProjectsPostsSort,
   ProjectSearch,
-  ProjectListCard
+  ProjectListCard,
+  ProjectList
 } from '../../components/_dashboard/projects';
 import { getProjectList } from '../../_actions/project_actions';
 
@@ -81,9 +82,10 @@ export default function ProjectMain() {
         </Stack>
 
         <Container>
-          {projectList.map((pjt) => (
+          <ProjectList pjtList={projectList} />
+          {/* {projectList.map((pjt) => (
             <ProjectListCard key={pjt.teamSeq} project={pjt} filterKeyword={filterKeyword} />
-          ))}
+          ))} */}
         </Container>
       </Container>
     </Page>

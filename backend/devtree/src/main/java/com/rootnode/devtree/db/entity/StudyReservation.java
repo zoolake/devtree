@@ -26,5 +26,6 @@ public class StudyReservation {
     @JoinColumn(name = "team_seq")
     private Team team;
 
-    private LocalDateTime study_reservation_create_time;
+    @Column(name = "study_reservation_create_time")
+    private LocalDateTime studyReservationCreateTime;
 }

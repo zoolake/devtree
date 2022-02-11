@@ -89,9 +89,7 @@ public class StudyService {
     }
 
     // 스터디 신청
-    public CommonResponseDto joinStudy(Long teamSeq, StudyJoinRequestDto requestDto) {
-        Long userSeq = requestDto.getUserSeq();
-        System.out.println("userSeq >>> " + userSeq);
+    public CommonResponseDto joinStudy(Long userSeq, Long teamSeq, StudyJoinRequestDto requestDto) {
         // 1. User 객체를 찾는다.
         User user = userRepository.findById(userSeq).get();
         System.out.println(user.getUserName());

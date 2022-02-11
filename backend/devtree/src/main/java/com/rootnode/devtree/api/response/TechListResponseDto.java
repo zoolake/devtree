@@ -9,9 +9,11 @@ import lombok.NoArgsConstructor;
 public class TechListResponseDto{
     private Long techSeq;
     private String techName;
+    private String techImage;
 
     public TechListResponseDto(Tech tech) {
         this.techSeq = tech.getTechSeq();
         this.techName = tech.getTechName();
+        this.techImage = tech.getTechImage();
     }
 }

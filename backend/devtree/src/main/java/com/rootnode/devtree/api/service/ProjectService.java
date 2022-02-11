@@ -97,8 +97,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public CommonResponseDto joinProject(Long teamSeq, ProjectJoinRequestDto requestDto) {
-        Long userSeq = requestDto.getUserSeq();
+    public CommonResponseDto joinProject(Long userSeq,Long teamSeq, ProjectJoinRequestDto requestDto) {
         String detailPositionName = requestDto.getDetailPositionName();
 
         // 1. User 객체를 찾는다.

@@ -2,6 +2,7 @@ package com.rootnode.devtree.api.controller;
 
 import com.rootnode.devtree.api.request.UserLoginPostReq;
 import com.rootnode.devtree.api.request.UserUpdateRequestDto;
+import com.rootnode.devtree.api.response.UserDetailResponseDto;
 import com.rootnode.devtree.api.response.UserLoginPostRes;
 import com.rootnode.devtree.api.service.UserService;
 import com.rootnode.devtree.common.auth.UserDetail;
@@ -60,7 +61,8 @@ public class AuthController {
     public ResponseEntity<Result> getUserInfo(@ApiIgnore Authentication authentication) {
 //		userdetails를 통해서 user를 가져온다.
         UserDetail userDetails = (UserDetail)authentication.getDetails();
-        return ResponseEntity.status(200).body(new Result(userDetails.getUser(),200,"성공"));
+        UserDetailResponseDto user = userService.getUserDetailByUserId(userDetails.getUsername());
+        return ResponseEntity.status(200).body(new Result(user,200,"성공"));
     }
 
 

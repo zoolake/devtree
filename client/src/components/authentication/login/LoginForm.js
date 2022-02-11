@@ -31,9 +31,9 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const LoginSchema = Yup.object().shape({
     userId: Yup.string()
-      .matches(/^[a-zA-Z0-9]*$/, 'ID는 영문자, 숫자만 가능합니다.')
-      .min(6, 'ID는 6자 이상이여야 합니다.')
-      .max(16, 'ID는 16자 이하이여야 합니다.')
+      // .matches(/^[a-zA-Z0-9]*$/, 'ID는 영문자, 숫자만 가능합니다.')
+      // .min(6, 'ID는 6자 이상이여야 합니다.')
+      // .max(16, 'ID는 16자 이하이여야 합니다.')
       .required('아이디를 입력해주세요.'),
     userPassword: Yup.string()
       .min(6, '최소 6자 이상 입력해주세요')

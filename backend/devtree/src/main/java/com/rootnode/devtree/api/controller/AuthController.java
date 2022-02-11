@@ -73,7 +73,7 @@ public class AuthController {
      */
     @PostMapping("/v1/user/idcheck")
     public ResponseEntity<Boolean> login(@RequestBody Map<String,String> request) {
-        User user = userService.getUserByUserId(request.get("user_id"));
+        User user = userService.getUserByUserId(request.get("userId"));
         if (user == null) {
             return ResponseEntity.ok(true);
         }

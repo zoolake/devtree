@@ -45,26 +45,26 @@ export default function MentorProfile() {
   };
 
   const ProfileSchema = Yup.object().shape({
-    mentor_nickname: Yup.string(),
-    mentor_email: Yup.string().email('올바르지 않은 이메일입니다.'),
-    mentor_career: Yup.string(),
-    mentor_desc: Yup.string()
+    mentorNickname: Yup.string(),
+    mentorEmail: Yup.string().email('올바르지 않은 이메일입니다.'),
+    mentorCareer: Yup.string(),
+    mentorDesc: Yup.string()
   });
   const formik = useFormik({
     initialValues: {
-      mentor_nickname: '',
-      mentor_career: '',
-      mentor_email: '',
-      mentor_desc: ''
+      mentorNickname: '',
+      mentorCareer: '',
+      mentorEmail: '',
+      mentorDesc: ''
     },
     validationSchema: ProfileSchema,
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
         const dataToSubmit = {
-          mentor_nickname: values.mentor_nickname,
-          mentor_career: values.mentor_career,
-          mentor_email: values.mentor_email,
-          mentor_desc: values.mentor_desc
+          mentorNickname: values.mentorNickname,
+          mentorCareer: values.mentorCareer,
+          mentorEmail: values.mentorEmail,
+          mentorDesc: values.mentorDesc
         };
         console.log(dataToSubmit);
         dispatch(updateUser(dataToSubmit)).then((response) => {
@@ -108,14 +108,14 @@ export default function MentorProfile() {
               <Box sx={{ p: 3 }}>
                 멘토 닉네임
                 <TextField
-                  {...getFieldProps('mentor_nickname')}
+                  {...getFieldProps('mentorNickname')}
                   disabled={!visible}
                   fullWidth
                   type="text"
                 />
                 멘토 커리어
                 <TextField
-                  {...getFieldProps('mentor_career')}
+                  {...getFieldProps('mentorCareer')}
                   disabled={!visible}
                   fullWidth
                   autoComplete="username"
@@ -123,17 +123,17 @@ export default function MentorProfile() {
                 />
                 멘토 이메일
                 <TextField
-                  {...getFieldProps('mentor_email')}
+                  {...getFieldProps('mentorEmail')}
                   disabled={!visible}
                   fullWidth
                   autoComplete="username"
                   type="text"
-                  error={Boolean(touched.mentor_email && errors.mentor_email)}
-                  helperText={touched.mentor_email && errors.mentor_email}
+                  error={Boolean(touched.mentorEmail && errors.mentorEmail)}
+                  helperText={touched.mentorEmail && errors.mentorEmail}
                 />
                 멘토 자기소개
                 <TextField
-                  {...getFieldProps('mentor_desc')}
+                  {...getFieldProps('mentorDesc')}
                   id="filled-textarea"
                   disabled={!visible}
                   multiline

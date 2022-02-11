@@ -36,7 +36,7 @@ export default function PasswordUpdate() {
   const [formErrorMessage, setFormErrorMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const PasswordSchema = Yup.object().shape({
-    user_password: Yup.string()
+    userPassword: Yup.string()
       .min(8, '비밀번호는 8자 이상이여야 합니다.')
       .max(20, '비밀번호는 20자 이하이여야 합니다.')
       .required('비밀번호는 필수 값 입니다.')
@@ -45,7 +45,7 @@ export default function PasswordUpdate() {
         '비밀번호는 영어, 숫자, 특수문자가 포함되어야 합니다.'
       ),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref('user_password'), null], '비밀번호가 일치하지 않습니다.')
+      .oneOf([Yup.ref('userPassword'), null], '비밀번호가 일치하지 않습니다.')
       .required('비밀번호를 재입력해주세요')
   });
   const handleShowPassword = () => {
@@ -53,7 +53,7 @@ export default function PasswordUpdate() {
   };
   const formik = useFormik({
     initialValues: {
-      user_password: ''
+      userPassword: ''
     },
     validationSchema: PasswordSchema,
     onSubmit: (values, { setSubmitting }) => {
@@ -61,7 +61,7 @@ export default function PasswordUpdate() {
       setTimeout(() => {
         const dataToSubmit = {
           //     user_id: values.user_id,
-          user_password: values.user_password
+          userPassword: values.userPassword
         };
         dispatch(passwordUpdate(dataToSubmit))
           .then((response) => {
@@ -88,7 +88,7 @@ export default function PasswordUpdate() {
                 autoComplete="current-password"
                 type={showPassword ? 'text' : 'password'}
                 label="새 비밀번호"
-                {...getFieldProps('user_password')}
+                {...getFieldProps('userPassword')}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -98,8 +98,8 @@ export default function PasswordUpdate() {
                     </InputAdornment>
                   )
                 }}
-                error={Boolean(touched.user_password && errors.user_password)}
-                helperText={touched.user_password && errors.user_password}
+                error={Boolean(touched.userPassword && errors.userPassword)}
+                helperText={touched.userPassword && errors.userPassword}
               />
               <TextField
                 fullWidth

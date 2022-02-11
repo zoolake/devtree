@@ -121,8 +121,8 @@ export default function MentorWeeklySetting({ week, day, date }) {
 
   const getCheckedTime = () => {
     const dataToSubmit = {
-      mentor_time: date,
-      mentor_seq: id
+      mentorTime: date,
+      mentorSeq: id
     };
     dispatch(getCheckedtimeList(dataToSubmit))
       .then((response) => {
@@ -149,8 +149,8 @@ export default function MentorWeeklySetting({ week, day, date }) {
 
   const getReservedTeam = () => {
     const dataToSubmit = {
-      mentor_time: date,
-      mentor_seq: id
+      mentorTime: date,
+      mentorSeq: id
     };
     dispatch(getReservedList(dataToSubmit))
       .then((response) => {
@@ -174,7 +174,7 @@ export default function MentorWeeklySetting({ week, day, date }) {
   const submit = async () => {
     console.log(checkedInputs);
     const dataToSubmit = {
-      mentor_time: checkedInputs
+      mentorTime: checkedInputs
     };
     await dispatch(saveMentoringTime(dataToSubmit))
       .then((response) => {

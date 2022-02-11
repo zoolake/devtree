@@ -62,8 +62,8 @@ export default function WeekdayReserv({ week, day, date }) {
   console.log('-----------');
   const getTime = async () => {
     const dataToSubmit = {
-      mentor_time: date,
-      mentor_seq: id
+      mentorTime: date,
+      mentorSeq: id
     };
     await dispatch(getSchedule(dataToSubmit))
       .then((response) => {
@@ -78,9 +78,9 @@ export default function WeekdayReserv({ week, day, date }) {
   const submit = async () => {
     console.log('신청하기');
     const dataToSubmit = {
-      mentor_seq: id,
-      mentor_time: selectedTime,
-      team_seq: selectedTeam
+      mentorSeq: id,
+      mentorTime: selectedTime,
+      teamSeq: selectedTeam
     };
     await dispatch(getSchedule(dataToSubmit))
       .then((response) => {
@@ -103,7 +103,7 @@ export default function WeekdayReserv({ week, day, date }) {
 
   const getTeam = async () => {
     const dataToSubmit = {
-      mentor_seq: id
+      mentorSeq: id
     };
     await dispatch(getTeams(dataToSubmit))
       .then((response) => {
@@ -142,8 +142,8 @@ export default function WeekdayReserv({ week, day, date }) {
                   <FormControlLabel
                     onChange={handleTimeChange}
                     control={<Radio />}
-                    value={post.mentor_time}
-                    label={post.mentor_time}
+                    value={post.mentorTime}
+                    label={post.mentorTime}
                   />
                 ))}
               </RadioGroup>
@@ -166,8 +166,8 @@ export default function WeekdayReserv({ week, day, date }) {
                 {teams.map((post, index) => (
                   <FormControlLabel
                     control={<Radio onChange={handleTeamChange} />}
-                    value={post.team_seq}
-                    label={post.team_name}
+                    value={post.teamSeq}
+                    label={post.teamName}
                   />
                 ))}
               </RadioGroup>

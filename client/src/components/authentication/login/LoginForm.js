@@ -30,28 +30,28 @@ export default function LoginForm() {
   const [formErrorMessage, setFormErrorMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const LoginSchema = Yup.object().shape({
-    user_id: Yup.string()
+    userId: Yup.string()
       .matches(/^[a-zA-Z0-9]*$/, 'ID는 영문자, 숫자만 가능합니다.')
       .min(6, 'ID는 6자 이상이여야 합니다.')
       .max(16, 'ID는 16자 이하이여야 합니다.')
       .required('아이디를 입력해주세요.'),
-    user_password: Yup.string()
+    userPassword: Yup.string()
       .min(6, '최소 6자 이상 입력해주세요')
       .required('비밀번호를 입력해주세요.')
   });
 
   const formik = useFormik({
     initialValues: {
-      user_id: '',
-      user_password: '',
+      userId: '',
+      userPassword: '',
       remember: true
     },
     validationSchema: LoginSchema,
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
         const dataToSubmit = {
-          user_id: values.user_id,
-          user_password: values.user_password
+          userId: values.userId,
+          userPassword: values.userPassword
         };
         dispatch(loginUser(dataToSubmit))
           .then((response) => {
@@ -89,9 +89,9 @@ export default function LoginForm() {
             autoComplete="username"
             type="text"
             label="ID"
-            {...getFieldProps('user_id')}
-            error={Boolean(touched.user_id && errors.user_id)}
-            helperText={touched.user_id && errors.user_id}
+            {...getFieldProps('userId')}
+            error={Boolean(touched.userId && errors.userId)}
+            helperText={touched.userId && errors.userId}
           />
 
           <TextField
@@ -99,7 +99,7 @@ export default function LoginForm() {
             autoComplete="current-password"
             type={showPassword ? 'text' : 'password'}
             label="Password"
-            {...getFieldProps('user_password')}
+            {...getFieldProps('userPassword')}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -109,8 +109,8 @@ export default function LoginForm() {
                 </InputAdornment>
               )
             }}
-            error={Boolean(touched.user_password && errors.user_password)}
-            helperText={touched.user_password && errors.user_password}
+            error={Boolean(touched.userPassword && errors.userPassword)}
+            helperText={touched.userPassword && errors.userPassword}
           />
         </Stack>
 

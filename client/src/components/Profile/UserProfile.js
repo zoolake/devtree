@@ -45,31 +45,31 @@ export default function UserProfile() {
   };
 
   const ProfileSchema = Yup.object().shape({
-    user_name: Yup.string()
+    userName: Yup.string()
       .required('이름은 필수 값 입니다.')
       .min(2, '이름은 2자 이상이여야 합니다.')
       .max(10, '이름은 10자 이하이여야 합니다.'),
-    user_email: Yup.string()
+    userEmail: Yup.string()
       .email('올바르지 않은 이메일입니다.')
       .required('이메일은 필수 값 입니다.'),
-    user_nickname: Yup.string(),
-    user_desc: Yup.string()
+    userNickname: Yup.string(),
+    userDesc: Yup.string()
   });
   const formik = useFormik({
     initialValues: {
-      user_name: '',
-      user_email: '',
-      user_nickname: '',
-      user_desc: ''
+      userName: '',
+      userEmail: '',
+      userNickname: '',
+      userDesc: ''
     },
     validationSchema: ProfileSchema,
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
         const dataToSubmit = {
-          user_name: values.user_name,
-          user_email: values.user_email,
-          user_nickname: values.user_nickname,
-          user_desc: values.user_desc
+          userName: values.userName,
+          userEmail: values.userEmail,
+          userNickname: values.userNickname,
+          userDesc: values.userDesc
         };
         console.log(dataToSubmit);
         dispatch(updateUser(dataToSubmit)).then((response) => {
@@ -121,37 +121,37 @@ export default function UserProfile() {
                 />
                 이름
                 <TextField
-                  {...getFieldProps('user_name')}
+                  {...getFieldProps('userName')}
                   fullWidth
                   type="text"
-                  error={Boolean(touched.user_name && errors.user_name)}
-                  helperText={touched.user_name && errors.user_name}
+                  error={Boolean(touched.userName && errors.userName)}
+                  helperText={touched.userName && errors.userName}
                 />
                 닉네임
                 <TextField
-                  {...getFieldProps('user_nickname')}
+                  {...getFieldProps('userNickname')}
                   fullWidth
                   type="text"
-                  error={Boolean(touched.user_nickname && errors.user_nickname)}
-                  helperText={touched.user_nickname && errors.user_nickname}
+                  error={Boolean(touched.userNickname && errors.userNickname)}
+                  helperText={touched.userNickname && errors.userNickname}
                 />
                 이메일
                 <TextField
-                  {...getFieldProps('user_email')}
+                  {...getFieldProps('userEmail')}
                   fullWidth
                   type="text"
-                  error={Boolean(touched.user_email && errors.user_email)}
-                  helperText={touched.user_email && errors.user_email}
+                  error={Boolean(touched.userEmail && errors.userEmail)}
+                  helperText={touched.userEmail && errors.userEmail}
                 />
                 자기소개
                 <TextField
-                  {...getFieldProps('user_desc')}
+                  {...getFieldProps('userDesc')}
                   id="filled-textarea"
                   multiline
                   fullWidth
                   variant="filled"
-                  error={Boolean(touched.user_desc && errors.user_desc)}
-                  helperText={touched.user_desc && errors.user_desc}
+                  error={Boolean(touched.userDesc && errors.userDesc)}
+                  helperText={touched.userDesc && errors.userDesc}
                 />
                 <Divider />
               </Box>

@@ -33,7 +33,7 @@ export default function MentorReviewList(data) {
   console.log('id?');
   const getReviews = async () => {
     const dataToSubmit = {
-      mentor_seq: data.mentor_id
+      mentorSeq: data.mentorId
     };
     await dispatch(getReview(dataToSubmit))
       .then((response) => {

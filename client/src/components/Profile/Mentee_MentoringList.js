@@ -1,9 +1,14 @@
 import { filter } from 'lodash';
 import { Icon } from '@iconify/react';
-import { sentenceCase } from 'change-case';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import moment from 'moment';
+import Moment from 'react-moment';
+import { useInterval } from 'react-use';
+import Swal from 'sweetalert2';
+import 'moment/locale/ko';
 // material
 import {
   Card,
@@ -11,7 +16,6 @@ import {
   Stack,
   Avatar,
   Button,
-  Checkbox,
   TableRow,
   TableBody,
   TableCell,
@@ -21,23 +25,30 @@ import {
   TablePagination
 } from '@mui/material';
 // components
-import Page from '../components/Page';
-import Label from '../components/Label';
-import Scrollbar from '../components/Scrollbar';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
-//
-import USERLIST from '../_mocks_/user';
+import Page from '../Page';
+import Label from '../Label';
+import Scrollbar from '../Scrollbar';
+import { UserListHead, UserListToolbar, UserMoreMenu } from '../_dashboard/profileHistory';
 
+import {
+  getMentoringlist,
+  rejectMentoring,
+  acceptMentoring,
+  mentee_mentoringList
+} from '../../_actions/mentor_actions';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Company', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false }
+  { id: 'mentorname', label: '멘토이름', alignRight: false },
+  { id: 'teamname', label: '팀이름', alignRight: false },
+  { id: 'teamtype', label: '팀타입', alignRight: false },
+  { id: 'mentoringStartDate', label: '멘토링 일정', alignRight: false },
+  { id: 'mentoringmsg', label: '신청 메세지', alignRight: false },
+  { id: 'mentoringState', label: '상태', alignRight: false }
 ];
-
+const nowTime = moment().format('YYYY-MM-DD HH:mm:ss');
+console.log('nowTime');
+console.log(nowTime);
 // ----------------------------------------------------------------------
 
 function descendingComparator(a, b, orderBy) {
@@ -69,13 +80,39 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function User() {
+export default function Mentee_MentoringList() {
+  const [seconds, setSeconds] = useState(Date.now());
+  const [projectList, setProjectList] = useState([]);
+  const getMentoringLists = async () => {
+    dispatch(mentee_mentoringList())
+      .then((response) => {
+        if (response) {
+          console.log(response.payload);
+          setProjectList(response.payload);
+        }
+      })
+      .catch((err) => {
+        setTimeout(() => {}, 3000);
+      });
+  };
+  useInterval(() => {
+    setSeconds(Date.now());
+  }, 1000);
+
+  const startTime = new Date('2022-02-14T18:00:00');
+  const nowTimeFormat = new Date(seconds);
+
+  useEffect(() => {
+    getMentoringLists();
+  }, []);
+
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const dispatch = useDispatch();
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -85,7 +122,7 @@ export default function User() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      const newSelecteds = projectList.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -123,19 +160,16 @@ export default function User() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
-
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
-
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - projectList.length) : 0;
+  const filteredUsers = applySortFilter(projectList, getComparator(order, orderBy), filterName);
   return (
     <Page title="User">
       <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography variant="h4" gutterBottom>
-            user
+            멘토링 내역
           </Typography>
         </Stack>
-
         <Card>
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -144,55 +178,71 @@ export default function User() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
-                  numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
+
                 <TableBody>
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, name, role, status, company, avatarUrl, isVerified } = row;
-                      const isItemSelected = selected.indexOf(name) !== -1;
+                      const {
+                        mentoringCreateTime, // 이부분이 mentor 이름이여야함 수정해야함 api 요청할때
+                        mentoringSeq,
+                        teamtype,
+                        teamname,
+                        mentoringStartDate,
+                        mentoringStartTime,
+                        mentoringmsg,
+                        mentoringState
+                      } = row;
+                      const time = new Date(`${mentoringStartDate}T${mentoringStartTime}`);
 
                       return (
-                        <TableRow
-                          hover
-                          key={id}
-                          tabIndex={-1}
-                          role="checkbox"
-                          selected={isItemSelected}
-                          aria-checked={isItemSelected}
-                        >
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              checked={isItemSelected}
-                              onChange={(event) => handleClick(event, name)}
-                            />
-                          </TableCell>
-                          <TableCell component="th" scope="row" padding="none">
+                        <TableRow hover key={mentoringSeq} tabIndex={-1}>
+                          <TableCell align="left">{mentoringCreateTime}</TableCell>
+                          <TableCell component="th" scope="row" padding="3px">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              <Avatar alt={name} src={avatarUrl} />
-                              <Typography variant="subtitle2" noWrap>
-                                {name}
-                              </Typography>
+                              <Typography variant="subtitle2">{teamname}</Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{company}</TableCell>
-                          <TableCell align="left">{role}</TableCell>
-                          <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
                           <TableCell align="left">
                             <Label
                               variant="ghost"
-                              color={(status === 'banned' && 'error') || 'success'}
+                              color={
+                                (teamtype === 'STUDY' && 'warning') ||
+                                (teamtype === 'PROJECT' && 'primary')
+                              }
                             >
-                              {sentenceCase(status)}
+                              {teamtype === 'STUDY' ? <p>STUDY</p> : null}
+                              {teamtype === 'PROJECT' ? <p>PROJECT</p> : null}
                             </Label>
                           </TableCell>
+                          <TableCell align="left">
+                            {mentoringStartDate} {mentoringStartTime}
+                          </TableCell>
 
-                          <TableCell align="right">
-                            <UserMoreMenu />
+                          <TableCell align="left">{mentoringmsg}</TableCell>
+                          <TableCell align="left">
+                            {mentoringState === 'WAIT' ? (
+                              <div>
+                                <Button id={mentoringSeq}>수락대기중</Button>
+                              </div>
+                            ) : null}
+                            {mentoringState === 'ACCEPT' ? (
+                              <div>
+                                {time - nowTimeFormat > 0 ? (
+                                  <>
+                                    <Moment fromNow>{time}</Moment>
+                                    &nbsp;멘토링
+                                  </>
+                                ) : (
+                                  <Button>세션 대기중</Button>
+                                )}
+                              </div>
+                            ) : null}
+                            {mentoringState === 'ACTIVATE' ? <Button>세션입장</Button> : null}
+                            {mentoringState === 'FINISH' ? <Button>완료</Button> : null}
                           </TableCell>
                         </TableRow>
                       );
@@ -210,7 +260,7 @@ export default function User() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={USERLIST.length}
+            count={projectList.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

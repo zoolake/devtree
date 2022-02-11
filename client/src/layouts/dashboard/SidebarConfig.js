@@ -16,16 +16,16 @@ const sidebarConfig = [
     icon: getIcon(pieChart2Fill)
   },
 
-  {
-    title: 'product',
-    path: '/MainPage/products',
-    icon: getIcon(shoppingBagFill)
-  },
-  {
-    title: 'blog',
-    path: '/MainPage/blog',
-    icon: getIcon(fileTextFill)
-  },
+  // {
+  //   title: 'product',
+  //   path: '/MainPage/products',
+  //   icon: getIcon(shoppingBagFill)
+  // },
+  // {
+  //   title: 'blog',
+  //   path: '/MainPage/blog',
+  //   icon: getIcon(fileTextFill)
+  // },
   {
     title: 'project',
     path: '/project',
@@ -42,8 +42,8 @@ const sidebarConfig = [
     icon: getIcon(fileTextFill)
   },
   {
-    title: 'user',
-    path: '/MainPage/user',
+    title: 'Ranking',
+    path: '/MainPage/ranking',
     icon: getIcon(peopleFill)
   }
 ];

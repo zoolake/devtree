@@ -238,7 +238,7 @@ public class UserController {
 	 *  기능 : 유저의 멘토 인증
 	 */
 	@PostMapping("/v1/user/mentor")
-	public CommonResponseDto userCertification(Authentication authentication,
+	public CommonResponseDto userVerification(Authentication authentication,
 											   @RequestBody MentorCertificationRequestDto requestDto) {
 		UserDetail userDetails = (UserDetail)authentication.getDetails();
 		Long userSeq = userDetails.getUser().getUserSeq();

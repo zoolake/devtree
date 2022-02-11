@@ -12,9 +12,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserRegisterPostReq {
-	@JsonProperty("user_id")
-	String user_id;
-	String user_password;
-	String user_email;
-	String user_name;
+	String userId;
+	String userPassword;
+	String userEmail;
+	String userName;
 }

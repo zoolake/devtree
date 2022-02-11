@@ -35,12 +35,12 @@ public class AuthController {
 	 * */
     @PostMapping("/v1/user/login")
     public ResponseEntity<UserLoginPostRes> login(@RequestBody UserLoginPostReq loginInfo) {
-        String userId = loginInfo.getUser_id();
-        String password = loginInfo.getUser_password();
+        String userId = loginInfo.getUserId();
+        String password = loginInfo.getUserPassword();
         User user = userService.getUserByUserId(userId);
 
         // 로그인 요청한 유저로부터 입력된 패스워드 와 디비에 저장된 유저의 암호화된 패스워드가 같은지 확인.(유효한 패스워드인지 여부 확인)
-        if (user != null && passwordEncoder.matches(password, user.getUser_password())) {
+        if (user != null && passwordEncoder.matches(password, user.getUserPassword())) {
             // 유효한 패스워드가 맞는 경우, 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
             return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", JwtTokenUtil.getToken(userId,user.getUserSeq(),user.getUserRole().name())));
         }

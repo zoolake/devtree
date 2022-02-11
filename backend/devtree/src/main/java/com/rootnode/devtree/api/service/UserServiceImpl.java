@@ -46,12 +46,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(UserRegisterPostReq userRegisterInfo) {
+        System.out.println("userRegisterInfo = " + userRegisterInfo.toString());
         User user = User.builder()
-                .userId(userRegisterInfo.getUser_id())
+                .userId(userRegisterInfo.getUserId())
                 // 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
-                .user_password(passwordEncoder.encode(userRegisterInfo.getUser_password()))
-                .userName(userRegisterInfo.getUser_name())
-                .userEmail(userRegisterInfo.getUser_email())
+                .userPassword(passwordEncoder.encode(userRegisterInfo.getUserPassword()))
+                .userName(userRegisterInfo.getUserName())
+                .userEmail(userRegisterInfo.getUserEmail())
                 .userRole(UserRole.USER)
                 .build();
         return userRepository.save(user);
@@ -86,7 +87,7 @@ public class UserServiceImpl implements UserService {
             user = User.builder()
                     .userSeq(user.getUserSeq())
                     .userId(user.getUserId())
-                    .user_password(user.getUser_password())
+                    .userPassword(user.getUserPassword())
                     .userEmail(user.getUserEmail())
                     .userRole(user.getUserRole())
                     .userDesc(userUpdateRequestDto.getUser_desc())

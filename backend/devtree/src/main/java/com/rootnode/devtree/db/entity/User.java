@@ -42,8 +42,8 @@ public class User{
     private String verificationCode;
 
     @JsonIgnore
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    String user_password;
+    @Column(name = "user_password")
+    String userPassword;
 
 
     public void changeUserNickName(String userNickname) { this.userNickname = userNickname; }

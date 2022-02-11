@@ -5,7 +5,8 @@ import {
   GET_TECH_LIST,
   GET_POSITION_LIST,
   DELETE_PROJECT,
-  GET_PROJECT_DETAIL
+  GET_PROJECT_DETAIL,
+  UPDATE_PROJECT
 } from './types';
 
 export function getProjectList() {
@@ -48,4 +49,11 @@ export function deleteProject(teamSeq) {
     .delete(`/project/${teamSeq}`) // http://127.26.1.146:8080/v1/project/${teamSeq.id}
     .then((response) => response);
   return { type: DELETE_PROJECT, payload: request };
+}
+
+export function updateProject(teamSeq) {
+  const request = axios
+    .put(`/project/${teamSeq}`) // http://127.26.1.146:8080/v1/project/${teamSeq.id}
+    .then((response) => response);
+  return { type: UPDATE_PROJECT, payload: request };
 }

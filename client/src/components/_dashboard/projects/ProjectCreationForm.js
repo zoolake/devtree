@@ -32,7 +32,7 @@ export default function ProjectCreationForm() {
   const formik = useFormik({
     initialValues: {
       teamManagerSeq: '',
-      teamName: '',
+      teamName: 'hi',
       teamDesc: '',
       teamState: 'RECRUIT',
       teamType: 'PROJECT',
@@ -59,7 +59,6 @@ export default function ProjectCreationForm() {
               console.log(response, '프로젝트 생성 성공');
             })
             .catch((error) => {
-              console.log(dataToSubmit);
               console.log(error, '프로젝트 생성 실패');
             });
         };

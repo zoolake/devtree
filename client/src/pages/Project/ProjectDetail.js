@@ -67,7 +67,7 @@ export default function ProjectDetail() {
           {pjtPosition}
         </ul>
       </ul>
-      <Button variant="contained" component={RouterLink} to="update" project={projectDetail}>
+      <Button variant="contained" component={RouterLink} to="update">
         프로젝트 수정
       </Button>
       <Button variant="contained" component={RouterLink} to="delete">

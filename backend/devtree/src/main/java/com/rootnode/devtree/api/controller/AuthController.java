@@ -2,6 +2,7 @@ package com.rootnode.devtree.api.controller;
 
 import com.rootnode.devtree.api.request.UserLoginPostReq;
 import com.rootnode.devtree.api.request.UserUpdateRequestDto;
+import com.rootnode.devtree.api.response.UserDetailResponseDto;
 import com.rootnode.devtree.api.response.UserLoginPostRes;
 import com.rootnode.devtree.api.service.UserService;
 import com.rootnode.devtree.common.auth.UserDetail;
@@ -54,13 +55,14 @@ public class AuthController {
      * Feat : 나의 프로필 조회
      * User객체에 기술 스택 정보가 없으니 기술 스택 객체에서 가져와야한다.
      *
-     * 요청해더에
+     * 수정완료 !
      */
     @GetMapping("/v1/user")
     public ResponseEntity<Result> getUserInfo(@ApiIgnore Authentication authentication) {
 //		userdetails를 통해서 user를 가져온다.
         UserDetail userDetails = (UserDetail)authentication.getDetails();
-        return ResponseEntity.status(200).body(new Result(userDetails.getUser(),200,"성공"));
+        UserDetailResponseDto user = userService.getUserDetailByUserId(userDetails.getUsername());
+        return ResponseEntity.status(200).body(new Result(user,200,"성공"));
     }
 
 

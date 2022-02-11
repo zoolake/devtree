@@ -90,14 +90,14 @@ public class UserServiceImpl implements UserService {
                     .userPassword(user.getUserPassword())
                     .userEmail(user.getUserEmail())
                     .userRole(user.getUserRole())
-                    .userDesc(userUpdateRequestDto.getUser_desc())
-                    .userName(userUpdateRequestDto.getUser_name())
-                    .userNickname(userUpdateRequestDto.getUser_nickname())
+                    .userDesc(userUpdateRequestDto.getUserDesc())
+                    .userName(userUpdateRequestDto.getUserName())
+                    .userNickname(userUpdateRequestDto.getUserNickname())
                     .build();
             userRepository.save(user);
             userTechRepository.deleteByUserTechIdUserSeq(user.getUserSeq());
             //기술 스택 관련 정보(사용자 기술스택)먼저  save 해야한다.
-            for (Long t : userUpdateRequestDto.getUser_tech()){
+            for (Long t : userUpdateRequestDto.getUserTech()){
                 System.out.println(t);
                 userTechRepository.save(new UserTech(new UserTechId(user.getUserSeq(),t),user,techRepository.findByTechSeq(t)));
             }

@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface ProjectPositionRepository extends JpaRepository<ProjectPosition, ProjectPositionId> {
-    @Query(value = "select p from ProjectPosition p where p.projectPositionID.teamSeq = :team_seq")
+    @Query(value = "select p from ProjectPosition p where p.projectPositionID.teamSeq = :teamSeq")
     List<ProjectPosition> findByTeamSeq(Long teamSeq);
 
     @Transactional

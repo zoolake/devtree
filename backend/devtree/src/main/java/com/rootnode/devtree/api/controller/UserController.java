@@ -220,9 +220,11 @@ public class UserController {
 	/**
 	 *  기능 : 유저가 관리하는 팀 목록
 	 */
-	@GetMapping("/v1/common/team/manager/{managerSeq}")
-	public ResponseEntity<Result> findManagerTeam(@PathVariable Long managerSeq) {
-		List<TeamInfoDto> responseDto = userService.findManagerTeam(managerSeq);
+	@GetMapping("/v1/common/team/manager")
+	public ResponseEntity<Result> findManagerTeam(Authentication authentication){
+		UserDetail userDetails = (UserDetail)authentication.getDetails();
+		Long userSeq = userDetails.getUser().getUserSeq();
+		List<TeamInfoDto> responseDto = userService.findManagerTeam(userSeq);
 		return ResponseEntity
 				.status(200)
 				.body(Result.builder()
@@ -236,8 +238,11 @@ public class UserController {
 	 *  기능 : 유저의 멘토 인증
 	 */
 	@PostMapping("/v1/user/mentor")
-	public CommonResponseDto userCertification(@RequestBody MentorCertificationRequestDto requestDto) {
-		return userService.certificationMentor(requestDto);
+	public CommonResponseDto userCertification(Authentication authentication,
+											   @RequestBody MentorCertificationRequestDto requestDto) {
+		UserDetail userDetails = (UserDetail)authentication.getDetails();
+		Long userSeq = userDetails.getUser().getUserSeq();
+		return userService.certificationMentor(userSeq,requestDto);
 	}
 
 

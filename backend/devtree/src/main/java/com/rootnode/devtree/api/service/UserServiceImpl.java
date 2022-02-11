@@ -301,8 +301,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public CommonResponseDto certificationMentor(MentorCertificationRequestDto requestDto) {
-        Long mentorSeq = requestDto.getUserSeq();
+    public CommonResponseDto certificationMentor(Long mentorSeq,MentorCertificationRequestDto requestDto) {
         userRepository.certifyMentor(mentorSeq);
         User user = userRepository.findById(mentorSeq).get();
 

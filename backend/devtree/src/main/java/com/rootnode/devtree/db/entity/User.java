@@ -38,6 +38,8 @@ public class User{
     private String userDesc;
     @Column(name = "user_nickname")
     private String userNickname;
+    @Column(name = "verification_code")
+    private String verificationCode;
 
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -46,4 +48,7 @@ public class User{
 
     public void changeUserNickName(String userNickname) { this.userNickname = userNickname; }
     public void changeUserEmail(String userEmail) { this.userEmail = userEmail; }
+    public void changeUserRole(UserRole userRole) { this.userRole = userRole; }
+    public void changeVerificationCode(String verificationCode) { this.verificationCode = verificationCode; }
+
 }

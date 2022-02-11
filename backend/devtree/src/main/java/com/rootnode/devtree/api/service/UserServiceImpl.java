@@ -1,5 +1,6 @@
 package com.rootnode.devtree.api.service;
 
+import com.rootnode.devtree.api.request.EmailConfirmRequestDto;
 import com.rootnode.devtree.api.request.MentorCertificationRequestDto;
 import com.rootnode.devtree.api.request.UserRegisterPostReq;
 import com.rootnode.devtree.api.request.UserUpdateRequestDto;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -327,5 +329,20 @@ public class UserServiceImpl implements UserService {
         Notification notification = notificationRepository.findById(notificationSeq).get();
         notification.changeIsCheck();
         return new CommonResponseDto(200, "알림을 확인하였습니다.");
+    }
+
+    @Override
+    public CommonResponseDto confirmVerificationCode(User user, EmailConfirmRequestDto requestDto) {
+        String enteredCode = requestDto.getEnteredCode();
+        String verificationCode = userRepository.findVerificaionCodeByUserSeq(user.getUserSeq());
+
+        if(verificationCode.equals(enteredCode)) {
+            user.changeUserRole(UserRole.MENTOR);
+            user.changeVerificationCode("");
+            mentorRepository.save(Mentor.builder().user(user).mentorSeq(user.getUserSeq()).verificationDate(LocalDateTime.now()).build());
+            return new CommonResponseDto(200, "멘토인증이 완료되었습니다.");
+        } else {
+            return new CommonResponseDto(400, "멘토인증 실패");
+        }
     }
 }

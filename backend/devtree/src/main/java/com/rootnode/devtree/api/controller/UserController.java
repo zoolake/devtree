@@ -1,8 +1,11 @@
 package com.rootnode.devtree.api.controller;
 
+import com.rootnode.devtree.api.request.EmailConfirmRequestDto;
+import com.rootnode.devtree.api.request.EmailRequestDto;
 import com.rootnode.devtree.api.request.MentorCertificationRequestDto;
 import com.rootnode.devtree.api.request.UserRegisterPostReq;
 import com.rootnode.devtree.api.response.*;
+import com.rootnode.devtree.api.service.EmailService;
 import com.rootnode.devtree.api.service.UserService;
 import com.rootnode.devtree.common.auth.UserDetail;
 import com.rootnode.devtree.db.entity.MentoringState;
@@ -16,6 +19,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 유저 관련 API 요청 처리를 위한 컨트롤러 정의.
@@ -27,6 +31,7 @@ import java.util.List;
 //mapping 바꾸자
 public class UserController {
 	private final UserService userService;
+	private final EmailService emailService;
 
 	/**
 	 * @param registerInfo
@@ -243,6 +248,24 @@ public class UserController {
 		UserDetail userDetails = (UserDetail)authentication.getDetails();
 		Long userSeq = userDetails.getUser().getUserSeq();
 		return userService.certificationMentor(userSeq,requestDto);
+	}
+
+	/**
+	 *  기능 : 유저의 멘토 인증 (이메일 전송)
+	 */
+	@PostMapping("/v1/user/mentor/verification")
+	public CommonResponseDto userSendverificationCode(Authentication authentication, @RequestBody EmailRequestDto userEmail) throws Exception {
+		User user = ((UserDetail) authentication.getDetails()).getUser();
+		return emailService.sendSimpleMessage(user, userEmail);
+	}
+
+	/**
+	 *  기능 : 유저의 멘토 인증 확인
+	 */
+	@PostMapping("/v1/user/mentor/verification/confirm")
+	public CommonResponseDto userConfirmVerificationCode(Authentication authentication, @RequestBody EmailConfirmRequestDto requestDto) {
+		User user = ((UserDetail) authentication.getDetails()).getUser();
+		return userService.confirmVerificationCode(user, requestDto);
 	}
 
 

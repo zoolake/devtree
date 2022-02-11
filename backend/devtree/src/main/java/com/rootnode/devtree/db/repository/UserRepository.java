@@ -25,4 +25,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(value = "update User u set u.userRole='MENTOR' where u.userSeq = :mentorSeq")
     void certifyMentor(Long mentorSeq);
+
+    @Query(value = "select u.verificationCode from User u where u.userSeq = :userSeq")
+    String findVerificaionCodeByUserSeq(Long userSeq);
+
 }

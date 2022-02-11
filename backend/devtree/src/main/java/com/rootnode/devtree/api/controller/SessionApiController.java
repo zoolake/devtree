@@ -1,22 +1,26 @@
 package com.rootnode.devtree.api.controller;
 
+import com.rootnode.devtree.api.request.ReviewRequestDto;
 import com.rootnode.devtree.api.request.SessionJoinRequestDto;
+import com.rootnode.devtree.api.request.SessionQuitRequestDto;
+import com.rootnode.devtree.api.response.CommonResponseDto;
 import com.rootnode.devtree.api.response.SessionJoinResponseDto;
+import com.rootnode.devtree.common.auth.UserDetail;
 import com.rootnode.devtree.db.entity.*;
+import com.rootnode.devtree.db.entity.compositeKey.MentoringCommentId;
+import com.rootnode.devtree.db.entity.compositeKey.MentoringUserId;
+import com.rootnode.devtree.db.repository.MentoringCommentRepository;
 import com.rootnode.devtree.db.repository.MentoringRepository;
 import com.rootnode.devtree.db.repository.MentoringUserRepository;
-import com.rootnode.devtree.db.repository.ProjectPositionUserRepository;
-import com.rootnode.devtree.db.repository.StudyUserRepository;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -33,10 +37,10 @@ public class SessionApiController {
     private String SECRET;
 
     // Map <세션일련번호, OpenVidu 세션 객체>
-    private Map<Integer, Session> sessionMap = new ConcurrentHashMap<>();
+    private Map<Long, Session> sessionMap = new ConcurrentHashMap<>();
 
     // Map <세션일련번호, <토큰, 역할>>
-    private Map<Integer, Map<String, OpenViduRole>> sessionNamesTokensMap = new ConcurrentHashMap<>();
+    private Map<Long, Map<String, OpenViduRole>> sessionNamesTokensMap = new ConcurrentHashMap<>();
 
     @Autowired
     public SessionApiController(@Value("${openvidu.secret}") String secret,
@@ -45,74 +49,120 @@ public class SessionApiController {
         this.SECRET = secret;
         this.OPENVIDU_URL = url;
         this.openVidu = new OpenVidu(OPENVIDU_URL, SECRET);
-        System.out.println("HI");
-        System.out.println(mentoringRepository);
+        this.mentoringRepository = mentoringRepository;
     }
 
-//    @PostMapping("/create")
-//    public ResponseEntity<SessionJoinResponseDto> createConference(@RequestParam Long mentoringSeq) throws OpenViduJavaClientException, OpenViduHttpException {
-//        // 1. 멘토링 상태 ACCEPT -> ACTIVATE
-//        Mentoring mentoring = mentoringRepository.findById(mentoringSeq).get();
-//        mentoring.changeMentoringState(MentoringState.ACTIVATE);
-//
-//        // 2. 세션 생성
-//        OpenViduRole openViduRole = OpenViduRole.PUBLISHER; // 나중에 MODERATOR 로 변경도 해보기
-//        String teamName = mentoring.getTeam().getTeamName();
-//        Mentor mentor = mentoring.getMentor();
-//        String serverData = "{\"serverData\": \"" + mentor.getUser().getUserId() + "\"}";
-//
-//        ConnectionProperties connectionProperties = new ConnectionProperties.Builder().type(ConnectionType.WEBRTC).data(serverData).role(openViduRole).build();
-//
-//        Session session = this.openVidu.createSession();
-//        String token = session.createConnection(connectionProperties).getToken();
-//
-//        this.sessionMap.put(mentoringSeq, session);
-//        this.sessionNamesTokensMap.put(mentoringSeq, new ConcurrentHashMap<>());
-//        this.sessionNamesTokensMap.get(mentoringSeq).put(token, openViduRole);
-//
-//        return ResponseEntity.status(200).body(SessionJoinResponseDto.builder()
-//                .userRole(mentor.getUser().getUserRole())
-//                .openViduRole(openViduRole)
-//                .teamName(teamName)
-//                .token(token)
-//                .userId(mentor.getUser().getUserId())
-//                .userSeq(mentor.getMentorSeq())
-//                .build());
-//    }
-
     @PostMapping("/join")
-    public ResponseEntity<SessionJoinResponseDto> joinSession(@RequestBody SessionJoinRequestDto requestDto) throws OpenViduJavaClientException, OpenViduHttpException {
-        // 세션 일련번호
-        int sessionSeq = requestDto.getSessionSeq();
-        // 세션명
-        String sessionName = requestDto.getSessionName();
-        // 화상회의 참여시 사용자 역할
-        OpenViduRole userRole = requestDto.getUserRole().equals(UserRole.MENTOR) ? OpenViduRole.PUBLISHER : OpenViduRole.SUBSCRIBER;
-        // 사용자가 video-call 에 연결하면 다른 사용자에게 전달되어지는 선택적인 데이터 : 일단, userId로 지정
-        String serverData = "{\"serverData\": \"" + requestDto.getUserId() + "\"}";
+    public ResponseEntity<SessionJoinResponseDto> joinSession(@RequestBody SessionJoinRequestDto requestDto, Authentication authentication) throws OpenViduJavaClientException, OpenViduHttpException {
+        // 역할 관련 변수 선언
+        UserRole userRole = UserRole.MENTOR;
+        OpenViduRole openViduRole = OpenViduRole.PUBLISHER;
 
-        ConnectionProperties connectionProperties = new ConnectionProperties.Builder().type(ConnectionType.WEBRTC).data(serverData).role(userRole).build();
+        // 1. mentoringSeq 를 통해 멘토링 엔티티를 찾아온다.
+        Long mentoringSeq = requestDto.getMentoringSeq();
+        Mentoring mentoring = mentoringRepository.findById(mentoringSeq).get();
+        Mentor mentor = mentoring.getMentor();
 
-        /* case1: 세션이 이미 존재하는 경우 */
-        if (this.sessionMap.get(sessionSeq) != null) {
-            // 가장 최근에 만들어진 connectionProperties 로 새로운 connection을 만든다.
-            String token = this.sessionMap.get(sessionSeq).createConnection(connectionProperties).getToken();
-            System.out.println("session already exists token = " + token);
+        // 2. mentorSeq == userSeq 면 해당 유저는 멘토임을 확인할 수 있다.
+        //      authentication 사용 코드
+//        UserDetail userDetail = (UserDetail) authentication.getDetails();
+//        if (userDetail.getUser().getUserSeq() == mentor.getMentorSeq()) {
+//            userRole = UserRole.MENTOR;
+//            openViduRole = OpenViduRole.PUBLISHER;
+//        } else {
+//            userRole = UserRole.USER;
+//            openViduRole = OpenViduRole.PUBLISHER;
+//        }
+//        Long userSeq = userDetail.getUser().getUserSeq();
+//        String userId = userDetail.getUser().getUserId();
 
-            this.sessionNamesTokensMap.get(sessionSeq).put(token, userRole);
+        //      테스트용 DTO 사용 코드
 
-            return ResponseEntity.status(200).body(new SessionJoinResponseDto(token, userRole));
+        System.out.println("requestDto.getUserSeq() = " + requestDto.getUserSeq());
+        System.out.println("mentor.getMentorSeq() = " + mentor.getMentorSeq());
+
+        if (requestDto.getUserSeq() == mentor.getMentorSeq()) {
+            System.out.println("멘토입니다!");
+            userRole = UserRole.MENTOR;
+            openViduRole = OpenViduRole.MODERATOR;
+        } else {
+            System.out.println("멘티입니다!");
+            userRole = UserRole.USER;
+            openViduRole = OpenViduRole.PUBLISHER;
+        }
+        Long userSeq = requestDto.getUserSeq();
+        String userId = requestDto.getUserId();
+
+        String teamName = requestDto.getTeamName();
+
+        String serverData = "{\"serverData\": \"" + userId + "\"}";
+
+        ConnectionProperties connectionProperties = new ConnectionProperties.Builder().type(ConnectionType.WEBRTC).data(serverData).role(openViduRole).build();
+
+        // 멘티가 참석하는 경우 = 이미 세션이 존재해야 하는 경우
+        if (this.sessionMap.get(mentoringSeq) != null) {
+            System.out.println("멘티가 참석하는 경우");
+            String token = this.sessionMap.get(mentoringSeq).createConnection(connectionProperties).getToken();
+            this.sessionNamesTokensMap.get(mentoringSeq).put(token, openViduRole);
+            return ResponseEntity.status(200).body(SessionJoinResponseDto.builder()
+                    .userRole(userRole)
+                    .openViduRole(openViduRole)
+                    .teamName(teamName)
+                    .token(token)
+                    .userId(userId)
+                    .userSeq(userSeq)
+                    .build());
         }
 
-        /* case2: 새로운 세션을 만들어야하는 경우 */
+        System.out.println("멘토가 개설하는 경우");
         Session session = this.openVidu.createSession();
         String token = session.createConnection(connectionProperties).getToken();
-        System.out.println("new session token = " + token);
 
-        this.sessionMap.put(sessionSeq, session);
-        this.sessionNamesTokensMap.put(sessionSeq, new ConcurrentHashMap<>());
-        this.sessionNamesTokensMap.get(sessionSeq).put(token, userRole);
+        this.sessionMap.put(mentoringSeq, session);
+        this.sessionNamesTokensMap.put(mentoringSeq, new ConcurrentHashMap<>());
+        this.sessionNamesTokensMap.get(mentoringSeq).put(token, openViduRole);
 
-        return ResponseEntity.status(200).body(new SessionJoinResponseDto(token, userRole));
+        return ResponseEntity.status(200).body(SessionJoinResponseDto.builder()
+                .userRole(userRole)
+                .openViduRole(openViduRole)
+                .teamName(teamName)
+                .token(token)
+                .userId(mentor.getUser().getUserId())
+                .userSeq(mentor.getMentorSeq())
+                .build());
+    }
+
+    @PostMapping(value = "/quit")
+    public ResponseEntity<CommonResponseDto> removeUser(@RequestBody SessionQuitRequestDto requestDto)
+            throws Exception {
+
+        System.out.println("removeUser 메소드 호출");
+        Long mentoringSeq = requestDto.getMentoringSeq();
+        String token = requestDto.getToken();
+
+        // 해당 세션이 존재하는지
+        if (this.sessionMap.get(mentoringSeq) != null && this.sessionNamesTokensMap.get(mentoringSeq) != null) {
+            // 유저의 토큰이 타당한지
+            if (this.sessionNamesTokensMap.get(mentoringSeq).remove(token) != null) {
+                // 마지막 유저가 세션을 떠난다면 -> 세션 종료
+                if (this.sessionNamesTokensMap.get(mentoringSeq).isEmpty()) {
+                    this.sessionMap.remove(mentoringSeq);
+                    System.out.println("마지막 유저가 떠났습니다.");
+                }
+                System.out.println("화상 멘토링을 종료했습니다.");
+                return ResponseEntity.status(200).body(new CommonResponseDto(200, "화상 멘토링이 종료되었습니다."));
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new CommonResponseDto(500, "토큰이 타당하지 않습니다."));
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new CommonResponseDto(500, "세션이 타당하지 않습니다."));
+        }
+    }
+
+    @PostMapping(value = "/comment")
+    public void mentoringReview(@RequestBody ReviewRequestDto requestDto) {
+        System.out.println(requestDto.getMentoringSeq());
+        System.out.println(requestDto.getUserSeq());
+        System.out.println(requestDto.getComment());
     }
 }

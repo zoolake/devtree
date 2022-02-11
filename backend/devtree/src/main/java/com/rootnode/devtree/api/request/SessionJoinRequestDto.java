@@ -1,15 +1,13 @@
 package com.rootnode.devtree.api.request;
 
 import com.rootnode.devtree.db.entity.UserRole;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
+@ToString
 public class SessionJoinRequestDto {
     /**
      * 세션 일련번호 (== 멘토링 일련번호)
@@ -17,9 +15,9 @@ public class SessionJoinRequestDto {
      * 유저 일련번호
      * 유저 역할
      */
-    private int sessionSeq;
-    private String sessionName;
+    private Long mentoringSeq;
+    private String teamName;
     private String userId;
     private Long userSeq;
-    private UserRole userRole;
+//    private UserRole userRole;
 }

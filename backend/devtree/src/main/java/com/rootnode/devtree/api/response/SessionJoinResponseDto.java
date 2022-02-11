@@ -15,9 +15,9 @@ public class SessionJoinResponseDto {
     private String token;
     private OpenViduRole openViduRole;
 
-//    private String teamName;
-//
-//    private Long userSeq;
-//    private String userId;
-//    private UserRole userRole;
+    private String teamName;
+
+    private Long userSeq;
+    private String userId;
+    private UserRole userRole;
 }

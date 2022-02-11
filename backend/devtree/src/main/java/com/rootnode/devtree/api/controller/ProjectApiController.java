@@ -3,12 +3,14 @@ package com.rootnode.devtree.api.controller;
 import com.rootnode.devtree.api.request.*;
 import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.api.service.ProjectService;
+import com.rootnode.devtree.common.auth.UserDetail;
 import com.rootnode.devtree.db.entity.TeamType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -72,11 +74,13 @@ public class ProjectApiController {
     /**
      * 기능: 프로젝트 신청 응답
      */
-    @PostMapping("/v1/project/join/{team_seq}/{user_seq}")
-    public ResponseEntity<CommonResponseDto> projectJoinResponse(@PathVariable Long team_seq,
-                                                                 @PathVariable Long user_seq,
+    @PostMapping("/v1/project/join/response/{team_seq}")
+    public ResponseEntity<CommonResponseDto> projectJoinResponse(Authentication authentication,
+                                                                 @PathVariable Long team_seq,
                                                                  @RequestBody ProjectRespondRequestDto requestDto
     ) {
+        UserDetail userDetails = (UserDetail)authentication.getDetails();
+        Long user_seq = userDetails.getUser().getUserSeq();
         return ResponseEntity
                 .status(201)
                 .body(projectService.respondPosition(team_seq, user_seq, requestDto));

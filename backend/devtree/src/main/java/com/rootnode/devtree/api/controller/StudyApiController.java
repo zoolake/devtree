@@ -3,6 +3,7 @@ package com.rootnode.devtree.api.controller;
 import com.rootnode.devtree.api.request.*;
 import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.api.service.StudyService;
+import com.rootnode.devtree.common.auth.UserDetail;
 import com.rootnode.devtree.db.entity.TeamType;
 import com.rootnode.devtree.db.entity.User;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -88,10 +90,12 @@ public class StudyApiController {
     /**
      * 기능 : 스터디 신청 응답
      */
-    @PostMapping("/v1/study/join/{team_seq}/{user_seq}")
-    public ResponseEntity<CommonResponseDto> studyJoinResponse(@PathVariable Long team_seq,
-                                                               @PathVariable Long user_seq,
+    @PostMapping("/v1/study/join/{team_seq}")
+    public ResponseEntity<CommonResponseDto> studyJoinResponse(Authentication authentication,
+                                                               @PathVariable Long team_seq,
                                                                @RequestBody StudyRespondRequestDto requestDto) {
+        UserDetail userDetails = (UserDetail)authentication.getDetails();
+        Long user_seq = userDetails.getUser().getUserSeq();
         return ResponseEntity
                 .status(201)
                 .body(studyService.respondStudy(team_seq, user_seq, requestDto));

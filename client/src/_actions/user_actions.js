@@ -56,9 +56,7 @@ export function getTech() {
 
 // 유저 프로필 바꾸기
 export function updateUser(dataToSubmit) {
-  const request = axios
-    .put(`/user`, dataToSubmit)
-    .then((response) => response.data);
+  const request = axios.put(`/user`, dataToSubmit).then((response) => response.data);
 
   return {
     type: UPDATE_USER,
@@ -92,9 +90,7 @@ export function passwordUpdate(dataToSubmit) {
 // 회원가입하기
 export function registerUser(dataToSubmit) {
   console.log(dataToSubmit);
-  const request = axios
-    .post(`/user/signup`, dataToSubmit)
-    .then((response) => response.data);
+  const request = axios.post(`/user/signup`, dataToSubmit).then((response) => response.data);
 
   return {
     type: REGISTER_USER,
@@ -114,9 +110,7 @@ export function detailUser() {
 
 // id중복확인
 export function idcheckUser(dataToSubmit) {
-  const request = axios
-    .post(`/user/idcheck`, dataToSubmit)
-    .then((response) => response.data);
+  const request = axios.post(`/user/idcheck`, dataToSubmit).then((response) => response.data);
 
   return {
     type: IDCHECK_USER,
@@ -126,15 +120,13 @@ export function idcheckUser(dataToSubmit) {
 
 // 로그인 하기
 export function loginUser(dataToSubmit) {
-  const request = axios
-    .post(`/user/login`, dataToSubmit)
-    .then((response) => {
-      if (response.data.accessToken) {
-        const token = response.data.accessToken;
-        localStorage.setItem('user', token);
-        setAuthorizationToken(token);
-      }
-    });
+  const request = axios.post(`/user/login`, dataToSubmit).then((response) => {
+    if (response.data.accessToken) {
+      const token = response.data.accessToken;
+      localStorage.setItem('user', token);
+      setAuthorizationToken(token);
+    }
+  });
   return {
     type: LOGIN_USER,
     payload: request

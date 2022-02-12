@@ -13,7 +13,7 @@ import Swal from 'sweetalert2';
 class SessionPage extends Component {
   constructor(props) {
     super(props);
-    this.OPENVIDU_SERVER_URL = `https://${window.location.hostname}:8080`;
+    this.OPENVIDU_SERVER_URL = `https://${window.location.hostname}:8443`;
     this.OPENVIDU_SERVER_SECRET = 'MY_SECRET';
     this.state = {
       mentoringSeq: 3,

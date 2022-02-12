@@ -9,10 +9,39 @@ import {
   PASSWORD_UPDATE,
   DELETE_USER,
   UPDATE_USER,
-  GET_RANK
+  GET_RANK,
+  GET_ALARMLIST
 } from './types';
 import { USER_SERVER } from '../components/config';
 import setAuthorizationToken from '../utils/setAuthorizationToken';
+
+// 알림 페이지 데이터 불러오기
+export function getAlarmdata(notificationSeq) {
+  const request = axios
+    .get(`https://62049a60c6d8b20017dc35c3.mockapi.io/alarmlist/${notificationSeq}`)
+    .then((response) => response.data);
+
+  return { type: GET_ALARMLIST, payload: request };
+}
+export function setAlarmCheck(notificationSeq) {
+  const request = axios
+    .get(`http://localhost:8080/v1/user/notification`, {
+      params: {
+        ID: notificationSeq
+      }
+    })
+    .then((response) => response.data);
+
+  return { type: GET_ALARMLIST, payload: request };
+}
+// 알림 페이지 데이터 불러오기
+export function getAlarmList() {
+  const request = axios
+    .get(`https://62049a60c6d8b20017dc35c3.mockapi.io/alarmlist`)
+    .then((response) => response.data);
+
+  return { type: GET_ALARMLIST, payload: request };
+}
 
 // 랭킹 페이지 데이터 불러오기
 export function getRank() {

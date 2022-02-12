@@ -1,23 +1,11 @@
 import * as Yup from 'yup';
-import faker from 'faker';
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { useFormik, Form, FormikProvider } from 'formik';
 // material
-import {
-  TextField,
-  Multiline,
-  Divider,
-  Box,
-  Card,
-  Typography,
-  CardHeader,
-  CardContent
-} from '@mui/material';
+import { TextField, Divider, Box, Card, CardHeader } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // utils
-import { fDateTime } from '../../utils/formatTime';
 import { detailUser, updateUser } from '../../_actions/user_actions';
 import { MyProfile } from '.';
 // ---------------------------------------------------------------------

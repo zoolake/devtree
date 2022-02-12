@@ -1,22 +1,9 @@
-import faker from 'faker';
-import PropTypes from 'prop-types';
 import React, { useState, useCallback, useMemo } from 'react';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 // material
 import AsyncCreatableSelect from 'react-select/creatable';
 import { Box, Card, Typography, CardHeader, CardContent } from '@mui/material';
-import {
-  Timeline,
-  TimelineItem,
-  TimelineContent,
-  TimelineConnector,
-  TimelineSeparator,
-  TimelineDot
-} from '@mui/lab';
-// utils
-import { fDateTime } from '../../utils/formatTime';
-
 // ----------------------------------------------------------------------
 const animatedComponents = makeAnimated();
 // ----------------------------------------------------------------------

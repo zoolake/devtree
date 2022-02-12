@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link as RouterLink, useParams } from 'react-router-dom';
-import { Grid, Card, Button, Container, Stack, Typography } from '@mui/material';
+import { Grid, Container } from '@mui/material';
 import Page from '../Page';
 import { WeekdayReserv, MentorStack, MentorProfile, MentorReviewList } from '../_dashboard/mentor';
 import { MentorWeeklySetting } from '.';

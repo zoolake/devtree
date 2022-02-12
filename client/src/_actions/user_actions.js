@@ -90,7 +90,7 @@ export function passwordUpdate(dataToSubmit) {
 // 회원가입하기
 export function registerUser(dataToSubmit) {
   console.log(dataToSubmit);
-  const request = axios.post(`/user/signup`, dataToSubmit).then((response) => response.data);
+  const request = axios.post(`/v1/user/signup`, dataToSubmit).then((response) => response.data);
 
   return {
     type: REGISTER_USER,
@@ -100,7 +100,7 @@ export function registerUser(dataToSubmit) {
 
 // 유저 프로필 보기
 export function detailUser() {
-  const request = axios.get(`/user`).then((response) => response.data);
+  const request = axios.get(`/v1/user`).then((response) => response.data);
   console.log(request);
   return {
     type: DETAIL_USER,
@@ -110,7 +110,7 @@ export function detailUser() {
 
 // id중복확인
 export function idcheckUser(dataToSubmit) {
-  const request = axios.post(`/user/idcheck`, dataToSubmit).then((response) => response.data);
+  const request = axios.post(`/v1/user/idcheck`, dataToSubmit).then((response) => response.data);
 
   return {
     type: IDCHECK_USER,
@@ -120,7 +120,7 @@ export function idcheckUser(dataToSubmit) {
 
 // 로그인 하기
 export function loginUser(dataToSubmit) {
-  const request = axios.post(`/user/login`, dataToSubmit).then((response) => {
+  const request = axios.post(`/v1/user/login`, dataToSubmit).then((response) => {
     if (response.data.accessToken) {
       const token = response.data.accessToken;
       localStorage.setItem('user', token);

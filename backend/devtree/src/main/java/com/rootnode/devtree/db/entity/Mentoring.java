@@ -45,4 +45,8 @@ public class Mentoring {
     @Column(name = "mentoring_state")
     @Enumerated(EnumType.STRING)
     private MentoringState mentoringState;
+
+    public void changeMentoringState(MentoringState mentoringState) {
+        this.mentoringState = mentoringState;
+    }
 }

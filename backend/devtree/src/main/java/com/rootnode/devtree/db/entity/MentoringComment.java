@@ -12,16 +12,19 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 public class MentoringComment {
+
     @EmbeddedId
     private MentoringCommentId mentoringCommentID;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("mentoringUserID")
-    @JoinColumns({
-            @JoinColumn(name = "user_seq"),
-            @JoinColumn(name = "mentoring_seq")
-    })
-    private MentoringUser mentoringUser;
+    @MapsId("userSeq")
+    @JoinColumn(name = "user_seq")
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("mentoringSeq")
+    @JoinColumn(name = "mentoring_seq")
+    private Mentoring mentoring;
 
     @Column(name = "mentor_comment")
     private String mentorComment;

@@ -26,6 +26,8 @@ import Ranking from './pages/Ranking';
 import MentorPage from './pages/Mentor/MentorPage';
 import MentorDetail from './pages/Mentor/MentorDetail';
 import MentoringReservation from './pages/Mentor/MentoringReservation';
+
+import SessionPage from './pages/Session/SessionPage';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -99,6 +101,17 @@ export default function Router() {
         { path: 'login', element: <Login /> },
         { path: 'register', element: <Register /> },
         { path: '/', element: <Navigate to="/MainPage/app" /> }
+      ]
+    },
+    {
+      path: '/',
+      element: <SessionPage />,
+      children: [
+        {
+          path: 'session',
+          element: <SessionPage />,
+          children: [{ path: ':id', element: <SessionPage /> }]
+        }
       ]
     }
   ]);

@@ -303,7 +303,14 @@ export default function MentoringList() {
                                     &nbsp;멘토링
                                   </>
                                 ) : (
-                                  <Button onClick={createSession}>세션 생성하기</Button>
+                                  <Button
+                                    to={`/session/${mentoringSeq}`}
+                                    color="inherit"
+                                    underline="hover"
+                                    component={RouterLink}
+                                  >
+                                    세션 생성하기
+                                  </Button>
                                 )}
                               </div>
                             ) : null}

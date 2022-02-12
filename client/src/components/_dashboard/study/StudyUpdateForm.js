@@ -46,7 +46,7 @@ export default function StudyUpdateForm(project) {
         // post
         const createProject = async () => {
           // api 받아오기
-          const url = '/project';
+          const url = '/v1/project';
           await axios
             .post(url, {
               dataToSubmit

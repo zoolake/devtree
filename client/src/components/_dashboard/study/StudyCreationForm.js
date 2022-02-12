@@ -42,7 +42,7 @@ export default function StudyCreationForm() {
         };
 
         const createStudy = async () => {
-          const createUrl = '/study'; // http://127.26.1.146:8080/v1/study
+          const createUrl = '/v1/study'; // http://127.26.1.146:8080/v1/study
           await axios
             .post(createUrl, dataToSubmit)
             .then((response) => {
@@ -65,7 +65,7 @@ export default function StudyCreationForm() {
 
   const SetSelections = async () => {
     // 기술테크 리스트 불러오기
-    const techUrl = '/tech'; // http://127.26.1.146:8080/v1/tech
+    const techUrl = '/v1/tech'; // http://127.26.1.146:8080/v1/tech
     await axios
       .get(techUrl)
       .then((response) => {

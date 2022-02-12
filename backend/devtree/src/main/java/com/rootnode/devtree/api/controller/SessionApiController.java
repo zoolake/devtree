@@ -8,10 +8,9 @@ import com.rootnode.devtree.api.response.SessionJoinResponseDto;
 import com.rootnode.devtree.common.auth.UserDetail;
 import com.rootnode.devtree.db.entity.*;
 import com.rootnode.devtree.db.entity.compositeKey.MentoringCommentId;
-import com.rootnode.devtree.db.entity.compositeKey.MentoringUserId;
 import com.rootnode.devtree.db.repository.MentoringCommentRepository;
 import com.rootnode.devtree.db.repository.MentoringRepository;
-import com.rootnode.devtree.db.repository.MentoringUserRepository;
+import com.rootnode.devtree.db.repository.UserRepository;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +29,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SessionApiController {
 
     private MentoringRepository mentoringRepository;
+    private MentoringCommentRepository mentoringCommentRepository;
+    private UserRepository userRepository;
 
     private OpenVidu openVidu;
 
@@ -45,11 +46,15 @@ public class SessionApiController {
     @Autowired
     public SessionApiController(@Value("${openvidu.secret}") String secret,
                                 @Value("${openvidu.url}") String url,
-                                MentoringRepository mentoringRepository) {
+                                MentoringRepository mentoringRepository,
+                                MentoringCommentRepository mentoringCommentRepository,
+                                UserRepository userRepository) {
         this.SECRET = secret;
         this.OPENVIDU_URL = url;
         this.openVidu = new OpenVidu(OPENVIDU_URL, SECRET);
         this.mentoringRepository = mentoringRepository;
+        this.mentoringCommentRepository = mentoringCommentRepository;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/join")
@@ -66,15 +71,21 @@ public class SessionApiController {
         // 2. mentorSeq == userSeq 면 해당 유저는 멘토임을 확인할 수 있다.
         //      authentication 사용 코드
 //        UserDetail userDetail = (UserDetail) authentication.getDetails();
+//        Long userSeq = userDetail.getUser().getUserSeq();
+//        String userId = userDetail.getUser().getUserId();
+//        System.out.println("userSeq = " + userSeq);
+//        System.out.println("userId = " + userId);
 //        if (userDetail.getUser().getUserSeq() == mentor.getMentorSeq()) {
 //            userRole = UserRole.MENTOR;
-//            openViduRole = OpenViduRole.PUBLISHER;
+//            openViduRole = OpenViduRole.MODERATOR;
 //        } else {
 //            userRole = UserRole.USER;
 //            openViduRole = OpenViduRole.PUBLISHER;
 //        }
-//        Long userSeq = userDetail.getUser().getUserSeq();
-//        String userId = userDetail.getUser().getUserId();
+
+        UserDetail userDetail = (UserDetail) authentication.getDetails();
+        System.out.println("userSeq = " + userDetail.getUser().getUserSeq());
+        System.out.println("userId = " + userDetail.getUser().getUserId());
 
         //      테스트용 DTO 사용 코드
 
@@ -93,7 +104,7 @@ public class SessionApiController {
         Long userSeq = requestDto.getUserSeq();
         String userId = requestDto.getUserId();
 
-        String teamName = requestDto.getTeamName();
+        String teamName = mentoring.getTeam().getTeamName();
 
         String serverData = "{\"serverData\": \"" + userId + "\"}";
 
@@ -160,9 +171,21 @@ public class SessionApiController {
     }
 
     @PostMapping(value = "/comment")
-    public void mentoringReview(@RequestBody ReviewRequestDto requestDto) {
-        System.out.println(requestDto.getMentoringSeq());
-        System.out.println(requestDto.getUserSeq());
-        System.out.println(requestDto.getComment());
+    public ResponseEntity<CommonResponseDto> mentoringReview(@RequestBody ReviewRequestDto requestDto) {
+        System.out.println("mentoringSeq:" + requestDto.getMentoringSeq());
+        System.out.println("userSeq:" + requestDto.getUserSeq());
+        System.out.println("comment:" + requestDto.getComment());
+
+        Long mentoringSeq = requestDto.getMentoringSeq();
+        Long userSeq = requestDto.getUserSeq();
+        String comment = requestDto.getComment();
+        mentoringCommentRepository.save(new MentoringComment(
+                new MentoringCommentId(userSeq, mentoringSeq),
+                userRepository.findById(userSeq).get(),
+                mentoringRepository.findById(mentoringSeq).get(),
+                comment));
+
+        return ResponseEntity.status(200)
+                .body(new CommonResponseDto(200, "멘토링 후기 등록에 성공하였습니다."));
     }
 }

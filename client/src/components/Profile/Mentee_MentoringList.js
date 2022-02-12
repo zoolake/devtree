@@ -1,7 +1,5 @@
 import { filter } from 'lodash';
-import { Icon } from '@iconify/react';
 import { useState, useEffect } from 'react';
-import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import moment from 'moment';
@@ -14,7 +12,6 @@ import {
   Card,
   Table,
   Stack,
-  Avatar,
   Button,
   TableRow,
   TableBody,
@@ -28,7 +25,7 @@ import {
 import Page from '../Page';
 import Label from '../Label';
 import Scrollbar from '../Scrollbar';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../_dashboard/profileHistory';
+import { UserListHead } from '../_dashboard/profileHistory';
 
 import {
   getMentoringlist,

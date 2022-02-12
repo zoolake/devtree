@@ -1,6 +1,3 @@
-import PropTypes from 'prop-types';
-import { Icon } from '@iconify/react';
-import eyeFill from '@iconify/icons-eva/eye-fill';
 import { useEffect, useState } from 'react';
 import { Link as RouterLink, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -19,11 +16,7 @@ import {
   CardContent,
   Button
 } from '@mui/material';
-import { fDate } from '../../utils/formatTime';
-import { fShortenNumber } from '../../utils/formatNumber';
 import {
-  getSchedule,
-  getTeams,
   getReservedList,
   getCheckedtimeList,
   saveMentoringTime

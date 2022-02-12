@@ -30,7 +30,7 @@ const TitleStyle = styled(Link)({
 export default function ReviewCard({ post, index }) {
   console.log(post);
   console.log(index);
-  const { userName, mentor_comment } = post;
+  const { user_name, mentor_comment } = post;
   const [username, setUserName] = useState([]);
 
   const setAnonymous = (name) => {
@@ -38,7 +38,7 @@ export default function ReviewCard({ post, index }) {
   };
 
   useEffect(() => {
-    setAnonymous(userName);
+    setAnonymous(user_name);
   }, []);
 
   return (

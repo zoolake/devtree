@@ -85,36 +85,34 @@ export default function ProjectUpdateForm({ projectDetail }) {
     }
   });
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
-  const eachTech = () => {
-    myTechList.map((tech) => tech.techName);
-  };
+  const myTech = myTechList.map((tech) => allTechList.find((it) => it.label === tech.techName)); // 받아왔던 내 기술스택들을 전체 기술스택에서 찾기
+  console.log(myTech);
 
   // tech handling
-  const handleTechs = useCallback(
-    (inputValue, { action, removedValue }) => {
-      switch (action) {
-        case 'remove-value': // delete with 'x'
-          setMyTech(myTechList.filter((tech) => tech !== removedValue));
-          return;
-        case 'pop-value': {
-          // delete with backspace
-          if (removedValue.isFixed) {
-            setMyTech([...inputValue, removedValue]);
-          }
-          return;
+  const handleTechs = useCallback((inputValue, { action, removedValue }) => {
+    console.log(action);
+    switch (action) {
+      case 'remove-value': // delete with 'x'
+        setMyTech(myTechList.filter((tech) => tech !== removedValue));
+        return;
+      case 'pop-value': {
+        // delete with backspace
+        if (removedValue.isFixed) {
+          setMyTech([...inputValue, removedValue]);
         }
-        case 'clear': // clear button is clicked
-          setMyTech(myTechList.filter((v) => v.isFixed));
-          return;
-        case 'select-option': {
-          setMyTech(inputValue);
-          break;
-        }
-        default:
+        return;
       }
-    },
-    [myTechList]
-  );
+      case 'clear': // clear button is clicked
+        setMyTech(myTechList.filter((v) => v.isFixed));
+        return;
+      case 'select-option': {
+        setMyTech(inputValue);
+        console.log(myTechList);
+        break;
+      }
+      default:
+    }
+  });
 
   // render
   const animatedComponents = makeAnimated();
@@ -124,7 +122,7 @@ export default function ProjectUpdateForm({ projectDetail }) {
   }, []);
 
   // page
-  const showMyTechs = myTechList.map((tech, i) => <li key={i}>{tech.label}</li>);
+  if (myTech === [undefined]) return <div>로딩 중</div>;
 
   return (
     <FormikProvider value={formik}>
@@ -149,15 +147,15 @@ export default function ProjectUpdateForm({ projectDetail }) {
           <Box sx={7}>
             <Select
               components={animatedComponents}
+              defaultValue={myTech}
+              key={myTech}
               isMulti
               options={allTechList}
               placeholder="기술 스택 추가"
               onChange={handleTechs}
               // value={projectDetail.teamTech}
-              defaultValue={eachTech()}
             />
           </Box>
-          <ul>{showMyTechs}</ul>
 
           <LoadingButton
             size="small"

@@ -57,52 +57,51 @@ public class SessionApiController {
         this.userRepository = userRepository;
     }
 
-    @PostMapping("/join")
-    public ResponseEntity<SessionJoinResponseDto> joinSession(@RequestBody SessionJoinRequestDto requestDto, Authentication authentication) throws OpenViduJavaClientException, OpenViduHttpException {
+    @GetMapping("/join/{mentoringSeq}")
+    public ResponseEntity<SessionJoinResponseDto> joinSession(@PathVariable Long mentoringSeq, Authentication authentication) throws OpenViduJavaClientException, OpenViduHttpException {
         // 역할 관련 변수 선언
         UserRole userRole = UserRole.MENTOR;
         OpenViduRole openViduRole = OpenViduRole.PUBLISHER;
 
         // 1. mentoringSeq 를 통해 멘토링 엔티티를 찾아온다.
-        Long mentoringSeq = requestDto.getMentoringSeq();
         Mentoring mentoring = mentoringRepository.findById(mentoringSeq).get();
         Mentor mentor = mentoring.getMentor();
 
         // 2. mentorSeq == userSeq 면 해당 유저는 멘토임을 확인할 수 있다.
         //      authentication 사용 코드
-//        UserDetail userDetail = (UserDetail) authentication.getDetails();
-//        Long userSeq = userDetail.getUser().getUserSeq();
-//        String userId = userDetail.getUser().getUserId();
-//        System.out.println("userSeq = " + userSeq);
-//        System.out.println("userId = " + userId);
-//        if (userDetail.getUser().getUserSeq() == mentor.getMentorSeq()) {
-//            userRole = UserRole.MENTOR;
-//            openViduRole = OpenViduRole.MODERATOR;
-//        } else {
-//            userRole = UserRole.USER;
-//            openViduRole = OpenViduRole.PUBLISHER;
-//        }
-
         UserDetail userDetail = (UserDetail) authentication.getDetails();
-        System.out.println("userSeq = " + userDetail.getUser().getUserSeq());
-        System.out.println("userId = " + userDetail.getUser().getUserId());
-
-        //      테스트용 DTO 사용 코드
-
-        System.out.println("requestDto.getUserSeq() = " + requestDto.getUserSeq());
-        System.out.println("mentor.getMentorSeq() = " + mentor.getMentorSeq());
-
-        if (requestDto.getUserSeq() == mentor.getMentorSeq()) {
-            System.out.println("멘토입니다!");
+        Long userSeq = userDetail.getUser().getUserSeq();
+        String userId = userDetail.getUser().getUserId();
+        System.out.println("userSeq = " + userSeq);
+        System.out.println("userId = " + userId);
+        if (userDetail.getUser().getUserSeq() == mentor.getMentorSeq()) {
             userRole = UserRole.MENTOR;
             openViduRole = OpenViduRole.MODERATOR;
         } else {
-            System.out.println("멘티입니다!");
             userRole = UserRole.USER;
             openViduRole = OpenViduRole.PUBLISHER;
         }
-        Long userSeq = requestDto.getUserSeq();
-        String userId = requestDto.getUserId();
+
+//        UserDetail userDetail = (UserDetail) authentication.getDetails();
+//        System.out.println("userSeq = " + userDetail.getUser().getUserSeq());
+//        System.out.println("userId = " + userDetail.getUser().getUserId());
+//
+//        //      테스트용 DTO 사용 코드
+//
+//        System.out.println("requestDto.getUserSeq() = " + requestDto.getUserSeq());
+//        System.out.println("mentor.getMentorSeq() = " + mentor.getMentorSeq());
+//
+//        if (requestDto.getUserSeq() == mentor.getMentorSeq()) {
+//            System.out.println("멘토입니다!");
+//            userRole = UserRole.MENTOR;
+//            openViduRole = OpenViduRole.MODERATOR;
+//        } else {
+//            System.out.println("멘티입니다!");
+//            userRole = UserRole.USER;
+//            openViduRole = OpenViduRole.PUBLISHER;
+//        }
+//        Long userSeq = requestDto.getUserSeq();
+//        String userId = requestDto.getUserId();
 
         String teamName = mentoring.getTeam().getTeamName();
 

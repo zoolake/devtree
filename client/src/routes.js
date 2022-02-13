@@ -100,6 +100,17 @@ export default function Router() {
         { path: 'register', element: <Register /> },
         { path: '/', element: <Navigate to="/MainPage/app" /> }
       ]
+    },
+    {
+      path: '/',
+      element: <SessionPage />,
+      children: [
+        {
+          path: 'session/join',
+          element: <SessionPage />,
+          children: [{ path: ':id', element: <SessionPage /> }]
+        }
+      ]
     }
   ]);
 }

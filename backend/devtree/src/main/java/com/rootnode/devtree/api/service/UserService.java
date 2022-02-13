@@ -37,7 +37,7 @@ public interface UserService {
 	List<TeamInfoDto> findManagerTeam(Long managerSeq);
 	CommonResponseDto certificationMentor(Long mentorSeq,MentorCertificationRequestDto requestDto);
 
-	List<NotificationListResponseDto> findUserNotification(Long userSeq);
-	CommonResponseDto checkUserNotification(Long notificationSeq);
+	List<NotificationResponseDto> findUserNotification(Long userSeq);
+	NotificationResponseDto findUserDetailNotification(Long notificationSeq);
 	CommonResponseDto confirmVerificationCode(User user, EmailConfirmRequestDto requestDto);
 }

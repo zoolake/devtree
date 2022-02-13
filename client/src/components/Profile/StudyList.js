@@ -69,8 +69,8 @@ export default function StudyList() {
     dispatch(getStudy())
       .then((response) => {
         if (response) {
-          console.log(response.payload);
-          setStudyList(response.payload);
+          console.log(response.payload.data);
+          setStudyList(response.payload.data);
         }
       })
       .catch((err) => {
@@ -168,30 +168,37 @@ export default function StudyList() {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, name, role, status, starttime, endtime } = row;
+                      const {
+                        teamSeq,
+                        teamName,
+                        teamManagerSeq,
+                        teamState,
+                        teamStartTime,
+                        teamEndTime
+                      } = row;
 
                       return (
-                        <TableRow hover key={id} tabIndex={-1}>
+                        <TableRow hover key={teamSeq} tabIndex={-1}>
                           <TableCell component="th" scope="row" padding="3px">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              <Typography variant="subtitle2">{name}</Typography>
+                              <Typography variant="subtitle2">{teamName}</Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{starttime}</TableCell>
-                          <TableCell align="left">{endtime}</TableCell>
-                          <TableCell align="left">{role}</TableCell>
+                          <TableCell align="left">{teamStartTime}</TableCell>
+                          <TableCell align="left">{teamEndTime}</TableCell>
+                          <TableCell align="left">{teamManagerSeq}</TableCell>
                           <TableCell align="left">
                             <Label
                               variant="ghost"
                               color={
-                                (status === 'RECRUIT' && 'warning') ||
-                                (status === 'FINISH' && 'error') ||
+                                (teamState === 'RECRUIT' && 'warning') ||
+                                (teamState === 'FINISH' && 'error') ||
                                 'success'
                               }
                             >
-                              {status === 'RECRUIT' ? <p>진행전</p> : null}
-                              {status === 'FINISH' ? <p>종료</p> : null}
-                              {status === 'COMPLETED' ? <p>진행중</p> : null}
+                              {teamState === 'RECRUIT' ? <p>진행전</p> : null}
+                              {teamState === 'FINISH' ? <p>종료</p> : null}
+                              {teamState === 'COMPLETED' ? <p>진행중</p> : null}
                             </Label>
                           </TableCell>
 

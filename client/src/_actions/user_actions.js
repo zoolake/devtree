@@ -54,9 +54,7 @@ export function getRank() {
 
 // 나의 스터디 리스트 모아보기
 export function getStudy() {
-  const request = axios
-    .get(`https://61f649b22e1d7e0017fd6d42.mockapi.io/project`)
-    .then((response) => response.data);
+  const request = axios.get(`/study`).then((response) => response.data);
 
   return { type: UPDATE_USER, payload: request };
 }
@@ -94,6 +92,7 @@ export function updateUser(dataToSubmit) {
     payload: request
   };
 }
+
 // 유저 탈퇴
 export function deleteUser(dataToSubmit) {
   const request = axios
@@ -119,6 +118,7 @@ export function passwordUpdate(dataToSubmit) {
 }
 
 // 회원가입하기
+// 연결완료, 매칭확인
 export function registerUser(dataToSubmit) {
   console.log(dataToSubmit);
   const request = axios
@@ -132,6 +132,7 @@ export function registerUser(dataToSubmit) {
 }
 
 // 유저 프로필 보기
+// 연결완료, 매칭 더 필요
 export function detailUser() {
   const request = axios.get(`http://localhost:8080/v1/user`).then((response) => response.data);
   console.log(request);
@@ -142,6 +143,7 @@ export function detailUser() {
 }
 
 // id중복확인
+// 연결완료, 매칭확인
 export function idcheckUser(dataToSubmit) {
   const request = axios
     .post(`http://localhost:8080/v1/user/idcheck`, dataToSubmit)

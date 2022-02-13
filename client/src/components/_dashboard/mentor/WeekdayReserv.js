@@ -102,13 +102,10 @@ export default function WeekdayReserv({ week, day, date }) {
   };
 
   const getTeam = async () => {
-    const dataToSubmit = {
-      mentorSeq: id
-    };
-    await dispatch(getTeams(dataToSubmit))
+    await dispatch(getTeams())
       .then((response) => {
         if (response) {
-          setTeams(response.payload);
+          setTeams(response.payload.data);
         }
       })
       .catch((err) => {
@@ -132,7 +129,7 @@ export default function WeekdayReserv({ week, day, date }) {
           {!times && <CardContent>가능한 시간이 없습니다.</CardContent>}
           {times && (
             <FormControl>
-              <FormLabel id="demo-row-radio-buttons-group-label">팀 선택</FormLabel>
+              <FormLabel id="demo-row-radio-buttons-group-label">시간 선택</FormLabel>
               <RadioGroup
                 row
                 aria-labelledby="demo-row-radio-buttons-group-label"

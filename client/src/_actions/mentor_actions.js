@@ -13,9 +13,7 @@ import {
 
 // 멘티 - 팀별 멘토링 신청 내역 조회
 export function mentee_mentoringList(dataToSubmit) {
-  const request = axios
-    .get(`https://62049a60c6d8b20017dc35c3.mockapi.io/mentoringlist`)
-    .then((response) => response.data);
+  const request = axios.get(`common/team/manager`).then((response) => response.data);
   return { type: GET_MENTORINGLIST, payload: request };
 }
 
@@ -76,18 +74,16 @@ export function getReservedList() {
 }
 
 // 멘토 목록 조회
+// 연결 완료, 매칭 필요
 export function getMentors() {
-  const request = axios
-    .get(`https://61f649b22e1d7e0017fd6d42.mockapi.io/mentor`)
-    .then((response) => response.data);
+  const request = axios.get(`/mentor`).then((response) => response.data);
   return { type: GET_MENTORS, payload: request };
 }
 
 // 멘토 상세보기
+// 연결 완료, 매칭 필요
 export function detailMentor(id) {
-  const request = axios
-    .get(`https://61f649b22e1d7e0017fd6d42.mockapi.io/mentor/${id}`)
-    .then((response) => response.data);
+  const request = axios.get(`/mentor/${id}`).then((response) => response.data);
   return { type: MENTOR_DETAIL, payload: request };
 }
 
@@ -102,24 +98,22 @@ export function updateMentorProfile() {
 // 멘티 - 멘토링 신청할 때 시간 조회
 export function getSchedule(dataToSubmit) {
   const request = axios
-    .get(`https://620113cafdf509001724980b.mockapi.io/api/v1/time`, dataToSubmit)
+    .get(`/mentoring/schedule/${dataToSubmit.mentorSeq}`, dataToSubmit)
     .then((response) => response.data);
   return { type: MENTOR_DETAIL, payload: request };
 }
 
 // 멘티 - 멘토링 신청할 자신의 팀 조회
-export function getTeams(dataToSubmit) {
-  const request = axios
-    .get(`https://620113cafdf509001724980b.mockapi.io/api/v1/mentor_id`, dataToSubmit)
-    .then((response) => response.data);
+// 연결완료, 매칭 완료
+export function getTeams() {
+  const request = axios.get(`/common/team/manager`).then((response) => response.data);
   return { type: GET_TEAM, payload: request };
 }
 
 // 멘로의 리뷰를 가져옴
+// 연결 실패
 export function getReview(dataToSubmit) {
-  const request = axios
-    .get(`https://620113cafdf509001724980b.mockapi.io/api/v1/review`, dataToSubmit)
-    .then((response) => response.data);
+  const request = axios.get(`/mentor/${dataToSubmit.mentorSeq}`).then((response) => response.data);
   return { type: GET_REVIEWS, payload: request };
 }
 

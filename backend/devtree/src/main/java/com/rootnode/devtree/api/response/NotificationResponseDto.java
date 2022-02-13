@@ -2,7 +2,6 @@ package com.rootnode.devtree.api.response;
 
 import com.rootnode.devtree.db.entity.Notification;
 import com.rootnode.devtree.db.entity.NotificationType;
-import com.rootnode.devtree.db.entity.TeamType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
-public class NotificationListResponseDto {
+public class NotificationResponseDto {
     private Long notificationSeq;
     private Long notificationSendUserSeq;
     private String notificationSendUserName;
@@ -20,7 +19,7 @@ public class NotificationListResponseDto {
     private NotificationType notificationType;
     private boolean isCheck;
 
-    public NotificationListResponseDto(Notification notification, String sendUserName) {
+    public NotificationResponseDto(Notification notification, String sendUserName) {
         this.notificationSeq = notification.getNotificationSeq();
         this.notificationSendUserSeq = notification.getNotificationSendUserSeq();
         this.notificationSendUserName = sendUserName;

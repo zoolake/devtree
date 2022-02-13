@@ -92,7 +92,7 @@ public class MentorService {
 
             List<MentoringComment> mentoringCommentList = mentoringCommentRepository.findByMentoringSeq(mentoringSeq);
             mentoringCommentList.forEach(mentoringComment -> {
-                reviewDtoList.add(new MentoringCommentInfoDto(userRepository.findById(mentoringComment.getMentoringUser().getUser().getUserSeq()).get(), mentoringComment));
+                reviewDtoList.add(new MentoringCommentInfoDto(userRepository.findByUserSeq(mentoringComment.getUser().getUserSeq()).get(), mentoringComment));
             });
 
         });
@@ -152,7 +152,7 @@ public class MentorService {
 
             List<MentoringComment> mentoringCommentList = mentoringCommentRepository.findByMentoringSeq(mentoringSeq);
             mentoringCommentList.forEach(mentoringComment -> {
-                reviewDtoList.add(new MentoringCommentInfoDto(userRepository.findById(mentoringComment.getMentoringUser().getUser().getUserSeq()).get(), mentoringComment));
+                reviewDtoList.add(new MentoringCommentInfoDto(userRepository.findById(mentoringComment.getUser().getUserSeq()).get(), mentoringComment));
             });
 
         });

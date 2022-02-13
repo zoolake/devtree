@@ -11,14 +11,14 @@ import java.util.List;
 @NoArgsConstructor
 public class MentorListResponseDto {
     private Long mentorSeq;
-    private String mentorName;
+    private String mentorNickname;
     private String mentorCareer;
     private Long mentorExp;
     private List<MentorTechInfoDto> mentorTechList;
 
     public MentorListResponseDto(Mentor mentor, List<MentorTechInfoDto> mentorTechList) {
         this.mentorSeq = mentor.getMentorSeq();
-        this.mentorName = mentor.getUser().getUserName();
+        this.mentorNickname = mentor.getUser().getUserNickname();
         this.mentorTechList = mentorTechList;
         this.mentorCareer = mentor.getMentorCareer();
         this.mentorExp = mentor.getMentorExp();

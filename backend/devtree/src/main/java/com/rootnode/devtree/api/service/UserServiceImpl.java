@@ -313,23 +313,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<NotificationListResponseDto> findUserNotification(Long userSeq) {
+    public List<NotificationResponseDto> findUserNotification(Long userSeq) {
         List<Notification> notificationList = notificationRepository.findNotificationByUserSeq(userSeq);
-        List<NotificationListResponseDto> responseDto = new ArrayList<>();
+        List<NotificationResponseDto> responseDto = new ArrayList<>();
         notificationList.forEach(notification -> {
             Long sendUserSeq = notification.getNotificationSendUserSeq();
             String sendUserName = userRepository.findByUserSeq(sendUserSeq).get().getUserName();
-            responseDto.add(new NotificationListResponseDto(notification, sendUserName));
+            responseDto.add(new NotificationResponseDto(notification, sendUserName));
         });
         return responseDto;
     }
 
     @Override
     @Transactional
-    public CommonResponseDto checkUserNotification(Long notificationSeq) {
+    public NotificationResponseDto findUserDetailNotification(Long notificationSeq) {
         Notification notification = notificationRepository.findById(notificationSeq).get();
         notification.changeIsCheck();
-        return new CommonResponseDto(200, "알림을 확인하였습니다.");
+        String sendUserName = userRepository.findByUserSeq(notification.getNotificationSendUserSeq()).get().getUserName();
+        NotificationResponseDto responseDto = new NotificationResponseDto(notification, sendUserName);
+        return responseDto;
     }
 
     @Override

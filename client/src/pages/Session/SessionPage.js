@@ -118,12 +118,8 @@ class SessionPage extends Component {
 
   // eslint-disable-next-line react/sort-comp
   joinSession(event) {
-    const request = {
-      mentoringSeq: this.state.mentoringSeq,
-      teamName: this.state.teamName,
-      userSeq: this.state.userSeq
-    };
-    this.createSession(request).then((data) => {
+    const mentoringSeq = this.state.mentoringSeq;
+    this.createSession(mentoringSeq).then((data) => {
       this.setState({
         token: data.token,
         userId: data.userId,
@@ -200,11 +196,11 @@ class SessionPage extends Component {
       .catch((Err) => console.error(Err));
   }
 
-  createSession(request) {
+  createSession(mentoringSeq) {
     return new Promise((resolve, reject) => {
-      console.log('createSession', request);
+      console.log('createSession', mentoringSeq);
       axios
-        .post(`${this.OPENVIDU_SERVER_URL}/v1/session/join`, request)
+        .get(`${this.OPENVIDU_SERVER_URL}/v1/session/join` + mentoringSeq)
         .then((response) => {
           console.log('CREATE SESSION', response);
           resolve(response.data);
@@ -212,7 +208,7 @@ class SessionPage extends Component {
         .catch((response) => {
           const error = { ...response };
           if (error.response && error.response.status === 409) {
-            resolve(request.mentoringSeq);
+            resolve(mentoringSeq);
           } else {
             console.log(error);
             console.warn(

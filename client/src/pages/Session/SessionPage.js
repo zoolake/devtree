@@ -202,7 +202,7 @@ class SessionPage extends Component {
     return new Promise((resolve, reject) => {
       console.log('createSession', request);
       axios
-        .get(`${this.OPENVIDU_SERVER_URL}/v1/session/join/${request.mentoringSeq}`)
+        .get(`/v1/session/join/${request.mentoringSeq}`)
         .then((response) => {
           console.log('CREATE SESSION', response);
           resolve(response.data);

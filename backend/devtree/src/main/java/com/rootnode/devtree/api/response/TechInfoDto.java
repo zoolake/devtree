@@ -13,10 +13,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class TechInfoDto {
+    private Long techSeq;
     private String techName;
     private String techImage;
 
     public TechInfoDto(Tech tech) {
+        this.techSeq = tech.getTechSeq();
         this.techName = tech.getTechName();
         this.techImage = tech.getTechImage();
     }

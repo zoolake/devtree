@@ -7,8 +7,7 @@ import { Box } from '@mui/material';
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')({
-  flexGrow: 1,
-  height: '100%',
+  flexGrow: 0.6,
   overflow: 'hidden'
 });
 

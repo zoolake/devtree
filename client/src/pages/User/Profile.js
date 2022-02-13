@@ -18,7 +18,8 @@ import {
   MentorProfile,
   UserProfile,
   PasswordUpdate,
-  MentorAuth
+  MentorAuth,
+  AlarmList
 } from '../../components/Profile';
 import { MentorReviewList } from '../../components/_dashboard/mentor';
 // ----------------------------------------------------------------------
@@ -92,10 +93,10 @@ const Tab = [
       )
   },
   {
-    title: '임시',
+    title: '알림함',
     content: (
       <Grid item xs={12} md={6} lg={8}>
-        <AppNewsUpdate />
+        <AlarmList />
       </Grid>
     )
   }

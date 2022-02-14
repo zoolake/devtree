@@ -12,5 +12,5 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class MentoringAvailableTimeRequestDto {
-    private LocalDate selectedDate;
+    private LocalDate mentorDate;
 }

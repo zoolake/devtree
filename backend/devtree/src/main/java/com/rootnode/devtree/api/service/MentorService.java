@@ -199,34 +199,35 @@ public class MentorService {
 
         // 6. 멘토의 가능 시간 찾기
         // 날짜 별 가능한 시간 찾기
-        LocalDate currentDate = LocalDate.now();
-        List<MentorScheduleId> mentorTimeList = mentorScheduleRepository.findAfterNowByMentorSeq(mentorSeq, currentDate);
-
-        List<MentorTimeInfoDto> availableTimeList = new ArrayList<>();
-
-        mentorTimeList.forEach(schedule -> {
-            // false면 없음, true면 있음
-            boolean exist = false;
-            LocalDate date = schedule.getMentorDate();
-            LocalTime time = schedule.getMentorTime();
-            for (MentorTimeInfoDto availableTime : availableTimeList) {
-                if(availableTime.getMentorDate().equals(date)) {
-                    availableTime.getMentorTime().add(time);
-                    exist = true;
-                    break;
-                }
-            }
-            if(!exist) {
-                List<LocalTime> timeList = new ArrayList<>();
-                timeList.add(time);
-                availableTimeList.add(new MentorTimeInfoDto(date, timeList));
-            }
-        });
-        availableTimeList.stream().sorted(Comparator.comparing(MentorTimeInfoDto::getMentorDate)).collect(Collectors.toList());
-        availableTimeList.forEach(availableTime->{
-            List<LocalTime> timeList = availableTime.getMentorTime();
-            Collections.sort(timeList);
-        });
+        // 멘토링 가능 시간 조회 api를 사용하기로 함
+//        LocalDate currentDate = LocalDate.now();  // 날짜가 오늘이 아닌 클라이언트가 보내주는 날짜로 바꿔야함....
+//        List<MentorScheduleId> mentorTimeList = mentorScheduleRepository.findAfterNowByMentorSeq(mentorSeq, currentDate);
+//
+//        List<MentorTimeInfoDto> availableTimeList = new ArrayList<>();
+//
+//        mentorTimeList.forEach(schedule -> {
+//            // false면 없음, true면 있음
+//            boolean exist = false;
+//            LocalDate date = schedule.getMentorDate();
+//            LocalTime time = schedule.getMentorTime();
+//            for (MentorTimeInfoDto availableTime : availableTimeList) {
+//                if(availableTime.getMentorDate().equals(date)) {
+//                    availableTime.getMentorTime().add(time);
+//                    exist = true;
+//                    break;
+//                }
+//            }
+//            if(!exist) {
+//                List<LocalTime> timeList = new ArrayList<>();
+//                timeList.add(time);
+//                availableTimeList.add(new MentorTimeInfoDto(date, timeList));
+//            }
+//        });
+//        availableTimeList.stream().sorted(Comparator.comparing(MentorTimeInfoDto::getMentorDate)).collect(Collectors.toList());
+//        availableTimeList.forEach(availableTime->{
+//            List<LocalTime> timeList = availableTime.getMentorTime();
+//            Collections.sort(timeList);
+//        });
 
         return MentorSelfDetailSelfResponseDto.builder()
                 .mentorName(user.getUserName())
@@ -234,7 +235,6 @@ public class MentorService {
                 .mentorDesc(mentor.getMentorDesc())
                 .mentorEmail(user.getUserEmail())
                 .mentorNickname(user.getUserNickname())
-                .mentorTimeList(availableTimeList)
                 .mentorTechList(mentorTechInfoDtoList)
                 .mentoringInfoList(mentoringInfoList)
                 .mentoringReviewList(reviewDtoList)
@@ -292,6 +292,8 @@ public class MentorService {
         LocalDate mentorDate = requestDto.getMentorDate();
         List<LocalTime> mentorTimeList = requestDto.getMentorTime();
 
+        mentorScheduleRepository.deleteByMentorSeqAndDate(mentorSeq, mentorDate);
+
         mentorTimeList.forEach(mentorTime -> {
             mentorScheduleRepository.save(new MentorSchedule(new MentorScheduleId(mentorDate, mentorTime, mentorSeq), mentor));
         });
@@ -300,7 +302,7 @@ public class MentorService {
 
     // 멘토링 가능 스케줄 조회
     public List<LocalTime> findAvailableTime(Long mentorSeq, MentoringAvailableTimeRequestDto requestDto) {
-        LocalDate selectedDate = requestDto.getSelectedDate();
+        LocalDate selectedDate = requestDto.getMentorDate();
         List<LocalTime> availableTimeList = mentorScheduleRepository.findByMentorSeqAndDate(mentorSeq, selectedDate);
         return availableTimeList;
     }
@@ -326,7 +328,7 @@ public class MentorService {
     // 멘토의 멘토링 모든 정보 찾기
     public List<MentoringApplyListResponseDto> findMentoringApplyList(Long mentorSeq) {
         // 멘토링 정보 찾기
-        List<Mentoring> mentoringList = mentoringRepository.findByMentorMentorSeqAndMentoringState(mentorSeq, MentoringState.WAIT);
+        List<Mentoring> mentoringList = mentoringRepository.findByMentorSeq(mentorSeq);
         // 멘토링 시작 날짜 순 정렬 -> 시작 시간 순 정렬 -> 신청 시간 순 정렬
         return mentoringList.stream()
                 .map(mentoring -> new MentoringApplyListResponseDto(mentoring))

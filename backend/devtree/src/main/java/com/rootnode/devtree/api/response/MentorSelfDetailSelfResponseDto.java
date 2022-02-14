@@ -20,7 +20,6 @@ public class MentorSelfDetailSelfResponseDto {
     private String mentorEmail;
     private Tier tier;
     private List<MentorTechInfoDto> mentorTechList;
-    private List<MentorTimeInfoDto> mentorTimeList;
     private List<MentoringInfoDto> mentoringInfoList;
     private List<MentoringCommentInfoDto> mentoringReviewList;
 }

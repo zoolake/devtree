@@ -210,7 +210,7 @@ class SessionPage extends Component {
     return new Promise((resolve, reject) => {
       const data = JSON.stringify({ customSessionId: sessionId });
       axios
-        .post(`${this.OPENVIDU_SERVER_URL}/openvidu/api/sessions/${data}`, {
+        .post(`${this.OPENVIDU_SERVER_URL}/openvidu/api/sessions`, data, {
           headers: {
             Authorization: `Basic ${btoa(`OPENVIDUAPP:${this.OPENVIDU_SERVER_SECRET}`)}`,
             'Content-Type': 'application/json'

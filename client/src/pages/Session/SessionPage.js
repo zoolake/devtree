@@ -273,7 +273,7 @@ class SessionPage extends Component {
 
   createToken(sessionId) {
     return new Promise((resolve, reject) => {
-      const data = JSON.stringify({});
+      const data = JSON.stringify({ customSessionId: sessionId });
       axios
         .post(`${this.OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`, data, {
           headers: {

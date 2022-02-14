@@ -17,8 +17,8 @@ class SessionPage extends Component {
     this.OPENVIDU_SERVER_SECRET = 'MY_SECRET';
     this.state = {
       mentoringSeq: 3,
-      userId: 'userId',
-      teamName: 'teamName',
+      userId: undefined,
+      teamName: undefined,
       userSeq: 1,
       token: undefined,
       userRole: undefined
@@ -121,8 +121,15 @@ class SessionPage extends Component {
     const request = {
       mentoringSeq: this.state.mentoringSeq
     };
+    this.getToken(request).then((token) => {
+      this.setState({
+        token: token,
+        session: true
+      });
+    });
+    event.preventDefault();
     this.createSession(request).then((data) => {
-      console.log('토큰이다:', data.token);
+      console.log(data);
       this.setState({
         token: data.token,
         userId: data.userId,
@@ -199,31 +206,41 @@ class SessionPage extends Component {
       .catch((Err) => console.error(Err));
   }
 
-  createSession(request) {
+  createSession(sessionId) {
     return new Promise((resolve, reject) => {
-      console.log('createSession', request);
+      var data = JSON.stringify({ customSessionId: sessionId });
       axios
-        .get(`/v1/session/join/${request.mentoringSeq}`)
+        .post(this.OPENVIDU_SERVER_URL + '/openvidu/api/sessions', data, {
+          headers: {
+            Authorization: 'Basic ' + btoa('OPENVIDUAPP:' + this.OPENVIDU_SERVER_SECRET),
+            'Content-Type': 'application/json'
+          }
+        })
         .then((response) => {
-          console.log('CREATE SESSION', response);
-          resolve(response.data);
+          console.log('CREATE SESION', response);
+          resolve(response.data.id);
         })
         .catch((response) => {
-          const error = { ...response };
+          var error = Object.assign({}, response);
           if (error.response && error.response.status === 409) {
-            resolve(request.mentoringSeq);
+            resolve(sessionId);
           } else {
             console.log(error);
             console.warn(
-              `No connection to OpenVidu Server. This may be a certificate error at ${this.OPENVIDU_SERVER_URL}`
+              'No connection to OpenVidu Server. This may be a certificate error at ' +
+                this.OPENVIDU_SERVER_URL
             );
             if (
               window.confirm(
-                `No connection to OpenVidu Server. This may be a certificate error at "${this.OPENVIDU_SERVER_URL}"\n\nClick OK to navigate and accept it. ` +
-                  `If no certificate warning is shown, then check that your OpenVidu Server is up and running at "${this.OPENVIDU_SERVER_URL}"`
+                'No connection to OpenVidu Server. This may be a certificate error at "' +
+                  this.OPENVIDU_SERVER_URL +
+                  '"\n\nClick OK to navigate and accept it. ' +
+                  'If no certificate warning is shown, then check that your OpenVidu Server is up and running at "' +
+                  this.OPENVIDU_SERVER_URL +
+                  '"'
               )
             ) {
-              window.location.assign(`${this.OPENVIDU_SERVER_URL}/accept-certificate`);
+              window.location.assign(this.OPENVIDU_SERVER_URL + '/accept-certificate');
             }
           }
         });
@@ -259,25 +276,22 @@ class SessionPage extends Component {
     });
   }
 
-  createToken(mentoringSeq) {
-    console.log(mentoringSeq);
+  createToken(sessionId) {
     return new Promise((resolve, reject) => {
-      const data = {
-        mentoringSeq,
-        teamName: '루트노드',
-        userId: 'zoolake',
-        userSeq: 7
-      };
-      console.log('createToken:', data);
+      var data = JSON.stringify({});
       axios
-        .post(`/v1/session/join`, data, {
-          headers: {
-            Authorization: `Basic ${btoa(`OPENVIDUAPP:${this.OPENVIDU_SERVER_SECRET}`)}`,
-            'Content-Type': 'application/json'
+        .post(
+          this.OPENVIDU_SERVER_URL + '/openvidu/api/sessions/' + sessionId + '/connection',
+          data,
+          {
+            headers: {
+              Authorization: 'Basic ' + btoa('OPENVIDUAPP:' + this.OPENVIDU_SERVER_SECRET),
+              'Content-Type': 'application/json'
+            }
           }
-        })
+        )
         .then((response) => {
-          console.log('TOKEN 등장:', response);
+          console.log('TOKEN', response);
           resolve(response.data.token);
         })
         .catch((error) => reject(error));

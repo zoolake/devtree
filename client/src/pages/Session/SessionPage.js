@@ -128,17 +128,17 @@ class SessionPage extends Component {
       });
     });
     event.preventDefault();
-    this.createSession(request).then((data) => {
-      console.log(data);
-      this.setState({
-        token: data.token,
-        userId: data.userId,
-        userRole: data.userRole,
-        teamName: data.teamName,
-        session: true
-      });
-    });
-    event.preventDefault();
+    // this.createSession(request).then((data) => {
+    //   console.log(data);
+    //   this.setState({
+    //     token: data.token,
+    //     userId: data.userId,
+    //     userRole: data.userRole,
+    //     teamName: data.teamName,
+    //     session: true
+    //   });
+    // });
+    // event.preventDefault();
   }
 
   render() {

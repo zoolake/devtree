@@ -1,107 +1,80 @@
-import * as Yup from 'yup';
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
-import { useFormik, Form, FormikProvider } from 'formik';
-
-import { Stack, TextField, InputLabel, MenuItem, Select } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
-
-import { getTechList, updateProject, getPositionList } from '../../../_actions/project_actions';
+//
+import jwtdecode from 'jwt-decode';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
+import { TextField, Button, FormControl, InputLabel, NativeSelect, Stack } from '@mui/material';
+//
+import { updateProject, getTechList, getPositionList } from '../../../_actions/project_actions';
+import SelectPositionCnt from '../../team/SelectPositionCnt';
 
 ProjectUpdateForm.propTypes = {
   projectDetail: PropTypes.object.isRequired
 };
 
 export default function ProjectUpdateForm({ projectDetail }) {
-  // state
+  console.log(projectDetail);
+  // STATE
+  const teamSeq = useParams().id;
   // 기술스택
-  const [allTechList, setAllTech] = useState([]); // 전체 기술스택 리스트
-  const [allTechOption, setAllTechOption] = useState([]); // 전체 기술스택 옵션(only 이름)
-  const [myTechList, setMyTech] = useState([]); // 내 기술스택 리스트(only Seq)
-  const [myTechOption, setMyTechOption] = useState([]); // 내 기술스택 옵션(only 이름)
+  const [allTechList, setAllTech] = useState([]);
+  const [myTechList, setMyTech] = useState([]);
+  const [selectedTech, setSelectedTech] = useState('');
   // 포지션
   const [allPositionList, setAllPosition] = useState([]);
-  const [allPositionOption, setAllPositionOption] = useState([]);
   const [myPositionList, setMyPosition] = useState([]);
-  const [myPositionOption, setMyPositionOption] = useState([]);
-
-  const [selected, setSelected] = useState(''); // 각 선택되는 옵션
+  const [sendingPositionList, setsendingPositionList] = useState([]);
+  const [selectedPos, setSelectedPos] = useState('');
+  // 상태
+  const [teamState, setTeamState] = useState('');
+  const TEAM_STATE = [
+    { state: 'RECRUIT', stateName: '진행 중' },
+    { state: 'COMPLETED', stateName: '모집 완료됨' },
+    { state: 'FINISH', stateName: '종료됨' }
+  ];
+  // 입력 조건
   const RegisterSchema = Yup.object().shape({
-    team_name: Yup.string()
+    teamName: Yup.string()
       .required('프로젝트 제목은 필수 값 입니다.')
       .min(5, '이름은 5자 이상이여야 합니다.')
       .max(20, '이름은 20자 이하이여야 합니다.'),
-    team_desc: Yup.string()
+    teamDesc: Yup.string()
       .required('프로젝트 설명은 필수 값 입니다.')
       .min(10, '프로젝트 설명은 10자 이상이여야 합니다.')
   });
-  const teamSeq = useParams().id;
 
-  // initialization
+  // INIT
   const dispatch = useDispatch();
-  // 기술스택 불러오기
-  const getTechs = async () => {
-    await dispatch(getTechList())
-      .then((response) => {
-        const techData = response.payload.data.data;
-        setAllTech(techData);
-        return techData;
-      })
-      .then((techData) => {
-        const techOptions = techData.map((tech) => tech.techName);
-        setAllTechOption(techOptions);
-      })
-      .catch((error) => {
-        console.log(error, '테크 불러오기 실패');
-      });
-  };
-  // 내 기술스택 불러오기
-  const getMyTechs = setMyTech(projectDetail.teamTech.map((tech) => tech.techSeq));
-  const getMyTechOption = setMyTechOption(projectDetail.teamTech.map((tech) => tech.techname));
-  // 포지션 리스트 불러오기
-  const getPosition = async () => {
-    await dispatch(getPositionList())
-      .then((response) => {
-        const positionData = response.payload.data.data;
-        setAllPosition(positionData);
-        return positionData;
-      })
-      .then((positionData) => {
-        const positionOptions = positionData.map((position) => position.positionName);
-        setAllPositionOption(positionOptions);
-      })
-      .catch((error) => {
-        console.log(error, '포지션 불러오기 실패');
-      });
-  };
-
-  // form handling
   const formik = useFormik({
-    initialValues: projectDetail,
+    initialValues: {
+      teamManagerSeq: projectDetail.teamManagerSeq,
+      teamName: projectDetail.teamName,
+      teamDesc: projectDetail.teamDesc,
+      teamTech: projectDetail.teamTech,
+      teamPosition: projectDetail.teamPosition
+    },
     validationSchema: RegisterSchema,
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
-        // 프로젝트 수정 요청 데이터
+        // 프로젝트 수정시 요청할 데이터
         const dataToSubmit = {
-          teamManagerSeq: 1,
+          teamManagerSeq: formik.initialValues.teamManagerSeq,
           teamName: values.teamName,
           teamDesc: values.teamDesc,
-          teamState: formik.initialValues.teamState, // RECRUIT, COMPLETED, FINISH
-          teamType: formik.initialValues.teamType, // STUDY, PROJECT
-          teamTech: myTechList,
-          teamPosition: myPositionList
+          teamTech: myTechList.map((tech) => tech.techSeq),
+          teamPosition: sendingPositionList
         };
         // 프로젝트 수정 요청
         const updatePjt = async () => {
-          console.log('hi');
-          await dispatch(updateProject(teamSeq, dataToSubmit))
+          await dispatch(updateProject({ dataToSubmit, teamSeq }))
             .then((response) => {
               console.log(response, '프로젝트 수정 성공');
             })
             .catch((error) => {
-              console.log('dataToSubmit', dataToSubmit);
+              console.log(dataToSubmit);
               console.log(error, '프로젝트 수정 실패');
             });
         };
@@ -110,23 +83,95 @@ export default function ProjectUpdateForm({ projectDetail }) {
       }, 500);
     }
   });
-  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
-
-  // tech handling
-  const handleTechChange = (event) => {
-    setMyTechOption([...myTechOption, event.target.value]);
-    setMyTech([
-      ...myTechList,
-      allTechList.find((it) => it.techName === event.target.value).techSeq
-    ]);
+  const SetOption = async () => {
+    // 기술스택 리스트 불러오기
+    await dispatch(getTechList())
+      .then((response) => {
+        const techData = response.payload.data.data;
+        console.log(techData, '기술스택 리스트 불러오기 성공');
+        setAllTech(techData);
+      })
+      .catch((error) => {
+        console.log(error, '기술스택 리스트 불러오기 실패');
+      });
+    // 포지션 리스트 불러오기
+    await dispatch(getPositionList())
+      .then((response) => {
+        const positionData = response.payload.data.data;
+        console.log(positionData, '포지션 리스트 불러오기 성공');
+        setAllPosition(positionData);
+      })
+      .catch((error) => {
+        console.log(error, '포지션 리스트 불러오기 실패');
+      });
   };
-  // position handling
-  const handlePositionChange = (event) => {
-    setMyPositionOption([...myPositionOption, event.target.value]);
-    setMyPosition([
-      ...myPositionList,
-      allPositionList.find((it) => it.positionName === event.target.value).positionSeq
-    ]);
+  const setMyOption = () => {
+    // 내 기술스택 불러오기
+    setMyTech(projectDetail.teamTech);
+    setMyPosition(projectDetail.teamPosition);
+  };
+
+  // RENDER
+  useEffect(() => {
+    SetOption();
+    setMyOption();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // HANDLE
+  const handleChange = (event, type) => {
+    if (type === 'tech') {
+      setSelectedTech(event.target.value);
+      if (myTechList.includes(findOrigin(allTechList, 'techName', event.target.value))) {
+        return;
+      }
+      setMyTech([...myTechList, findOrigin(allTechList, 'techName', event.target.value)]);
+    } else if (type === 'position') {
+      setSelectedPos(event.target.value);
+      if (
+        myPositionList.includes(
+          findOrigin(allPositionList, 'detailPositionName', event.target.value)
+        )
+      ) {
+        return;
+      }
+      setMyPosition([
+        ...myPositionList,
+        findOrigin(allPositionList, 'detailPositionName', event.target.value)
+      ]);
+    } else {
+      setTeamState(event.target.value);
+      console.log(teamState);
+    }
+  };
+  const handlePositionCntChange = (value, pos, dv) => {
+    console.log(value, pos, dv);
+    if (!value) {
+      setsendingPositionList([
+        ...sendingPositionList,
+        {
+          position: findOrigin(allPositionList, 'detailPositionName', pos),
+          positionRecruitCnt: dv
+        }
+      ]);
+    } else {
+      setsendingPositionList([
+        ...sendingPositionList,
+        {
+          position: findOrigin(allPositionList, 'detailPositionName', pos),
+          positionRecruitCnt: value
+        }
+      ]);
+    }
+  };
+
+  // FUNC
+  const findOrigin = (originArray, findKey, findValue) => {
+    for (let i = 0; i < originArray.length; i += 1) {
+      if (originArray[i][findKey] === findValue) {
+        return originArray[i];
+      }
+    }
   };
 
   // const handleTechs = useCallback((inputValue, { action, removedValue }) => {
@@ -153,81 +198,86 @@ export default function ProjectUpdateForm({ projectDetail }) {
   //   }
   // });
 
-  // render
-  useEffect(() => {
-    getTechs();
-    getMyTechs();
-    getMyTechOption();
-    getPosition();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // page
-  const showMyTech = myTechOption.map((tech) => <li>{tech}</li>);
-  const showMyPosition = myPositionOption.map((position) => <li>{position}</li>);
-
   return (
-    <FormikProvider value={formik}>
-      <Form autoComplete="off" noValidate>
+    <div>
+      <form onSubmit={formik.handleSubmit}>
         <Stack spacing={3}>
+          {/* teamName */}
           <TextField
-            fullWidth
-            label="Name"
-            {...getFieldProps('teamName')}
-            defaultValue={projectDetail.teamName}
-            error={Boolean(touched.teamName && errors.teamName)}
-            helperText={touched.teamName && errors.teamName}
+            id="teamName"
+            name="teamName"
+            label="teamName"
+            value={formik.values.teamName}
+            onChange={formik.handleChange}
+            error={formik.touched.teamName && Boolean(formik.errors.teamName)}
+            helperText={formik.touched.teamName && formik.errors.teamName}
           />
+          {/* teamDesc */}
           <TextField
-            fullWidth
-            label="Desc"
-            {...getFieldProps('teamDesc')}
-            defaultValue={projectDetail.teamDesc}
-            error={Boolean(touched.teamName && errors.teamName)}
-            helperText={touched.teamName && errors.teamName}
+            id="teamDesc"
+            name="teamDesc"
+            label="teamDesc"
+            type="text"
+            value={formik.values.teamDesc}
+            onChange={formik.handleChange}
+            error={formik.touched.teamDesc && Boolean(formik.errors.teamDesc)}
+            helperText={formik.touched.teamDesc && formik.errors.teamDesc}
           />
-          <InputLabel id="select-myTech-label">기술 스택</InputLabel>
-          <Select
-            labelId="select-myTech-label"
-            id="select-myTech"
-            value={selected}
-            label="myTech"
-            onChange={handleTechChange}
-          >
-            {allTechOption.map((thisTech) => (
-              <MenuItem key={thisTech} value={thisTech}>
-                {thisTech}
-              </MenuItem>
-            ))}
-          </Select>
-          <ul>{showMyTech}</ul>
-
-          <Select
-            labelId="select-myPosition-label"
-            id="select-myPositionh"
-            value={selected}
-            label="myPosition"
-            onChange={handlePositionChange}
-          >
-            {allPositionOption.map((thisPosition) => (
-              <MenuItem key={thisPosition} value={thisPosition}>
-                {thisPosition}
-              </MenuItem>
-            ))}
-          </Select>
-          <ul>{showMyPosition}</ul>
-
-          <LoadingButton
-            size="small"
-            type="submit"
-            variant="contained"
-            loading={isSubmitting}
-            onChange={formik.onSubmit}
-          >
-            수정
-          </LoadingButton>
+          {/* teamTech */}
+          <FormControl>
+            <InputLabel htmlFor="select-tech">teamTech</InputLabel>
+            <NativeSelect
+              label="select-tech"
+              defaultValue={selectedTech}
+              value={selectedTech}
+              onChange={(e) => handleChange(e, 'tech')}
+            >
+              {allTechList.map((tech) => (
+                <option key={tech.techSeq} value={tech.techName}>
+                  {tech.techName}
+                </option>
+              ))}
+            </NativeSelect>
+            <div>
+              {myTechList.map((tech) => (
+                <span key={tech.techSeq}>{tech.techName} </span>
+              ))}
+            </div>
+          </FormControl>
+          {/* teamPosition */}
+          <FormControl>
+            <InputLabel htmlFor="select-position">teamPosition</InputLabel>
+            <NativeSelect
+              label="select-position"
+              defaultValue={selectedPos}
+              value={selectedPos}
+              onChange={(e) => handleChange(e, 'position')}
+            >
+              {allPositionList.map((pos) => (
+                <option key={pos.detailPositionName} value={pos.detailPositionName}>
+                  {pos.detailPositionName}
+                </option>
+              ))}
+            </NativeSelect>
+            <div>
+              {myPositionList.map((pos) => (
+                <div key={pos.detailPositionName}>
+                  {pos.detailPositionName}
+                  <SelectPositionCnt
+                    onSetCnt={handlePositionCntChange}
+                    pos={pos.detailPositionName}
+                    defaultValue={pos.positionRecruitCnt}
+                  />
+                </div>
+              ))}
+            </div>
+          </FormControl>
+          {/* Submit Btn */}
+          <Button color="primary" variant="contained" fullWidth type="submit">
+            Update
+          </Button>
         </Stack>
-      </Form>
-    </FormikProvider>
+      </form>
+    </div>
   );
 }

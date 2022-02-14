@@ -3,11 +3,12 @@ import { useState, useCallback } from 'react';
 import { FormControl, InputLabel, NativeSelect, Button } from '@mui/material';
 
 SelectPositionCnt.propTypes = {
-  pos: PropTypes.object.isRequired
+  onSetCnt: PropTypes.func.isRequired,
+  pos: PropTypes.string.isRequired,
+  defaultValue: PropTypes.number
 };
 
 export default function SelectPositionCnt(props) {
-  // console.log(props);
   // STATE
   const MEMBER_SELECT = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   const [selectedPositionCnt, setselectedPositionCnt] = useState('');
@@ -15,10 +16,10 @@ export default function SelectPositionCnt(props) {
 
   // HANDLE
   const handleChange = (e) => {
-    setselectedPositionCnt(e.target.value);
+    setselectedPositionCnt((e.target.value *= 1));
   };
   const getData = useCallback(() => {
-    props.onSetCnt(selectedPositionCnt, props.pos);
+    props.onSetCnt(selectedPositionCnt, props.pos, props.defaultValue);
     setCleared(true);
   });
 
@@ -29,8 +30,8 @@ export default function SelectPositionCnt(props) {
         <InputLabel htmlFor="select-position-cnt" />
         <NativeSelect
           label="select-position-cnt"
-          defaultValue={selectedPositionCnt}
-          value={selectedPositionCnt}
+          defaultValue={props.defaultValue}
+          // value={selectedPositionCnt}
           onChange={handleChange}
         >
           {MEMBER_SELECT.map((month, idx) => (
@@ -46,10 +47,11 @@ export default function SelectPositionCnt(props) {
   return (
     <FormControl disabled>
       <InputLabel htmlFor="select-position-cnt" />
+
       <NativeSelect
         label="select-position-cnt"
-        defaultValue={selectedPositionCnt}
-        value={selectedPositionCnt}
+        defaultValue={props.defaultValue}
+        // value={selectedPositionCnt}
         onChange={handleChange}
       >
         {MEMBER_SELECT.map((month, idx) => (

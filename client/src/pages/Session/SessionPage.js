@@ -122,6 +122,7 @@ class SessionPage extends Component {
       mentoringSeq: this.state.mentoringSeq
     };
     this.createSession(request).then((data) => {
+      console.log('토큰이다:', data.token);
       this.setState({
         token: data.token,
         userId: data.userId,
@@ -169,7 +170,7 @@ class SessionPage extends Component {
               id="opv-session"
               sessionName={this.state.teamName}
               user={this.state.userId}
-              token={token}
+              token={this.state.token}
               joinSession={this.handlerJoinSessionEvent}
               leaveSession={this.handlerMakeCommentEvent}
               error={this.handlerErrorEvent}

@@ -18,7 +18,7 @@ public class MentoringApplyListResponseDto {
     private Long teamSeq;
     private String teamName;
     private TeamType teamType;
-    private String mentoringApplyComment;
+//    private String mentoringApplyComment;
     private LocalDate mentoringStartDate;
     private LocalTime mentoringStartTime;
     private LocalDateTime mentoringCreateTime;
@@ -29,7 +29,7 @@ public class MentoringApplyListResponseDto {
         this.teamSeq = mentoring.getTeam().getTeamSeq();
         this.mentoringStartDate = mentoring.getMentoringStartDate();
         this.mentoringStartTime = mentoring.getMentoringStartTime();
-        this.mentoringApplyComment = mentoring.getMentoringApplicationComment();
+//        this.mentoringApplyComment = mentoring.getMentoringApplicationComment();
         this.mentoringCreateTime = mentoring.getMentoringCreateTime();
         this.mentoringState = mentoring.getMentoringState();
 

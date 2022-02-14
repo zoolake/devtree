@@ -30,7 +30,7 @@ public class MentoringApplyRequestDto {
                 .mentor(mentor)
                 .mentoringStartDate(selectedDate)
                 .mentoringStartTime(selectedTime)
-                .mentoringApplicationComment(applyComment)
+//                .mentoringApplicationComment(applyComment)
                 .mentoringCreateTime(LocalDateTime.now())
                 .mentoringState(MentoringState.WAIT)
                 .build();

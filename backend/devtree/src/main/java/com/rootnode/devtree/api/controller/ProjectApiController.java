@@ -57,9 +57,9 @@ public class ProjectApiController {
     /**
      * 기능: 프로젝트 상세 조회
      */
-    @GetMapping("/v1/project/{team_seq}")
-    public ResponseEntity<Result> projectDetail(@PathVariable Long team_seq) {
-        ProjectDetailResponseDto responseDto = projectService.findProject(team_seq);
+    @GetMapping("/v1/project/{teamSeq}")
+    public ResponseEntity<Result> projectDetail(@PathVariable Long teamSeq) {
+        ProjectDetailResponseDto responseDto = projectService.findProject(teamSeq);
         return ResponseEntity
                 .status(200)
                 .body(Result.builder()
@@ -87,23 +87,23 @@ public class ProjectApiController {
      */
     @PostMapping("/v1/project/join/response/{team_seq}")
     public ResponseEntity<CommonResponseDto> projectJoinResponse(Authentication authentication,
-                                                                 @PathVariable Long team_seq,
+                                                                 @PathVariable Long teamSeq,
                                                                  @RequestBody ProjectRespondRequestDto requestDto) {
         UserDetail userDetails = (UserDetail)authentication.getDetails();
-        Long user_seq = userDetails.getUser().getUserSeq();
+        Long userSeq = userDetails.getUser().getUserSeq();
         return ResponseEntity
                 .status(201)
-                .body(projectService.respondPosition(team_seq, user_seq, requestDto));
+                .body(projectService.respondPosition(teamSeq, userSeq, requestDto));
     }
 
     /**
      * 기능: 프로젝트 포지션 조회
      */
     @GetMapping("/v1/project/{team_seq}/position")
-    public ResponseEntity<ProjectPositionDetailResponseDto> projectPositionDetail(@PathVariable Long team_seq) {
+    public ResponseEntity<ProjectPositionDetailResponseDto> projectPositionDetail(@PathVariable Long teamSeq) {
         return ResponseEntity
                 .status(200)
-                .body(projectService.findProjectPositionDetail(team_seq));
+                .body(projectService.findProjectPositionDetail(teamSeq));
     }
 
     /**
@@ -121,14 +121,14 @@ public class ProjectApiController {
      */
     @PutMapping("/v1/project/{team_seq}")
     public ResponseEntity<CommonResponseDto> projectDetailUpdate(Authentication authentication,
-                                                                 @PathVariable Long team_seq,
+                                                                 @PathVariable Long teamSeq,
                                                                  @RequestBody ProjectUpdateRequestDto requestDto) {
         UserDetail userDetails = (UserDetail)authentication.getDetails();
         Long userSeq = userDetails.getUser().getUserSeq();
 //      updateProject 안에서 userSeq를 사용하지 않는것 같다.
         return ResponseEntity
                 .status(201)
-                .body(projectService.updateProject(team_seq, requestDto));
+                .body(projectService.updateProject(teamSeq, requestDto));
     }
 
     /**

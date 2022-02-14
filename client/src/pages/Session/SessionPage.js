@@ -239,7 +239,7 @@ class SessionPage extends Component {
     };
 
     console.log(request);
-    axios.post(`${this.OPENVIDU_SERVER_URL}/v1/session/comment`, request, {
+    axios.post(`/v1/session/comment`, request, {
       headers: {
         'Content-Type': 'application/json'
       }
@@ -252,7 +252,7 @@ class SessionPage extends Component {
       mentoringSeq: this.state.mentoringSeq,
       token: this.state.token
     };
-    axios.post(`${this.OPENVIDU_SERVER_URL}/v1/session/quit`, request, {
+    axios.post(`/v1/session/quit`, request, {
       headers: {
         'Content-Type': 'application/json'
       }
@@ -270,7 +270,7 @@ class SessionPage extends Component {
       };
       console.log('createToken:', data);
       axios
-        .post(`${this.OPENVIDU_SERVER_URL}/v1/session/join`, data, {
+        .post(`/v1/session/join`, data, {
           headers: {
             Authorization: `Basic ${btoa(`OPENVIDUAPP:${this.OPENVIDU_SERVER_SECRET}`)}`,
             'Content-Type': 'application/json'

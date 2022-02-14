@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {
+  GET_MYMENTORPROFILE,
   GET_MENTORS,
   MENTOR_DETAIL,
   SET_MENTOR,
@@ -12,8 +13,14 @@ import {
 } from './types';
 
 // 멘티 - 팀별 멘토링 신청 내역 조회
+export function mymentorProfile() {
+  const request = axios.get(`/user/mentor`).then((response) => response.data);
+  return { type: GET_MENTORS, payload: request };
+}
+
+// 멘티 - 팀별 멘토링 신청 내역 조회
 export function mentee_mentoringList(dataToSubmit) {
-  const request = axios.get(`common/team/manager`).then((response) => response.data);
+  const request = axios.get(`/common/team/manager`).then((response) => response.data);
   return { type: GET_MENTORINGLIST, payload: request };
 }
 
@@ -56,18 +63,18 @@ export function saveMentoringTime(dataToSubmit) {
 }
 
 // 멘토가 저장한 멘토링 시간 불러오기
-export function getCheckedtimeList() {
+export function getCheckedtimeList(dataToSubmit) {
+  console.log('여기는바로!');
+  console.log(dataToSubmit);
   const request = axios
-    .get(`https://620113cafdf509001724980b.mockapi.io/api/v1/Possibletime`)
+    .post(`/mentoring/schedule/${dataToSubmit.mentorSeq}`, dataToSubmit)
     .then((response) => response.data);
   return { type: GET_TIMELIST, payload: request };
 }
 
 // 멘토의 예약시간들을 불러오기
 export function getReservedList() {
-  const request = axios
-    .get(`https://62049a60c6d8b20017dc35c3.mockapi.io/reserved`)
-    .then((response) => response.data);
+  const request = axios.post(`/mentor/schedule/available`).then((response) => response.data);
   return { type: GET_RESERVEDLIST, payload: request };
 }
 

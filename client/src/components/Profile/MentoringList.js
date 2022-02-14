@@ -82,7 +82,6 @@ export default function MentoringList() {
     dispatch(getMentoringlist())
       .then((response) => {
         if (response) {
-          console.log('메리 따끈', response);
           setProjectList(response.payload.data);
         }
       })
@@ -253,11 +252,11 @@ export default function MentoringList() {
                       const {
                         mentoringCreateTime,
                         mentoringSeq,
-                        teamtype,
-                        teamname,
+                        teamType,
+                        teamName,
                         mentoringStartDate,
                         mentoringStartTime,
-                        mentoringmsg,
+                        mentoringApplyComment,
                         mentoringState
                       } = row;
                       const time = new Date(`${mentoringStartDate}T${mentoringStartTime}`);
@@ -267,25 +266,25 @@ export default function MentoringList() {
                           <TableCell align="left">{mentoringCreateTime}</TableCell>
                           <TableCell component="th" scope="row" padding="3px">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              <Typography variant="subtitle2">{teamname}</Typography>
+                              <Typography variant="subtitle2">{teamName}</Typography>
                             </Stack>
                           </TableCell>
                           <TableCell align="left">
                             <Label
                               variant="ghost"
                               color={
-                                (teamtype === 'STUDY' && 'warning') ||
-                                (teamtype === 'PROJECT' && 'primary')
+                                (teamType === 'STUDY' && 'warning') ||
+                                (teamType === 'PROJECT' && 'primary')
                               }
                             >
-                              {teamtype === 'STUDY' ? <p>STUDY</p> : null}
-                              {teamtype === 'PROJECT' ? <p>PROJECT</p> : null}
+                              {teamType === 'STUDY' ? <p>STUDY</p> : null}
+                              {teamType === 'PROJECT' ? <p>PROJECT</p> : null}
                             </Label>
                           </TableCell>
                           <TableCell align="left">
                             {mentoringStartDate} {mentoringStartTime}
                           </TableCell>
-                          <TableCell align="left">{mentoringmsg}</TableCell>
+                          <TableCell align="left">{mentoringApplyComment}</TableCell>
                           <TableCell align="left">
                             {mentoringState === 'WAIT' ? (
                               <div>

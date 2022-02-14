@@ -32,10 +32,7 @@ export function getAlarmList() {
 
 // 랭킹 페이지 데이터 불러오기
 export function getRank() {
-  const request = axios
-    .get(`https://61f649b22e1d7e0017fd6d42.mockapi.io/project`)
-    .then((response) => response.data);
-
+  const request = axios.get(`/mentor/sort`).then((response) => response.data);
   return { type: GET_RANK, payload: request };
 }
 

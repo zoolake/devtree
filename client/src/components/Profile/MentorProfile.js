@@ -7,6 +7,8 @@ import { TextField, Box, Card, CardHeader } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // utils
 import { detailUser, updateUser } from '../../_actions/user_actions';
+import { mymentorProfile } from '../../_actions/mentor_actions';
+
 import { MentorProfileUpdate } from '.';
 // ---------------------------------------------------------------------
 
@@ -19,14 +21,17 @@ export default function MentorProfile() {
     setMentor(null);
     // loading 상태를 true 로 바꿉니다.
     setLoading(true);
-    await dispatch(detailUser())
+    await dispatch(mymentorProfile())
       .then((response) => {
         if (response) {
-          setMentor(response.payload.data.user);
-          console.log(mentor.userId);
+          console.log('멘토프로필');
+          setMentor(response.payload.data);
+          console.log(response.payload.data);
         }
       })
       .catch((err) => {
+        console.log('멘토프로필 에러');
+        console.log(err);
         setTimeout(() => {}, 3000);
       });
     setLoading(false);

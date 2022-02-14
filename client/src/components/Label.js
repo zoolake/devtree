@@ -19,7 +19,7 @@ const RootStyle = styled('span')(({ theme, ownerState }) => {
   });
 
   const styleGhost = (color) => ({
-    color: theme.palette[color].dark,
+    color: theme.palette[color].main,
     backgroundColor: alpha(theme.palette[color].main, 0.16)
   });
 
@@ -43,8 +43,7 @@ const RootStyle = styled('span')(({ theme, ownerState }) => {
     ...(color !== 'default'
       ? {
           ...(variant === 'filled' && { ...styleFilled(color) }),
-          ...(variant === 'outlined' && { ...styleOutlined(color) }),
-          ...(variant === 'ghost' && { ...styleGhost(color) })
+          ...(variant === 'outlined' && { ...styleOutlined(color) })
         }
       : {
           ...(variant === 'outlined' && {

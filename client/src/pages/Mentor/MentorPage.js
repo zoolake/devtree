@@ -27,8 +27,8 @@ export default function Mentor() {
     dispatch(getMentors())
       .then((response) => {
         if (response) {
-          console.log(response.p);
-          setMentorList(response.payload.data.content);
+          console.log(response.payload.data);
+          setMentorList(response.payload.data);
         }
       })
       .catch((err) => {

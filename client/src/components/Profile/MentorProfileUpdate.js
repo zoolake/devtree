@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { TextField, Divider, Box, CardHeader } from '@mui/material';
 // utils
 import { detailUser } from '../../_actions/user_actions';
+import { mymentorProfile } from '../../_actions/mentor_actions';
 // ----------------------------------------------------------------------
 
 export default function MentorProfileUpdate() {
@@ -16,11 +17,11 @@ export default function MentorProfileUpdate() {
     setMentor(null);
     // loading 상태를 true 로 바꿉니다.
     setLoading(true);
-    await dispatch(detailUser())
+    await dispatch(mymentorProfile())
       .then((response) => {
         if (response) {
           console.log('test');
-          setMentor(response.payload.data.user);
+          setMentor(response.payload.data);
         }
       })
       .catch((err) => {
@@ -42,10 +43,10 @@ export default function MentorProfileUpdate() {
     <div>
       <CardHeader title="멘토 프로필 정보" />
       <Box sx={{ p: 3 }}>
-        내 경험치
-        <TextField disabled={!visible} fullWidth type="text" value={mentor.mentorTier} />
         내 티어
-        <TextField disabled={!visible} fullWidth type="text" value={mentor.mentorTier} />
+        <TextField disabled={!visible} fullWidth type="text" value={mentor.tier.tierName} />
+        내 경험치
+        <TextField disabled={!visible} fullWidth type="text" value={mentor.tier.tierName} />
         멘토 닉네임
         <TextField disabled={!visible} fullWidth type="text" value={mentor.mentorNickname} />
         멘토 커리어

@@ -28,3 +28,4 @@ export const DELETE_PROJECT = 'delete_project';
 export const GET_PROJECT_DETAIL = 'get_project_detail';
 export const UPDATE_PROJECT = 'get_project_detail';
 export const GET_ALARMLIST = 'get_alarm_list';
+export const GET_MYMENTORPROFILE = 'get_my_mentorfile';

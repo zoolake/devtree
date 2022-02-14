@@ -21,7 +21,7 @@ import {
   getReservedList,
   getCheckedtimeList,
   saveMentoringTime
-} from '../../_actions/mentor_actions';
+} from '../../../_actions/mentor_actions';
 
 // eslint-disable-next-line prefer-const
 let testdata = [
@@ -95,7 +95,7 @@ const TitleStyle = styled(Link)({
   WebkitBoxOrient: 'vertical'
 });
 
-export default function MentorWeeklySetting({ week, day, date }) {
+export default function Week2({ week, day, date }) {
   console.log(date);
   const { id } = useParams();
   const dispatch = useDispatch();

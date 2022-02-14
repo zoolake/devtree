@@ -21,7 +21,7 @@ import {
   getReservedList,
   getCheckedtimeList,
   saveMentoringTime
-} from '../../_actions/mentor_actions';
+} from '../../../_actions/mentor_actions';
 
 // eslint-disable-next-line prefer-const
 let testdata = [

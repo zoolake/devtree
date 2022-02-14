@@ -69,8 +69,8 @@ export default function ProjectList() {
     dispatch(getProject())
       .then((response) => {
         if (response) {
-          console.log(response.payload);
-          setProjectList(response.payload);
+          console.log(response.payload.data);
+          setProjectList(response.payload.data);
         }
       })
       .catch((err) => {

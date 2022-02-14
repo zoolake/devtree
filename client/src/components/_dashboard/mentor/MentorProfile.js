@@ -2,6 +2,7 @@ import * as Yup from 'yup';
 import faker from 'faker';
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import jwtdecode from 'jwt-decode';
 import { useDispatch } from 'react-redux';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { Link as RouterLink } from 'react-router-dom';
@@ -19,6 +20,7 @@ import {
   Button,
   CardContent
 } from '@mui/material';
+import Swal from 'sweetalert2';
 import { LoadingButton } from '@mui/lab';
 // utils
 import { fDateTime } from '../../../utils/formatTime';
@@ -34,8 +36,8 @@ export default function UserProfile({ index }) {
     await dispatch(detailMentor(index))
       .then((response) => {
         if (response) {
-          setMentor(response.payload);
-          console.log(mentor.mentorname);
+          setMentor(response.payload.data);
+          console.log(response.payload.data);
         }
       })
       .catch((err) => {
@@ -43,7 +45,26 @@ export default function UserProfile({ index }) {
       });
     setLoading(false);
   };
-
+  const usercheck = () => {
+    const token = localStorage.getItem('user');
+    console.log(index);
+    console.log(localStorage.getItem('user'));
+    if (!token) {
+      Swal.fire({
+        icon: 'error',
+        title: '실패',
+        text: '로그인 해주세요.'
+      });
+    } else if (jwtdecode(localStorage.getItem('user')).userSeq == index) {
+      Swal.fire({
+        icon: 'error',
+        title: '실패',
+        text: '본인은 신청할 수 없습니다.'
+      });
+    } else {
+      document.location.assign(`/reservation/${index}`);
+    }
+  };
   useEffect(() => {
     userDetail();
   }, []);
@@ -55,19 +76,23 @@ export default function UserProfile({ index }) {
     <div>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography sx={{ p: 3 }} variant="h4">
-          {mentor.mentorname} <h5>{mentor.tier}</h5>
-          <h5> {mentor.mentorcarrer}</h5>
+          {mentor.mentorNickname} <h5>{mentor.tier}</h5>
+          <h5> {mentor.mentorCareer}</h5>
         </Typography>
-        <Button variant="contained" component={RouterLink} to={`/reservation/${index}`}>
-          멘토링 신청하기
-        </Button>
+        <Button onClick={usercheck}>멘토링 신청하기</Button>
       </Stack>
       <CardHeader />
       <Box sx={{ p: 3 }}>
         이메일
-        <TextField value={mentor.mentoremail} fullWidth type="text" />
+        <TextField value={mentor.mentorEmail} fullWidth type="text" />
         소개말
-        <TextField id="filled-textarea" multiline fullWidth variant="filled" />
+        <TextField
+          id="filled-textarea"
+          value={mentor.mentorDesc}
+          multiline
+          fullWidth
+          variant="filled"
+        />
         <Divider />
       </Box>
     </div>

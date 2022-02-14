@@ -105,5 +105,5 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.4.1"
   },
-  "proxy": "http://localhost:8080/v1"
+  "proxy": "https://localhost:8080/v1"
 }

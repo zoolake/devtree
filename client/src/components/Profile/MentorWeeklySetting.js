@@ -167,6 +167,7 @@ export default function MentorWeeklySetting({ week, day, date }) {
   const submit = async () => {
     console.log(checkedInputs);
     const dataToSubmit = {
+      mentorDate: date,
       mentorTime: checkedInputs
     };
     await dispatch(saveMentoringTime(dataToSubmit))

@@ -15,11 +15,9 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 유저 관련 API 요청 처리를 위한 컨트롤러 정의.
@@ -276,7 +274,7 @@ public class UserController {
 	public ResponseEntity<Result> userNotification(Authentication authentication) {
 		UserDetail userDetails = (UserDetail)authentication.getDetails();
 		Long userSeq = userDetails.getUser().getUserSeq();
-		List<NotificationListResponseDto> responseDto = userService.findUserNotification(userSeq);
+		List<NotificationResponseDto> responseDto = userService.findUserNotification(userSeq);
 		return ResponseEntity
 				.status(200)
 				.body(Result.builder()
@@ -287,12 +285,18 @@ public class UserController {
 	}
 
 	/**
-	 *  기능 : 유저의 알림 확인
+	 *  기능 : 유저의 알림 상세 조회 (읽음 표시)
 	 */
 	@GetMapping("/v1/user/notification/{notificationSeq}")
-	public CommonResponseDto userNotificationCheck(Authentication authentication,
-												   @PathVariable Long notificationSeq) {
-		return userService.checkUserNotification(notificationSeq);
+	public ResponseEntity<Result> userNotificationCheck(@PathVariable Long notificationSeq) {
+		NotificationResponseDto responseDto = userService.findUserDetailNotification(notificationSeq);
+		return ResponseEntity
+				.status(200)
+				.body(Result.builder()
+						.data(responseDto)
+						.status(200)
+						.message("알림 상세 조회 성공")
+						.build());
 	}
 
 

@@ -53,12 +53,12 @@ MentorCard.propTypes = {
 };
 
 export default function MentorCard({ post, index }) {
-  console.log(post);
+  console.log('post', post);
   console.log(index);
-  const { stack, mentorname, tier, mentorcarrer } = post;
-  console.log(`tier:${tier}`);
-
-  const POST_INFO = [{ text: tier, icon: messageCircleFill }];
+  const { mentorCareer, mentorName, mentorExp, mentorTechList } = post;
+  console.log(`tier:${mentorExp}`);
+  console.log(`${mentorTechList}`);
+  const POST_INFO = [{ text: mentorExp, icon: messageCircleFill }];
 
   return (
     <Grid item xs={12} sm={6} md={3}>
@@ -66,23 +66,23 @@ export default function MentorCard({ post, index }) {
       <Card sx={{ position: 'relative' }}>
         <CardMediaStyle>
           <AvatarStyle />
-          <CoverImgStyle alt={mentorname} src="/static/mock-images/covers/cover_1.jpg" />
+          <CoverImgStyle alt={mentorName} src="/static/mock-images/covers/cover_1.jpg" />
         </CardMediaStyle>
         <CardContent>
           <Typography gutterBottom variant="caption">
-            {mentorcarrer}
+            {mentorCareer}
           </Typography>
           <TitleStyle
-            to={`${post.id}`}
+            to={`${post.mentorSeq}`}
             color="inherit"
             variant="subtitle2"
             underline="hover"
             component={RouterLink}
           >
-            {mentorname}
+            {mentorName}
           </TitleStyle>
           <Typography gutterBottom variant="caption">
-            {stack}
+            {mentorTechList}
           </Typography>
           <InfoStyle>
             {POST_INFO.map((info, index) => (

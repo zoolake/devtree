@@ -20,7 +20,7 @@ export function mentee_mentoringList(dataToSubmit) {
 // 멘토 - 멘토링 거절
 export function rejectMentoring(dataToSubmit) {
   const request = axios
-    .get(`https://62049a60c6d8b20017dc35c3.mockapi.io/mentoringlist`)
+    .get(`/mentoring/apply/${dataToSubmit.mentoringSeq}`, dataToSubmit)
     .then((response) => response.data);
   return { type: GET_MENTORINGLIST, payload: request };
 }
@@ -28,16 +28,14 @@ export function rejectMentoring(dataToSubmit) {
 // 멘토 - 멘토링 수락
 export function acceptMentoring(dataToSubmit) {
   const request = axios
-    .get(`https://62049a60c6d8b20017dc35c3.mockapi.io/mentoringlist`)
+    .get(`/mentoring/apply/${dataToSubmit.mentoringSeq}`, dataToSubmit)
     .then((response) => response.data);
   return { type: GET_MENTORINGLIST, payload: request };
 }
 
 // 멘토 - 멘토링 리스트 조회
 export function getMentoringlist() {
-  const request = axios
-    .get(`https://62049a60c6d8b20017dc35c3.mockapi.io/mentoringlist`)
-    .then((response) => response.data);
+  const request = axios.get(`/mentoring/apply`).then((response) => response.data);
   return { type: GET_MENTORINGLIST, payload: request };
 }
 
@@ -50,9 +48,9 @@ export function setMentor() {
 }
 
 // 멘토 - 멘토링 가능시간 저장
-export function saveMentoringTime() {
+export function saveMentoringTime(dataToSubmit) {
   const request = axios
-    .get(`https://620113cafdf509001724980b.mockapi.io/api/v1/Possibletime`)
+    .put(`/mentor/schedule/available`, dataToSubmit)
     .then((response) => response.data);
   return { type: GET_TIMELIST, payload: request };
 }
@@ -89,9 +87,7 @@ export function detailMentor(id) {
 
 // 멘토 프로필 업데이트
 export function updateMentorProfile() {
-  const request = axios
-    .get(`https://61f649b22e1d7e0017fd6d42.mockapi.io/mentor}`)
-    .then((response) => response.data);
+  const request = axios.put(`/v1/mentor`).then((response) => response.data);
   return { type: Update_MentorProfile, payload: request };
 }
 

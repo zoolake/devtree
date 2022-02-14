@@ -82,8 +82,8 @@ export default function MentoringList() {
     dispatch(getMentoringlist())
       .then((response) => {
         if (response) {
-          console.log(response.payload);
-          setProjectList(response.payload);
+          console.log('메리 따끈', response);
+          setProjectList(response.payload.data);
         }
       })
       .catch((err) => {
@@ -157,7 +157,8 @@ export default function MentoringList() {
 
   const accept = (event) => {
     const dataToSubmit = {
-      mentoringseq: event.target.id
+      mentoringseq: event.target.id,
+      responseType: 'ACCEPT'
     };
     Swal.fire({
       title: '멘토링 수락',
@@ -173,7 +174,7 @@ export default function MentoringList() {
           .then((response) => {
             console.log('멘토링 수락');
             if (response) {
-              console.log(response.payload);
+              console.log(response.payload.data);
             }
           })
           .catch((err) => {
@@ -185,7 +186,8 @@ export default function MentoringList() {
   };
   const reject = (event) => {
     const dataToSubmit = {
-      mentoringseq: event.target.id
+      mentoringSeq: event.target.id,
+      responseType: 'REJECT'
     };
     Swal.fire({
       title: '멘토링 거절',

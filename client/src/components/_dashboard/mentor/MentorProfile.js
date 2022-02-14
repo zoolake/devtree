@@ -20,6 +20,7 @@ import {
   Button,
   CardContent
 } from '@mui/material';
+import Swal from 'sweetalert2';
 import { LoadingButton } from '@mui/lab';
 // utils
 import { fDateTime } from '../../../utils/formatTime';
@@ -49,9 +50,17 @@ export default function UserProfile({ index }) {
     console.log(index);
     console.log(localStorage.getItem('user'));
     if (!token) {
-      alert('로그인 해주세요.');
+      Swal.fire({
+        icon: 'error',
+        title: '실패',
+        text: '로그인 해주세요.'
+      });
     } else if (jwtdecode(localStorage.getItem('user')).userSeq == index) {
-      alert('본인은 신청할 수 없습니다.');
+      Swal.fire({
+        icon: 'error',
+        title: '실패',
+        text: '본인은 신청할 수 없습니다.'
+      });
     } else {
       document.location.assign(`/reservation/${index}`);
     }

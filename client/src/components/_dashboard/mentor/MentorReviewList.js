@@ -38,8 +38,8 @@ export default function MentorReviewList(data) {
     await dispatch(getReview(dataToSubmit))
       .then((response) => {
         if (response) {
-          console.log('뀨?', response.payload.data);
-          setReviews(response.payload.data);
+          console.log(response.payload.data.mentoringReviewList);
+          setReviews(response.payload.data.mentoringReviewList);
         }
       })
       .catch((err) => {
@@ -52,7 +52,13 @@ export default function MentorReviewList(data) {
   return (
     <Box>
       <Container className="container">
-        <CardHeader title="멘토링 리뷰" /> <ScrollMenu>d</ScrollMenu>
+        <CardHeader title="멘토링 리뷰" />
+        <ScrollMenu>
+          {' '}
+          {reviews.map((post, index) => (
+            <ReviewCard key={post.id} post={post} index={index} />
+          ))}
+        </ScrollMenu>
       </Container>
     </Box>
   );

@@ -18,27 +18,14 @@ import setAuthorizationToken from '../utils/setAuthorizationToken';
 // 알림 페이지 데이터 불러오기
 export function getAlarmdata(notificationSeq) {
   const request = axios
-    .get(`https://62049a60c6d8b20017dc35c3.mockapi.io/alarmlist/${notificationSeq}`)
-    .then((response) => response.data);
-
-  return { type: GET_ALARMLIST, payload: request };
-}
-export function setAlarmCheck(notificationSeq) {
-  const request = axios
-    .get(`http://localhost:8080/v1/user/notification`, {
-      params: {
-        ID: notificationSeq
-      }
-    })
+    .get(`/user/notification/${notificationSeq}`)
     .then((response) => response.data);
 
   return { type: GET_ALARMLIST, payload: request };
 }
 // 알림 페이지 데이터 불러오기
 export function getAlarmList() {
-  const request = axios
-    .get(`https://62049a60c6d8b20017dc35c3.mockapi.io/alarmlist`)
-    .then((response) => response.data);
+  const request = axios.get(`/user/notification`).then((response) => response.data);
 
   return { type: GET_ALARMLIST, payload: request };
 }
@@ -54,17 +41,14 @@ export function getRank() {
 
 // 나의 스터디 리스트 모아보기
 export function getStudy() {
-  const request = axios.get(`/study`).then((response) => response.data);
+  const request = axios.get(`/user/study`).then((response) => response.data);
 
   return { type: UPDATE_USER, payload: request };
 }
 
 // 나의 프로젝트 정보 모아보기
 export function getProject() {
-  const request = axios
-    .get(`https://61f649b22e1d7e0017fd6d42.mockapi.io/project`)
-    .then((response) => response.data);
-
+  const request = axios.get(`/user/project`).then((response) => response.data);
   return { type: UPDATE_USER, payload: request };
 }
 
@@ -83,9 +67,7 @@ export function getTech() {
 
 // 유저 프로필 바꾸기
 export function updateUser(dataToSubmit) {
-  const request = axios
-    .put(`http://localhost:8080/v1/user`, dataToSubmit)
-    .then((response) => response.data);
+  const request = axios.put(`/v1/user`, dataToSubmit).then((response) => response.data);
 
   return {
     type: UPDATE_USER,
@@ -121,9 +103,7 @@ export function passwordUpdate(dataToSubmit) {
 // 연결완료, 매칭확인
 export function registerUser(dataToSubmit) {
   console.log(dataToSubmit);
-  const request = axios
-    .post(`http://localhost:8080/v1/user/signup`, dataToSubmit)
-    .then((response) => response.data);
+  const request = axios.post(`/user/signup`, dataToSubmit).then((response) => response.data);
 
   return {
     type: REGISTER_USER,
@@ -134,7 +114,7 @@ export function registerUser(dataToSubmit) {
 // 유저 프로필 보기
 // 연결완료, 매칭 더 필요
 export function detailUser() {
-  const request = axios.get(`http://localhost:8080/v1/user`).then((response) => response.data);
+  const request = axios.get(`/user`).then((response) => response.data);
   console.log(request);
   return {
     type: DETAIL_USER,
@@ -145,9 +125,7 @@ export function detailUser() {
 // id중복확인
 // 연결완료, 매칭확인
 export function idcheckUser(dataToSubmit) {
-  const request = axios
-    .post(`http://localhost:8080/v1/user/idcheck`, dataToSubmit)
-    .then((response) => response.data);
+  const request = axios.post(`/user/idcheck`, dataToSubmit).then((response) => response.data);
 
   return {
     type: IDCHECK_USER,
@@ -157,15 +135,13 @@ export function idcheckUser(dataToSubmit) {
 
 // 로그인 하기
 export function loginUser(dataToSubmit) {
-  const request = axios
-    .post(`http://localhost:8080/v1/user/login`, dataToSubmit)
-    .then((response) => {
-      if (response.data.accessToken) {
-        const token = response.data.accessToken;
-        localStorage.setItem('user', token);
-        setAuthorizationToken(token);
-      }
-    });
+  const request = axios.post(`/user/login`, dataToSubmit).then((response) => {
+    if (response.data.accessToken) {
+      const token = response.data.accessToken;
+      localStorage.setItem('user', token);
+      setAuthorizationToken(token);
+    }
+  });
   return {
     type: LOGIN_USER,
     payload: request

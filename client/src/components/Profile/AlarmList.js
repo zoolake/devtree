@@ -60,7 +60,10 @@ export default function AlarmList() {
         if (response) {
           console.log('alarmlist!');
           console.log(response.payload.data);
-          getList(response.payload.data);
+          const alarmdatas = response.payload.data;
+          alarmdatas.sort((a, b) => parseFloat(b.notificationSeq) - parseFloat(a.notificationSeq));
+          console.log('sort적용', alarmdatas);
+          getList(alarmdatas);
         }
       })
       .catch((err) => {

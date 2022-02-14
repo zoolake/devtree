@@ -12,6 +12,7 @@ import org.aspectj.weaver.ast.Not;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -21,6 +22,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -37,18 +40,55 @@ public class MentorService {
     private final TierRepository tierRepository;
     private final NotificationRepository notificationRepository;
 
-    public Page<MentorListResponseDto> findMentors(Pageable pageable) {
-        Page<Mentor> mentors = mentorRepository.findAllWithPagination(pageable);
-        return new PageImpl(mentors.stream()
+    /**
+     *  mentorlist pagination
+     */
+//    public Page<MentorListResponseDto> findMentors(Pageable pageable) {
+//        Page<Mentor> mentors = mentorRepository.findAllWithPagination(pageable);
+//        return new PageImpl(mentors.stream()
+//                .map(mentor -> {
+//                    List<MentorTechInfoDto> mentorTechInfoDtoList =
+//                            mentorTechRepository.findByMentorTechIdMentorSeq(mentor.getMentorSeq()).stream()
+//                                    .map(mentorTech -> new MentorTechInfoDto(mentorTech))
+//                                    .collect(Collectors.toList());
+//
+//                    return new MentorListResponseDto(mentor, mentorTechInfoDtoList);
+//                })
+//                .collect(Collectors.toList()));
+//    }
+
+    /**
+     *  mentorlist non pagination
+     */
+    public List<MentorListResponseDto> findMentors() {
+        List<Mentor> mentors = mentorRepository.findAll();
+        return mentors.stream()
+                .map(mentor -> {
+                    List<MentorTechInfoDto> mentorTechInfoDtoList =
+                            mentorTechRepository.findByMentorTechIdMentorSeq(mentor.getMentorSeq()).stream()
+                                    .map(mentorTech -> new MentorTechInfoDto(mentorTech))
+                                    .collect(Collectors.toList());
+                    return new MentorListResponseDto(mentor, mentorTechInfoDtoList);
+                })
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * sorted mentorlist non pagination
+     */
+    public List<MentorSortedListResponseDto> findSortedMentors() {
+        AtomicLong index = new AtomicLong();
+        List<Mentor> mentors = mentorRepository.findAll(Sort.by(Sort.Direction.DESC,"mentorExp"));
+        return mentors.stream()
                 .map(mentor -> {
                     List<MentorTechInfoDto> mentorTechInfoDtoList =
                             mentorTechRepository.findByMentorTechIdMentorSeq(mentor.getMentorSeq()).stream()
                                     .map(mentorTech -> new MentorTechInfoDto(mentorTech))
                                     .collect(Collectors.toList());
 
-                    return new MentorListResponseDto(mentor, mentorTechInfoDtoList);
+                    return new MentorSortedListResponseDto(mentor,index.getAndIncrement(), mentorTechInfoDtoList);
                 })
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
     }
 
     /**

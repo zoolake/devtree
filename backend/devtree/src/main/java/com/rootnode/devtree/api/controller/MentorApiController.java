@@ -26,11 +26,35 @@ public class MentorApiController {
     private final MentorService mentorService;
 
     /**
-     * 기능: 멘토 목록 조회
+     * 기능: 멘토 목록 조회 (pagination)
+     *
+     */
+//    @GetMapping("/v1/mentor")
+//    public ResponseEntity<Result> mentorList(Pageable pageable) {
+//        Page<MentorListResponseDto> responseDto = mentorService.findMentors(pageable);
+//        return ResponseEntity
+//                .status(200)
+//                .body(new Result(responseDto, 200, "멘토 목록 조회에 성공하였습니다."));
+//    }
+
+    /**
+     * 기능: 멘토 목록 조회 (non-pagination)
+     *
      */
     @GetMapping("/v1/mentor")
-    public ResponseEntity<Result> mentorList(Pageable pageable) {
-        Page<MentorListResponseDto> responseDto = mentorService.findMentors(pageable);
+    public ResponseEntity<Result> mentorList() {
+        List<MentorListResponseDto> responseDto = mentorService.findMentors();
+        return ResponseEntity
+                .status(200)
+                .body(new Result(responseDto, 200, "멘토 목록 조회에 성공하였습니다."));
+    }
+
+    /**
+     * 기능: 멘토 목록 경험치순 조회 (non-pagination)
+     */
+    @GetMapping("/v1/mentor/sort")
+    public ResponseEntity<Result> mentorSortList() {
+        List<MentorSortedListResponseDto> responseDto = mentorService.findSortedMentors();
         return ResponseEntity
                 .status(200)
                 .body(new Result(responseDto, 200, "멘토 목록 조회에 성공하였습니다."));

@@ -130,6 +130,23 @@ public class MentorApiController {
 
 
     /**
+     * 기능: 예약 확정된 멘토링 스케줄 조회 (불가능)
+     */
+    @PostMapping("/v1/mentoring/schedule/unavailable/{mentorSeq}")
+    public ResponseEntity<Result> mentorUnavailableSchedule(@PathVariable Long mentorSeq,
+                                                            @RequestBody MentoringAvailableTimeRequestDto requestDto) {
+        List<String> responseDto = mentorService.findUnavailableTime(mentorSeq, requestDto);
+        return ResponseEntity
+                .status(200)
+                .body(Result.builder()
+                        .data(responseDto)
+                        .status(200)
+                        .message("확정된 멘토링 스케줄 조회 완료")
+                        .build());
+    }
+
+
+    /**
      * 기능: 멘토링 신청
      */
     @PostMapping("/v1/mentoring/apply")

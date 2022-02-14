@@ -311,6 +311,19 @@ public class MentorService {
                 .map(time -> time.format(DateTimeFormatter.ofPattern("HH:mm"))).collect(Collectors.toList());
     }
 
+    // 예약 확정된 멘토링 스케줄 조회
+    public List<String> findUnavailableTime(Long mentorSeq, MentoringAvailableTimeRequestDto requestDto) {
+        LocalDate selectedDate = requestDto.getMentorDate();
+
+        // 멘토링 정보 찾기
+        List<Mentoring> mentoringList = mentoringRepository.findByMentorMentorSeqAndMentoringState(mentorSeq, MentoringState.ACCEPT)
+                .stream().filter(mentoring -> mentoring.getMentoringStartDate().equals(selectedDate)).collect(Collectors.toList());
+
+        return mentoringList.stream()
+                .map(mentoring -> mentoring.getMentoringStartTime().format(DateTimeFormatter.ofPattern(("HH:mm"))))
+                .collect(Collectors.toList());
+    }
+
     // 멘토링 신청
     public CommonResponseDto applyMentoring(MentoringApplyRequestDto requestDto) {
         Team team = teamRepository.findById(requestDto.getTeamSeq()).get();

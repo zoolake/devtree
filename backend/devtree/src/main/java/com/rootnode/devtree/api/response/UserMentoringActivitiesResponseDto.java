@@ -14,7 +14,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 public class UserMentoringActivitiesResponseDto {
     private Long mentorSeq;
-    private String mentorName;
+    private String mentorNickName;
     private Long teamSeq;
     private TeamType teamType;
     private LocalDate mentoringStartDate;
@@ -24,7 +24,7 @@ public class UserMentoringActivitiesResponseDto {
 
     public UserMentoringActivitiesResponseDto(Mentoring mentoring, TeamType teamType) {
         this.mentorSeq = mentoring.getMentor().getMentorSeq();
-        this.mentorName = mentoring.getMentor().getUser().getUserName();
+        this.mentorNickName = mentoring.getMentor().getUser().getUserNickname();
         this.teamSeq = mentoring.getTeam().getTeamSeq();
         this.teamType = teamType;
         this.mentoringStartDate = mentoring.getMentoringStartDate();

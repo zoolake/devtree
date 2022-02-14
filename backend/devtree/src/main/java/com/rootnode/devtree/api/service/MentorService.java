@@ -68,9 +68,11 @@ public class MentorService {
                             mentorTechRepository.findByMentorTechIdMentorSeq(mentor.getMentorSeq()).stream()
                                     .map(mentorTech -> new MentorTechInfoDto(mentorTech))
                                     .collect(Collectors.toList());
-                    return new MentorListResponseDto(mentor, mentorTechInfoDtoList);
+                    Tier tier =tierRepository.findByTierMaxExpGreaterThanEqualAndTierMinExpLessThanEqual(mentor.getMentorExp(),mentor.getMentorExp());
+                    return new MentorListResponseDto(mentor,tier, mentorTechInfoDtoList);
                 })
                 .collect(Collectors.toList());
+
     }
 
     /**
@@ -85,8 +87,8 @@ public class MentorService {
                             mentorTechRepository.findByMentorTechIdMentorSeq(mentor.getMentorSeq()).stream()
                                     .map(mentorTech -> new MentorTechInfoDto(mentorTech))
                                     .collect(Collectors.toList());
-
-                    return new MentorSortedListResponseDto(mentor,index.getAndIncrement(), mentorTechInfoDtoList);
+                    Tier tier =tierRepository.findByTierMaxExpGreaterThanEqualAndTierMinExpLessThanEqual(mentor.getMentorExp(),mentor.getMentorExp());
+                    return new MentorSortedListResponseDto(mentor,index.getAndIncrement(),tier, mentorTechInfoDtoList);
                 })
                 .collect(Collectors.toList());
     }

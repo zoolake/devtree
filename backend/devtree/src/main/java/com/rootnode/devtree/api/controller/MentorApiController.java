@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -117,7 +118,7 @@ public class MentorApiController {
     @PostMapping("/v1/mentoring/schedule/{mentorSeq}")
     public ResponseEntity<Result> mentorAvailableSchedule(@PathVariable Long mentorSeq,
                                                           @RequestBody MentoringAvailableTimeRequestDto requestDto) {
-        List<LocalTime> responseDto = mentorService.findAvailableTime(mentorSeq, requestDto);
+        List<String> responseDto = mentorService.findAvailableTime(mentorSeq, requestDto);
         return ResponseEntity
                 .status(200)
                 .body(Result.builder()

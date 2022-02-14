@@ -303,10 +303,12 @@ public class MentorService {
     }
 
     // 멘토링 가능 스케줄 조회
-    public List<LocalTime> findAvailableTime(Long mentorSeq, MentoringAvailableTimeRequestDto requestDto) {
+    public List<String> findAvailableTime(Long mentorSeq, MentoringAvailableTimeRequestDto requestDto) {
         LocalDate selectedDate = requestDto.getMentorDate();
+
         List<LocalTime> availableTimeList = mentorScheduleRepository.findByMentorSeqAndDate(mentorSeq, selectedDate);
-        return availableTimeList;
+        return availableTimeList.stream()
+                .map(time -> time.format(DateTimeFormatter.ofPattern("HH:mm"))).collect(Collectors.toList());
     }
 
     // 멘토링 신청

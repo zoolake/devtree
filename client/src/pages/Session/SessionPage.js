@@ -123,7 +123,7 @@ class SessionPage extends Component {
     };
     this.getToken(request).then((token) => {
       this.setState({
-        token: token,
+        token,
         session: true
       });
     });
@@ -208,11 +208,11 @@ class SessionPage extends Component {
 
   createSession(sessionId) {
     return new Promise((resolve, reject) => {
-      var data = JSON.stringify({ customSessionId: sessionId });
+      const data = JSON.stringify({ customSessionId: sessionId });
       axios
-        .post(this.OPENVIDU_SERVER_URL + '/openvidu/api/sessions', data, {
+        .post(`${this.OPENVIDU_SERVER_URL}/openvidu/api/sessions/${data}`, {
           headers: {
-            Authorization: 'Basic ' + btoa('OPENVIDUAPP:' + this.OPENVIDU_SERVER_SECRET),
+            Authorization: `Basic ${btoa(`OPENVIDUAPP:${this.OPENVIDU_SERVER_SECRET}`)}`,
             'Content-Type': 'application/json'
           }
         })
@@ -221,26 +221,21 @@ class SessionPage extends Component {
           resolve(response.data.id);
         })
         .catch((response) => {
-          var error = Object.assign({}, response);
+          const error = { ...response };
           if (error.response && error.response.status === 409) {
             resolve(sessionId);
           } else {
             console.log(error);
             console.warn(
-              'No connection to OpenVidu Server. This may be a certificate error at ' +
-                this.OPENVIDU_SERVER_URL
+              `No connection to OpenVidu Server. This may be a certificate error at ${this.OPENVIDU_SERVER_URL}`
             );
             if (
               window.confirm(
-                'No connection to OpenVidu Server. This may be a certificate error at "' +
-                  this.OPENVIDU_SERVER_URL +
-                  '"\n\nClick OK to navigate and accept it. ' +
-                  'If no certificate warning is shown, then check that your OpenVidu Server is up and running at "' +
-                  this.OPENVIDU_SERVER_URL +
-                  '"'
+                `No connection to OpenVidu Server. This may be a certificate error at "${this.OPENVIDU_SERVER_URL}"\n\nClick OK to navigate and accept it. ` +
+                  `If no certificate warning is shown, then check that your OpenVidu Server is up and running at "${this.OPENVIDU_SERVER_URL}"`
               )
             ) {
-              window.location.assign(this.OPENVIDU_SERVER_URL + '/accept-certificate');
+              window.location.assign(`${this.OPENVIDU_SERVER_URL}/accept-certificate`);
             }
           }
         });
@@ -278,18 +273,14 @@ class SessionPage extends Component {
 
   createToken(sessionId) {
     return new Promise((resolve, reject) => {
-      var data = JSON.stringify({});
+      const data = JSON.stringify({});
       axios
-        .post(
-          this.OPENVIDU_SERVER_URL + '/openvidu/api/sessions/' + sessionId + '/connection',
-          data,
-          {
-            headers: {
-              Authorization: 'Basic ' + btoa('OPENVIDUAPP:' + this.OPENVIDU_SERVER_SECRET),
-              'Content-Type': 'application/json'
-            }
+        .post(`${this.OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`, data, {
+          headers: {
+            Authorization: `Basic ${btoa(`OPENVIDUAPP:${this.OPENVIDU_SERVER_SECRET}`)}`,
+            'Content-Type': 'application/json'
           }
-        )
+        })
         .then((response) => {
           console.log('TOKEN', response);
           resolve(response.data.token);

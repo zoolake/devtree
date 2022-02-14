@@ -21,7 +21,6 @@ import {
 } from '@mui/material';
 // components
 import Page from '../components/Page';
-import Label from '../components/Label';
 import Scrollbar from '../components/Scrollbar';
 import {
   UserListHead,
@@ -29,7 +28,7 @@ import {
   UserMoreMenu
 } from '../components/_dashboard/profileHistory';
 
-import { getStudy, getRank } from '../_actions/user_actions';
+import { getRank } from '../_actions/user_actions';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -54,7 +53,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function StudyList() {
+export default function Ranking() {
   const [studyList, setStudyList] = useState([]);
   const getUserist = async () => {
     dispatch(getRank())
@@ -157,7 +156,7 @@ export default function StudyList() {
                   {studyList
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => {
-                      const { mentorSeq, mentorRank, mentorNickname, mentorTechList } = row;
+                      const { mentorSeq, mentorRank, mentorNickname, tier } = row;
                       return (
                         <TableRow hover key={mentorSeq} tabIndex={-1}>
                           <TableCell component="th" scope="row" padding="3px">
@@ -166,7 +165,7 @@ export default function StudyList() {
                             </Stack>
                           </TableCell>
                           <TableCell align="left">{mentorNickname}</TableCell>
-                          <TableCell align="left">{mentorTechList}</TableCell>
+                          <TableCell align="left">{tier.tierName}</TableCell>
                           <TableCell align="left">aa</TableCell>
                         </TableRow>
                       );

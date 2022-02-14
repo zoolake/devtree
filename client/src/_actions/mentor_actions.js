@@ -19,15 +19,15 @@ export function mymentorProfile() {
 }
 
 // 멘티 - 팀별 멘토링 신청 내역 조회
-export function mentee_mentoringList(dataToSubmit) {
-  const request = axios.get(`/common/team/manager`).then((response) => response.data);
+export function menteementoring() {
+  const request = axios.get(`/user/mentoring`).then((response) => response.data);
   return { type: GET_MENTORINGLIST, payload: request };
 }
 
 // 멘토 - 멘토링 거절
 export function rejectMentoring(dataToSubmit) {
   const request = axios
-    .get(`/mentoring/apply/${dataToSubmit.mentoringSeq}`, dataToSubmit)
+    .post(`/mentoring/apply/${dataToSubmit.mentoringSeq}`, dataToSubmit)
     .then((response) => response.data);
   return { type: GET_MENTORINGLIST, payload: request };
 }
@@ -35,7 +35,7 @@ export function rejectMentoring(dataToSubmit) {
 // 멘토 - 멘토링 수락
 export function acceptMentoring(dataToSubmit) {
   const request = axios
-    .get(`/mentoring/apply/${dataToSubmit.mentoringSeq}`, dataToSubmit)
+    .post(`/mentoring/apply/${dataToSubmit.mentoringSeq}`, dataToSubmit)
     .then((response) => response.data);
   return { type: GET_MENTORINGLIST, payload: request };
 }
@@ -73,8 +73,10 @@ export function getCheckedtimeList(dataToSubmit) {
 }
 
 // 멘토의 예약시간들을 불러오기
-export function getReservedList() {
-  const request = axios.post(`/mentor/schedule/available`).then((response) => response.data);
+export function getReservedList(dataToSubmit) {
+  const request = axios
+    .post(`/mentoring/schedule/unavailable/${dataToSubmit.mentorSeq}`, dataToSubmit)
+    .then((response) => response.data);
   return { type: GET_RESERVEDLIST, payload: request };
 }
 
@@ -101,7 +103,7 @@ export function updateMentorProfile() {
 // 멘티 - 멘토링 신청할 때 시간 조회
 export function getSchedule(dataToSubmit) {
   const request = axios
-    .get(`/mentoring/schedule/${dataToSubmit.mentorSeq}`, dataToSubmit)
+    .post(`/mentoring/schedule/${dataToSubmit.mentorSeq}`, dataToSubmit)
     .then((response) => response.data);
   return { type: MENTOR_DETAIL, payload: request };
 }
@@ -122,6 +124,6 @@ export function getReview(dataToSubmit) {
 
 // 멘토링 신청
 export function submitMentoring(dataToSubmit) {
-  const request = axios.get(``).then((response) => response.data);
+  const request = axios.post(`/mentoring/apply`, dataToSubmit).then((response) => response.data);
   return { type: GET_REVIEWS, payload: request };
 }

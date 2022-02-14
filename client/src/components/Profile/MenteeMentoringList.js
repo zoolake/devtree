@@ -27,12 +27,7 @@ import Label from '../Label';
 import Scrollbar from '../Scrollbar';
 import { UserListHead } from '../_dashboard/profileHistory';
 
-import {
-  getMentoringlist,
-  rejectMentoring,
-  acceptMentoring,
-  mentee_mentoringList
-} from '../../_actions/mentor_actions';
+import { menteementoring } from '../../_actions/mentor_actions';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -77,15 +72,15 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function Mentee_MentoringList() {
+export default function MenteeMentoringList() {
   const [seconds, setSeconds] = useState(Date.now());
-  const [projectList, setProjectList] = useState([]);
+  const [mentoring, setMentoring] = useState([]);
   const getMentoringLists = async () => {
-    dispatch(mentee_mentoringList())
+    dispatch(menteementoring())
       .then((response) => {
         if (response) {
-          console.log(response.payload);
-          setProjectList(response.payload);
+          console.log(response.payload.data);
+          setMentoring(response.payload.data);
         }
       })
       .catch((err) => {
@@ -119,7 +114,7 @@ export default function Mentee_MentoringList() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = projectList.map((n) => n.name);
+      const newSelecteds = mentoring.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -157,8 +152,8 @@ export default function Mentee_MentoringList() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - projectList.length) : 0;
-  const filteredUsers = applySortFilter(projectList, getComparator(order, orderBy), filterName);
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - mentoring.length) : 0;
+  const filteredUsers = applySortFilter(mentoring, getComparator(order, orderBy), filterName);
   return (
     <Page title="User">
       <Container>
@@ -186,40 +181,42 @@ export default function Mentee_MentoringList() {
                       const {
                         mentoringCreateTime, // 이부분이 mentor 이름이여야함 수정해야함 api 요청할때
                         mentoringSeq,
-                        teamtype,
-                        teamname,
+                        teamType,
+                        teamName,
                         mentoringStartDate,
                         mentoringStartTime,
                         mentoringmsg,
-                        mentoringState
+                        mentorNickName,
+                        mentoringState,
+                        mentoringApplicationComment
                       } = row;
                       const time = new Date(`${mentoringStartDate}T${mentoringStartTime}`);
 
                       return (
                         <TableRow hover key={mentoringSeq} tabIndex={-1}>
-                          <TableCell align="left">{mentoringCreateTime}</TableCell>
+                          <TableCell align="left">{mentorNickName}</TableCell>
                           <TableCell component="th" scope="row" padding="3px">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              <Typography variant="subtitle2">{teamname}</Typography>
+                              <Typography variant="subtitle2">{teamName}</Typography>
                             </Stack>
                           </TableCell>
                           <TableCell align="left">
                             <Label
                               variant="ghost"
                               color={
-                                (teamtype === 'STUDY' && 'warning') ||
-                                (teamtype === 'PROJECT' && 'primary')
+                                (teamType === 'STUDY' && 'warning') ||
+                                (teamType === 'PROJECT' && 'primary')
                               }
                             >
-                              {teamtype === 'STUDY' ? <p>STUDY</p> : null}
-                              {teamtype === 'PROJECT' ? <p>PROJECT</p> : null}
+                              {teamType === 'STUDY' ? <p>STUDY</p> : null}
+                              {teamType === 'PROJECT' ? <p>PROJECT</p> : null}
                             </Label>
                           </TableCell>
                           <TableCell align="left">
                             {mentoringStartDate} {mentoringStartTime}
                           </TableCell>
 
-                          <TableCell align="left">{mentoringmsg}</TableCell>
+                          <TableCell align="left">{mentoringApplicationComment}</TableCell>
                           <TableCell align="left">
                             {mentoringState === 'WAIT' ? (
                               <div>
@@ -257,7 +254,7 @@ export default function Mentee_MentoringList() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={projectList.length}
+            count={mentoring.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

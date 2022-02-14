@@ -23,14 +23,14 @@ import {
   Avatar,
   Typography,
   CardContent,
-  Button
+  Button,
+  TextField
 } from '@mui/material';
 // utils
 
-import { fDate } from '../../../utils/formatTime';
-import { fShortenNumber } from '../../../utils/formatNumber';
-import { PossibleTime } from '.';
-import { getSchedule, getTeams, submitMentoring } from '../../../_actions/mentor_actions';
+import { fDate } from '../../../../utils/formatTime';
+import { fShortenNumber } from '../../../../utils/formatNumber';
+import { getSchedule, getTeams, submitMentoring } from '../../../../_actions/mentor_actions';
 
 const TitleStyle = styled(Link)({
   height: 44,
@@ -40,12 +40,13 @@ const TitleStyle = styled(Link)({
   WebkitBoxOrient: 'vertical'
 });
 
-export default function WeekdayReserv({ week, day, date }) {
+export default function Week1({ week, day, date }) {
+  console.log(date, 'date');
   const { id } = useParams();
   const dispatch = useDispatch();
   const [teams, setTeams] = useState([]);
   const [times, setTime] = useState([]);
-  const [selectedTime, setSelectedTime] = useState(null);
+  const [selectedHour, setSelectedTime] = useState(null);
   const [selectedTeam, setSelectedTeam] = useState(null);
   const handleTimeChange = (event) => {
     setSelectedTime(event.target.value);
@@ -80,13 +81,16 @@ export default function WeekdayReserv({ week, day, date }) {
     console.log('신청하기');
     const dataToSubmit = {
       mentorSeq: id,
-      mentorDate: selectedTime,
-      teamSeq: selectedTeam
+      selectedTime: selectedHour,
+      selectedDate: date,
+      teamSeq: selectedTeam,
+      applyComment: '안녕하세요~'
     };
-    await dispatch(getSchedule(dataToSubmit))
+    console.log(dataToSubmit);
+    await dispatch(submitMentoring(dataToSubmit))
       .then((response) => {
         if (response) {
-          Swal.fire('Good job!', 'You clicked the button!', 'success').then(() => {
+          Swal.fire('완료', '멘토링이 신청되었습니다.', 'success').then(() => {
             document.location.assign('/');
           });
         }
@@ -171,7 +175,12 @@ export default function WeekdayReserv({ week, day, date }) {
           )}
         </CardContent>
       </Card>
-      {selectedTeam && selectedTime && <Button onClick={submit}>신청하기</Button>}
+      {selectedTeam && selectedHour && (
+        <div>
+          <TextField label="신청 메세지" id="submitmsg" variant="filled" color="success" />
+          <Button onClick={submit}>신청하기</Button>
+        </div>
+      )}
     </Grid>
   );
 }

@@ -27,10 +27,9 @@ import {
 } from '@mui/material';
 // utils
 
-import { fDate } from '../../../utils/formatTime';
-import { fShortenNumber } from '../../../utils/formatNumber';
-import { PossibleTime } from '.';
-import { getSchedule, getTeams, submitMentoring } from '../../../_actions/mentor_actions';
+import { fDate } from '../../../../utils/formatTime';
+import { fShortenNumber } from '../../../../utils/formatNumber';
+import { getSchedule, getTeams, submitMentoring } from '../../../../_actions/mentor_actions';
 
 const TitleStyle = styled(Link)({
   height: 44,
@@ -40,7 +39,7 @@ const TitleStyle = styled(Link)({
   WebkitBoxOrient: 'vertical'
 });
 
-export default function WeekdayReserv({ week, day, date }) {
+export default function Week2({ week, day, date }) {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [teams, setTeams] = useState([]);

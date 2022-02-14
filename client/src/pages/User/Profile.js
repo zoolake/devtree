@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import { Grid, Card, Button, Container, Stack, Typography } from '@mui/material';
+import jwtdecode from 'jwt-decode';
 // components
 import Page from '../../components/Page';
 import { AppNewsUpdate } from '../../components/_dashboard/app';
 import {
-  Mentoring,
   MentoringStack,
   MentoringTime,
   ProjectChart,
@@ -19,10 +19,13 @@ import {
   UserProfile,
   PasswordUpdate,
   MentorAuth,
-  AlarmList
+  AlarmList,
+  MenteeMentoringList
 } from '../../components/Profile';
 import { MentorReviewList } from '../../components/_dashboard/mentor';
+
 // ----------------------------------------------------------------------
+const usersq = localStorage.getItem('user') ? jwtdecode(localStorage.getItem('user')).userSeq : 0;
 const ismentor = 'true';
 const Tab = [
   {
@@ -57,6 +60,9 @@ const Tab = [
         <Grid item xs={12} md={6} lg={12}>
           <ProjectChart />
         </Grid>
+        <Grid item xs={12} md={6} lg={12}>
+          <MenteeMentoringList />
+        </Grid>
       </Grid>
     )
   },
@@ -83,7 +89,7 @@ const Tab = [
             <MentoringTime />
           </Grid>
           <Grid item xs={12} md={6} lg={12}>
-            <MentorReviewList />
+            <MentorReviewList mentorId={usersq} />
           </Grid>
         </Grid>
       ) : (

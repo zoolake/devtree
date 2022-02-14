@@ -55,7 +55,7 @@ MentorCard.propTypes = {
 export default function MentorCard({ post, index }) {
   console.log('post', post);
   console.log(index);
-  const { mentorCareer, mentorName, mentorExp, mentorTechList } = post;
+  const { mentorSeq, mentorCareer, mentorNickname, mentorExp, mentorTechList } = post;
   console.log(`tier:${mentorExp}`);
   console.log(`${mentorTechList}`);
   const POST_INFO = [{ text: mentorExp, icon: messageCircleFill }];
@@ -66,20 +66,20 @@ export default function MentorCard({ post, index }) {
       <Card sx={{ position: 'relative' }}>
         <CardMediaStyle>
           <AvatarStyle />
-          <CoverImgStyle alt={mentorName} src="/static/mock-images/covers/cover_1.jpg" />
+          <CoverImgStyle alt={mentorNickname} src="/static/mock-images/covers/cover_1.jpg" />
         </CardMediaStyle>
         <CardContent>
           <Typography gutterBottom variant="caption">
             {mentorCareer}
           </Typography>
           <TitleStyle
-            to={`${post.mentorSeq}`}
+            to={`${mentorSeq}`}
             color="inherit"
             variant="subtitle2"
             underline="hover"
             component={RouterLink}
           >
-            {mentorName}
+            {mentorNickname}
           </TitleStyle>
           <Typography gutterBottom variant="caption">
             {mentorTechList}

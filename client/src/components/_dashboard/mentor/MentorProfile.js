@@ -76,7 +76,7 @@ export default function UserProfile({ index }) {
     <div>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography sx={{ p: 3 }} variant="h4">
-          {mentor.mentorNickname} <h5>{mentor.tier}</h5>
+          {mentor.mentorNickname} <h5>{}</h5>
           <h5> {mentor.mentorCareer}</h5>
         </Typography>
         <Button onClick={usercheck}>멘토링 신청하기</Button>

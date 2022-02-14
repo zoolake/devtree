@@ -103,7 +103,7 @@ export default function AlarmList() {
           Swal.fire({
             title: '알림 메세지',
             html: `
-              ${response.payload.data.notificationSendUserName}님이 ${response.payload.data.notificationContent}`,
+              ${response.payload.data.notificationSendUserName}님의 ${response.payload.data.notificationContent}`,
             width: 600,
             content: '...',
             padding: '3em',
@@ -123,8 +123,11 @@ export default function AlarmList() {
           .then((response) => {
             if (response) {
               console.log(response.payload.data);
-              getList(response.payload.data);
-              console.log('alarmlist!2');
+              const alarmdatas = response.payload.data;
+              alarmdatas.sort(
+                (a, b) => parseFloat(b.notificationSeq) - parseFloat(a.notificationSeq)
+              );
+              getList(alarmdatas);
             }
           })
           .catch((err) => {

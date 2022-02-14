@@ -82,7 +82,12 @@ export default function MentoringList() {
     dispatch(getMentoringlist())
       .then((response) => {
         if (response) {
-          setProjectList(response.payload.data);
+          console.log('멘토링신청리스트');
+          console.log(response);
+          const sortdata = response.payload.data;
+          sortdata.sort((a, b) => parseFloat(b.mentoringSeq) - parseFloat(a.mentoringSeq));
+          console.log('sort가 완료되었습니다><', sortdata);
+          setProjectList(sortdata);
         }
       })
       .catch((err) => {
@@ -156,9 +161,11 @@ export default function MentoringList() {
 
   const accept = (event) => {
     const dataToSubmit = {
-      mentoringseq: event.target.id,
+      mentoringSeq: event.target.id,
       responseType: 'ACCEPT'
     };
+    console.log('이얏호웅');
+    console.log(dataToSubmit);
     Swal.fire({
       title: '멘토링 수락',
       text: '멘토링을 수락하시겠습니까?',

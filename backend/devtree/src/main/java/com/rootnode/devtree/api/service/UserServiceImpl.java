@@ -260,7 +260,7 @@ public class UserServiceImpl implements UserService {
         teamList.forEach(team -> {
             List<Mentoring> mentoringList = mentoringRepository.findMentoringByTeamSeq(team.getTeamSeq());
             mentoringList.forEach(mentoring -> {
-                mentoringActivitiesList.add(new UserMentoringActivitiesResponseDto(mentoring, team.getTeamType()));
+                mentoringActivitiesList.add(new UserMentoringActivitiesResponseDto(mentoring, team.getTeamType(), team.getTeamName()));
             });
         });
 

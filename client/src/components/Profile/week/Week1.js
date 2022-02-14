@@ -152,13 +152,12 @@ export default function MentorWeeklySetting({ week, day, date }) {
 
   const getReservedTeam = () => {
     const dataToSubmit = {
-      mentorTime: date,
+      mentorDate: date,
       mentorSeq: id
     };
     dispatch(getReservedList(dataToSubmit))
       .then((response) => {
         if (response) {
-          console.log('test!!!!!!!!!!!!');
           const filter2 = response.payload[0].time;
           // eslint-disable-next-line guard-for-in
           for (const i in filter2) {

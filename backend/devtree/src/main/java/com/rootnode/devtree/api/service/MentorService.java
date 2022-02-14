@@ -329,10 +329,22 @@ public class MentorService {
         return new CommonResponseDto(201, "멘토링 신청을 완료하였습니다.");
     }
 
-    // 멘토의 멘토링 모든 정보 찾기
+    // 멘토의 멘토링 모든 정보 조회
     public List<MentoringApplyListResponseDto> findMentoringApplyList(Long mentorSeq) {
         // 멘토링 정보 찾기
         List<Mentoring> mentoringList = mentoringRepository.findByMentorSeq(mentorSeq);
+        // 멘토링 시작 날짜 순 정렬 -> 시작 시간 순 정렬 -> 신청 시간 순 정렬
+        return mentoringList.stream()
+                .map(mentoring -> new MentoringApplyListResponseDto(mentoring))
+                .sorted(Comparator.comparing(MentoringApplyListResponseDto::getMentoringStartDate).thenComparing(MentoringApplyListResponseDto::getMentoringStartTime).thenComparing(MentoringApplyListResponseDto::getMentoringCreateTime))
+                .collect(Collectors.toList());
+    }
+
+
+    // 멘토의 확정된 멘토링 정보 조회
+    public List<MentoringApplyListResponseDto> findMentoringApplyAcceptList(Long mentorSeq) {
+        // 멘토링 정보 찾기
+        List<Mentoring> mentoringList = mentoringRepository.findByMentorMentorSeqAndMentoringState(mentorSeq, MentoringState.ACCEPT);
         // 멘토링 시작 날짜 순 정렬 -> 시작 시간 순 정렬 -> 신청 시간 순 정렬
         return mentoringList.stream()
                 .map(mentoring -> new MentoringApplyListResponseDto(mentoring))

@@ -128,6 +128,7 @@ public class MentorApiController {
                         .build());
     }
 
+
     /**
      * 기능: 멘토링 신청
      */
@@ -144,6 +145,23 @@ public class MentorApiController {
         UserDetail userDetail = (UserDetail)authentication.getDetails();
         Long mentorSeq = userDetail.getUser().getUserSeq();
         List<MentoringApplyListResponseDto> responseDto = mentorService.findMentoringApplyList(mentorSeq);
+        return ResponseEntity
+                .status(200)
+                .body(Result.builder()
+                        .data(responseDto)
+                        .status(200)
+                        .message("멘토링 신청목록 조회 완료")
+                        .build());
+    }
+
+    /**
+     * 기능: 멘토링 예약 확정 조회
+     */
+    @GetMapping("/v1/mentoring/apply/accept")
+    public ResponseEntity<Result> mentoringApplyAcceptList(Authentication authentication) {
+        UserDetail userDetail = (UserDetail)authentication.getDetails();
+        Long mentorSeq = userDetail.getUser().getUserSeq();
+        List<MentoringApplyListResponseDto> responseDto = mentorService.findMentoringApplyAcceptList(mentorSeq);
         return ResponseEntity
                 .status(200)
                 .body(Result.builder()

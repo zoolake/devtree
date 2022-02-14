@@ -11,49 +11,51 @@ import {
 
 export function getProjectList() {
   const request = axios
-    .get('/project') // http://127.26.1.146:8080/v1/project
+    .get('/project') // https://127.26.1.146:8080/v1/project
     .then((response) => response);
   return { type: GET_PROJECT_LIST, payload: request };
 }
 
 export function createProject(pjtData) {
+  console.log(pjtData);
   const request = axios
-    .post('/project', pjtData) // http://127.26.1.146:8080/v1/project
+    .post('/project', pjtData) // https://127.26.1.146:8080/v1/project
     .then((response) => response);
   return { type: CREATE_PROJECT, payload: request };
 }
 
 export function getTechList() {
   const request = axios
-    .get('/tech') // http://127.26.1.146:8080/v1/tech
+    .get('/tech') // https://127.26.1.146:8080/v1/tech
     .then((response) => response);
   return { type: GET_TECH_LIST, payload: request };
 }
 
 export function getPositionList() {
   const request = axios
-    .get('/position') // http://127.26.1.146:8080/v1/position
+    .get('/position') // https://127.26.1.146:8080/v1/position
     .then((response) => response);
   return { type: GET_POSITION_LIST, payload: request };
 }
 
 export function getProjectDetail(teamSeq) {
   const request = axios
-    .get(`/project/${teamSeq}`) // http://127.26.1.146:8080/v1/project/${teamSeq.id}
+    .get(`/project/${teamSeq}`) // https://127.26.1.146:8080/v1/project/${teamSeq.id}
     .then((response) => response);
   return { type: GET_PROJECT_DETAIL, payload: request };
 }
 
 export function deleteProject(teamSeq) {
   const request = axios
-    .delete(`/project/${teamSeq}`) // http://127.26.1.146:8080/v1/project/${teamSeq.id}
+    .delete(`/project/${teamSeq}`) // https://127.26.1.146:8080/v1/project/${teamSeq.id}
     .then((response) => response);
   return { type: DELETE_PROJECT, payload: request };
 }
 
-export function updateProject(teamSeq) {
+export function updateProject(teamSeq, pjtData) {
+  console.log(teamSeq, pjtData);
   const request = axios
-    .put(`/project/${teamSeq}`) // http://127.26.1.146:8080/v1/project/${teamSeq.id}
+    .put(`/project/${teamSeq}`, pjtData) // https://127.26.1.146:8080/v1/project/${teamSeq.id}
     .then((response) => response);
   return { type: UPDATE_PROJECT, payload: request };
 }

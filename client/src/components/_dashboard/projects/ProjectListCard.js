@@ -1,33 +1,30 @@
 import PropTypes from 'prop-types';
-import { Link as RouterLink } from 'react-router-dom';
-import { styled } from '@mui/material/styles';
-import { Link } from '@mui/material';
-
-const TitleStyle = styled(Link)({
-  height: 44,
-  overflow: 'hidden',
-  WebkitLineClamp: 2,
-  WebkitBoxOrient: 'vertical'
-});
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 ProjectListCard.propTypes = {
   project: PropTypes.object.isRequired
 };
 
 export default function ProjectListCard({ project }) {
+  // PAGE
+  if (!project.teamPosition || !project.teamTech) return <div>'로딩 중'</div>;
   return (
-    <div>
-      <TitleStyle
-        to={`${project.teamSeq}`}
-        color="inherit"
-        variant="subtitle2"
-        underline="hover"
-        component={RouterLink}
-      >
-        {project.teamSeq}) 프로젝트 이름: {project.teamName}
-      </TitleStyle>
-      <p>{project.teamDesc}</p>
+    <ul>
+      <li>
+        <Link to={`${project.teamSeq}`}>
+          <div>'teamManagerName': {project.teamManagerName}</div>
+          <div>'teamManagerSeq': {project.teamManagerSeq}</div>
+          <div>'teamMemberCnt': {project.teamMemberCnt}</div>
+          <div>'teamName': {project.teamName}</div>
+          <div>'teamPosition': {JSON.stringify(project.teamPosition.map((pos) => pos))}</div>
+          <div>'teamRecruitCnt': {project.teamRecruitCnt}</div>
+          <div>'teamSeq': {project.teamSeq}</div>
+          <div>'teamState': {project.teamState}</div>
+          <li>'teamTech': {JSON.stringify(project.teamTech.map((pos) => pos))}</li>
+        </Link>
+      </li>
       <br />
-    </div>
+    </ul>
   );
 }

@@ -57,7 +57,7 @@ public class ProjectApiController {
     /**
      * 기능: 프로젝트 상세 조회
      */
-    @GetMapping("/v1/project/{team_seq}")
+    @GetMapping("/v1/project/{teamSeq}")
     public ResponseEntity<Result> projectDetail(@PathVariable Long teamSeq) {
         ProjectDetailResponseDto responseDto = projectService.findProject(teamSeq);
         return ResponseEntity

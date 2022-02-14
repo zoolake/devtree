@@ -8,14 +8,13 @@ import Page from '../../components/Page';
 import {
   ProjectsPostsSort,
   ProjectSearch,
-  ProjectListCard,
   ProjectList
 } from '../../components/_dashboard/projects';
 import { getProjectList } from '../../_actions/project_actions';
 
 export default function ProjectMain() {
   // state
-  const [projectList, setProjectList] = useState(['hi']);
+  const [projectList, setProjectList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [filterKeyword, setFilterKeyword] = useState(null);
   const SORT_OPTIONS = [
@@ -33,13 +32,13 @@ export default function ProjectMain() {
         const pjtData = response.payload.data.data;
         if (pjtData.length > 0) {
           setProjectList(pjtData);
-          console.log('프로젝트 생성 성공');
+          console.log('프로젝트 받아오기 성공');
         } else {
-          console.log('생성할 프로젝트 없음');
+          console.log('받아올 프로젝트 없음');
         }
       })
       .catch((error) => {
-        console.log(error, '프로젝트 조회 실패');
+        console.log(error, '프로젝트 받아오기 실패');
       });
     setLoading(false);
   };
@@ -83,9 +82,6 @@ export default function ProjectMain() {
 
         <Container>
           <ProjectList pjtList={projectList} />
-          {/* {projectList.map((pjt) => (
-            <ProjectListCard key={pjt.teamSeq} project={pjt} filterKeyword={filterKeyword} />
-          ))} */}
         </Container>
       </Container>
     </Page>

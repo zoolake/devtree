@@ -1,21 +1,11 @@
-import * as Yup from 'yup';
-import { useEffect, useState, useMemo, useCallback } from 'react';
-import { useFormik, Form, FormikProvider } from 'formik';
-import Select from 'react-select';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import makeAnimated from 'react-select/animated';
-import {
-  TextField,
-  Button,
-  FormControl,
-  InputLabel,
-  NativeSelect,
-  Stack,
-  MenuItem,
-  ListSubheader
-} from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+//
 import jwtdecode from 'jwt-decode';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
+import { TextField, Button, FormControl, InputLabel, NativeSelect, Stack } from '@mui/material';
+//
 import { createProject, getTechList, getPositionList } from '../../../_actions/project_actions';
 import SelectPositionCnt from '../../team/SelectPositionCnt';
 
@@ -41,7 +31,7 @@ export default function ProjectCreationForm() {
       .min(10, '프로젝트 설명은 10자 이상이여야 합니다.')
   });
 
-  // AXIOS
+  // INIT
   const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
@@ -111,10 +101,6 @@ export default function ProjectCreationForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
-
-  // SELECT
-
   // HANDLE
   const handleChange = (event, type) => {
     if (type === 'tech') {
@@ -147,6 +133,7 @@ export default function ProjectCreationForm() {
       }
     ]);
   };
+
   // const getPositionData = useCallback(() => {
   //   const date = `${myPositionList}-${myPositionList.toString().padStart(2, '0')}`;
   //   console.log(date);
@@ -332,100 +319,18 @@ export default function ProjectCreationForm() {
                   <SelectPositionCnt
                     onSetCnt={handlePositionCntChange}
                     pos={pos.detailPositionName}
+                    defaultValue={1}
                   />
                 </div>
               ))}
             </div>
           </FormControl>
+          {/* Submit Btn */}
           <Button color="primary" variant="contained" fullWidth type="submit">
             Submit
           </Button>
         </Stack>
       </form>
     </div>
-
-    // <FormikProvider value={formik}>
-    //   <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-    //     <Stack spacing={3}>
-    //       <TextField
-    //         fullWidth
-    //         label="Name"
-    //         {...getFieldProps('teamName')}
-    //         error={Boolean(touched.teamName && errors.teamName)}
-    //         helperText={touched.teamName && errors.teamName}
-    //       />
-
-    //       <TextField
-    //         fullWidth
-    //         multiline
-    //         rows={5}
-    //         label="desc"
-    //         {...getFieldProps('teamDesc')}
-    //         error={Boolean(touched.teamDesc && errors.teamDesc)}
-    //         helperText={touched.teamDesc && errors.teamDesc}
-    //       />
-
-    //       <Box sx={7}>
-    //         <Select
-    //           // closeMenuOnSelect={false}
-    //           components={animatedComponents}
-    //           isMulti
-    //           options={allTechList}
-    //           placeholder="기술 스택 추가"
-    //           // // isClearable={myTechList.some((v) => !v.isFixed)} // clear button shows conditionally
-    //           styles={styles} // styles that do not show 'x' for fixed options
-    //           // value={addTech(value)} // selected values
-    //           onChange={handleTechs} // handler for changes
-    //           // // error={Boolean(touched.team_position && errors.team_position)}
-    //           // // helperText={touched.team_position && errors.team_position}
-    //         />
-    //       </Box>
-    //       {/* {myTechList.map((tech, idx) => (
-    //         <div key={idx}>{tech.techName}</div>
-    //       ))} */}
-
-    //       <Box sx={7}>
-    //         <Select
-    //           // closeMenuOnSelect={false}
-    //           components={animatedComponents}
-    //           isMulti
-    //           options={allPositionList}
-    //           placeholder="포지션 추가"
-    //           // // isClearable={myTechList.some((v) => !v.isFixed)} // clear button shows conditionally
-    //           styles={styles} // styles that do not show 'x' for fixed options
-    //           // value={addTech(value)} // selected values
-    //           onChange={handlePositions} // handler for changes
-    //           // // error={Boolean(touched.team_position && errors.team_position)}
-    //           // // helperText={touched.team_position && errors.team_position}
-    //         />
-    //       </Box>
-
-    //       {myPositionList.map((position, idx) => (
-    //         <div key={idx}>
-    //           {position.position.detailPositionName}
-    //           <SelectPositionCnt
-    //             position={position}
-    //             myPositionCnt={myPositionCnt}
-    //             setMyPositionCnt={setMyPositionCnt}
-    //             onChange={handlePositions}
-    //             myPositionList={myPositionList}
-    //             parentCallback={handleCallback}
-    //           />
-    //         </div>
-    //       ))}
-
-    //       <LoadingButton
-    //         fullWidth
-    //         size="large"
-    //         type="submit"
-    //         variant="contained"
-    //         loading={isSubmitting}
-    //         onChange={formik.onSubmit}
-    //       >
-    //         생성
-    //       </LoadingButton>
-    //     </Stack>
-    //   </Form>
-    // </FormikProvider>
   );
 }

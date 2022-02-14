@@ -119,7 +119,7 @@ public class ProjectApiController {
     /**
      * 기능: 프로젝트 정보 수정
      */
-    @PutMapping("/v1/project/{team_seq}")
+    @PutMapping("/v1/project/{teamSeq}")
     public ResponseEntity<CommonResponseDto> projectDetailUpdate(Authentication authentication,
                                                                  @PathVariable Long teamSeq,
                                                                  @RequestBody ProjectUpdateRequestDto requestDto) {

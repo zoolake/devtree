@@ -17,7 +17,6 @@ export function getProjectList() {
 }
 
 export function createProject(pjtData) {
-  console.log(pjtData);
   const request = axios
     .post('/project', pjtData) // https://127.26.1.146:8080/v1/project
     .then((response) => response);
@@ -52,10 +51,9 @@ export function deleteProject(teamSeq) {
   return { type: DELETE_PROJECT, payload: request };
 }
 
-export function updateProject(teamSeq, pjtData) {
-  console.log(teamSeq, pjtData);
+export function updateProject(data) {
   const request = axios
-    .put(`/project/${teamSeq}`, pjtData) // https://127.26.1.146:8080/v1/project/${teamSeq.id}
+    .put(`/project/${data.teamSeq}`, data.dataToSubmit) // https://127.26.1.146:8080/v1/project/${teamSeq.id}
     .then((response) => response);
   return { type: UPDATE_PROJECT, payload: request };
 }

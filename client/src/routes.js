@@ -3,6 +3,7 @@ import { Navigate, useRoutes } from 'react-router-dom';
 import DashboardLayout from './layouts/dashboard';
 import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 //
+import Home from './pages/Home/Home';
 import Login from './pages/User/Login';
 import Register from './pages/User/Register';
 import MainPage from './pages/Main/MainPage';
@@ -92,14 +93,18 @@ export default function Router() {
         // { path: 'mentor', element: <MentorPage /> }
       ]
     },
+    // {
+    //   path: '/',
+    //   element: <LogoOnlyLayout />,
+    //   children: [
+    //     { path: 'login', element: <Login /> },
+    //     { path: 'register', element: <Register /> },
+    //     { path: '/', element: <Navigate to="/MainPage/app" /> }
+    //   ]
+    // },
     {
       path: '/',
-      element: <LogoOnlyLayout />,
-      children: [
-        { path: 'login', element: <Login /> },
-        { path: 'register', element: <Register /> },
-        { path: '/', element: <Navigate to="/MainPage/app" /> }
-      ]
+      element: <Home />
     }
   ]);
 }

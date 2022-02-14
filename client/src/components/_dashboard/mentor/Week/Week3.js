@@ -23,7 +23,8 @@ import {
   Avatar,
   Typography,
   CardContent,
-  Button
+  Button,
+  TextField
 } from '@mui/material';
 // utils
 
@@ -40,11 +41,13 @@ const TitleStyle = styled(Link)({
 });
 
 export default function Week3({ week, day, date }) {
+  console.log(date, 'date');
   const { id } = useParams();
   const dispatch = useDispatch();
   const [teams, setTeams] = useState([]);
   const [times, setTime] = useState([]);
-  const [selectedTime, setSelectedTime] = useState(null);
+  const [text, setText] = useState('');
+  const [selectedHour, setSelectedTime] = useState(null);
   const [selectedTeam, setSelectedTeam] = useState(null);
   const handleTimeChange = (event) => {
     setSelectedTime(event.target.value);
@@ -79,13 +82,16 @@ export default function Week3({ week, day, date }) {
     console.log('신청하기');
     const dataToSubmit = {
       mentorSeq: id,
-      mentorDate: selectedTime,
-      teamSeq: selectedTeam
+      selectedTime: selectedHour,
+      selectedDate: date,
+      teamSeq: selectedTeam,
+      applyComment: text
     };
-    await dispatch(getSchedule(dataToSubmit))
+    console.log(dataToSubmit);
+    await dispatch(submitMentoring(dataToSubmit))
       .then((response) => {
         if (response) {
-          Swal.fire('Good job!', 'You clicked the button!', 'success').then(() => {
+          Swal.fire('완료', '멘토링이 신청되었습니다.', 'success').then(() => {
             document.location.assign('/');
           });
         }
@@ -112,6 +118,10 @@ export default function Week3({ week, day, date }) {
       .catch((err) => {
         setTimeout(() => {}, 3000);
       });
+  };
+
+  const onChange = (e) => {
+    setText(e.target.value);
   };
 
   useEffect(() => {
@@ -170,7 +180,18 @@ export default function Week3({ week, day, date }) {
           )}
         </CardContent>
       </Card>
-      {selectedTeam && selectedTime && <Button onClick={submit}>신청하기</Button>}
+      {selectedTeam && selectedHour && (
+        <div>
+          <TextField
+            label="신청 메세지"
+            onChange={onChange}
+            value={text}
+            variant="filled"
+            color="success"
+          />
+          <Button onClick={submit}>신청하기</Button>
+        </div>
+      )}
     </Grid>
   );
 }

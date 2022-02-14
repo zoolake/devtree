@@ -157,7 +157,7 @@ export default function StudyList() {
                   {studyList
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => {
-                      const { mentorSeq, mentorRank, mentorNickname, mentorTechList } = row;
+                      const { mentorSeq, mentorRank, mentorNickname, tier, mentorExp } = row;
                       return (
                         <TableRow hover key={mentorSeq} tabIndex={-1}>
                           <TableCell component="th" scope="row" padding="3px">
@@ -166,8 +166,8 @@ export default function StudyList() {
                             </Stack>
                           </TableCell>
                           <TableCell align="left">{mentorNickname}</TableCell>
-                          <TableCell align="left">{mentorTechList}</TableCell>
-                          <TableCell align="left">aa</TableCell>
+                          <TableCell align="left">{tier.tierName}</TableCell>
+                          <TableCell align="left">{mentorExp}</TableCell>
                         </TableRow>
                       );
                     })}

@@ -46,6 +46,7 @@ export default function Week1({ week, day, date }) {
   const dispatch = useDispatch();
   const [teams, setTeams] = useState([]);
   const [times, setTime] = useState([]);
+  const [text, setText] = useState('');
   const [selectedHour, setSelectedTime] = useState(null);
   const [selectedTeam, setSelectedTeam] = useState(null);
   const handleTimeChange = (event) => {
@@ -84,7 +85,7 @@ export default function Week1({ week, day, date }) {
       selectedTime: selectedHour,
       selectedDate: date,
       teamSeq: selectedTeam,
-      applyComment: '안녕하세요~'
+      applyComment: text
     };
     console.log(dataToSubmit);
     await dispatch(submitMentoring(dataToSubmit))
@@ -117,6 +118,10 @@ export default function Week1({ week, day, date }) {
       .catch((err) => {
         setTimeout(() => {}, 3000);
       });
+  };
+
+  const onChange = (e) => {
+    setText(e.target.value);
   };
 
   useEffect(() => {
@@ -177,7 +182,13 @@ export default function Week1({ week, day, date }) {
       </Card>
       {selectedTeam && selectedHour && (
         <div>
-          <TextField label="신청 메세지" id="submitmsg" variant="filled" color="success" />
+          <TextField
+            label="신청 메세지"
+            onChange={onChange}
+            value={text}
+            variant="filled"
+            color="success"
+          />
           <Button onClick={submit}>신청하기</Button>
         </div>
       )}

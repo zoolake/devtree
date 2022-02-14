@@ -30,7 +30,7 @@ import Label from '../Label';
 import Scrollbar from '../Scrollbar';
 import { AlarmListHead } from '../_dashboard/user';
 import { getMentoringlist, rejectMentoring, acceptMentoring } from '../../_actions/mentor_actions';
-import { setAlarmCheck, getAlarmdata, getAlarmList } from '../../_actions/user_actions';
+import { getAlarmdata, getAlarmList } from '../../_actions/user_actions';
 //
 import USERLIST from '../../_mocks_/user';
 // ----------------------------------------------------------------------
@@ -59,8 +59,11 @@ export default function AlarmList() {
       .then((response) => {
         if (response) {
           console.log('alarmlist!');
-          console.log(response.payload);
-          getList(response.payload);
+          console.log(response.payload.data);
+          const alarmdatas = response.payload.data;
+          alarmdatas.sort((a, b) => parseFloat(b.notificationSeq) - parseFloat(a.notificationSeq));
+          console.log('sort적용', alarmdatas);
+          getList(alarmdatas);
         }
       })
       .catch((err) => {
@@ -93,34 +96,41 @@ export default function AlarmList() {
   const confirmmsg = (event) => {
     console.log(event.target.id);
 
-    dispatch(setAlarmCheck(event.target.id))
+    dispatch(getAlarmdata(event.target.id))
       .then((response) => {
         if (response) {
-          console.log('읽음으로 체크하기');
-        }
-      })
-      .then(
-        dispatch(getAlarmdata(event.target.id)).then((response) => {
-          if (response) {
-            console.log(response);
-            Swal.fire({
-              title: '알림 메세지',
-              html: `
-              ${response.payload.notificationSendUserName}님이 ${response.payload.notificationContent}`,
-              width: 600,
-              content: '...',
-              padding: '3em',
-              color: '#12682f',
-              background: '#fff',
-              confirmButtonColor: '#12682f',
-              footer: `${response.payload.notificationSendTime}`,
-              backdrop: `
+          console.log(response);
+          Swal.fire({
+            title: '알림 메세지',
+            html: `
+              ${response.payload.data.notificationSendUserName}님이 ${response.payload.data.notificationContent}`,
+            width: 600,
+            content: '...',
+            padding: '3em',
+            color: '#12682f',
+            background: '#fff',
+            confirmButtonColor: '#12682f',
+            footer: `${response.payload.data.notificationSendTime}`,
+            backdrop: `
               rgba(167,201,181,0.2)
                 no-repeat
               `
-            });
-          }
-        })
+          });
+        }
+      })
+      .then(
+        dispatch(getAlarmList())
+          .then((response) => {
+            if (response) {
+              console.log(response.payload.data);
+              getList(response.payload.data);
+              console.log('alarmlist!2');
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            setTimeout(() => {}, 3000);
+          })
       );
   };
   const handleChangeRowsPerPage = (event) => {
@@ -129,8 +139,11 @@ export default function AlarmList() {
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - alarms.length) : 0;
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     Alarmlistget();
+    console.log('여긴가요');
   }, []);
 
   return (
@@ -191,22 +204,22 @@ export default function AlarmList() {
                       .map((row) => {
                         const {
                           notificationSeq,
-                          isCheck,
+                          check,
                           notificationSendUserName,
                           notificationSendTime,
-                          NotificationType,
+                          notificationType,
                           notificationContent
                         } = row;
                         return (
                           <TableRow hover key={notificationSeq} tabIndex={-1}>
                             <TableCell align="left">
-                              {NotificationType == 'STUDY' ? (
+                              {notificationType == 'STUDY' ? (
                                 <Chip label="STUDY" color="error" size="small" />
                               ) : null}{' '}
-                              {NotificationType == 'PROJECT' ? (
+                              {notificationType == 'PROJECT' ? (
                                 <Chip label="PROJECT" color="info" size="small" />
                               ) : null}
-                              {NotificationType == 'MENTORING' ? (
+                              {notificationType == 'MENTORING' ? (
                                 <Chip label="MENTORING" color="success" size="small" />
                               ) : null}
                             </TableCell>
@@ -222,14 +235,14 @@ export default function AlarmList() {
                               </Typography>
                             </TableCell>
                             <TableCell align="left">
-                              {isCheck && (
+                              {!check && (
                                 <Avatar
                                   src="/static/images/mail.png"
                                   sx={{ width: 25, height: 25 }}
                                   variant="square"
                                 />
                               )}
-                              {!isCheck && (
+                              {check && (
                                 <Avatar
                                   src="/static/images/open-mail.png"
                                   sx={{ width: 25, height: 25 }}

@@ -149,6 +149,7 @@ public class MentorService {
                 .mentorTechList(mentorTechInfoDtoList)
                 .mentoringInfoList(mentoringInfoList)
                 .mentoringReviewList(reviewDtoList)
+                .mentorExp(mentor.getMentorExp())
                 .tier(tier)
                 .build();
     }
@@ -240,6 +241,7 @@ public class MentorService {
                 .mentorTechList(mentorTechInfoDtoList)
                 .mentoringInfoList(mentoringInfoList)
                 .mentoringReviewList(reviewDtoList)
+                .mentorExp(mentor.getMentorExp())
                 .tier(tierRepository.findByTierMaxExpGreaterThanEqualAndTierMinExpLessThanEqual(mentor.getMentorSeq(),mentor.getMentorExp()))
                 .build();
     }

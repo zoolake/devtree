@@ -95,7 +95,7 @@ const TitleStyle = styled(Link)({
   WebkitBoxOrient: 'vertical'
 });
 
-export default function MentorWeeklySetting({ week, day, date }) {
+export default function Week1({ week, day, date }) {
   console.log(date);
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -153,12 +153,13 @@ export default function MentorWeeklySetting({ week, day, date }) {
   const getReservedTeam = () => {
     const dataToSubmit = {
       mentorDate: date,
-      mentorSeq: id
+      mentorSeq: jwtdecode(localStorage.getItem('user')).userSeq
     };
     dispatch(getReservedList(dataToSubmit))
       .then((response) => {
         if (response) {
-          const filter2 = response.payload[0].time;
+          console.log('예약된곳', response.payload.data);
+          const filter2 = response.payload.data;
           // eslint-disable-next-line guard-for-in
           for (const i in filter2) {
             const hour = filter2[i].substring(0, 2);
@@ -169,6 +170,7 @@ export default function MentorWeeklySetting({ week, day, date }) {
         setTime(testdata);
       })
       .catch((err) => {
+        console.log('예약된 곳 에러');
         setTimeout(() => {}, 3000);
       });
   };

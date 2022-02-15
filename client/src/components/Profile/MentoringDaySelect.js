@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Grid, Container } from '@mui/material';
 import Page from '../Page';
 import { WeekdayReserv, MentorStack, MentorProfile, MentorReviewList } from '../_dashboard/mentor';
-import { MentorWeeklySetting, MentorWeeklySetting2 } from '.';
+import { MentorWeeklySetting } from '.';
 import { Week1, Week2, Week3, Week4, Week5, Week6, Week7 } from './week';
 
 function MentoringReservation() {

@@ -3,6 +3,12 @@
     display: inline;
     width: 310px;
     height: 120px;
+    animation-duration: 1.8s;
+    animation: iteration count 1px;
+    animation-name: wave;
+    display: inline-block;
+    transform-origin: 70% 50%;
+    animation-fill-mode: forwards;
   }
 }
 @media screen and (max-width: 599px) {
@@ -43,14 +49,17 @@
   justify-content: center;
   text-align: center;
   align-items: center;
-  height: calc(100vh);
+  height: calc(100vh - 81.5px);
   z-index: 1000;
   /* background-color: rgb(241, 248, 217); */
-  /* background-color: rgb(213, 228, 209); */
-  background-color: darkslategrey;
+  background-color: rgb(226, 253, 220);
+  /* background-color: darkslategrey; */
 }
 .greeting {
-  margin: -63px 20px 0 20px;
+  margin: 37px 20px 0 20px;
+  /* margin: 40px;
+  border-radius: 10%;
+  border: 0.1rem solid #16e67e; */
 }
 .hide {
   display: none;
@@ -59,13 +68,29 @@
   /* border-radius: 10%;
   border: 0.1rem solid #16e67e; */
 }
+/* @font-face {
+  font-family: 'Cafe24Oneprettynight';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Cafe24Oneprettynight.woff')
+    format('woff');
+  font-weight: normal;
+  font-style: normal;
+} */
 .greeting-text {
-  color: rgb(182, 179, 179);
+  color: rgb(0, 0, 0);
   /* color: rgb(34, 34, 34); */
-  margin: 15px;
+  font-weight: normal;
+  font-size: 1.8em;
+  font-family: sans-serif;
 }
 .name {
-  color: rgb(11, 231, 121);
+  font-weight: bold;
+  color: rgba(23, 180, 102, 0.918);
+  animation-duration: 1.8s;
+  animation: iteration count 1px;
+  animation-name: wave;
+  display: inline-block;
+  transform-origin: 70% 50%;
+  animation-fill-mode: forwards;
 }
 .links {
   display: flex;

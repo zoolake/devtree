@@ -9,6 +9,8 @@ import Typewriter from 'typewriter-effect';
 import config from '../../config';
 import profile from '../../images/logo3.svg';
 import linkedin from '../../images/logos/enter.png';
+import leaf from '../../images/leaf3.gif';
+import cutleaf from '../../images/cutleaf.gif';
 
 const Home = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -25,7 +27,7 @@ const Home = () => {
             onLoad={() => setImageLoaded(true)}
           />
           <h1 className="greeting-text">
-            Hi, I'm <span className="name">DevTree</span>.{' '}
+            안녕하세요 <span className="name">devtree</span> 입니다.
             <span className="wave-emoji" role="img" aria-label="waving hand">
               👋
             </span>
@@ -33,7 +35,7 @@ const Home = () => {
           <h1 className="greeting-text">
             <Typewriter
               options={{
-                strings: ['환영합니다! devtree입니다.', 'I Like Mentoring'],
+                strings: ['맨토링을 통해 더 나아가 보세요!', '한글을 쓰면 글씨체가 왜이런걸까요'],
                 autoStart: true,
                 loop: true,
                 deleteSpeed: 10,
@@ -67,7 +69,23 @@ const Home = () => {
           {/* </Fade> */}
         </div>
       </div>
-      {/* <div style={{ backgroundColor: 'black', height: '60px' }}>하하</div> */}
+      <div style={{ backgroundColor: 'rgb(226, 253, 220)' }}>
+        <img
+          className="imgs"
+          style={{ marginLeft: '18px', display: '-ms-grid' }}
+          src={leaf}
+          alt="Linkedin Logo"
+        />
+      </div>
+      {/* <div style={{ backgroundColor: 'rgb(242, 255, 239)' }}>
+        <img
+          className="imgs"
+          style={{ marginLeft: '18px', display: '-ms-grid' }}
+          src={leaf}
+          alt="Linkedin Logo"
+        />
+        <img className="imgs" style={{ marginLeft: '80%' }} src={leaf} alt="Linkedin Logo" />
+      </div> */}
     </div>
   );
 };

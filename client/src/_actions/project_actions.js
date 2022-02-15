@@ -6,7 +6,10 @@ import {
   GET_POSITION_LIST,
   DELETE_PROJECT,
   GET_PROJECT_DETAIL,
-  UPDATE_PROJECT
+  UPDATE_PROJECT,
+  JOIN_PROJECT,
+  GET_RESPONSE_PROJECT,
+  ANSWER_PROJECT_RESPONSE
 } from './types';
 
 export function getProjectList() {
@@ -21,20 +24,6 @@ export function createProject(pjtData) {
     .post('/project', pjtData) // https://127.26.1.146:8080/v1/project
     .then((response) => response);
   return { type: CREATE_PROJECT, payload: request };
-}
-
-export function getTechList() {
-  const request = axios
-    .get('/tech') // https://127.26.1.146:8080/v1/tech
-    .then((response) => response);
-  return { type: GET_TECH_LIST, payload: request };
-}
-
-export function getPositionList() {
-  const request = axios
-    .get('/position') // https://127.26.1.146:8080/v1/position
-    .then((response) => response);
-  return { type: GET_POSITION_LIST, payload: request };
 }
 
 export function getProjectDetail(teamSeq) {
@@ -56,4 +45,26 @@ export function updateProject(data) {
     .put(`/project/${data.teamSeq}`, data.dataToSubmit) // https://127.26.1.146:8080/v1/project/${teamSeq.id}
     .then((response) => response);
   return { type: UPDATE_PROJECT, payload: request };
+}
+
+export function joinProject(data) {
+  const request = axios
+    .post(`/project/join/${data.teamSeq}`, data.dataToSubmit) // https://127.26.1.146:8080/v1/project/${teamSeq.id}
+    .then((response) => response);
+  return { type: JOIN_PROJECT, payload: request };
+}
+
+export function getProjectResponse(teamSeq) {
+  const request = axios
+    .get(`/project/join/${teamSeq}`) // https://127.26.1.146:8080/v1/project/join/${teamSeq.id}
+    .then((response) => response);
+  return { type: GET_RESPONSE_PROJECT, payload: request };
+}
+
+export function answerProjectResponse(data) {
+  console.log(data);
+  const request = axios
+    .post(`/project/join/response/${data.teamSeq}`, data.dataToSubmit) // https://127.26.1.146:8080/v1/project/join/response/${teamSeq.id}
+    .then((response) => response);
+  return { type: ANSWER_PROJECT_RESPONSE, payload: request };
 }

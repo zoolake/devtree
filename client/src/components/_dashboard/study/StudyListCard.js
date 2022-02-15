@@ -1,34 +1,29 @@
 import PropTypes from 'prop-types';
-import { Link as RouterLink } from 'react-router-dom';
-import { styled } from '@mui/material/styles';
-import { Link } from '@mui/material';
-
-const TitleStyle = styled(Link)({
-  height: 44,
-  overflow: 'hidden',
-  WebkitLineClamp: 2,
-  WebkitBoxOrient: 'vertical'
-});
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 StudyListCard.propTypes = {
-  study: PropTypes.object.isRequired,
-  index: PropTypes.number
+  study: PropTypes.object.isRequired
 };
 
-export default function StudyListCard({ study, index }) {
+export default function StudyListCard({ study }) {
+  // PAGE
+  if (!study.teamTech) return <div>'로딩 중'</div>;
   return (
-    <div>
-      <TitleStyle
-        to={`${study.teamSeq}`}
-        color="inherit"
-        variant="subtitle2"
-        underline="hover"
-        component={RouterLink}
-      >
-        {index}) 스터디 이름: {study.teamName}
-      </TitleStyle>
-      <p>{study.teamDesc}</p>
+    <ul>
+      <li>
+        <Link to={`${study.teamSeq}`}>
+          <div>'teamManagerName': {study.teamManagerName}</div>
+          <div>'teamManagerSeq': {study.teamManagerSeq}</div>
+          <div>'teamMemberCnt': {study.teamMemberCnt}</div>
+          <div>'teamName': {study.teamName}</div>
+          <div>'teamRecruitCnt': {study.teamRecruitCnt}</div>
+          <div>'teamSeq': {study.teamSeq}</div>
+          <div>'teamState': {study.teamState}</div>
+          <li>'teamTech': {JSON.stringify(study.teamTech.map((pos) => pos))}</li>
+        </Link>
+      </li>
       <br />
-    </div>
+    </ul>
   );
 }

@@ -14,12 +14,15 @@ import ProjectDetail from './pages/Project/ProjectDetail';
 import ProjectCreate from './pages/Project/ProjectCreate';
 import ProjectUpdate from './pages/Project/ProjectUpdate';
 import ProjectDelete from './pages/Project/ProjectDelete';
+import ProjectJoin from './pages/Project/ProjectJoin';
+import ProjectResponse from './pages/Project/ProjectResponse';
 // study
 import Study from './pages/Study/StudyMain';
 import StudyDetail from './pages/Study/StudyDetail';
 import StudyCreate from './pages/Study/StudyCreate';
 import StudyUpdate from './pages/Study/StudyUpdate';
 import StudyDelete from './pages/Study/StudyDelete';
+import StudyResponse from './pages/Study/StudyResponse';
 
 import Blog from './pages/Blog';
 import Ranking from './pages/Ranking';
@@ -75,6 +78,8 @@ export default function Router() {
         { path: 'create', element: <ProjectCreate /> },
         { path: ':id/update', element: <ProjectUpdate /> },
         { path: ':id/delete', element: <ProjectDelete /> },
+        { path: ':id/join', element: <ProjectJoin /> },
+        { path: ':id/response', element: <ProjectResponse /> },
         { path: 'mentor', element: <Navigate to="/mentor" /> }
         // { path: 'mentor/:id', element: <MentorDetail /> },
         // { path: 'mentor', element: <MentorPage /> }
@@ -89,6 +94,7 @@ export default function Router() {
         { path: 'create', element: <StudyCreate /> },
         { path: ':id/update', element: <StudyUpdate /> },
         { path: ':id/delete', element: <StudyDelete /> },
+        { path: ':id/response', element: <StudyResponse /> },
         { path: 'mentor', element: <Navigate to="/mentor" /> }
         // { path: 'mentor/:id', element: <MentorDetail /> },
         // { path: 'mentor', element: <MentorPage /> }

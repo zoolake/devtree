@@ -3,12 +3,12 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 //
-import jwtdecode from 'jwt-decode';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { TextField, Button, FormControl, InputLabel, NativeSelect, Stack } from '@mui/material';
 //
-import { updateProject, getTechList, getPositionList } from '../../../_actions/project_actions';
+import { updateProject } from '../../../_actions/project_actions';
+import { getTechList, getPositionList } from '../../../_actions/team_actions';
 import SelectPositionCnt from '../../team/SelectPositionCnt';
 
 ProjectUpdateForm.propTypes = {
@@ -16,7 +16,6 @@ ProjectUpdateForm.propTypes = {
 };
 
 export default function ProjectUpdateForm({ projectDetail }) {
-  console.log(projectDetail);
   // STATE
   const teamSeq = useParams().id;
   // 기술스택
@@ -30,11 +29,7 @@ export default function ProjectUpdateForm({ projectDetail }) {
   const [selectedPos, setSelectedPos] = useState('');
   // 상태
   const [teamState, setTeamState] = useState('');
-  const TEAM_STATE = [
-    { state: 'RECRUIT', stateName: '진행 중' },
-    { state: 'COMPLETED', stateName: '모집 완료됨' },
-    { state: 'FINISH', stateName: '종료됨' }
-  ];
+
   // 입력 조건
   const RegisterSchema = Yup.object().shape({
     teamName: Yup.string()
@@ -122,7 +117,7 @@ export default function ProjectUpdateForm({ projectDetail }) {
   const handleChange = (event, type) => {
     if (type === 'tech') {
       setSelectedTech(event.target.value);
-      if (myTechList.includes(findOrigin(allTechList, 'techName', event.target.value))) {
+      if (myTechList.map((tech) => tech.techName).includes(event.target.value)) {
         return;
       }
       setMyTech([...myTechList, findOrigin(allTechList, 'techName', event.target.value)]);
@@ -139,13 +134,9 @@ export default function ProjectUpdateForm({ projectDetail }) {
         ...myPositionList,
         findOrigin(allPositionList, 'detailPositionName', event.target.value)
       ]);
-    } else {
-      setTeamState(event.target.value);
-      console.log(teamState);
     }
   };
   const handlePositionCntChange = (value, pos, dv) => {
-    console.log(value, pos, dv);
     if (!value) {
       setsendingPositionList([
         ...sendingPositionList,

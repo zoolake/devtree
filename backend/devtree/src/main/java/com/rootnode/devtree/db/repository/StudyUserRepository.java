@@ -17,4 +17,7 @@ public interface StudyUserRepository extends JpaRepository<StudyUser, StudyUserI
 
     @Query(value = "select s.team.teamSeq from StudyUser s where s.user.userSeq = :userSeq")
     List<Long> findTeamSeqByUserSeq(Long userSeq);
+
+    @Query(value = "select s.user.userSeq from StudyUser s where s.team.teamSeq = :teamSeq")
+    List<Long> findUserSeqByTeamSeq(Long teamSeq);
 }

@@ -30,6 +30,14 @@ export const DELETE_PROJECT = 'delete_project';
 export const GET_PROJECT_DETAIL = 'get_project_detail';
 export const UPDATE_PROJECT = 'update_project';
 export const JOIN_PROJECT = 'join_project';
+export const CHANGE_PROJECT_STATE = 'change_project_state';
+// study
+export const GET_STUDY_LIST = 'get_study_list';
+export const CREATE_STUDY = 'create_study';
+export const DELETE_STUDY = 'delete_study';
+export const GET_STUDY_DETAIL = 'get_study_detail';
+export const UPDATE_STUDY = 'update_study';
+export const JOIN_STUDY = 'join_study';
 //
 export const GET_ALARMLIST = 'get_alarm_list';
 export const GET_MYMENTORPROFILE = 'get_my_mentorfile';

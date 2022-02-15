@@ -85,7 +85,7 @@ public class ProjectApiController {
     /**
      * 기능: 프로젝트 신청 응답
      */
-    @PostMapping("/v1/project/join/response/{team_seq}")
+    @PostMapping("/v1/project/join/response/{teamSeq}")
     public ResponseEntity<CommonResponseDto> projectJoinResponse(Authentication authentication,
                                                                  @PathVariable Long teamSeq,
                                                                  @RequestBody ProjectRespondRequestDto requestDto) {
@@ -99,7 +99,7 @@ public class ProjectApiController {
     /**
      * 기능: 프로젝트 포지션 조회
      */
-    @GetMapping("/v1/project/{team_seq}/position")
+    @GetMapping("/v1/project/{teamSeq}/position")
     public ResponseEntity<ProjectPositionDetailResponseDto> projectPositionDetail(@PathVariable Long teamSeq) {
         return ResponseEntity
                 .status(200)

@@ -6,7 +6,8 @@ import {
   GET_POSITION_LIST,
   DELETE_PROJECT,
   GET_PROJECT_DETAIL,
-  UPDATE_PROJECT
+  UPDATE_PROJECT,
+  CHANGE_PROJECT_STATE
 } from './types';
 
 export function getProjectList() {
@@ -60,7 +61,14 @@ export function updateProject(data) {
 
 export function joinProject(data) {
   const request = axios
-    .post(`/project/join/${data.teamSeq}`, data.dataToSubmit) // https://127.26.1.146:8080/v1/project/${teamSeq.id}
+    .post(`/project/${data.teamSeq}`, data.dataToSubmit) // https://127.26.1.146:8080/v1/project/${teamSeq.id}
     .then((response) => response);
   return { type: UPDATE_PROJECT, payload: request };
+}
+
+export function changeProjectState(data) {
+  const request = axios
+    .put('/team/change/state', data) // https://127.26.1.146:8080/v1/team/change/state
+    .then((response) => response);
+  return { type: CHANGE_PROJECT_STATE, payload: request };
 }

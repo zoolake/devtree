@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 //
-import jwtdecode from 'jwt-decode';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { TextField, Button, FormControl, InputLabel, NativeSelect, Stack } from '@mui/material';
@@ -30,11 +29,7 @@ export default function ProjectUpdateForm({ projectDetail }) {
   const [selectedPos, setSelectedPos] = useState('');
   // 상태
   const [teamState, setTeamState] = useState('');
-  const TEAM_STATE = [
-    { state: 'RECRUIT', stateName: '진행 중' },
-    { state: 'COMPLETED', stateName: '모집 완료됨' },
-    { state: 'FINISH', stateName: '종료됨' }
-  ];
+
   // 입력 조건
   const RegisterSchema = Yup.object().shape({
     teamName: Yup.string()

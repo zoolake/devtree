@@ -81,9 +81,7 @@ export default function MentorCard({ post, index }) {
           >
             {mentorNickname}
           </TitleStyle>
-          <Typography align="center" gutterBottom variant="caption">
-            {mentorTechList}
-          </Typography>
+
           <InfoStyle>
             {POST_INFO.map((info, index) => (
               <Box key={index}>

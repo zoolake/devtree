@@ -9,7 +9,8 @@ import {
   Update_MentorProfile,
   GET_TIMELIST,
   GET_RESERVEDLIST,
-  GET_MENTORINGLIST
+  GET_MENTORINGLIST,
+  UPDATE_MENTOR
 } from './types';
 
 // 멘티 - 팀별 멘토링 신청 내역 조회
@@ -126,4 +127,10 @@ export function getReview(dataToSubmit) {
 export function submitMentoring(dataToSubmit) {
   const request = axios.post(`/mentoring/apply`, dataToSubmit).then((response) => response.data);
   return { type: GET_REVIEWS, payload: request };
+}
+
+// 멘토 프로필 수정
+export function updateMentor(dataToSubmit) {
+  const request = axios.put(`/mentor`, dataToSubmit).then((response) => response.data);
+  return { type: UPDATE_MENTOR, payload: request };
 }

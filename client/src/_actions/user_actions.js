@@ -63,7 +63,7 @@ export function getTech() {
 
 // 유저 프로필 바꾸기
 export function updateUser(dataToSubmit) {
-  const request = axios.put(`/v1/user`, dataToSubmit).then((response) => response.data);
+  const request = axios.put(`/user`, dataToSubmit).then((response) => response.data);
 
   return {
     type: UPDATE_USER,

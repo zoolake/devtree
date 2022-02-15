@@ -1,44 +1,38 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
-
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
-
 import { useDispatch } from 'react-redux';
-
 // material
 import AsyncCreatableSelect from 'react-select/creatable';
-import { Box, CardHeader } from '@mui/material';
+import { Box, CardHeader, Button } from '@mui/material';
 import { getTech } from '../../_actions/user_actions';
 // utils
 
 // ----------------------------------------------------------------------
 const animatedComponents = makeAnimated();
-
+// ----------------------------------------------------------------------
 export default function UserStack() {
   const dispatch = useDispatch();
-  const [allTechList, setAllTech] = useState([]);
+  const [opti, setOptions] = useState([]);
 
   const techGet = () => {
-    console.log('뀨?');
     dispatch(getTech())
       .then((response) => {
-        console.log(response.payload);
-        setAllTech(response.payload);
+        const data = response.payload;
+        const all = data.reduce((total, data) => {
+          total = [...total, { value: data.techSeq, label: data.techName }];
+          return total;
+        }, []);
+        setOptions(all);
       })
       .catch((err) => {
-        console.log('에러');
         console.log(err);
       });
   };
-  const options = useMemo(
-    () => [
-      { value: 'vue', label: 'Vue.js' },
-      { value: 'react', label: 'React.js' },
-      { value: 'angular', label: 'Angular.js' },
-      { value: 'spring', label: 'Spring' }
-    ],
-    []
-  );
+  useEffect(() => {
+    techGet();
+    setValue([{ value: 1, label: 'Java' }]);
+  }, []);
 
   // styles that do not show 'x' for fixed options
   const styles = useMemo(
@@ -61,7 +55,11 @@ export default function UserStack() {
   );
 
   // selected values, initially it lists all options in order
-  const [value, setValue] = useState(orderOptions(options));
+  const [value, setValue] = useState(orderOptions(opti));
+
+  useEffect(() => {
+    console.log(value);
+  }, [value]);
 
   // handler for changes
   const handleChange = useCallback(
@@ -75,30 +73,25 @@ export default function UserStack() {
           }
           break;
         case 'clear': // clear button is clicked
-          setValue(options.filter((v) => v.isFixed));
+          setValue(opti.filter((v) => v.isFixed));
           return;
         default:
       }
       setValue(inputValue);
     },
-    [options, orderOptions]
+    [opti, orderOptions]
   );
-
-  useEffect(() => {
-    techGet();
-  }, []);
 
   return (
     <Box sx={7}>
       <CardHeader title="관심있는 기술 스택" />
       <div>
-        {allTechList}
         <Select
           isMulti // show multiple options
           components={animatedComponents} // animate builtin components
           isClearable={value.some((v) => !v.isFixed)} // clear button shows conditionally
           styles={styles} // styles that do not show 'x' for fixed options
-          options={options} // all options
+          options={opti} // all options
           value={value} // selected values
           onChange={handleChange} // handler for changes
         />

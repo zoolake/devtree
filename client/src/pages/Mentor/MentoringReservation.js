@@ -22,9 +22,7 @@ function MentoringReservation() {
   const year = now.getFullYear();
   const month = `0${now.getMonth() + 1}`.slice(-2);
   const day = `0${now.getDate()}`.slice(-2);
-  console.log('---------');
   console.log(now.getDate() + 3);
-  console.log('---------');
   const dateString = `${year}-${month}-${day}`;
   console.log(dateString);
   const [daylist, setDaylist] = useState([]);

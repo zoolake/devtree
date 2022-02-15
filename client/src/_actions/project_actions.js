@@ -9,8 +9,7 @@ import {
   UPDATE_PROJECT,
   JOIN_PROJECT,
   GET_RESPONSE_PROJECT,
-  ANSWER_PROJECT_RESPONSE,
-  CHANGE_PROJECT_STATE
+  ANSWER_PROJECT_RESPONSE
 } from './types';
 
 export function getProjectList() {

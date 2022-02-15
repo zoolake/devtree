@@ -7,7 +7,9 @@ import {
   DELETE_STUDY,
   GET_STUDY_DETAIL,
   UPDATE_STUDY,
-  JOIN_STUDY
+  JOIN_STUDY,
+  GET_RESPONSE_STUDY,
+  ANSWER_STUDY_RESPONSE
 } from './types';
 
 export function getStudyList() {
@@ -64,4 +66,19 @@ export function joinStudy(data) {
     .post(`/study/${data.teamSeq}`, data.joinData) // https://127.26.1.146:8080/v1/study/${teamSeq.id}
     .then((response) => response);
   return { type: JOIN_STUDY, payload: request };
+}
+
+export function getStudyResponse(teamSeq) {
+  const request = axios
+    .get(`/study/join/${teamSeq}`) // https://127.26.1.146:8080/v1/study/join/${teamSeq.id}
+    .then((response) => response);
+  return { type: GET_RESPONSE_STUDY, payload: request };
+}
+
+export function answerStudyResponse(data) {
+  console.log(data);
+  const request = axios
+    .post(`/study/join/${data.teamSeq}`, data.dataToSubmit) // https://127.26.1.146:8080/v1/study/join/${teamSeq.id}
+    .then((response) => response);
+  return { type: ANSWER_STUDY_RESPONSE, payload: request };
 }

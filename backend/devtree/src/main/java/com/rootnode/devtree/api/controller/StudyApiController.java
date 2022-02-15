@@ -101,10 +101,10 @@ public class StudyApiController {
                                                                @PathVariable Long teamSeq,
                                                                @RequestBody StudyRespondRequestDto requestDto) {
         UserDetail userDetails = (UserDetail)authentication.getDetails();
-        Long user_seq = userDetails.getUser().getUserSeq();
+        Long userSeq = userDetails.getUser().getUserSeq();
         return ResponseEntity
                 .status(201)
-                .body(studyService.respondStudy(teamSeq, user_seq, requestDto));
+                .body(studyService.respondStudy(teamSeq, userSeq, requestDto));
     }
 
     /**

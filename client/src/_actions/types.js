@@ -39,6 +39,8 @@ export const DELETE_STUDY = 'delete_study';
 export const GET_STUDY_DETAIL = 'get_study_detail';
 export const UPDATE_STUDY = 'update_study';
 export const JOIN_STUDY = 'join_study';
+export const GET_RESPONSE_STUDY = 'get_response_study';
+export const ANSWER_STUDY_RESPONSE = 'answer_study_response';
 
 // team
 export const GET_TECH_LIST = 'get_tech_list';

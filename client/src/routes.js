@@ -22,6 +22,7 @@ import StudyDetail from './pages/Study/StudyDetail';
 import StudyCreate from './pages/Study/StudyCreate';
 import StudyUpdate from './pages/Study/StudyUpdate';
 import StudyDelete from './pages/Study/StudyDelete';
+import StudyResponse from './pages/Study/StudyResponse';
 
 import Blog from './pages/Blog';
 import Ranking from './pages/Ranking';
@@ -93,6 +94,7 @@ export default function Router() {
         { path: 'create', element: <StudyCreate /> },
         { path: ':id/update', element: <StudyUpdate /> },
         { path: ':id/delete', element: <StudyDelete /> },
+        { path: ':id/response', element: <StudyResponse /> },
         { path: 'mentor', element: <Navigate to="/mentor" /> }
         // { path: 'mentor/:id', element: <MentorDetail /> },
         // { path: 'mentor', element: <MentorPage /> }

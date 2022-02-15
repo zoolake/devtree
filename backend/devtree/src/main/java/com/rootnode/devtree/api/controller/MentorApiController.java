@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -26,11 +27,35 @@ public class MentorApiController {
     private final MentorService mentorService;
 
     /**
-     * 기능: 멘토 목록 조회
+     * 기능: 멘토 목록 조회 (pagination)
+     *
+     */
+//    @GetMapping("/v1/mentor")
+//    public ResponseEntity<Result> mentorList(Pageable pageable) {
+//        Page<MentorListResponseDto> responseDto = mentorService.findMentors(pageable);
+//        return ResponseEntity
+//                .status(200)
+//                .body(new Result(responseDto, 200, "멘토 목록 조회에 성공하였습니다."));
+//    }
+
+    /**
+     * 기능: 멘토 목록 조회 (non-pagination)
+     *
      */
     @GetMapping("/v1/mentor")
-    public ResponseEntity<Result> mentorList(Pageable pageable) {
-        Page<MentorListResponseDto> responseDto = mentorService.findMentors(pageable);
+    public ResponseEntity<Result> mentorList() {
+        List<MentorListResponseDto> responseDto = mentorService.findMentors();
+        return ResponseEntity
+                .status(200)
+                .body(new Result(responseDto, 200, "멘토 목록 조회에 성공하였습니다."));
+    }
+
+    /**
+     * 기능: 멘토 목록 경험치순 조회 (non-pagination)
+     */
+    @GetMapping("/v1/mentor/sort")
+    public ResponseEntity<Result> mentorSortList() {
+        List<MentorSortedListResponseDto> responseDto = mentorService.findSortedMentors();
         return ResponseEntity
                 .status(200)
                 .body(new Result(responseDto, 200, "멘토 목록 조회에 성공하였습니다."));
@@ -93,7 +118,7 @@ public class MentorApiController {
     @PostMapping("/v1/mentoring/schedule/{mentorSeq}")
     public ResponseEntity<Result> mentorAvailableSchedule(@PathVariable Long mentorSeq,
                                                           @RequestBody MentoringAvailableTimeRequestDto requestDto) {
-        List<LocalTime> responseDto = mentorService.findAvailableTime(mentorSeq, requestDto);
+        List<String> responseDto = mentorService.findAvailableTime(mentorSeq, requestDto);
         return ResponseEntity
                 .status(200)
                 .body(Result.builder()
@@ -102,6 +127,24 @@ public class MentorApiController {
                         .message("멘토 스케줄 조회 완료")
                         .build());
     }
+
+
+    /**
+     * 기능: 예약 확정된 멘토링 스케줄 조회 (불가능)
+     */
+    @PostMapping("/v1/mentoring/schedule/unavailable/{mentorSeq}")
+    public ResponseEntity<Result> mentorUnavailableSchedule(@PathVariable Long mentorSeq,
+                                                            @RequestBody MentoringAvailableTimeRequestDto requestDto) {
+        List<String> responseDto = mentorService.findUnavailableTime(mentorSeq, requestDto);
+        return ResponseEntity
+                .status(200)
+                .body(Result.builder()
+                        .data(responseDto)
+                        .status(200)
+                        .message("확정된 멘토링 스케줄 조회 완료")
+                        .build());
+    }
+
 
     /**
      * 기능: 멘토링 신청
@@ -119,6 +162,23 @@ public class MentorApiController {
         UserDetail userDetail = (UserDetail)authentication.getDetails();
         Long mentorSeq = userDetail.getUser().getUserSeq();
         List<MentoringApplyListResponseDto> responseDto = mentorService.findMentoringApplyList(mentorSeq);
+        return ResponseEntity
+                .status(200)
+                .body(Result.builder()
+                        .data(responseDto)
+                        .status(200)
+                        .message("멘토링 신청목록 조회 완료")
+                        .build());
+    }
+
+    /**
+     * 기능: 멘토링 예약 확정 조회
+     */
+    @GetMapping("/v1/mentoring/apply/accept")
+    public ResponseEntity<Result> mentoringApplyAcceptList(Authentication authentication) {
+        UserDetail userDetail = (UserDetail)authentication.getDetails();
+        Long mentorSeq = userDetail.getUser().getUserSeq();
+        List<MentoringApplyListResponseDto> responseDto = mentorService.findMentoringApplyAcceptList(mentorSeq);
         return ResponseEntity
                 .status(200)
                 .body(Result.builder()

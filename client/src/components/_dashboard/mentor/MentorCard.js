@@ -13,7 +13,7 @@ const CardMediaStyle = styled('div')({
 });
 
 const TitleStyle = styled(Link)({
-  height: 44,
+  height: 20,
   overflow: 'hidden',
   WebkitLineClamp: 2,
   display: '-webkit-box',
@@ -25,8 +25,8 @@ const AvatarStyle = styled(Avatar)(({ theme }) => ({
   width: 100,
   height: 100,
   position: 'absolute',
-  left: theme.spacing(3),
-  bottom: theme.spacing(-2)
+  left: theme.spacing(10),
+  bottom: theme.spacing(0)
 }));
 
 const InfoStyle = styled('div')(({ theme }) => ({
@@ -63,16 +63,16 @@ export default function MentorCard({ post, index }) {
   return (
     <Grid item xs={12} sm={6} md={3}>
       {' '}
-      <Card sx={{ position: 'relative' }}>
+      <Card sx={{ position: 'relative', backgourdcolor: 'red' }}>
         <CardMediaStyle>
           <AvatarStyle />
-          <CoverImgStyle alt={mentorNickname} src="/static/mock-images/covers/cover_1.jpg" />
         </CardMediaStyle>
         <CardContent>
-          <Typography gutterBottom variant="caption">
+          <Typography align="center" gutterBottom>
             {mentorCareer}
           </Typography>
           <TitleStyle
+            align="center"
             to={`${mentorSeq}`}
             color="inherit"
             variant="subtitle2"
@@ -81,7 +81,7 @@ export default function MentorCard({ post, index }) {
           >
             {mentorNickname}
           </TitleStyle>
-          <Typography gutterBottom variant="caption">
+          <Typography align="center" gutterBottom variant="caption">
             {mentorTechList}
           </Typography>
           <InfoStyle>

@@ -10,7 +10,8 @@ import {
   DELETE_USER,
   UPDATE_USER,
   GET_RANK,
-  GET_ALARMLIST
+  GET_ALARMLIST,
+  GET_TECH
 } from './types';
 import { USER_SERVER } from '../components/config';
 import setAuthorizationToken from '../utils/setAuthorizationToken';
@@ -23,6 +24,7 @@ export function getAlarmdata(notificationSeq) {
 
   return { type: GET_ALARMLIST, payload: request };
 }
+
 // 알림 페이지 데이터 불러오기
 export function getAlarmList() {
   const request = axios.get(`/user/notification`).then((response) => response.data);
@@ -50,14 +52,11 @@ export function getProject() {
 }
 
 // 기술스택 가져오기
-// 아직 미완성
 export function getTech() {
-  const request = axios
-    .put(`https://61f649b22e1d7e0017fd6d42.mockapi.io/tech`)
-    .then((response) => response.data);
-
+  const request = axios.get(`/tech`).then((response) => response.data.data);
+  console.log('?!', request.content);
   return {
-    type: UPDATE_USER,
+    type: GET_TECH,
     payload: request
   };
 }

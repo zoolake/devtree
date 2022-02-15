@@ -27,7 +27,7 @@ import MentorPage from './pages/Mentor/MentorPage';
 import MentorDetail from './pages/Mentor/MentorDetail';
 import MentoringReservation from './pages/Mentor/MentoringReservation';
 
-import SessionPage from './pages/Session/SessionPage';
+import SessionPage from './pages/Session/SessionPage2';
 // ----------------------------------------------------------------------
 
 export default function Router() {

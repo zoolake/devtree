@@ -127,7 +127,7 @@ export default function Profile() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Profile
+            내 프로필
           </Typography>
         </Stack>
         <div>

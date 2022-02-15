@@ -29,6 +29,7 @@ import { detailMentor } from '../../../_actions/mentor_actions';
 export default function UserProfile({ index }) {
   const [mentor, setMentor] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [tiername, setTiername] = useState([]);
   const dispatch = useDispatch();
   const userDetail = async () => {
     setMentor(null);
@@ -37,7 +38,8 @@ export default function UserProfile({ index }) {
       .then((response) => {
         if (response) {
           setMentor(response.payload.data);
-          console.log(response.payload.data);
+          console.log(response.payload.data.tier.tierName);
+          setTiername(response.payload.data.tier.tierName);
         }
       })
       .catch((err) => {
@@ -77,12 +79,13 @@ export default function UserProfile({ index }) {
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography sx={{ p: 3 }} variant="h4">
           {mentor.mentorNickname} <h5>{}</h5>
-          <h5> {mentor.mentorCareer}</h5>
+          <h5> {mentor.mentorCareer}</h5> <h5>{tiername} </h5>
         </Typography>
         <Button onClick={usercheck}>멘토링 신청하기</Button>
       </Stack>
       <CardHeader />
       <Box sx={{ p: 3 }}>
+        {' '}
         이메일
         <TextField value={mentor.mentorEmail} fullWidth type="text" />
         소개말

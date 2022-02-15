@@ -1,15 +1,35 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
+
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
+
+import { useDispatch } from 'react-redux';
+
 // material
 import AsyncCreatableSelect from 'react-select/creatable';
 import { Box, CardHeader } from '@mui/material';
+import { getTech } from '../../_actions/user_actions';
 // utils
 
 // ----------------------------------------------------------------------
 const animatedComponents = makeAnimated();
-// ----------------------------------------------------------------------
+
 export default function UserStack() {
+  const dispatch = useDispatch();
+  const [allTechList, setAllTech] = useState([]);
+
+  const techGet = () => {
+    console.log('뀨?');
+    dispatch(getTech())
+      .then((response) => {
+        console.log(response.payload);
+        setAllTech(response.payload);
+      })
+      .catch((err) => {
+        console.log('에러');
+        console.log(err);
+      });
+  };
   const options = useMemo(
     () => [
       { value: 'vue', label: 'Vue.js' },
@@ -64,10 +84,15 @@ export default function UserStack() {
     [options, orderOptions]
   );
 
+  useEffect(() => {
+    techGet();
+  }, []);
+
   return (
     <Box sx={7}>
       <CardHeader title="관심있는 기술 스택" />
       <div>
+        {allTechList}
         <Select
           isMulti // show multiple options
           components={animatedComponents} // animate builtin components

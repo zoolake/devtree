@@ -17,6 +17,7 @@ export default function ProjectJoinForm({ projectPosition }) {
   // STATE
   const teamSeq = useParams().id;
   const [selectedPosition, setSelectedPosition] = useState('');
+  const [userSeq] = useState(jwtdecode(localStorage.getItem('user')).userSeq);
 
   // AXIOS
   const dispatch = useDispatch();
@@ -30,7 +31,7 @@ export default function ProjectJoinForm({ projectPosition }) {
   const sendData = useCallback((event) => {
     event.preventDefault();
     const dataToSubmit = {
-      userSeq: jwtdecode(localStorage.getItem('user')).userSeq,
+      userSeq: userSeq * 1,
       detailPositionName: selectedPosition
     };
     const joinPjt = async () => {

@@ -30,7 +30,10 @@ export const DELETE_PROJECT = 'delete_project';
 export const GET_PROJECT_DETAIL = 'get_project_detail';
 export const UPDATE_PROJECT = 'update_project';
 export const JOIN_PROJECT = 'join_project';
+export const GET_RESPONSE_PROJECT = 'get_response_project';
+export const ANSWER_PROJECT_RESPONSE = 'answer_project_response';
 export const CHANGE_PROJECT_STATE = 'change_project_state';
+
 // study
 export const GET_STUDY_LIST = 'get_study_list';
 export const CREATE_STUDY = 'create_study';

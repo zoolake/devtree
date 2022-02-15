@@ -15,6 +15,7 @@ import ProjectCreate from './pages/Project/ProjectCreate';
 import ProjectUpdate from './pages/Project/ProjectUpdate';
 import ProjectDelete from './pages/Project/ProjectDelete';
 import ProjectJoin from './pages/Project/ProjectJoin';
+import ProjectResponse from './pages/Project/ProjectResponse';
 // study
 import Study from './pages/Study/StudyMain';
 import StudyDetail from './pages/Study/StudyDetail';
@@ -77,6 +78,7 @@ export default function Router() {
         { path: ':id/update', element: <ProjectUpdate /> },
         { path: ':id/delete', element: <ProjectDelete /> },
         { path: ':id/join', element: <ProjectJoin /> },
+        { path: ':id/response', element: <ProjectResponse /> },
         { path: 'mentor', element: <Navigate to="/mentor" /> }
         // { path: 'mentor/:id', element: <MentorDetail /> },
         // { path: 'mentor', element: <MentorPage /> }

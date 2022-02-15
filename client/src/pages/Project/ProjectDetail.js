@@ -98,6 +98,7 @@ export default function ProjectDetail() {
         <RouterLink to="update">프로젝트 수정</RouterLink>
         <RouterLink to="delete">프로젝트 삭제</RouterLink>
         <RouterLink to="join">프로젝트 신청</RouterLink>
+        <RouterLink to="response">프로젝트 신청 목록</RouterLink>
       </div>
     );
   }

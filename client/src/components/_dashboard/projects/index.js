@@ -5,3 +5,4 @@ export { default as ProjectsPostsSort } from './ProjectsPostsSort';
 export { default as ProjectCreationForm } from './ProjectCreationForm';
 export { default as ProjectUpdateForm } from './ProjectUpdateForm';
 export { default as ProjectJoinForm } from './ProjectJoinForm';
+export { default as ProjectResponseForm } from './ProjectResponseForm';

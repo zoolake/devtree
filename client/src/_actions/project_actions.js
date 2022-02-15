@@ -7,6 +7,9 @@ import {
   DELETE_PROJECT,
   GET_PROJECT_DETAIL,
   UPDATE_PROJECT,
+  JOIN_PROJECT,
+  GET_RESPONSE_PROJECT,
+  ANSWER_PROJECT_RESPONSE,
   CHANGE_PROJECT_STATE
 } from './types';
 
@@ -61,9 +64,24 @@ export function updateProject(data) {
 
 export function joinProject(data) {
   const request = axios
-    .post(`/project/${data.teamSeq}`, data.dataToSubmit) // https://127.26.1.146:8080/v1/project/${teamSeq.id}
+    .post(`/project/join/${data.teamSeq}`, data.dataToSubmit) // https://127.26.1.146:8080/v1/project/${teamSeq.id}
     .then((response) => response);
-  return { type: UPDATE_PROJECT, payload: request };
+  return { type: JOIN_PROJECT, payload: request };
+}
+
+export function getProjectResponse(teamSeq) {
+  const request = axios
+    .get(`/project/join/${teamSeq}`) // https://127.26.1.146:8080/v1/project/join/${teamSeq.id}
+    .then((response) => response);
+  return { type: GET_RESPONSE_PROJECT, payload: request };
+}
+
+export function answerProjectResponse(data) {
+  console.log(data);
+  const request = axios
+    .post(`/project/join/response/${data.teamSeq}`, data.dataToSubmit) // https://127.26.1.146:8080/v1/project/join/response/${teamSeq.id}
+    .then((response) => response);
+  return { type: ANSWER_PROJECT_RESPONSE, payload: request };
 }
 
 export function changeProjectState(data) {

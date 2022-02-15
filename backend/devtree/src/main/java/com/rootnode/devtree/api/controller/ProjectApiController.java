@@ -70,7 +70,7 @@ public class ProjectApiController {
     /**
      * 기능: 프로젝트 신청
      */
-    @PostMapping("/v1/project/join/{team_seq}")
+    @PostMapping("/v1/project/join/{teamSeq}")
     public ResponseEntity<CommonResponseDto> projectJoin(Authentication authentication,
                                                          @PathVariable Long teamSeq,
                                                          @RequestBody ProjectJoinRequestDto requestDto) {

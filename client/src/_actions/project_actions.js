@@ -57,3 +57,10 @@ export function updateProject(data) {
     .then((response) => response);
   return { type: UPDATE_PROJECT, payload: request };
 }
+
+export function joinProject(data) {
+  const request = axios
+    .post(`/project/join/${data.teamSeq}`, data.dataToSubmit) // https://127.26.1.146:8080/v1/project/${teamSeq.id}
+    .then((response) => response);
+  return { type: UPDATE_PROJECT, payload: request };
+}

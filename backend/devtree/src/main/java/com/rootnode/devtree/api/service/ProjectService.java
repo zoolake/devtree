@@ -122,7 +122,8 @@ public class ProjectService {
     }
 
     @Transactional
-    public CommonResponseDto respondPosition(Long teamSeq, Long userSeq, ProjectRespondRequestDto requestDto) {
+    public CommonResponseDto respondPosition(Long teamSeq, ProjectRespondRequestDto requestDto) {
+        Long userSeq = requestDto.getUserSeq();
 
         String detailPositionName = requestDto.getDetailPositionName();
         ResponseType responseType = requestDto.getResponseType();

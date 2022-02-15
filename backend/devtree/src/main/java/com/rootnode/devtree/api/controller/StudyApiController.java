@@ -49,11 +49,11 @@ public class StudyApiController {
     /**
      * 기능 : 스터디 상세 조회
      */
-    @GetMapping("/v1/study/{team_seq}")
+    @GetMapping("/v1/study/{teamSeq}")
     public ResponseEntity<Result> studyDetail(Authentication authentication,
-                                              @PathVariable Long team_seq) {
+                                              @PathVariable Long teamSeq) {
 
-        StudyDetailResponseDto responseDto = studyService.findStudyDetail(team_seq);
+        StudyDetailResponseDto responseDto = studyService.findStudyDetail(teamSeq);
         return ResponseEntity
                 .status(200)
                 .body(Result.builder()
@@ -66,7 +66,7 @@ public class StudyApiController {
     /**
      * 기능 : 스터디 신청
      */
-    @PostMapping("/v1/study/{team_seq}")
+    @PostMapping("/v1/study/{teamSeq}")
     public ResponseEntity<CommonResponseDto> studyJoin(Authentication authentication,
                                                        @PathVariable Long teamSeq,
                                                        @RequestBody StudyJoinRequestDto requestDto) {
@@ -81,7 +81,7 @@ public class StudyApiController {
     /**
      * 기능 : 스터디 신청 조회
      */
-    @GetMapping("/v1/study/join/{team_seq}")
+    @GetMapping("/v1/study/join/{teamSeq}")
     public ResponseEntity<Result> studyJoinList(@PathVariable Long teamSeq) {
         List<StudyJoinListResponseDto> responseDto = studyService.findStudyJoinList(teamSeq);
         return ResponseEntity
@@ -97,14 +97,11 @@ public class StudyApiController {
      * 기능 : 스터디 신청 응답
      */
     @PostMapping("/v1/study/join/{teamSeq}")
-    public ResponseEntity<CommonResponseDto> studyJoinResponse(Authentication authentication,
-                                                               @PathVariable Long teamSeq,
+    public ResponseEntity<CommonResponseDto> studyJoinResponse(@PathVariable Long teamSeq,
                                                                @RequestBody StudyRespondRequestDto requestDto) {
-        UserDetail userDetails = (UserDetail)authentication.getDetails();
-        Long userSeq = userDetails.getUser().getUserSeq();
         return ResponseEntity
                 .status(201)
-                .body(studyService.respondStudy(teamSeq, userSeq, requestDto));
+                .body(studyService.respondStudy(teamSeq, requestDto));
     }
 
     /**
@@ -121,22 +118,22 @@ public class StudyApiController {
      * 기능 : 스터디 정보 수정
      * teamManagerSeq 와 본인의 비교 필요
      */
-    @PutMapping("/v1/study/{team_seq}")
-    public ResponseEntity<CommonResponseDto> studyDetailUpdate(@PathVariable Long team_seq,
+    @PutMapping("/v1/study/{teamSeq}")
+    public ResponseEntity<CommonResponseDto> studyDetailUpdate(@PathVariable Long teamSeq,
                                                                @RequestBody StudyUpdateRequestDto requestDto) {
         return ResponseEntity
                 .status(201)
-                .body(studyService.updateStudy(team_seq, requestDto));
+                .body(studyService.updateStudy(teamSeq, requestDto));
     }
 
     /**
      * 기능 : 스터디 삭제
      */
-    @DeleteMapping("/v1/study/{team_seq}")
-    public ResponseEntity<CommonResponseDto> studyDelete(@PathVariable Long team_seq) {
+    @DeleteMapping("/v1/study/{teamSeq}")
+    public ResponseEntity<CommonResponseDto> studyDelete(@PathVariable Long teamSeq) {
         return ResponseEntity
                 .status(204)
-                .body(studyService.deleteStudy(team_seq));
+                .body(studyService.deleteStudy(teamSeq));
     }
 
     /**

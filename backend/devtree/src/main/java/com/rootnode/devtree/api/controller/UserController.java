@@ -103,12 +103,12 @@ public class UserController {
 	/**
 	 *  기능 : 유저의 스터디 상태 활동 내역
 	 */
-	@GetMapping("/v1/user/study/{team_state}")
+	@GetMapping("/v1/user/study/{teamState}")
 	public ResponseEntity<Result> userStudyListState(Authentication authentication,
-													 @PathVariable TeamState team_state) {
+													 @PathVariable TeamState teamState) {
 		UserDetail userDetails = (UserDetail)authentication.getDetails();
 		Long userSeq = userDetails.getUser().getUserSeq();
-		List<UserStudyActivitiesListResponseDto> responseDto = userService.findStudyListState(userSeq, team_state);
+		List<UserStudyActivitiesListResponseDto> responseDto = userService.findStudyListState(userSeq, teamState);
 		return ResponseEntity
 				.status(200)
 				.body(Result.builder()
@@ -155,12 +155,12 @@ public class UserController {
 	/**
 	 *  기능 : 유저의 프로젝트 상태 활동 내역
 	 */
-	@GetMapping("/v1/user/project/{team_state}")
+	@GetMapping("/v1/user/project/{teamState}")
 	public ResponseEntity<Result> userProjectListState(Authentication authentication,
-													   @PathVariable TeamState team_state) {
+													   @PathVariable TeamState teamState) {
 		UserDetail userDetails = (UserDetail)authentication.getDetails();
 		Long userSeq = userDetails.getUser().getUserSeq();
-		List<UserProjectActivitiesListResponseDto> responseDto = userService.findProjectListState(userSeq, team_state);
+		List<UserProjectActivitiesListResponseDto> responseDto = userService.findProjectListState(userSeq, teamState);
 		return ResponseEntity
 				.status(200)
 				.body(Result.builder()
@@ -190,12 +190,12 @@ public class UserController {
 	/**
 	 *  기능 : 유저의 멘토링 상태 활동 내역
 	 */
-	@GetMapping("/v1/user/mentoring/{mentoring_state}")
+	@GetMapping("/v1/user/mentoring/{mentoringState}")
 	public ResponseEntity<Result> userMentoringListState(Authentication authentication,
-														 @PathVariable MentoringState mentoring_state) {
+														 @PathVariable MentoringState mentoringState) {
 		UserDetail userDetails = (UserDetail)authentication.getDetails();
 		Long userSeq = userDetails.getUser().getUserSeq();
-		List<UserMentoringActivitiesResponseDto> responseDto = userService.findMentoringListState(userSeq, mentoring_state);
+		List<UserMentoringActivitiesResponseDto> responseDto = userService.findMentoringListState(userSeq, mentoringState);
 		return ResponseEntity
 				.status(200)
 				.body(Result.builder()
@@ -274,7 +274,8 @@ public class UserController {
 	 *  기능 : 유저의 멘토 인증 (이메일 전송)
 	 */
 	@PostMapping("/v1/user/mentor/verification")
-	public CommonResponseDto userSendverificationCode(Authentication authentication, @RequestBody EmailRequestDto userEmail) throws Exception {
+	public CommonResponseDto userSendverificationCode(Authentication authentication,
+													  @RequestBody EmailRequestDto userEmail) throws Exception {
 		User user = ((UserDetail) authentication.getDetails()).getUser();
 		return emailService.sendSimpleMessage(user, userEmail);
 	}
@@ -283,7 +284,8 @@ public class UserController {
 	 *  기능 : 유저의 멘토 인증 확인
 	 */
 	@PostMapping("/v1/user/mentor/verification/confirm")
-	public ResponseEntity<Result> userConfirmVerificationCode(Authentication authentication, @RequestBody EmailConfirmRequestDto requestDto) {
+	public ResponseEntity<Result> userConfirmVerificationCode(Authentication authentication,
+															  @RequestBody EmailConfirmRequestDto requestDto) {
 		User user = ((UserDetail) authentication.getDetails()).getUser();
 		String accessToken = userService.confirmVerificationCode(user, requestDto);
 		if(!accessToken.equals(null)) {

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor @AllArgsConstructor
 @Builder
 public class ProjectRespondRequestDto {
+    private Long userSeq;
     private String detailPositionName;
     private ResponseType responseType;
 }

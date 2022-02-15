@@ -1,24 +1,38 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
+import { useDispatch } from 'react-redux';
 // material
 import AsyncCreatableSelect from 'react-select/creatable';
-import { Box, CardHeader } from '@mui/material';
+import { Box, CardHeader, Button } from '@mui/material';
+import { getTech } from '../../_actions/user_actions';
 // utils
 
 // ----------------------------------------------------------------------
 const animatedComponents = makeAnimated();
 // ----------------------------------------------------------------------
 export default function UserStack() {
-  const options = useMemo(
-    () => [
-      { value: 'vue', label: 'Vue.js' },
-      { value: 'react', label: 'React.js' },
-      { value: 'angular', label: 'Angular.js' },
-      { value: 'spring', label: 'Spring' }
-    ],
-    []
-  );
+  const dispatch = useDispatch();
+  const [opti, setOptions] = useState([]);
+
+  const techGet = () => {
+    dispatch(getTech())
+      .then((response) => {
+        const data = response.payload;
+        const all = data.reduce((total, data) => {
+          total = [...total, { value: data.techSeq, label: data.techName }];
+          return total;
+        }, []);
+        setOptions(all);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  useEffect(() => {
+    techGet();
+    setValue([{ value: 1, label: 'Java' }]);
+  }, []);
 
   // styles that do not show 'x' for fixed options
   const styles = useMemo(
@@ -41,7 +55,11 @@ export default function UserStack() {
   );
 
   // selected values, initially it lists all options in order
-  const [value, setValue] = useState(orderOptions(options));
+  const [value, setValue] = useState(orderOptions(opti));
+
+  useEffect(() => {
+    console.log(value);
+  }, [value]);
 
   // handler for changes
   const handleChange = useCallback(
@@ -55,13 +73,13 @@ export default function UserStack() {
           }
           break;
         case 'clear': // clear button is clicked
-          setValue(options.filter((v) => v.isFixed));
+          setValue(opti.filter((v) => v.isFixed));
           return;
         default:
       }
       setValue(inputValue);
     },
-    [options, orderOptions]
+    [opti, orderOptions]
   );
 
   return (
@@ -73,7 +91,7 @@ export default function UserStack() {
           components={animatedComponents} // animate builtin components
           isClearable={value.some((v) => !v.isFixed)} // clear button shows conditionally
           styles={styles} // styles that do not show 'x' for fixed options
-          options={options} // all options
+          options={opti} // all options
           value={value} // selected values
           onChange={handleChange} // handler for changes
         />

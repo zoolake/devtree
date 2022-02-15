@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import { Grid, Card, Button, Container, Stack, Typography } from '@mui/material';
+import jwtdecode from 'jwt-decode';
 // components
 import Page from '../../components/Page';
 import { AppNewsUpdate } from '../../components/_dashboard/app';
 import {
-  Mentoring,
   MentoringStack,
   MentoringTime,
   ProjectChart,
@@ -19,10 +19,13 @@ import {
   UserProfile,
   PasswordUpdate,
   MentorAuth,
-  AlarmList
+  AlarmList,
+  MenteeMentoringList
 } from '../../components/Profile';
 import { MentorReviewList } from '../../components/_dashboard/mentor';
+
 // ----------------------------------------------------------------------
+const usersq = localStorage.getItem('user') ? jwtdecode(localStorage.getItem('user')).userSeq : 0;
 const ismentor = 'true';
 const Tab = [
   {
@@ -57,6 +60,9 @@ const Tab = [
         <Grid item xs={12} md={6} lg={12}>
           <ProjectChart />
         </Grid>
+        <Grid item xs={12} md={6} lg={12}>
+          <MenteeMentoringList />
+        </Grid>
       </Grid>
     )
   },
@@ -75,15 +81,12 @@ const Tab = [
         <Grid container spacing={1}>
           <Grid item xs={12} md={6} lg={12}>
             <MentorProfile />
-          </Grid>{' '}
-          <Grid item xs={12} md={6} lg={12}>
-            <MentoringStack />
           </Grid>
           <Grid item xs={12} md={6} lg={12}>
             <MentoringTime />
           </Grid>
           <Grid item xs={12} md={6} lg={12}>
-            <MentorReviewList />
+            <MentorReviewList mentorId={usersq} />
           </Grid>
         </Grid>
       ) : (
@@ -117,11 +120,11 @@ const useTab = (idx, Tabs) => {
 export default function Profile() {
   const { currentItem, changeItem } = useTab(0, Tab);
   return (
-    <Page title="profile">
+    <Page title="devtree - profile">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Profile
+            내 프로필
           </Typography>
         </Stack>
         <div>

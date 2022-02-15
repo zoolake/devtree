@@ -29,4 +29,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "select u.verificationCode from User u where u.userSeq = :userSeq")
     String findVerificaionCodeByUserSeq(Long userSeq);
 
+
+    @Modifying(clearAutomatically = true)
+    @Query(value = "update User u set u.verificationCode= :epw where u.userSeq = :userSeq")
+    void updateVerificationCodeByUserSeq(Long userSeq, String epw);
 }

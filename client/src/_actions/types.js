@@ -31,3 +31,5 @@ export const GET_PROJECT_DETAIL = 'get_project_detail';
 export const UPDATE_PROJECT = 'update_project';
 export const GET_ALARMLIST = 'get_alarm_list';
 export const GET_MYMENTORPROFILE = 'get_my_mentorfile';
+export const GET_TECH = 'get_tech';
+export const UPDATE_MENTOR = 'update_mentor';

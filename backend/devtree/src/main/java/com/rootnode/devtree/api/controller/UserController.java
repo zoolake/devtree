@@ -8,6 +8,7 @@ import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.api.service.EmailService;
 import com.rootnode.devtree.api.service.UserService;
 import com.rootnode.devtree.common.auth.UserDetail;
+import com.rootnode.devtree.common.util.JwtTokenUtil;
 import com.rootnode.devtree.db.entity.MentoringState;
 import com.rootnode.devtree.db.entity.TeamState;
 import com.rootnode.devtree.db.entity.User;
@@ -18,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 유저 관련 API 요청 처리를 위한 컨트롤러 정의.
@@ -261,9 +263,26 @@ public class UserController {
 	 *  기능 : 유저의 멘토 인증 확인
 	 */
 	@PostMapping("/v1/user/mentor/verification/confirm")
-	public CommonResponseDto userConfirmVerificationCode(Authentication authentication, @RequestBody EmailConfirmRequestDto requestDto) {
+	public ResponseEntity<Result> userConfirmVerificationCode(Authentication authentication, @RequestBody EmailConfirmRequestDto requestDto) {
 		User user = ((UserDetail) authentication.getDetails()).getUser();
-		return userService.confirmVerificationCode(user, requestDto);
+		String accessToken = userService.confirmVerificationCode(user, requestDto);
+		if(!accessToken.equals(null)) {
+			return ResponseEntity
+					.status(200)
+					.body(Result.builder()
+							.data(accessToken)
+							.status(200)
+							.message("인증성공")
+							.build());
+		}
+		else return ResponseEntity
+				.status(401)
+				.body(Result.builder()
+						.data(accessToken)
+						.status(200)
+						.message("인증실패")
+						.build());
+//		return ;
 	}
 
 

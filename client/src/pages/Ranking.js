@@ -21,6 +21,7 @@ import {
 } from '@mui/material';
 // components
 import Page from '../components/Page';
+import Label from '../components/Label';
 import Scrollbar from '../components/Scrollbar';
 import {
   UserListHead,
@@ -28,7 +29,7 @@ import {
   UserMoreMenu
 } from '../components/_dashboard/profileHistory';
 
-import { getRank } from '../_actions/user_actions';
+import { getStudy, getRank } from '../_actions/user_actions';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -53,7 +54,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function Ranking() {
+export default function StudyList() {
   const [studyList, setStudyList] = useState([]);
   const getUserist = async () => {
     dispatch(getRank())
@@ -130,7 +131,7 @@ export default function Ranking() {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - studyList.length) : 0;
 
   return (
-    <Page title="User">
+    <Page title="devtree - ranking">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography variant="h4" gutterBottom>
@@ -156,7 +157,7 @@ export default function Ranking() {
                   {studyList
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => {
-                      const { mentorSeq, mentorRank, mentorNickname, tier } = row;
+                      const { mentorSeq, mentorRank, mentorNickname, tier, mentorExp } = row;
                       return (
                         <TableRow hover key={mentorSeq} tabIndex={-1}>
                           <TableCell component="th" scope="row" padding="3px">
@@ -166,7 +167,7 @@ export default function Ranking() {
                           </TableCell>
                           <TableCell align="left">{mentorNickname}</TableCell>
                           <TableCell align="left">{tier.tierName}</TableCell>
-                          <TableCell align="left">aa</TableCell>
+                          <TableCell align="left">{mentorExp}</TableCell>
                         </TableRow>
                       );
                     })}

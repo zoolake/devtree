@@ -1,11 +1,11 @@
 import { Link as RouterLink } from 'react-router-dom';
 import React, { Component } from 'react';
-
 // material
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { Card, Stack, Link, Container, Typography } from '@mui/material';
 import OpenViduSession from 'openvidu-react';
+import Swal from 'sweetalert2';
 // layouts
 
 // ----------------------------------------------------------------------
@@ -45,11 +45,50 @@ class SessionPage extends Component {
     // 후기를 받을지 안받을지 + 세션을 정리해줄지를 정해준다.
     if (this.state.session !== undefined) {
       if (this.state.userRole === 'USER') {
-        const comment = prompt('후기는 멘토에게 큰 힘이 됩니다! :)');
-        if (comment !== null) this.createComment(comment);
+        // const comment = prompt('후기는 멘토에게 큰 힘이 됩니다! :)');
+        // if (comment !== null) {
+        //   this.createComment(comment);
+        //   alert('소중한 후기 감사합니다!');
+        // }
+        Swal.fire({
+          title: '후기는 멘토에게 큰 힘이 됩니다!😊',
+          html: `<input type="text" id="comment" class="swal2-input" placeholder="Comment">`,
+          showCancelButton: true,
+          confirmButtonText: '후기 남기기',
+          cancelButtonText: '다음에 남기기',
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          focusConfirm: false,
+          preConfirm: () => {
+            const comment = Swal.getPopup().querySelector('#comment').value;
+            console.log(comment);
+            return comment;
+          }
+        })
+          .then((comment) => {
+            if (comment.value !== undefined) {
+              this.createComment(comment);
+              Swal.fire(
+                `
+            소중한 후기 감사합니다! 👍
+          `.trim()
+              );
+            } else {
+              Swal.fire(
+                `
+            다음에는 꼭 남겨주세요! 🙏
+          `.trim()
+              );
+            }
+          })
+          .then(() => {
+            this.quitSession(); // 백엔드의 세션 관련 데이터들을 먼저 정리해준다.
+            this.handlerLeaveSessionEvent();
+          });
+      } else {
+        this.quitSession(); // 백엔드의 세션 관련 데이터들을 먼저 정리해준다.
+        this.handlerLeaveSessionEvent();
       }
-      this.quitSession(); // 백엔드의 세션 관련 데이터들을 먼저 정리해준다.
-      this.handlerLeaveSessionEvent();
     }
   }
 
@@ -80,14 +119,14 @@ class SessionPage extends Component {
   // eslint-disable-next-line react/sort-comp
   joinSession(event) {
     const request = {
-      mentoringSeq: this.state.mentoringSeq,
-      teamName: this.state.teamName,
-      userSeq: this.state.userSeq
+      mentoringSeq: this.state.mentoringSeq
     };
     this.createSession(request).then((data) => {
       this.setState({
         token: data.token,
+        userId: data.userId,
         userRole: data.userRole,
+        teamName: data.teamName,
         session: true
       });
     });
@@ -128,9 +167,9 @@ class SessionPage extends Component {
           <div id="session">
             <OpenViduSession
               id="opv-session"
-              sessionName={teamName}
-              user={userId}
-              token={token}
+              sessionName={this.state.teamName}
+              user={this.state.userId}
+              token={this.state.token}
               joinSession={this.handlerJoinSessionEvent}
               leaveSession={this.handlerMakeCommentEvent}
               error={this.handlerErrorEvent}
@@ -163,12 +202,7 @@ class SessionPage extends Component {
     return new Promise((resolve, reject) => {
       console.log('createSession', request);
       axios
-        .post(`${this.OPENVIDU_SERVER_URL}/v1/session/join`, request, {
-          headers: {
-            Authorization: `Basic ${btoa(`OPENVIDUAPP:${this.OPENVIDU_SERVER_SECRET}`)}`,
-            'Content-Type': 'application/json'
-          }
-        })
+        .get(`/v1/session/join/${request.mentoringSeq}`)
         .then((response) => {
           console.log('CREATE SESSION', response);
           resolve(response.data);
@@ -198,11 +232,13 @@ class SessionPage extends Component {
   // 리뷰를 남기는 함수
   createComment(comment) {
     const request = {
-      comment,
+      comment: comment.value,
       mentoringSeq: this.state.mentoringSeq,
       userSeq: this.state.userSeq
     };
-    axios.post(`${this.OPENVIDU_SERVER_URL}/v1/session/comment`, request, {
+
+    console.log(request);
+    axios.post(`/v1/session/comment`, request, {
       headers: {
         'Content-Type': 'application/json'
       }
@@ -215,7 +251,7 @@ class SessionPage extends Component {
       mentoringSeq: this.state.mentoringSeq,
       token: this.state.token
     };
-    axios.post(`${this.OPENVIDU_SERVER_URL}/v1/session/quit`, request, {
+    axios.post(`/v1/session/quit`, request, {
       headers: {
         'Content-Type': 'application/json'
       }
@@ -233,7 +269,7 @@ class SessionPage extends Component {
       };
       console.log('createToken:', data);
       axios
-        .post(`${this.OPENVIDU_SERVER_URL}/v1/session/join`, data, {
+        .post(`/v1/session/join`, data, {
           headers: {
             Authorization: `Basic ${btoa(`OPENVIDUAPP:${this.OPENVIDU_SERVER_SECRET}`)}`,
             'Content-Type': 'application/json'

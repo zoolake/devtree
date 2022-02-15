@@ -95,7 +95,6 @@ export default function StudyCreationForm() {
 
   // 사용자가 추가하기
   const [techList, setTech] = useState([]);
-
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
   // Selection Form

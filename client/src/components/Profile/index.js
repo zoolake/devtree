@@ -15,7 +15,6 @@ export { default as MentorAuth } from './MentorAuth';
 export { default as MentorProfileUpdate } from './MentorProfileUpdate';
 export { default as MentoringDaySelect } from './MentoringDaySelect';
 export { default as MentorWeeklySetting } from './MentorWeeklySetting';
-export { default as MentorWeeklySetting2 } from './MentorWeeklySetting2';
 export { default as MentoringList } from './MentoringList';
-export { default as Mentee_MentoringList } from './Mentee_MentoringList';
+export { default as MenteeMentoringList } from './MenteeMentoringList';
 export { default as AlarmList } from './AlarmList';

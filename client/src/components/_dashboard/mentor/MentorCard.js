@@ -71,7 +71,23 @@ export default function MentorCard({ post, index }) {
       {' '}
       <Card sx={{ position: 'relative' }}>
         <CardMediaStyle>
-          <AvatarStyle />
+          <div
+            style={{
+              zIndex: 1,
+              width: 50,
+              height: 50,
+              position: 'absolute',
+              margin: '-25px 25px 0px 0px',
+              backgroundColor: 'Yellow',
+              borderRadius: '50%',
+              textAlign: 'right',
+              verticalAlign: 'middle',
+              display: 'table-cell'
+            }}
+          >
+            안녕
+          </div>
+          {/* <AvatarStyle /> */}
           <CoverImgStyle alt={mentorname} src="/static/mock-images/covers/cover_1.jpg" />
         </CardMediaStyle>
         <CardContent>

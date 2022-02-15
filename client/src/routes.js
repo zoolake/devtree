@@ -93,17 +93,17 @@ export default function Router() {
         // { path: 'mentor', element: <MentorPage /> }
       ]
     },
-    // {
-    //   path: '/',
-    //   element: <LogoOnlyLayout />,
-    //   children: [
-    //     { path: 'login', element: <Login /> },
-    //     { path: 'register', element: <Register /> },
-    //     { path: '/', element: <Navigate to="/MainPage/app" /> }
-    //   ]
-    // },
     {
       path: '/',
+      element: <LogoOnlyLayout />,
+      children: [
+        { path: 'login', element: <Login /> },
+        { path: 'register', element: <Register /> },
+        { path: '/', element: <Navigate to="/landing" /> }
+      ]
+    },
+    {
+      path: '/landing',
       element: <Home />
     }
   ]);

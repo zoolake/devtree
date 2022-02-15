@@ -45,6 +45,9 @@
   align-items: center;
   height: calc(100vh);
   z-index: 1000;
+  /* background-color: rgb(241, 248, 217); */
+  /* background-color: rgb(213, 228, 209); */
+  background-color: darkslategrey;
 }
 .greeting {
   margin: -63px 20px 0 20px;
@@ -57,7 +60,8 @@
   border: 0.1rem solid #16e67e; */
 }
 .greeting-text {
-  color: rgb(34, 34, 34);
+  color: rgb(182, 179, 179);
+  /* color: rgb(34, 34, 34); */
   margin: 15px;
 }
 .name {

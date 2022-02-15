@@ -33,7 +33,7 @@ const Home = () => {
           <h1 className="greeting-text">
             <Typewriter
               options={{
-                strings: ['Welcome to DevTree', 'I Like Mentoring'],
+                strings: ['환영합니다! devtree입니다.', 'I Like Mentoring'],
                 autoStart: true,
                 loop: true,
                 deleteSpeed: 10,
@@ -44,29 +44,30 @@ const Home = () => {
           </h1>
           <Bounce cascade>
             <div className="links">
-              <a href="/MainPage/app" rel="noopener noreferrer">
+              <a href="/Mainpage/app" rel="noopener noreferrer">
                 <img className="imgs" src={linkedin} alt="Linkedin Logo" width="200px" />
               </a>
             </div>
           </Bounce>
           {/* <div className="scroll-down">
-              <Link
-                activeClass="active"
-                to="about"
-                spy={true}
-                smooth={true}
-                offset={-63}
-                duration={500}
-              >
-                <ArrowDropDownCircleIcon
-                  fontSize="large"
-                  style={{ pointerEvents: 'fill', cursor: 'pointer' }}
-                />
-              </Link>
-            </div> */}
+            <Link
+              activeClass="active"
+              to="about"
+              spy={true}
+              smooth={true}
+              offset={-63}
+              duration={500}
+            >
+              <ArrowDropDownCircleIcon
+                fontSize="large"
+                style={{ pointerEvents: 'fill', cursor: 'pointer' }}
+              />
+            </Link>
+          </div> */}
           {/* </Fade> */}
         </div>
       </div>
+      {/* <div style={{ backgroundColor: 'black', height: '60px' }}>하하</div> */}
     </div>
   );
 };

@@ -131,7 +131,7 @@ export default function StudyList() {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - studyList.length) : 0;
 
   return (
-    <Page title="User">
+    <Page title="devtree - ranking">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography variant="h4" gutterBottom>

@@ -123,7 +123,7 @@ const useTab = (idx, Tabs) => {
 export default function Profile() {
   const { currentItem, changeItem } = useTab(0, Tab);
   return (
-    <Page title="profile">
+    <Page title="devtree - profile">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>

@@ -26,7 +26,7 @@ export default function AppRankMain() {
           background: 'url(https://picsum.photos/2000/400)',
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'contain',
-          height: '300px',
+          height: '400px',
           width: '100%',
           borderRadius: '40px'
         }}

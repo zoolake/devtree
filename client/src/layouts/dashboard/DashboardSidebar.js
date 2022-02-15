@@ -25,7 +25,7 @@ import account from '../../_mocks_/account';
 
 // ----------------------------------------------------------------------
 
-const DRAWER_WIDTH = 250;
+const DRAWER_WIDTH = 280;
 let token = localStorage.getItem('user') || '로그인 하기';
 let a;
 if (localStorage.getItem('user')) {
@@ -43,7 +43,7 @@ const RootStyle = styled('div')(({ theme }) => ({
 const AccountStyle = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  padding: theme.spacing(2, 2.5),
+  padding: theme.spacing(2, 3),
   borderRadius: theme.shape.borderRadiusSm,
   backgroundColor: theme.palette.grey[200]
 }));
@@ -72,9 +72,8 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: '#02c87e'
-
-          // borderRadius: '30px'
+          //  backgroundColor: '#02c87e',
+          background: 'url(/static/images/sidebar.png)'
         }
       }}
     >
@@ -126,8 +125,10 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         <Drawer
           open
           variant="persistent"
+          elevation="0"
           PaperProps={{
             sx: {
+              elevation: 0,
               width: DRAWER_WIDTH,
               bgcolor: 'background.default'
             }

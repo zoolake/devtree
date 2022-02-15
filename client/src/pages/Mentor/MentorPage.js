@@ -27,8 +27,8 @@ export default function Mentor() {
     dispatch(getMentors())
       .then((response) => {
         if (response) {
-          console.log(response.payload.data);
-          setMentorList(response.payload.data);
+          console.log(response.payload.data.content);
+          setMentorList(response.payload.data.content);
         }
       })
       .catch((err) => {
@@ -40,7 +40,7 @@ export default function Mentor() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <Page title="Mentor">
+    <Page title="devtree - Mentor">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
@@ -53,7 +53,7 @@ export default function Mentor() {
         </Stack>
         <Grid container spacing={3}>
           {mentorlist.map((post, index) => (
-            <MentorCard key={post.id} post={post} index={index} />
+            <MentorCard key={post.mentorSeq} post={post} index={index} />
           ))}
         </Grid>
       </Container>

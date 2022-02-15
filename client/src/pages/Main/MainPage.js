@@ -21,7 +21,7 @@ import {
 
 export default function MainPage() {
   return (
-    <Page title="Dashboard | Minimal-UI">
+    <Page title="devtree">
       <Container maxWidth="xl">
         <Grid container spacing={4}>
           <Grid item xs={12} sm={6} lg={12}>

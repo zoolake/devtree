@@ -206,6 +206,26 @@ public class UserController {
 	}
 
 	/**
+	 *  기능 : 현재 팀에 속한 멤버인지 확인 (true면 속함, false면 속하지 않음)
+	 */
+	@GetMapping("/v1/member/check/{teamSeq}")
+	public ResponseEntity<Result> userCheckTeamMember(Authentication authentication,
+													  @PathVariable Long teamSeq) {
+		UserDetail userDetails = (UserDetail)authentication.getDetails();
+		Long userSeq = userDetails.getUser().getUserSeq();
+
+		boolean responseDto = userService.checkTeamMember(userSeq, teamSeq);
+		return ResponseEntity
+				.status(200)
+				.body(Result.builder()
+						.data(responseDto)
+						.status(200)
+						.message("참여한 팀 내역(팀 일련번호, 팀 이름, 팀 타입) 조회 성공")
+						.build());
+	}
+
+
+	/**
 	 *  기능 : 유저가 속한 팀 목록
 	 */
 	@GetMapping("/v1/common/team")

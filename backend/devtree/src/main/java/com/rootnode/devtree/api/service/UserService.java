@@ -33,11 +33,12 @@ public interface UserService {
 	List<UserMentoringActivitiesResponseDto> findMentoringListAll(Long userSeq);
 	List<UserMentoringActivitiesResponseDto> findMentoringListState(Long userSeq, MentoringState mentoringState);
 
+	boolean checkTeamMember(Long userSeq, Long teamSeq);
 	List<TeamInfoDto> findUserTeam(Long userSeq);
 	List<TeamInfoDto> findManagerTeam(Long managerSeq);
 	CommonResponseDto certificationMentor(Long mentorSeq,MentorCertificationRequestDto requestDto);
 
 	List<NotificationResponseDto> findUserNotification(Long userSeq);
 	NotificationResponseDto findUserDetailNotification(Long notificationSeq);
-	String confirmVerificationCode(User user, EmailConfirmRequestDto requestDto) ;
+	String confirmVerificationCode(User user, EmailConfirmRequestDto requestDto);
 }

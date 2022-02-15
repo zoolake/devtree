@@ -277,6 +277,22 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public boolean checkTeamMember(Long userSeq, Long teamSeq) {
+        boolean isCheck = false;
+        Team team = teamRepository.findTeamByTeamSeq(teamSeq);
+        List<Long> teamMemberSeq;
+
+        if(team.getTeamType().equals(TeamType.STUDY)) {
+            teamMemberSeq = studyUserRepository.findUserSeqByTeamSeq(teamSeq);
+            isCheck = teamMemberSeq.stream().anyMatch(memberSeq -> memberSeq.equals(userSeq));
+        } else {
+            teamMemberSeq = projectPositionUserRepository.findUserSeqByTeamSeq(teamSeq);
+            isCheck = teamMemberSeq.stream().anyMatch(memberSeq -> memberSeq.equals(userSeq));
+        }
+        return isCheck;
+    }
+
     // 사용자가 속한 팀 찾기
     @Override
     public List<TeamInfoDto> findUserTeam(Long userSeq) {

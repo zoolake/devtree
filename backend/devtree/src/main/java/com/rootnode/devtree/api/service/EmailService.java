@@ -96,7 +96,10 @@ public class EmailService {
             es.printStackTrace();
             throw new IllegalArgumentException();
         }
-        user.changeVerificationCode(ePw);
+        System.out.println("user.getUserId() = " + user.getUserId());
+        System.out.println("ePw = " + ePw);
+        userRepository.updateVerificationCodeByUserSeq(user.getUserSeq(), ePw);
+//        user.changeVerificationCode(ePw);
         return new CommonResponseDto(200, "멘토 인증 코드를 전송하였습니다.");
     }
 }

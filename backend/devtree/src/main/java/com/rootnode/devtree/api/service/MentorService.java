@@ -12,6 +12,7 @@ import org.aspectj.weaver.ast.Not;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -21,6 +22,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -37,18 +40,57 @@ public class MentorService {
     private final TierRepository tierRepository;
     private final NotificationRepository notificationRepository;
 
-    public Page<MentorListResponseDto> findMentors(Pageable pageable) {
-        Page<Mentor> mentors = mentorRepository.findAllWithPagination(pageable);
-        return new PageImpl(mentors.stream()
+    /**
+     *  mentorlist pagination
+     */
+//    public Page<MentorListResponseDto> findMentors(Pageable pageable) {
+//        Page<Mentor> mentors = mentorRepository.findAllWithPagination(pageable);
+//        return new PageImpl(mentors.stream()
+//                .map(mentor -> {
+//                    List<MentorTechInfoDto> mentorTechInfoDtoList =
+//                            mentorTechRepository.findByMentorTechIdMentorSeq(mentor.getMentorSeq()).stream()
+//                                    .map(mentorTech -> new MentorTechInfoDto(mentorTech))
+//                                    .collect(Collectors.toList());
+//
+//                    return new MentorListResponseDto(mentor, mentorTechInfoDtoList);
+//                })
+//                .collect(Collectors.toList()));
+//    }
+
+    /**
+     *  mentorlist non pagination
+     */
+    public List<MentorListResponseDto> findMentors() {
+        List<Mentor> mentors = mentorRepository.findAll();
+        return mentors.stream()
                 .map(mentor -> {
                     List<MentorTechInfoDto> mentorTechInfoDtoList =
                             mentorTechRepository.findByMentorTechIdMentorSeq(mentor.getMentorSeq()).stream()
                                     .map(mentorTech -> new MentorTechInfoDto(mentorTech))
                                     .collect(Collectors.toList());
-
-                    return new MentorListResponseDto(mentor, mentorTechInfoDtoList);
+                    Tier tier =tierRepository.findByTierMaxExpGreaterThanEqualAndTierMinExpLessThanEqual(mentor.getMentorExp(),mentor.getMentorExp());
+                    return new MentorListResponseDto(mentor,tier, mentorTechInfoDtoList);
                 })
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
+
+    }
+
+    /**
+     * sorted mentorlist non pagination
+     */
+    public List<MentorSortedListResponseDto> findSortedMentors() {
+        AtomicLong index = new AtomicLong();
+        List<Mentor> mentors = mentorRepository.findAll(Sort.by(Sort.Direction.DESC,"mentorExp"));
+        return mentors.stream()
+                .map(mentor -> {
+                    List<MentorTechInfoDto> mentorTechInfoDtoList =
+                            mentorTechRepository.findByMentorTechIdMentorSeq(mentor.getMentorSeq()).stream()
+                                    .map(mentorTech -> new MentorTechInfoDto(mentorTech))
+                                    .collect(Collectors.toList());
+                    Tier tier =tierRepository.findByTierMaxExpGreaterThanEqualAndTierMinExpLessThanEqual(mentor.getMentorExp(),mentor.getMentorExp());
+                    return new MentorSortedListResponseDto(mentor,index.getAndIncrement(),tier, mentorTechInfoDtoList);
+                })
+                .collect(Collectors.toList());
     }
 
     /**
@@ -92,7 +134,7 @@ public class MentorService {
 
             List<MentoringComment> mentoringCommentList = mentoringCommentRepository.findByMentoringSeq(mentoringSeq);
             mentoringCommentList.forEach(mentoringComment -> {
-                reviewDtoList.add(new MentoringCommentInfoDto(userRepository.findById(mentoringComment.getUser().getUserSeq()).get(), mentoringComment));
+                reviewDtoList.add(new MentoringCommentInfoDto(userRepository.findByUserSeq(mentoringComment.getUser().getUserSeq()).get(), mentoringComment));
             });
 
         });
@@ -107,6 +149,7 @@ public class MentorService {
                 .mentorTechList(mentorTechInfoDtoList)
                 .mentoringInfoList(mentoringInfoList)
                 .mentoringReviewList(reviewDtoList)
+                .mentorExp(mentor.getMentorExp())
                 .tier(tier)
                 .build();
     }
@@ -159,34 +202,35 @@ public class MentorService {
 
         // 6. 멘토의 가능 시간 찾기
         // 날짜 별 가능한 시간 찾기
-        LocalDate currentDate = LocalDate.now();
-        List<MentorScheduleId> mentorTimeList = mentorScheduleRepository.findAfterNowByMentorSeq(mentorSeq, currentDate);
-
-        List<MentorTimeInfoDto> availableTimeList = new ArrayList<>();
-
-        mentorTimeList.forEach(schedule -> {
-            // false면 없음, true면 있음
-            boolean exist = false;
-            LocalDate date = schedule.getMentorDate();
-            LocalTime time = schedule.getMentorTime();
-            for (MentorTimeInfoDto availableTime : availableTimeList) {
-                if(availableTime.getMentorDate().equals(date)) {
-                    availableTime.getMentorTime().add(time);
-                    exist = true;
-                    break;
-                }
-            }
-            if(!exist) {
-                List<LocalTime> timeList = new ArrayList<>();
-                timeList.add(time);
-                availableTimeList.add(new MentorTimeInfoDto(date, timeList));
-            }
-        });
-        availableTimeList.stream().sorted(Comparator.comparing(MentorTimeInfoDto::getMentorDate)).collect(Collectors.toList());
-        availableTimeList.forEach(availableTime->{
-            List<LocalTime> timeList = availableTime.getMentorTime();
-            Collections.sort(timeList);
-        });
+        // 멘토링 가능 시간 조회 api를 사용하기로 함
+//        LocalDate currentDate = LocalDate.now();  // 날짜가 오늘이 아닌 클라이언트가 보내주는 날짜로 바꿔야함....
+//        List<MentorScheduleId> mentorTimeList = mentorScheduleRepository.findAfterNowByMentorSeq(mentorSeq, currentDate);
+//
+//        List<MentorTimeInfoDto> availableTimeList = new ArrayList<>();
+//
+//        mentorTimeList.forEach(schedule -> {
+//            // false면 없음, true면 있음
+//            boolean exist = false;
+//            LocalDate date = schedule.getMentorDate();
+//            LocalTime time = schedule.getMentorTime();
+//            for (MentorTimeInfoDto availableTime : availableTimeList) {
+//                if(availableTime.getMentorDate().equals(date)) {
+//                    availableTime.getMentorTime().add(time);
+//                    exist = true;
+//                    break;
+//                }
+//            }
+//            if(!exist) {
+//                List<LocalTime> timeList = new ArrayList<>();
+//                timeList.add(time);
+//                availableTimeList.add(new MentorTimeInfoDto(date, timeList));
+//            }
+//        });
+//        availableTimeList.stream().sorted(Comparator.comparing(MentorTimeInfoDto::getMentorDate)).collect(Collectors.toList());
+//        availableTimeList.forEach(availableTime->{
+//            List<LocalTime> timeList = availableTime.getMentorTime();
+//            Collections.sort(timeList);
+//        });
 
         return MentorSelfDetailSelfResponseDto.builder()
                 .mentorName(user.getUserName())
@@ -194,10 +238,10 @@ public class MentorService {
                 .mentorDesc(mentor.getMentorDesc())
                 .mentorEmail(user.getUserEmail())
                 .mentorNickname(user.getUserNickname())
-                .mentorTimeList(availableTimeList)
                 .mentorTechList(mentorTechInfoDtoList)
                 .mentoringInfoList(mentoringInfoList)
                 .mentoringReviewList(reviewDtoList)
+                .mentorExp(mentor.getMentorExp())
                 .tier(tierRepository.findByTierMaxExpGreaterThanEqualAndTierMinExpLessThanEqual(mentor.getMentorSeq(),mentor.getMentorExp()))
                 .build();
     }
@@ -252,6 +296,8 @@ public class MentorService {
         LocalDate mentorDate = requestDto.getMentorDate();
         List<LocalTime> mentorTimeList = requestDto.getMentorTime();
 
+        mentorScheduleRepository.deleteByMentorSeqAndDate(mentorSeq, mentorDate);
+
         mentorTimeList.forEach(mentorTime -> {
             mentorScheduleRepository.save(new MentorSchedule(new MentorScheduleId(mentorDate, mentorTime, mentorSeq), mentor));
         });
@@ -259,10 +305,25 @@ public class MentorService {
     }
 
     // 멘토링 가능 스케줄 조회
-    public List<LocalTime> findAvailableTime(Long mentorSeq, MentoringAvailableTimeRequestDto requestDto) {
-        LocalDate selectedDate = requestDto.getSelectedDate();
+    public List<String> findAvailableTime(Long mentorSeq, MentoringAvailableTimeRequestDto requestDto) {
+        LocalDate selectedDate = requestDto.getMentorDate();
+
         List<LocalTime> availableTimeList = mentorScheduleRepository.findByMentorSeqAndDate(mentorSeq, selectedDate);
-        return availableTimeList;
+        return availableTimeList.stream()
+                .map(time -> time.format(DateTimeFormatter.ofPattern("HH:mm"))).collect(Collectors.toList());
+    }
+
+    // 예약 확정된 멘토링 스케줄 조회
+    public List<String> findUnavailableTime(Long mentorSeq, MentoringAvailableTimeRequestDto requestDto) {
+        LocalDate selectedDate = requestDto.getMentorDate();
+
+        // 멘토링 정보 찾기
+        List<Mentoring> mentoringList = mentoringRepository.findByMentorMentorSeqAndMentoringState(mentorSeq, MentoringState.ACCEPT)
+                .stream().filter(mentoring -> mentoring.getMentoringStartDate().equals(selectedDate)).collect(Collectors.toList());
+
+        return mentoringList.stream()
+                .map(mentoring -> mentoring.getMentoringStartTime().format(DateTimeFormatter.ofPattern(("HH:mm"))))
+                .collect(Collectors.toList());
     }
 
     // 멘토링 신청
@@ -283,10 +344,22 @@ public class MentorService {
         return new CommonResponseDto(201, "멘토링 신청을 완료하였습니다.");
     }
 
-    // 멘토의 멘토링 모든 정보 찾기
+    // 멘토의 멘토링 모든 정보 조회
     public List<MentoringApplyListResponseDto> findMentoringApplyList(Long mentorSeq) {
         // 멘토링 정보 찾기
-        List<Mentoring> mentoringList = mentoringRepository.findByMentorMentorSeqAndMentoringState(mentorSeq, MentoringState.WAIT);
+        List<Mentoring> mentoringList = mentoringRepository.findByMentorSeq(mentorSeq);
+        // 멘토링 시작 날짜 순 정렬 -> 시작 시간 순 정렬 -> 신청 시간 순 정렬
+        return mentoringList.stream()
+                .map(mentoring -> new MentoringApplyListResponseDto(mentoring))
+                .sorted(Comparator.comparing(MentoringApplyListResponseDto::getMentoringStartDate).thenComparing(MentoringApplyListResponseDto::getMentoringStartTime).thenComparing(MentoringApplyListResponseDto::getMentoringCreateTime))
+                .collect(Collectors.toList());
+    }
+
+
+    // 멘토의 확정된 멘토링 정보 조회
+    public List<MentoringApplyListResponseDto> findMentoringApplyAcceptList(Long mentorSeq) {
+        // 멘토링 정보 찾기
+        List<Mentoring> mentoringList = mentoringRepository.findByMentorMentorSeqAndMentoringState(mentorSeq, MentoringState.ACCEPT);
         // 멘토링 시작 날짜 순 정렬 -> 시작 시간 순 정렬 -> 신청 시간 순 정렬
         return mentoringList.stream()
                 .map(mentoring -> new MentoringApplyListResponseDto(mentoring))

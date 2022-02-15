@@ -39,5 +39,5 @@ public interface UserService {
 
 	List<NotificationResponseDto> findUserNotification(Long userSeq);
 	NotificationResponseDto findUserDetailNotification(Long notificationSeq);
-	CommonResponseDto confirmVerificationCode(User user, EmailConfirmRequestDto requestDto);
+	String confirmVerificationCode(User user, EmailConfirmRequestDto requestDto) ;
 }

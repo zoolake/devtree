@@ -19,6 +19,7 @@ public class MentorDetailResponseDto {
     private List<MentorTechInfoDto> mentorTechList;
     private String mentorDesc;
     private String mentorEmail;
+    private Long mentorExp;
     private List<MentoringInfoDto> mentoringInfoList;
     private List<MentoringCommentInfoDto> mentoringReviewList;
     private Tier tier;

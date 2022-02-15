@@ -49,6 +49,8 @@ public class User{
     public void changeUserNickName(String userNickname) { this.userNickname = userNickname; }
     public void changeUserEmail(String userEmail) { this.userEmail = userEmail; }
     public void changeUserRole(UserRole userRole) { this.userRole = userRole; }
-    public void changeVerificationCode(String verificationCode) { this.verificationCode = verificationCode; }
+    public void changeVerificationCode(String verificationCode) {
+        System.out.println("this.verificationCode = " + this.verificationCode);
+    }
 
 }

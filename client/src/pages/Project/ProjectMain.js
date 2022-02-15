@@ -50,9 +50,6 @@ export default function ProjectMain() {
   }, []);
 
   // condition
-  if (projectList.length === 0) {
-    return <div>'생성된 프로젝트가 없습니다.'</div>;
-  }
   if (loading) {
     return <div>'로딩 중'</div>;
   }

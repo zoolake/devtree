@@ -27,20 +27,6 @@ export function createProject(pjtData) {
   return { type: CREATE_PROJECT, payload: request };
 }
 
-export function getTechList() {
-  const request = axios
-    .get('/tech') // https://127.26.1.146:8080/v1/tech
-    .then((response) => response);
-  return { type: GET_TECH_LIST, payload: request };
-}
-
-export function getPositionList() {
-  const request = axios
-    .get('/position') // https://127.26.1.146:8080/v1/position
-    .then((response) => response);
-  return { type: GET_POSITION_LIST, payload: request };
-}
-
 export function getProjectDetail(teamSeq) {
   const request = axios
     .get(`/project/${teamSeq}`) // https://127.26.1.146:8080/v1/project/${teamSeq.id}
@@ -82,11 +68,4 @@ export function answerProjectResponse(data) {
     .post(`/project/join/response/${data.teamSeq}`, data.dataToSubmit) // https://127.26.1.146:8080/v1/project/join/response/${teamSeq.id}
     .then((response) => response);
   return { type: ANSWER_PROJECT_RESPONSE, payload: request };
-}
-
-export function changeProjectState(data) {
-  const request = axios
-    .put('/team/change/state', data) // https://127.26.1.146:8080/v1/team/change/state
-    .then((response) => response);
-  return { type: CHANGE_PROJECT_STATE, payload: request };
 }

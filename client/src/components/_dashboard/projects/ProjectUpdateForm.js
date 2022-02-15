@@ -7,7 +7,8 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { TextField, Button, FormControl, InputLabel, NativeSelect, Stack } from '@mui/material';
 //
-import { updateProject, getTechList, getPositionList } from '../../../_actions/project_actions';
+import { updateProject } from '../../../_actions/project_actions';
+import { getTechList, getPositionList } from '../../../_actions/team_actions';
 import SelectPositionCnt from '../../team/SelectPositionCnt';
 
 ProjectUpdateForm.propTypes = {
@@ -116,7 +117,7 @@ export default function ProjectUpdateForm({ projectDetail }) {
   const handleChange = (event, type) => {
     if (type === 'tech') {
       setSelectedTech(event.target.value);
-      if (myTechList.includes(findOrigin(allTechList, 'techName', event.target.value))) {
+      if (myTechList.map((tech) => tech.techName).includes(event.target.value)) {
         return;
       }
       setMyTech([...myTechList, findOrigin(allTechList, 'techName', event.target.value)]);
@@ -133,13 +134,9 @@ export default function ProjectUpdateForm({ projectDetail }) {
         ...myPositionList,
         findOrigin(allPositionList, 'detailPositionName', event.target.value)
       ]);
-    } else {
-      setTeamState(event.target.value);
-      console.log(teamState);
     }
   };
   const handlePositionCntChange = (value, pos, dv) => {
-    console.log(value, pos, dv);
     if (!value) {
       setsendingPositionList([
         ...sendingPositionList,

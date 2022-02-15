@@ -1,10 +1,11 @@
-import React, { useState, useEffect, setState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link as RouterLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import jwtdecode from 'jwt-decode';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 //
-import { getProjectDetail, changeProjectState } from '../../_actions/project_actions';
+import { getProjectDetail } from '../../_actions/project_actions';
+import { changeTeamState } from '../../_actions/team_actions';
 import { checkTeamMember } from '../../_actions/user_actions';
 
 export default function ProjectDetail() {
@@ -56,7 +57,7 @@ export default function ProjectDetail() {
         teamState: newAlignment
       };
       const changePjtState = async () => {
-        await dispatch(changeProjectState(dataToSubmit))
+        await dispatch(changeTeamState(dataToSubmit))
           .then(() => {
             console.log('프로젝트 상태 수정 성공');
             getPjtDetail();

@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { StudyUpdateForm } from '../../components/_dashboard/study';
+//
+// import { StudyJoinForm } from '../../components/_dashboard/study';
 import { getStudyDetail } from '../../_actions/study_actions';
 
-export default function StudyUpdate() {
-  // STATE
+export default function StudyJoin() {
+  // state
   const teamSeq = useParams().id;
   const [studyDetail, setStudyDetail] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // AXIOS
+  // axios
   const dispatch = useDispatch();
   // 해당 스터디 정보 불러오기
-  const makeStudyDetail = async () => {
+  const getStyDetail = async () => {
     setLoading(true);
     await dispatch(getStudyDetail(teamSeq))
       .then((response) => {
-        console.log('스터디 상세 정보 불러오기 성공');
+        console.log(response.payload.data.data);
         setStudyDetail(response.payload.data.data);
       })
       .catch((error) => {
@@ -28,7 +29,7 @@ export default function StudyUpdate() {
 
   // RENDER
   useEffect(() => {
-    makeStudyDetail();
+    getStyDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -36,8 +37,8 @@ export default function StudyUpdate() {
   if (loading || studyDetail.length === 0) return <div>로딩 중</div>;
   return (
     <div>
-      <h1>Study Update</h1>
-      <StudyUpdateForm studyDetail={studyDetail} />
+      <h1>스터디 신청</h1>
+      {/* <StudyJoinForm studyPosition={studyDetail.teamPosition} /> */}
     </div>
   );
 }

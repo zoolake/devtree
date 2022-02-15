@@ -6,7 +6,8 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { TextField, Button, FormControl, InputLabel, NativeSelect, Stack } from '@mui/material';
 //
-import { createProject, getTechList, getPositionList } from '../../../_actions/project_actions';
+import { createProject } from '../../../_actions/project_actions';
+import { getTechList, getPositionList } from '../../../_actions/team_actions';
 import SelectPositionCnt from '../../team/SelectPositionCnt';
 
 export default function ProjectCreationForm() {

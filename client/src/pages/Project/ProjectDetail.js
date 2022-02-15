@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, setState } from 'react';
 import { useParams, Link as RouterLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import jwtdecode from 'jwt-decode';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 //
 import { getProjectDetail, changeProjectState } from '../../_actions/project_actions';
+import { checkTeamMember } from '../../_actions/user_actions';
 
 export default function ProjectDetail() {
   // STATE
@@ -12,28 +13,37 @@ export default function ProjectDetail() {
   const [projectDetail, setProjectDetail] = useState([]);
   const [loading, setLoading] = useState(false);
   const [userSeq] = useState(jwtdecode(localStorage.getItem('user')).userSeq);
-  const [alignment, setAlignment] = React.useState('left');
+  const [alignment, setAlignment] = useState();
+  const [belonged, setBelonged] = useState(false);
   const TEAM_STATE = [
     { state: 'RECRUIT', stateName: '진행 중' },
     { state: 'COMPLETED', stateName: '모집 완료됨' },
     { state: 'FINISH', stateName: '종료됨' }
   ];
 
-  // AXIOS
+  // INIT
   const dispatch = useDispatch();
   const getPjtDetail = async () => {
     setLoading(true);
     await dispatch(getProjectDetail(teamSeq))
       .then((response) => {
-        console.log('프로젝트 상세 조회 성공');
         const projectData = response.payload.data.data;
-        console.log(response.payload.data.data);
         setProjectDetail(projectData);
+        console.log('프로젝트 상세 조회 성공');
+        return projectData.teamState;
+      })
+      .then((state) => {
+        setAlignment(state);
       })
       .catch((error) => {
         console.log(error, '프로젝트 상세 조회 실패');
       });
     setLoading(false);
+  };
+  const getBelonged = async () => {
+    await dispatch(checkTeamMember(teamSeq)).then((response) => {
+      setBelonged(response.payload.data.data);
+    });
   };
 
   // HANDLE
@@ -43,12 +53,13 @@ export default function ProjectDetail() {
       const teamSeqNum = teamSeq * 1;
       const dataToSubmit = {
         teamSeq: teamSeqNum,
-        teamState: alignment
+        teamState: newAlignment
       };
       const changePjtState = async () => {
         await dispatch(changeProjectState(dataToSubmit))
           .then(() => {
             console.log('프로젝트 상태 수정 성공');
+            getPjtDetail();
           })
           .catch((error) => {
             console.log(error, '프로젝트 상태 수정 실패');
@@ -62,10 +73,17 @@ export default function ProjectDetail() {
   // RENDER
   useEffect(() => {
     getPjtDetail();
+    getBelonged();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // CONDITION
+  let joinBtn;
+  if (belonged || alignment !== 'RECRUIT') {
+    joinBtn = null;
+  } else {
+    joinBtn = <RouterLink to="join">프로젝트 신청</RouterLink>;
+  }
   if (loading || projectDetail.length === 0) return null;
 
   // PAGE
@@ -97,7 +115,7 @@ export default function ProjectDetail() {
         </ul>
         <RouterLink to="update">프로젝트 수정</RouterLink>
         <RouterLink to="delete">프로젝트 삭제</RouterLink>
-        <RouterLink to="join">프로젝트 신청</RouterLink>
+        {joinBtn}
         <RouterLink to="response">프로젝트 신청 목록</RouterLink>
       </div>
     );

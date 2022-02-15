@@ -10,7 +10,8 @@ import {
   DELETE_USER,
   UPDATE_USER,
   GET_RANK,
-  GET_ALARMLIST
+  GET_ALARMLIST,
+  CHECK_TEAM_MEMBER
 } from './types';
 import { USER_SERVER } from '../components/config';
 import setAuthorizationToken from '../utils/setAuthorizationToken';
@@ -161,6 +162,15 @@ export function logoutUser() {
 
   return {
     type: LOGOUT_USER,
+    payload: request
+  };
+}
+
+// 내가 속해있는지 확인
+export function checkTeamMember(teamSeq) {
+  const request = axios.get(`/member/check/${teamSeq}`).then((response) => response);
+  return {
+    type: CHECK_TEAM_MEMBER,
     payload: request
   };
 }

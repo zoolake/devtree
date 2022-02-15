@@ -68,22 +68,22 @@ public class StudyApiController {
      */
     @PostMapping("/v1/study/{team_seq}")
     public ResponseEntity<CommonResponseDto> studyJoin(Authentication authentication,
-                                                       @PathVariable Long team_seq,
+                                                       @PathVariable Long teamSeq,
                                                        @RequestBody StudyJoinRequestDto requestDto) {
         UserDetail userDetail = (UserDetail)authentication.getDetails();
         Long userSeq = userDetail.getUser().getUserSeq();
         System.out.println("user_seq >>> " + requestDto.getUserSeq());
         return ResponseEntity
                 .status(200)
-                .body(studyService.joinStudy(userSeq,team_seq, requestDto));
+                .body(studyService.joinStudy(userSeq,teamSeq, requestDto));
     }
 
     /**
      * 기능 : 스터디 신청 조회
      */
     @GetMapping("/v1/study/join/{team_seq}")
-    public ResponseEntity<Result> studyJoinList(@PathVariable Long team_seq) {
-        List<StudyJoinListResponseDto> responseDto = studyService.findStudyJoinList(team_seq);
+    public ResponseEntity<Result> studyJoinList(@PathVariable Long teamSeq) {
+        List<StudyJoinListResponseDto> responseDto = studyService.findStudyJoinList(teamSeq);
         return ResponseEntity
                 .status(200)
                 .body(Result.builder()
@@ -96,15 +96,15 @@ public class StudyApiController {
     /**
      * 기능 : 스터디 신청 응답
      */
-    @PostMapping("/v1/study/join/{team_seq}")
+    @PostMapping("/v1/study/join/{teamSeq}")
     public ResponseEntity<CommonResponseDto> studyJoinResponse(Authentication authentication,
-                                                               @PathVariable Long team_seq,
+                                                               @PathVariable Long teamSeq,
                                                                @RequestBody StudyRespondRequestDto requestDto) {
         UserDetail userDetails = (UserDetail)authentication.getDetails();
-        Long user_seq = userDetails.getUser().getUserSeq();
+        Long userSeq = userDetails.getUser().getUserSeq();
         return ResponseEntity
                 .status(201)
-                .body(studyService.respondStudy(team_seq, user_seq, requestDto));
+                .body(studyService.respondStudy(teamSeq, userSeq, requestDto));
     }
 
     /**

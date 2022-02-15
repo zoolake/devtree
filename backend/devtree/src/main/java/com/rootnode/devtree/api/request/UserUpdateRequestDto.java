@@ -16,6 +16,7 @@ import java.util.List;
 @Builder
 public class UserUpdateRequestDto {
 
+    private String userEmail;
     private String userName;
     private String userNickname;
     private String userDesc;

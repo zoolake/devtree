@@ -93,6 +93,26 @@ public class MentorService {
                 .collect(Collectors.toList());
     }
 
+    public List<MentorListResponseDto> findTechMentors(MentorTechRequestDto requestDto) {
+        List<Long> mentorTechSeq = requestDto.getMentorTechSeq();
+        Map<Long, MentorListResponseDto> mentorListMap = new HashMap<>();
+
+        mentorTechSeq.forEach(techSeq -> {
+            List<Mentor> mentors = mentorTechRepository.findByTechSeq(techSeq);
+            mentors.forEach(mentor -> {
+                Long mentorSeq = mentor.getMentorSeq();
+                Long mentorExp = mentor.getMentorExp();
+                Tier tier = tierRepository.findByTierMaxExpGreaterThanEqualAndTierMinExpLessThanEqual(mentorExp, mentorExp);
+                List<MentorTechInfoDto> mentorTechList = mentorTechRepository.findByMentorTechIdMentorSeq(mentorSeq).stream()
+                        .map(mentorTech -> new MentorTechInfoDto(mentorTech)).collect(Collectors.toList());
+                if(mentorListMap.get(mentorSeq) == null) {
+                    mentorListMap.put(mentorSeq, new MentorListResponseDto(mentor, tier, mentorTechList));
+                }
+            });
+        });
+        return mentorListMap.values().stream().collect(Collectors.toList());
+    }
+
     /**
      * 남이 보는 멘토 프로필
      */

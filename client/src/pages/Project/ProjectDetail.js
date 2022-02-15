@@ -116,7 +116,6 @@ export default function ProjectDetail() {
         </ul>
         <RouterLink to="update">프로젝트 수정</RouterLink>
         <RouterLink to="delete">프로젝트 삭제</RouterLink>
-        {joinBtn}
         <RouterLink to="response">프로젝트 신청 목록</RouterLink>
       </div>
     );
@@ -140,7 +139,7 @@ export default function ProjectDetail() {
         <li>teamType: {projectDetail.teamType}</li>
         <li>teamUpdateTime: {projectDetail.teamUpdateTime}</li>
       </ul>
-      <RouterLink to="join">프로젝트 신청</RouterLink>
+      {joinBtn}
     </div>
   );
 }

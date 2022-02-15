@@ -86,14 +86,11 @@ public class ProjectApiController {
      * 기능: 프로젝트 신청 응답
      */
     @PostMapping("/v1/project/join/response/{teamSeq}")
-    public ResponseEntity<CommonResponseDto> projectJoinResponse(Authentication authentication,
-                                                                 @PathVariable Long teamSeq,
+    public ResponseEntity<CommonResponseDto> projectJoinResponse(@PathVariable Long teamSeq,
                                                                  @RequestBody ProjectRespondRequestDto requestDto) {
-        UserDetail userDetails = (UserDetail)authentication.getDetails();
-        Long userSeq = userDetails.getUser().getUserSeq();
         return ResponseEntity
                 .status(201)
-                .body(projectService.respondPosition(teamSeq, userSeq, requestDto));
+                .body(projectService.respondPosition(teamSeq, requestDto));
     }
 
     /**

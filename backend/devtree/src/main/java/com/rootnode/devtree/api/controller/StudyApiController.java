@@ -97,14 +97,11 @@ public class StudyApiController {
      * 기능 : 스터디 신청 응답
      */
     @PostMapping("/v1/study/join/{teamSeq}")
-    public ResponseEntity<CommonResponseDto> studyJoinResponse(Authentication authentication,
-                                                               @PathVariable Long teamSeq,
+    public ResponseEntity<CommonResponseDto> studyJoinResponse(@PathVariable Long teamSeq,
                                                                @RequestBody StudyRespondRequestDto requestDto) {
-        UserDetail userDetails = (UserDetail)authentication.getDetails();
-        Long userSeq = userDetails.getUser().getUserSeq();
         return ResponseEntity
                 .status(201)
-                .body(studyService.respondStudy(teamSeq, userSeq, requestDto));
+                .body(studyService.respondStudy(teamSeq, requestDto));
     }
 
     /**

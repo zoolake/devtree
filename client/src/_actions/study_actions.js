@@ -76,7 +76,7 @@ export function getStudyResponse(teamSeq) {
 }
 
 export function answerStudyResponse(data) {
-  console.log(data);
+  console.log(data.dataToSubmit);
   const request = axios
     .post(`/study/join/${data.teamSeq}`, data.dataToSubmit) // https://127.26.1.146:8080/v1/study/join/${teamSeq.id}
     .then((response) => response);

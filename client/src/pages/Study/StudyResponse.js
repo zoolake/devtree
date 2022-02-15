@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 //
 import { Button } from '@mui/material';
 //
-// import { StudyResponseForm } from '../../components/_dashboard/study';
 import { getStudyResponse, answerStudyResponse } from '../../_actions/study_actions';
 
 export default function StudyResponse() {
@@ -30,15 +29,34 @@ export default function StudyResponse() {
   };
 
   // HANDLE
-  const sendResponse = (event) => {
-    const answer = event.target.value;
+  const sendGoodResponse = (event) => {
+    const volunteerSeq = event.target.value * 1;
     const dataToSubmit = {
-      responseType: answer
+      responseType: 'ACCEPT',
+      userSeq: volunteerSeq
     };
     const sendAnswer = async () => {
       await dispatch(answerStudyResponse({ teamSeq, dataToSubmit }))
-        .then((response) => {
-          console.log(response.payload.data.data, '스터디 신청 응답 성공');
+        .then(() => {
+          console.log('스터디 신청 응답 성공');
+        })
+        .catch((error) => {
+          console.log(error, '스터디 신청 응답 실패');
+        });
+    };
+    sendAnswer();
+    getStyResponse();
+  };
+  const sendBadResponse = (event) => {
+    const volunteerSeq = event.target.value * 1;
+    const dataToSubmit = {
+      responseType: 'REJECT',
+      userSeq: volunteerSeq
+    };
+    const sendAnswer = async () => {
+      await dispatch(answerStudyResponse({ teamSeq, dataToSubmit }))
+        .then(() => {
+          console.log('스터디 신청 응답 성공');
         })
         .catch((error) => {
           console.log(error, '스터디 신청 응답 실패');
@@ -65,10 +83,10 @@ export default function StudyResponse() {
       {studyRequest.map((request) => (
         <div key={request.userSeq}>
           {request.userId}의 신청
-          <Button value="ACCEPT" onClick={sendResponse}>
+          <Button value={request.userSeq} onClick={sendGoodResponse}>
             수락
           </Button>
-          <Button value="REJECT" onClick={sendResponse}>
+          <Button value={request.userSeq} onClick={sendBadResponse}>
             거절
           </Button>
         </div>

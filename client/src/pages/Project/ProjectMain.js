@@ -13,7 +13,7 @@ import {
 import { getProjectList } from '../../_actions/project_actions';
 
 export default function ProjectMain() {
-  // state
+  // STATE
   const [projectList, setProjectList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [filterKeyword, setFilterKeyword] = useState(null);
@@ -23,7 +23,7 @@ export default function ProjectMain() {
     { value: 'oldest', label: 'Oldest' }
   ];
 
-  // axios
+  // INIT
   const dispatch = useDispatch();
   const getPjtList = async () => {
     setLoading(true);
@@ -43,18 +43,18 @@ export default function ProjectMain() {
     setLoading(false);
   };
 
-  // render
+  // RENDER
   useEffect(() => {
     getPjtList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // condition
+  // CONDITION
   if (loading) {
     return <div>'로딩 중'</div>;
   }
 
-  // page
+  // PAGE
   return (
     <Page title="Dashboard: Projects | Minimal-UI">
       <Container>

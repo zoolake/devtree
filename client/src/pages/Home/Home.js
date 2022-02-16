@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import './Home.css';
-import Fade from 'react-reveal/Fade';
-import { Bounce } from 'react-reveal';
+import { Bounce } from '@stahl.luke/react-reveal';
 import { Link } from 'react-scroll';
-import Particles from 'react-particles-js';
+import Particles from 'react-tsparticles';
 import Typewriter from 'typewriter-effect';
 // import Navbar from '../navbar/Navbar'
 import config from '../../config';
 import profile from '../../images/logo3.svg';
-import linkedin from '../../images/logos/enter.png';
+import linkedin from '../../images/enter.png';
 import leaf from '../../images/leaf3.gif';
 import cutleaf from '../../images/cutleaf.gif';
 

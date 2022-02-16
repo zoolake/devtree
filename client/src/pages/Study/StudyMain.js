@@ -52,11 +52,11 @@ export default function StudyMain() {
 
   // page
   return (
-    <Page title="Dashboard: Studys | Minimal-UI">
+    <Page>
       <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={10}>
           <Typography variant="h4" gutterBottom>
-            Study
+            STUDY
           </Typography>
           <Button
             variant="contained"
@@ -67,12 +67,6 @@ export default function StudyMain() {
             스터디 생성
           </Button>
         </Stack>
-
-        <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
-          <StudySearch studyList={studyList} setFilterKeyword={setFilterKeyword} />
-          <StudyPostsSort options={SORT_OPTIONS} />
-        </Stack>
-
         <Container>
           <StudyList studyList={studyList} />
         </Container>

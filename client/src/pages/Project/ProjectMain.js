@@ -71,12 +71,6 @@ export default function ProjectMain() {
             프로젝트 생성
           </Button>
         </Stack>
-
-        <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
-          <ProjectSearch pjtList={projectList} setFilterKeyword={setFilterKeyword} />
-          <ProjectsPostsSort options={SORT_OPTIONS} />
-        </Stack>
-
         <Container>
           <ProjectList pjtList={projectList} />
         </Container>

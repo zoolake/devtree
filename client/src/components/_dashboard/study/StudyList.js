@@ -12,5 +12,5 @@ export default function StudyList({ studyList }) {
   const showEachStudy = studyList.map((study) => (
     <StudyListCard key={study.teamSeq} study={study} />
   ));
-  return <Container>{showEachStudy}</Container>;
+  return <Container fixed>{showEachStudy}</Container>;
 }

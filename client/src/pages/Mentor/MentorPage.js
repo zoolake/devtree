@@ -37,7 +37,6 @@ export default function Mentor() {
   };
   useEffect(() => {
     getMentorlist();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <Page title="devtree - Mentor">
@@ -48,8 +47,7 @@ export default function Mentor() {
           </Typography>
         </Stack>
         <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
-          <MentorSearch posts={mentorlist} />
-          <MentorSort options={SORT_OPTIONS} />
+          {' '}
         </Stack>
         <Grid container spacing={3}>
           {mentorlist.map((post, index) => (

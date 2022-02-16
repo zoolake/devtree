@@ -113,12 +113,9 @@ export default function UserProfile() {
 
   const ProfileSchema = Yup.object().shape({
     userName: Yup.string()
-      .required('이름은 필수 값 입니다.')
       .min(2, '이름은 2자 이상이여야 합니다.')
       .max(10, '이름은 10자 이하이여야 합니다.'),
-    userEmail: Yup.string()
-      .email('올바르지 않은 이메일입니다.')
-      .required('이메일은 필수 값 입니다.'),
+    userEmail: Yup.string().email('올바르지 않은 이메일입니다.'),
     userNickname: Yup.string(),
     userDesc: Yup.string()
   });
@@ -167,7 +164,6 @@ export default function UserProfile() {
 
   return (
     <FormikProvider value={formik}>
-      {' '}
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Card
           sx={{
@@ -195,6 +191,7 @@ export default function UserProfile() {
                   fullWidth
                   placeholder={users.userName}
                   type="text"
+                  value={formik.values.userName}
                   error={Boolean(touched.userName && errors.userName)}
                   helperText={touched.userName && errors.userName}
                 />
@@ -235,6 +232,7 @@ export default function UserProfile() {
                   multiline
                   fullWidth
                   variant="filled"
+                  placeholder={users.userDesc}
                   error={Boolean(touched.userDesc && errors.userDesc)}
                   helperText={touched.userDesc && errors.userDesc}
                 />

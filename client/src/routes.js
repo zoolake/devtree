@@ -24,6 +24,7 @@ import StudyUpdate from './pages/Study/StudyUpdate';
 import StudyDelete from './pages/Study/StudyDelete';
 import StudyResponse from './pages/Study/StudyResponse';
 
+import Home from './pages/Home/Home';
 import Blog from './pages/Blog';
 import Ranking from './pages/Ranking';
 import MentorPage from './pages/Mentor/MentorPage';
@@ -49,6 +50,16 @@ export default function Router() {
     },
     {
       path: '/reservation',
+      element: <DashboardLayout />,
+      children: [
+        {
+          path: ':id',
+          element: <MentoringReservation />
+        }
+      ]
+    },
+    {
+      path: '/MentorProfile',
       element: <DashboardLayout />,
       children: [
         {
@@ -106,8 +117,12 @@ export default function Router() {
       children: [
         { path: 'login', element: <Login /> },
         { path: 'register', element: <Register /> },
-        { path: '/', element: <Navigate to="/MainPage/app" /> }
+        { path: '/', element: <Navigate to="/landing" /> }
       ]
+    },
+    {
+      path: '/landing',
+      element: <Home />
     },
     {
       path: '/',

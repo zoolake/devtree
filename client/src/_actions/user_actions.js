@@ -11,7 +11,7 @@ import {
   UPDATE_USER,
   GET_RANK,
   GET_ALARMLIST,
-  CHECK_TEAM_MEMBER
+  CHECK_TEAM_MEMBER,
   GET_TECH
 } from './types';
 import { USER_SERVER } from '../components/config';
@@ -53,12 +53,8 @@ export function getProject() {
 }
 
 // 기술스택 가져오기
-// 아직 미완성
 export function getTech() {
   const request = axios.get(`/tech`).then((response) => response.data.data);
-  console.log('?!', request.content);
-    .then((response) => response.data);
-
   return {
     type: GET_TECH,
     payload: request
@@ -68,7 +64,6 @@ export function getTech() {
 // 유저 프로필 바꾸기
 export function updateUser(dataToSubmit) {
   const request = axios.put(`/user`, dataToSubmit).then((response) => response.data);
-  const request = axios.put(`/v1/user`, dataToSubmit).then((response) => response.data);
 
   return {
     type: UPDATE_USER,

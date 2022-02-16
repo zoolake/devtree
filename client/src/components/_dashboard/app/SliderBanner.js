@@ -18,7 +18,6 @@ const RootStyle = styled('div')(({ theme }) => ({
 export default function AppRankMain() {
   const [index, setIndex] = useState([]);
   function Item({ item }) {
-    console.log(item);
     return (
       <div
         style={{
@@ -60,7 +59,6 @@ export default function AppRankMain() {
   ];
   const handleChange = (cur, prev) => {
     setIndex(cur);
-    console.log(cur, prev);
   };
   return (
     <RootStyle>

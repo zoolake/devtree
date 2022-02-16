@@ -328,7 +328,7 @@ class SessionPage extends Component {
   }
 
   componentDidMount() {
-    fetch(`https://${window.location.hostname}:8080/v1/session/join/${this.state.mentoringSeq}`, {
+    fetch(`/v1/session/join/${this.state.mentoringSeq}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('user')}`
       }

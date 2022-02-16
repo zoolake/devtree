@@ -63,6 +63,24 @@ public class StudyApiController {
                         .build());
     }
 
+
+    /**
+     * 기능 : 스터디 팀 멤버 조회
+     */
+    @GetMapping("/v1/study/member/{teamSeq}")
+    public ResponseEntity<Result> studyMemberList(@PathVariable Long teamSeq) {
+        List<StudyMemberListResponseDto> responseDto = studyService.findStudyMember(teamSeq);
+        return ResponseEntity
+                .status(200)
+                .body(Result.builder()
+                        .data(responseDto)
+                        .status(200)
+                        .message("스터디 멤버 조회 성공")
+                        .build());
+    }
+
+
+
     /**
      * 기능 : 스터디 신청
      */

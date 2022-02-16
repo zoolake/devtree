@@ -8,13 +8,13 @@ import Page from '../../components/Page';
 import {
   ProjectsPostsSort,
   ProjectSearch,
-  ProjectListCard
+  ProjectList
 } from '../../components/_dashboard/projects';
 import { getProjectList } from '../../_actions/project_actions';
 
 export default function ProjectMain() {
-  // state
-  const [projectList, setProjectList] = useState(['hi']);
+  // STATE
+  const [projectList, setProjectList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [filterKeyword, setFilterKeyword] = useState(null);
   const SORT_OPTIONS = [
@@ -23,7 +23,7 @@ export default function ProjectMain() {
     { value: 'oldest', label: 'Oldest' }
   ];
 
-  // axios
+  // INIT
   const dispatch = useDispatch();
   const getPjtList = async () => {
     setLoading(true);
@@ -32,32 +32,29 @@ export default function ProjectMain() {
         const pjtData = response.payload.data.data;
         if (pjtData.length > 0) {
           setProjectList(pjtData);
-          console.log('프로젝트 생성 성공');
+          console.log('프로젝트 받아오기 성공');
         } else {
-          console.log('생성할 프로젝트 없음');
+          console.log('받아올 프로젝트 없음');
         }
       })
       .catch((error) => {
-        console.log(error, '프로젝트 조회 실패');
+        console.log(error, '프로젝트 받아오기 실패');
       });
     setLoading(false);
   };
 
-  // render
+  // RENDER
   useEffect(() => {
     getPjtList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // condition
-  if (projectList.length === 0) {
-    return <div>'생성된 프로젝트가 없습니다.'</div>;
-  }
+  // CONDITION
   if (loading) {
     return <div>'로딩 중'</div>;
   }
 
-  // page
+  // PAGE
   return (
     <Page title="Dashboard: Projects | Minimal-UI">
       <Container>
@@ -81,9 +78,7 @@ export default function ProjectMain() {
         </Stack>
 
         <Container>
-          {projectList.map((pjt) => (
-            <ProjectListCard key={pjt.teamSeq} project={pjt} filterKeyword={filterKeyword} />
-          ))}
+          <ProjectList pjtList={projectList} />
         </Container>
       </Container>
     </Page>

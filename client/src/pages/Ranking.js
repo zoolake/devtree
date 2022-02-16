@@ -60,13 +60,10 @@ export default function StudyList() {
     dispatch(getRank())
       .then((response) => {
         if (response) {
-          console.log(response.payload);
+          console.log(response.payload.data);
+          console.log(response);
           const data = response.payload;
-          // eslint-disable-next-line guard-for-in
-          for (const i in data) {
-            data[i].rank = i;
-          }
-          setStudyList(response.payload);
+          setStudyList(response.payload.data);
         }
       })
       .catch((err) => {
@@ -134,7 +131,7 @@ export default function StudyList() {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - studyList.length) : 0;
 
   return (
-    <Page title="User">
+    <Page title="devtree - ranking">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography variant="h4" gutterBottom>
@@ -143,11 +140,6 @@ export default function StudyList() {
         </Stack>
 
         <Card>
-          <UserListToolbar
-            numSelected={selected.length}
-            filterName={filterName}
-            onFilterName={handleFilterByName}
-          />
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
@@ -160,17 +152,17 @@ export default function StudyList() {
                   {studyList
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => {
-                      const { id, rank, name, role, status, starttime, endtime } = row;
+                      const { mentorSeq, mentorRank, mentorNickname, tier, mentorExp } = row;
                       return (
-                        <TableRow hover key={id} tabIndex={-1}>
+                        <TableRow hover key={mentorSeq} tabIndex={-1}>
                           <TableCell component="th" scope="row" padding="3px">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              <TableCell align="left">{index + 1}</TableCell>
+                              <TableCell align="left">{mentorRank + 1}</TableCell>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{starttime}</TableCell>
-                          <TableCell align="left">{endtime}</TableCell>
-                          <TableCell align="left">{role}</TableCell>
+                          <TableCell align="left">{mentorNickname}</TableCell>
+                          <TableCell align="left">{tier.tierName}</TableCell>
+                          <TableCell align="left">{mentorExp}</TableCell>
                         </TableRow>
                       );
                     })}

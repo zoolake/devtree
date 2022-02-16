@@ -1,11 +1,9 @@
-import PropTypes from 'prop-types';
-import { Icon } from '@iconify/react';
-import eyeFill from '@iconify/icons-eva/eye-fill';
 import { useEffect, useState } from 'react';
 import { Link as RouterLink, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import jwtdecode from 'jwt-decode';
 // material
 import { styled } from '@mui/material/styles';
 import {
@@ -19,11 +17,7 @@ import {
   CardContent,
   Button
 } from '@mui/material';
-import { fDate } from '../../utils/formatTime';
-import { fShortenNumber } from '../../utils/formatNumber';
 import {
-  getSchedule,
-  getTeams,
   getReservedList,
   getCheckedtimeList,
   saveMentoringTime
@@ -121,16 +115,23 @@ export default function MentorWeeklySetting({ week, day, date }) {
 
   const getCheckedTime = () => {
     const dataToSubmit = {
-      mentorTime: date,
-      mentorSeq: id
+      mentorDate: date,
+      mentorSeq: jwtdecode(localStorage.getItem('user')).userSeq
     };
     dispatch(getCheckedtimeList(dataToSubmit))
       .then((response) => {
         if (response) {
-          console.log('test!!!!!!!!!!!!');
-          const filter1 = response.payload[0].time;
+          console.log(response);
+          console.log('test!><');
+          const filter1 = response.payload.data;
+          // eslint-disable-next-line guard-for-in
+          for (const i in filter1) {
+            const hours = filter1[i].substring(0, 4);
+            setCheckedInputs(hours);
+          }
+
           console.log(filter1);
-          setCheckedInputs(filter1);
+          // setCheckedInputs(filter1);
           // eslint-disable-next-line guard-for-in
           for (const i in filter1) {
             const hour = filter1[i].substring(0, 2);
@@ -143,6 +144,8 @@ export default function MentorWeeklySetting({ week, day, date }) {
         console.log(times);
       })
       .catch((err) => {
+        console.log('error!T.T');
+        console.log(err);
         setTimeout(() => {}, 3000);
       });
   };
@@ -174,6 +177,7 @@ export default function MentorWeeklySetting({ week, day, date }) {
   const submit = async () => {
     console.log(checkedInputs);
     const dataToSubmit = {
+      mentorDate: date,
       mentorTime: checkedInputs
     };
     await dispatch(saveMentoringTime(dataToSubmit))
@@ -194,6 +198,7 @@ export default function MentorWeeklySetting({ week, day, date }) {
   };
 
   useEffect(() => {
+    console.log('야통!');
     getCheckedTime();
     getReservedTeam();
   }, [times]);

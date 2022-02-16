@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react';
 import pieChart2Fill from '@iconify/icons-eva/pie-chart-2-fill';
 import peopleFill from '@iconify/icons-eva/people-fill';
+import homefill from '@iconify/icons-eva/home-fill';
 import shoppingBagFill from '@iconify/icons-eva/shopping-bag-fill';
 import fileTextFill from '@iconify/icons-eva/file-text-fill';
 import lockFill from '@iconify/icons-eva/lock-fill';
@@ -13,7 +14,7 @@ const sidebarConfig = [
   {
     title: 'Main',
     path: '/MainPage/app',
-    icon: getIcon(pieChart2Fill)
+    icon: getIcon(homefill)
   },
 
   // {

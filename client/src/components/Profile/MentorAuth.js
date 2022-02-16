@@ -1,22 +1,8 @@
-import faker from 'faker';
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 // material
-import {
-  TextField,
-  Multiline,
-  Divider,
-  Box,
-  Card,
-  Typography,
-  CardHeader,
-  CardContent,
-  Button
-} from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+import { Divider, Box, CardHeader, Button } from '@mui/material';
 // utils
-import { fDateTime } from '../../utils/formatTime';
 import { setMentor } from '../../_actions/mentor_actions';
 
 // ----------------------------------------------------------------------

@@ -73,7 +73,11 @@ export default function StudyListCard({ study }) {
             justifyContent="space-between"
             sx={{ alignItems: 'center' }}
           >
-            <Stack direction="row" spacing={3} sx={{ alignItems: 'center', width: '80%' }}>
+            <Stack
+              direction={{ xs: 'column', md: 'row' }}
+              spacing={3}
+              sx={{ alignItems: 'center', width: '80%' }}
+            >
               <Typography
                 variant="h4"
                 color="primary"

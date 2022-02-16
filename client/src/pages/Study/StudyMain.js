@@ -50,7 +50,7 @@ export default function StudyMain() {
       <Container sx={{ mt: 10 }}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={10}>
           <Typography variant="h3" gutterBottom>
-            STUDY
+            스터디
           </Typography>
           <Button
             variant="contained"

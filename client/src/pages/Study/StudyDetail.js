@@ -29,6 +29,7 @@ export default function StudyDetail() {
   const [userSeq] = useState(jwtdecode(localStorage.getItem('user')).userSeq);
   const [alignment, setAlignment] = useState();
   const [belonged, setBelonged] = useState(false);
+  const [isLoad, setIsLoad] = useState(false);
   const TEAM_STATE = [
     { state: 'RECRUIT', stateName: '모집 중' },
     { state: 'COMPLETED', stateName: '모집 완료됨' },
@@ -89,28 +90,7 @@ export default function StudyDetail() {
     makeStudyDetail();
     getBelonged();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // CONDITION
-  let joinBtn;
-  if (belonged || alignment !== 'RECRUIT') {
-    joinBtn = null;
-  } else {
-    joinBtn = (
-      <Button
-        variant="outlined"
-        color="primary"
-        to="join"
-        component={RouterLink}
-        sx={{ fontSize: 23 }}
-        size="large"
-        onClick={clickJoinBtn}
-      >
-        스터디 신청
-      </Button>
-    );
-  }
-  if (loading || studyDetail.length === 0) return null;
+  }, [isLoad]);
 
   // MODAL
   const MySwal = withReactContent(Swal);
@@ -130,6 +110,7 @@ export default function StudyDetail() {
         dispatch(joinStudy({ teamSeq, joinData }))
           .then(() => {
             console.log('스터디 신청 성공');
+            setIsLoad(!isLoad);
           })
           .catch((error) => {
             console.log(error, '스터디 신청 실패');
@@ -137,6 +118,25 @@ export default function StudyDetail() {
       }
     });
   };
+
+  // CONDITION
+  let joinBtn;
+  if (belonged || alignment !== 'RECRUIT') {
+    joinBtn = null;
+  } else {
+    joinBtn = (
+      <Button
+        variant="outlined"
+        color="primary"
+        sx={{ fontSize: 23 }}
+        size="large"
+        onClick={clickJoinBtn}
+      >
+        스터디 신청
+      </Button>
+    );
+  }
+  if (loading || studyDetail.length === 0) return null;
 
   // SHOW
   const showTechs = studyDetail.teamTech.map((tech) => (
@@ -302,7 +302,7 @@ export default function StudyDetail() {
   }
 
   return (
-    <Container>
+    <Container sx={{ mt: 10 }}>
       <Stack
         direction={{ xs: 'column', md: 'row' }}
         justifyContent="space-between"
@@ -316,29 +316,38 @@ export default function StudyDetail() {
       </Stack>
       <Divider sx={{ mt: 2, mb: 5 }} />
       <Grid container spacing={2}>
-        <Grid item xs={7}>
+        <Grid item xs={7.4}>
           <Box sx={{ height: 300, p: 4, border: '2px solid white', fontSize: 23 }}>
             <Typography variant="inherit">{studyDetail.teamDesc}</Typography>
           </Box>
         </Grid>
-        <Grid item xs={5}>
+        <Divider orientation="vertical" flexItem />
+        <Grid item xs={4.5}>
           <Stack
             direction="column"
             sx={{ alignItems: { xs: 'center', md: 'end' }, fontSize: 22 }}
             spacing={4}
           >
-            <Stack direction="column" alignItems="center" spacing={3}>
-              <Stack direction="row" spacing={2}>
-                {showTechs}
-              </Stack>
+            <Stack direction="row" spacing={2} noWrap={"textOverFlow: '...더보기'"}>
+              {showTechs}
             </Stack>
-            <Stack direction="row" justifyContent="space-between" spacing={4} sx={{ width: '75%' }}>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              spacing={4}
+              sx={{ width: '100%' }}
+            >
               <div style={{ fontWeight: 'bold' }}>인원 </div>
               <div>
                 {studyDetail.teamMemberCnt}/{studyDetail.teamRecruitCnt}
               </div>
             </Stack>
-            <Stack direction="row" justifyContent="space-between" spacing={4} sx={{ width: '75%' }}>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              spacing={4}
+              sx={{ width: '100%' }}
+            >
               <div style={{ fontWeight: 'bold' }}>상태 </div>
               <div>{showState()}</div>
             </Stack>
@@ -346,7 +355,7 @@ export default function StudyDetail() {
               direction="row"
               justifyContent="space-between"
               spacing={4}
-              sx={{ width: '75%', alignItems: 'center' }}
+              sx={{ width: '100%', alignItems: 'center' }}
             >
               <div style={{ fontWeight: 'bold' }}>생성 날짜 </div>
               <div style={{ fontSize: 15 }}>{showDate(studyDetail.teamCreateTime)}</div>
@@ -355,7 +364,7 @@ export default function StudyDetail() {
               direction="row"
               justifyContent="space-between"
               spacing={4}
-              sx={{ width: '75%', alignItems: 'center' }}
+              sx={{ width: '100%', alignItems: 'center' }}
             >
               <div style={{ fontWeight: 'bold' }}>시작 날짜 </div>
               <div style={{ fontSize: 15 }}>{showDate(studyDetail.teamStartTime)}</div>
@@ -364,7 +373,7 @@ export default function StudyDetail() {
               direction="row"
               justifyContent="space-between"
               spacing={4}
-              sx={{ width: '75%', alignItems: 'center' }}
+              sx={{ width: '100%', alignItems: 'center' }}
             >
               <div style={{ fontWeight: 'bold' }}>종료 날짜 </div>
               <div style={{ fontSize: 15 }}>{showDate(studyDetail.teamEndTime)}</div>

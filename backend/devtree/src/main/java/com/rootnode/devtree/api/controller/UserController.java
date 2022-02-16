@@ -8,6 +8,7 @@ import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.api.service.EmailService;
 import com.rootnode.devtree.api.service.UserService;
 import com.rootnode.devtree.common.auth.UserDetail;
+import com.rootnode.devtree.common.util.JwtTokenUtil;
 import com.rootnode.devtree.db.entity.MentoringState;
 import com.rootnode.devtree.db.entity.TeamState;
 import com.rootnode.devtree.db.entity.User;
@@ -15,7 +16,6 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -206,6 +206,26 @@ public class UserController {
 	}
 
 	/**
+	 *  기능 : 현재 팀에 속한 멤버인지 확인 (true면 속함, false면 속하지 않음)
+	 */
+	@GetMapping("/v1/member/check/{teamSeq}")
+	public ResponseEntity<Result> userCheckTeamMember(Authentication authentication,
+													  @PathVariable Long teamSeq) {
+		UserDetail userDetails = (UserDetail)authentication.getDetails();
+		Long userSeq = userDetails.getUser().getUserSeq();
+
+		boolean responseDto = userService.checkTeamMember(userSeq, teamSeq);
+		return ResponseEntity
+				.status(200)
+				.body(Result.builder()
+						.data(responseDto)
+						.status(200)
+						.message("참여한 팀 내역(팀 일련번호, 팀 이름, 팀 타입) 조회 성공")
+						.build());
+	}
+
+
+	/**
 	 *  기능 : 유저가 속한 팀 목록
 	 */
 	@GetMapping("/v1/common/team")
@@ -263,9 +283,26 @@ public class UserController {
 	 *  기능 : 유저의 멘토 인증 확인
 	 */
 	@PostMapping("/v1/user/mentor/verification/confirm")
-	public CommonResponseDto userConfirmVerificationCode(Authentication authentication, @RequestBody EmailConfirmRequestDto requestDto) {
+	public ResponseEntity<Result> userConfirmVerificationCode(Authentication authentication, @RequestBody EmailConfirmRequestDto requestDto) {
 		User user = ((UserDetail) authentication.getDetails()).getUser();
-		return userService.confirmVerificationCode(user, requestDto);
+		String accessToken = userService.confirmVerificationCode(user, requestDto);
+		if(!accessToken.equals(null)) {
+			return ResponseEntity
+					.status(200)
+					.body(Result.builder()
+							.data(accessToken)
+							.status(200)
+							.message("인증성공")
+							.build());
+		}
+		else return ResponseEntity
+				.status(401)
+				.body(Result.builder()
+						.data(accessToken)
+						.status(200)
+						.message("인증실패")
+						.build());
+//		return ;
 	}
 
 
@@ -276,7 +313,7 @@ public class UserController {
 	public ResponseEntity<Result> userNotification(Authentication authentication) {
 		UserDetail userDetails = (UserDetail)authentication.getDetails();
 		Long userSeq = userDetails.getUser().getUserSeq();
-		List<NotificationListResponseDto> responseDto = userService.findUserNotification(userSeq);
+		List<NotificationResponseDto> responseDto = userService.findUserNotification(userSeq);
 		return ResponseEntity
 				.status(200)
 				.body(Result.builder()
@@ -287,12 +324,18 @@ public class UserController {
 	}
 
 	/**
-	 *  기능 : 유저의 알림 확인
+	 *  기능 : 유저의 알림 상세 조회 (읽음 표시)
 	 */
 	@GetMapping("/v1/user/notification/{notificationSeq}")
-	public CommonResponseDto userNotificationCheck(Authentication authentication,
-												   @PathVariable Long notificationSeq) {
-		return userService.checkUserNotification(notificationSeq);
+	public ResponseEntity<Result> userNotificationCheck(@PathVariable Long notificationSeq) {
+		NotificationResponseDto responseDto = userService.findUserDetailNotification(notificationSeq);
+		return ResponseEntity
+				.status(200)
+				.body(Result.builder()
+						.data(responseDto)
+						.status(200)
+						.message("알림 상세 조회 성공")
+						.build());
 	}
 
 

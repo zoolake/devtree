@@ -30,7 +30,12 @@ import Label from '../Label';
 import Scrollbar from '../Scrollbar';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../_dashboard/profileHistory';
 
-import { getMentoringlist, rejectMentoring, acceptMentoring } from '../../_actions/mentor_actions';
+import {
+  getMentoringlist,
+  rejectMentoring,
+  acceptMentoring,
+  createSession
+} from '../../_actions/mentor_actions';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -82,8 +87,12 @@ export default function MentoringList() {
     dispatch(getMentoringlist())
       .then((response) => {
         if (response) {
-          console.log(response.payload);
-          setProjectList(response.payload);
+          console.log('멘토링신청리스트');
+          console.log(response);
+          const sortdata = response.payload.data;
+          sortdata.sort((a, b) => parseFloat(b.mentoringSeq) - parseFloat(a.mentoringSeq));
+          console.log('sort가 완료되었습니다><', sortdata);
+          setProjectList(sortdata);
         }
       })
       .catch((err) => {
@@ -157,8 +166,11 @@ export default function MentoringList() {
 
   const accept = (event) => {
     const dataToSubmit = {
-      mentoringseq: event.target.id
+      mentoringSeq: event.target.id,
+      responseType: 'ACCEPT'
     };
+    console.log('이얏호웅');
+    console.log(dataToSubmit);
     Swal.fire({
       title: '멘토링 수락',
       text: '멘토링을 수락하시겠습니까?',
@@ -173,7 +185,7 @@ export default function MentoringList() {
           .then((response) => {
             console.log('멘토링 수락');
             if (response) {
-              console.log(response.payload);
+              console.log(response.payload.data);
             }
           })
           .catch((err) => {
@@ -185,7 +197,8 @@ export default function MentoringList() {
   };
   const reject = (event) => {
     const dataToSubmit = {
-      mentoringseq: event.target.id
+      mentoringSeq: event.target.id,
+      responseType: 'REJECT'
     };
     Swal.fire({
       title: '멘토링 거절',
@@ -211,17 +224,31 @@ export default function MentoringList() {
       }
     });
   };
-  const createSession = () => {
-    dispatch(rejectMentoring())
+  const sessionOpen = (event) => {
+    const dataToSubmit = {
+      mentoringSeq: event.target.id
+    };
+    dispatch(createSession(dataToSubmit))
       .then((response) => {
         if (response) {
-          console.log(response.payload);
+          console.log(response);
+          localStorage.removeItem('mentoringSeq');
+          localStorage.setItem('mentoringSeq', event.target.id);
+          document.location.assign(`/session/join`);
         }
       })
       .catch((err) => {
         setTimeout(() => {}, 3000);
       });
   };
+
+  const sessionEnter = (event) => {
+    console.log();
+    localStorage.removeItem('mentoringSeq');
+    localStorage.setItem('mentoringSeq', event.target.id);
+    document.location.assign(`/session/join`);
+  };
+
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - projectList.length) : 0;
   const filteredUsers = applySortFilter(projectList, getComparator(order, orderBy), filterName);
   return (
@@ -243,7 +270,6 @@ export default function MentoringList() {
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
-
                 <TableBody>
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -251,11 +277,11 @@ export default function MentoringList() {
                       const {
                         mentoringCreateTime,
                         mentoringSeq,
-                        teamtype,
-                        teamname,
+                        teamType,
+                        teamName,
                         mentoringStartDate,
                         mentoringStartTime,
-                        mentoringmsg,
+                        mentoringApplyComment,
                         mentoringState
                       } = row;
                       const time = new Date(`${mentoringStartDate}T${mentoringStartTime}`);
@@ -265,25 +291,25 @@ export default function MentoringList() {
                           <TableCell align="left">{mentoringCreateTime}</TableCell>
                           <TableCell component="th" scope="row" padding="3px">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              <Typography variant="subtitle2">{teamname}</Typography>
+                              <Typography variant="subtitle2">{teamName}</Typography>
                             </Stack>
                           </TableCell>
                           <TableCell align="left">
                             <Label
                               variant="ghost"
                               color={
-                                (teamtype === 'STUDY' && 'warning') ||
-                                (teamtype === 'PROJECT' && 'primary')
+                                (teamType === 'STUDY' && 'warning') ||
+                                (teamType === 'PROJECT' && 'primary')
                               }
                             >
-                              {teamtype === 'STUDY' ? <p>STUDY</p> : null}
-                              {teamtype === 'PROJECT' ? <p>PROJECT</p> : null}
+                              {teamType === 'STUDY' ? <p>STUDY</p> : null}
+                              {teamType === 'PROJECT' ? <p>PROJECT</p> : null}
                             </Label>
                           </TableCell>
                           <TableCell align="left">
                             {mentoringStartDate} {mentoringStartTime}
                           </TableCell>
-                          <TableCell align="left">{mentoringmsg}</TableCell>
+                          <TableCell align="left">{mentoringApplyComment}</TableCell>
                           <TableCell align="left">
                             {mentoringState === 'WAIT' ? (
                               <div>
@@ -303,11 +329,17 @@ export default function MentoringList() {
                                     &nbsp;멘토링
                                   </>
                                 ) : (
-                                  <Button onClick={createSession}>세션 생성하기</Button>
+                                  <Button id={mentoringSeq} onClick={sessionOpen}>
+                                    세션 생성하기
+                                  </Button>
                                 )}
                               </div>
                             ) : null}
-                            {mentoringState === 'ACTIVATE' ? <Button>세션입장</Button> : null}
+                            {mentoringState === 'ACTIVATE' ? (
+                              <Button id={mentoringSeq} onClick={sessionEnter}>
+                                세션입장
+                              </Button>
+                            ) : null}
                             {mentoringState === 'FINISH' ? <Button>완료</Button> : null}
                           </TableCell>
                         </TableRow>

@@ -56,7 +56,6 @@ export default function LoginForm() {
         dispatch(loginUser(dataToSubmit))
           .then((response) => {
             if (response) {
-              console.log('뀨?');
               window.location.reload();
               document.location.assign('/');
             } else {

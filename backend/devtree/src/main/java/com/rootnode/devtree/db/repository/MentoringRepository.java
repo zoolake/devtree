@@ -13,6 +13,9 @@ import java.util.List;
 public interface MentoringRepository extends JpaRepository<Mentoring, Long> {
     List<Mentoring> findByMentorMentorSeqAndMentoringState(Long mentorSeq, MentoringState mentoringState);
 
+    @Query(value = "select m from Mentoring m where m.mentor.mentorSeq = :mentorSeq")
+    List<Mentoring> findByMentorSeq(Long mentorSeq);
+
 	@Query(value = "select m from Mentoring m where m.team.teamSeq = :teamSeq")
     List<Mentoring> findMentoringByTeamSeq(Long teamSeq);
 

@@ -18,9 +18,6 @@ function MentorDetail() {
         <MentorProfile index={id} />
       </Grid>
       <Grid item xs={12} md={6} lg={10}>
-        <MentorStack />
-      </Grid>{' '}
-      <Grid item xs={12} md={6} lg={10}>
         <MentorReviewList mentorId={id} />
       </Grid>
     </Grid>

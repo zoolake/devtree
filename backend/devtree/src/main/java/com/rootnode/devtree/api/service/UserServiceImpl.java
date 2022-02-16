@@ -5,6 +5,7 @@ import com.rootnode.devtree.api.request.MentorCertificationRequestDto;
 import com.rootnode.devtree.api.request.UserRegisterPostReq;
 import com.rootnode.devtree.api.request.UserUpdateRequestDto;
 import com.rootnode.devtree.api.response.*;
+import com.rootnode.devtree.common.util.JwtTokenUtil;
 import com.rootnode.devtree.db.entity.*;
 import com.rootnode.devtree.db.entity.compositeKey.UserTechId;
 import com.rootnode.devtree.db.repository.*;
@@ -53,6 +54,7 @@ public class UserServiceImpl implements UserService {
                 .userPassword(passwordEncoder.encode(userRegisterInfo.getUserPassword()))
                 .userName(userRegisterInfo.getUserName())
                 .userEmail(userRegisterInfo.getUserEmail())
+                .userNickname(userRegisterInfo.getUserId())
                 .userRole(UserRole.USER)
                 .build();
         return userRepository.save(user);
@@ -88,8 +90,8 @@ public class UserServiceImpl implements UserService {
                     .userSeq(user.getUserSeq())
                     .userId(user.getUserId())
                     .userPassword(user.getUserPassword())
-                    .userEmail(user.getUserEmail())
                     .userRole(user.getUserRole())
+                    .userEmail(userUpdateRequestDto.getUserEmail())
                     .userDesc(userUpdateRequestDto.getUserDesc())
                     .userName(userUpdateRequestDto.getUserName())
                     .userNickname(userUpdateRequestDto.getUserNickname())
@@ -260,7 +262,7 @@ public class UserServiceImpl implements UserService {
         teamList.forEach(team -> {
             List<Mentoring> mentoringList = mentoringRepository.findMentoringByTeamSeq(team.getTeamSeq());
             mentoringList.forEach(mentoring -> {
-                mentoringActivitiesList.add(new UserMentoringActivitiesResponseDto(mentoring, team.getTeamType()));
+                mentoringActivitiesList.add(new UserMentoringActivitiesResponseDto(mentoring, team.getTeamType(), team.getTeamName()));
             });
         });
 
@@ -273,6 +275,22 @@ public class UserServiceImpl implements UserService {
         return findMentoringListAll(userSeq).stream()
                 .filter(m -> m.getMentoringState().equals(mentoringState.name()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean checkTeamMember(Long userSeq, Long teamSeq) {
+        boolean isCheck = false;
+        Team team = teamRepository.findTeamByTeamSeq(teamSeq);
+        List<Long> teamMemberSeq;
+
+        if(team.getTeamType().equals(TeamType.STUDY)) {
+            teamMemberSeq = studyUserRepository.findUserSeqByTeamSeq(teamSeq);
+            isCheck = teamMemberSeq.stream().anyMatch(memberSeq -> memberSeq.equals(userSeq));
+        } else {
+            teamMemberSeq = projectPositionUserRepository.findUserSeqByTeamSeq(teamSeq);
+            isCheck = teamMemberSeq.stream().anyMatch(memberSeq -> memberSeq.equals(userSeq));
+        }
+        return isCheck;
     }
 
     // 사용자가 속한 팀 찾기
@@ -313,27 +331,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<NotificationListResponseDto> findUserNotification(Long userSeq) {
+    public List<NotificationResponseDto> findUserNotification(Long userSeq) {
         List<Notification> notificationList = notificationRepository.findNotificationByUserSeq(userSeq);
-        List<NotificationListResponseDto> responseDto = new ArrayList<>();
+        List<NotificationResponseDto> responseDto = new ArrayList<>();
         notificationList.forEach(notification -> {
             Long sendUserSeq = notification.getNotificationSendUserSeq();
             String sendUserName = userRepository.findByUserSeq(sendUserSeq).get().getUserName();
-            responseDto.add(new NotificationListResponseDto(notification, sendUserName));
+            responseDto.add(new NotificationResponseDto(notification, sendUserName));
         });
         return responseDto;
     }
 
     @Override
     @Transactional
-    public CommonResponseDto checkUserNotification(Long notificationSeq) {
+    public NotificationResponseDto findUserDetailNotification(Long notificationSeq) {
         Notification notification = notificationRepository.findById(notificationSeq).get();
         notification.changeIsCheck();
-        return new CommonResponseDto(200, "알림을 확인하였습니다.");
+        String sendUserName = userRepository.findByUserSeq(notification.getNotificationSendUserSeq()).get().getUserName();
+        NotificationResponseDto responseDto = new NotificationResponseDto(notification, sendUserName);
+        return responseDto;
     }
 
     @Override
-    public CommonResponseDto confirmVerificationCode(User user, EmailConfirmRequestDto requestDto) {
+    public String confirmVerificationCode(User user, EmailConfirmRequestDto requestDto) {
         String enteredCode = requestDto.getEnteredCode();
         String verificationCode = userRepository.findVerificaionCodeByUserSeq(user.getUserSeq());
 
@@ -341,9 +361,10 @@ public class UserServiceImpl implements UserService {
             user.changeUserRole(UserRole.MENTOR);
             user.changeVerificationCode("");
             mentorRepository.save(Mentor.builder().user(user).mentorSeq(user.getUserSeq()).verificationDate(LocalDateTime.now()).build());
-            return new CommonResponseDto(200, "멘토인증이 완료되었습니다.");
+            String accessToken = JwtTokenUtil.getToken(user.getUserId(),user.getUserSeq(),user.getUserRole().name());
+            return accessToken;
         } else {
-            return new CommonResponseDto(400, "멘토인증 실패");
+            return null;
         }
     }
 }

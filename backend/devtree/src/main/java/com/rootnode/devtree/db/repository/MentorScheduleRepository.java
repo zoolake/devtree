@@ -26,4 +26,9 @@ public interface MentorScheduleRepository extends JpaRepository<MentorSchedule, 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(value = "delete from MentorSchedule s where s.mentorScheduleId.mentorDate = :mentoringDate and s.mentorScheduleId.mentorTime = :mentoringTime")
     void deleteByDateAndTime(LocalDate mentoringDate, LocalTime mentoringTime);
+
+    @Transactional
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query(value = "delete from MentorSchedule s where s.mentor.mentorSeq = :mentorSeq and s.mentorScheduleId.mentorDate = :mentorDate")
+    void deleteByMentorSeqAndDate(Long mentorSeq, LocalDate mentorDate);
 }

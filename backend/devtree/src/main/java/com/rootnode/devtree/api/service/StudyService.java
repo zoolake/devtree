@@ -112,8 +112,9 @@ public class StudyService {
 
     // 스터디 신청 응답
     @Transactional
-    public CommonResponseDto respondStudy(Long teamSeq, Long userSeq, StudyRespondRequestDto requestDto) {
+    public CommonResponseDto respondStudy(Long teamSeq, StudyRespondRequestDto requestDto) {
         // 응답 타입 (수락 / 거절)
+        Long userSeq = requestDto.getUserSeq();
         ResponseType responseType = requestDto.getResponseType();
         StudyUserId studyUserId = new StudyUserId(userSeq, teamSeq);
         User user = userRepository.findById(userSeq).get();

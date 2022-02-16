@@ -1,7 +1,5 @@
 import { filter } from 'lodash';
-import { Icon } from '@iconify/react';
 import { useState, useEffect } from 'react';
-import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 // material
@@ -9,8 +7,6 @@ import {
   Card,
   Table,
   Stack,
-  Avatar,
-  Button,
   TableRow,
   TableBody,
   TableCell,
@@ -73,8 +69,8 @@ export default function ProjectList() {
     dispatch(getProject())
       .then((response) => {
         if (response) {
-          console.log(response.payload);
-          setProjectList(response.payload);
+          console.log(response.payload.data);
+          setProjectList(response.payload.data);
         }
       })
       .catch((err) => {

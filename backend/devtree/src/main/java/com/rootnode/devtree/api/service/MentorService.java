@@ -441,4 +441,16 @@ public class MentorService {
         }
         return new CommonResponseDto(201, "멘토링 요청 응답에 성공하였습니다.");
     }
+
+    @Transactional
+    public CommonResponseDto changeMentoringState(Long mentoringSeq) {
+        Mentoring mentoring = mentoringRepository.findById(mentoringSeq).get();
+
+        if(mentoring.getMentoringState().equals(MentoringState.ACCEPT)) {
+            mentoring.changeMentoringState(MentoringState.ACTIVATE);
+            return new CommonResponseDto(201, "멘토링 상태 변경에 성공하였습니다.");
+        } else {
+            return new CommonResponseDto(400, "멘토링 상태 변경에 실패하였습니다.");
+        }
+    }
 }

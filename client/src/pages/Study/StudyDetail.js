@@ -74,7 +74,7 @@ export default function StudyDetail() {
         await dispatch(changeTeamState(dataToSubmit))
           .then(() => {
             console.log('스터디 상태 수정 성공');
-            makeStudyDetail();
+            setIsLoad(!isLoad);
           })
           .catch((error) => {
             console.log(error, '스터디 상태 수정 실패');
@@ -121,8 +121,32 @@ export default function StudyDetail() {
 
   // CONDITION
   let joinBtn;
-  if (belonged || alignment !== 'RECRUIT') {
-    joinBtn = null;
+  if (belonged) {
+    joinBtn = (
+      <Button
+        variant="outlined"
+        color="primary"
+        sx={{ fontSize: 23 }}
+        size="large"
+        onClick={clickJoinBtn}
+        disabled
+      >
+        소속됨
+      </Button>
+    );
+  } else if (alignment !== 'RECRUIT') {
+    joinBtn = (
+      <Button
+        variant="outlined"
+        color="primary"
+        sx={{ fontSize: 23 }}
+        size="large"
+        onClick={clickJoinBtn}
+        disabled
+      >
+        스터디 신청
+      </Button>
+    );
   } else {
     joinBtn = (
       <Button
@@ -140,7 +164,9 @@ export default function StudyDetail() {
 
   // SHOW
   const showTechs = studyDetail.teamTech.map((tech) => (
-    <div key={tech.techSeq}>{tech.techName}</div>
+    <Grid item xs={3} key={tech.techSeq}>
+      <Typography align="center">{tech.techName}</Typography>
+    </Grid>
   ));
   // eslint-disable-next-line consistent-return
   const getStateName = () => {
@@ -192,17 +218,25 @@ export default function StudyDetail() {
         <Stack
           direction={{ xs: 'column', md: 'row' }}
           justifyContent="space-between"
+          alignItems="flex-end"
           sx={{ alignItems: { xs: 'center', md: 'end' } }}
           spacing={{ xs: 2, md: 5 }}
         >
-          <Stack direction="row" justifyContent="flex-end" spacing={{ xs: 2, md: 5 }}>
-            <Typography variant="h3">{studyDetail.teamName}</Typography>
+          <Stack
+            direction="row"
+            justifyContent="flex-start"
+            alignItems="flex-end"
+            spacing={{ xs: 2, md: 5 }}
+          >
+            <Typography variant="h3" sx={{ maxWidth: '55%' }}>
+              {studyDetail.teamName}
+            </Typography>
             <ToggleButtonGroup
               value={alignment}
               exclusive
               onChange={handleAlignment}
               size="small"
-              sx={{ m: 0, minWidth: 225 }}
+              sx={{ m: 0, minWidth: 225, maxHeight: 50 }}
             >
               {TEAM_STATE.map((state, idx) => (
                 <ToggleButton
@@ -216,7 +250,12 @@ export default function StudyDetail() {
               ))}
             </ToggleButtonGroup>
           </Stack>
-          <Stack direction="row" justifyContent={{ xs: 'center', md: 'flex-end' }} spacing={1}>
+          <Stack
+            direction="row"
+            justifyContent={{ xs: 'center', md: 'flex-end' }}
+            spacing={1}
+            sx={{ minWidth: '35%' }}
+          >
             <Button color="primary" to="response" component={RouterLink}>
               스터디 신청 목록
             </Button>
@@ -227,7 +266,9 @@ export default function StudyDetail() {
               스터디 삭제
             </Button>
           </Stack>
-          <Typography variant="h6">{studyDetail.teamManagerName}</Typography>
+          <Typography variant="h6" sx={{ minWidth: '6%' }}>
+            {studyDetail.teamManagerName}
+          </Typography>
         </Stack>
         <Divider sx={{ mt: 2, mb: 5 }} />
         <Grid container spacing={2}>
@@ -243,9 +284,9 @@ export default function StudyDetail() {
               sx={{ alignItems: { xs: 'center', md: 'end' }, fontSize: 22 }}
               spacing={4}
             >
-              <Stack direction="row" spacing={2} noWrap={"textOverFlow: '...더보기'"}>
+              <Grid direction="row-reverse" container spacing={1}>
                 {showTechs}
-              </Stack>
+              </Grid>
               <Stack
                 direction="row"
                 justifyContent="space-between"
@@ -306,10 +347,16 @@ export default function StudyDetail() {
       <Stack
         direction={{ xs: 'column', md: 'row' }}
         justifyContent="space-between"
+        alignItems="flex-end"
         sx={{ alignItems: { xs: 'center', md: 'end' } }}
         spacing={{ xs: 2, md: 5 }}
       >
-        <Stack direction="row" justifyContent="flex-end" spacing={{ xs: 2, md: 5 }}>
+        <Stack
+          direction="row"
+          justifyContent="flex-start"
+          alignItems="flex-end"
+          spacing={{ xs: 2, md: 5 }}
+        >
           <Typography variant="h3">{studyDetail.teamName}</Typography>
         </Stack>
         <Typography variant="h6">{studyDetail.teamManagerName}</Typography>
@@ -325,12 +372,12 @@ export default function StudyDetail() {
         <Grid item xs={4.5}>
           <Stack
             direction="column"
-            sx={{ alignItems: { xs: 'center', md: 'end' }, fontSize: 22 }}
+            sx={{ alignItems: { xs: 'center', md: 'flex-end' }, fontSize: 22 }}
             spacing={4}
           >
-            <Stack direction="row" spacing={2} noWrap={"textOverFlow: '...더보기'"}>
+            <Grid direction="row-reverse" container spacing={1}>
               {showTechs}
-            </Stack>
+            </Grid>
             <Stack
               direction="row"
               justifyContent="space-between"

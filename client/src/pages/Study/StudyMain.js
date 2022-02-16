@@ -46,25 +46,23 @@ export default function StudyMain() {
 
   // page
   return (
-    <Page>
-      <Container sx={{ mt: 10 }}>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={10}>
-          <Typography variant="h3" gutterBottom>
-            스터디
-          </Typography>
-          <Button
-            variant="contained"
-            component={RouterLink}
-            to="create"
-            startIcon={<Icon icon={plusFill} />}
-          >
-            스터디 생성
-          </Button>
-        </Stack>
-        <Container>
-          <StudyList studyList={studyList} />
-        </Container>
+    <Container sx={{ mt: 10 }}>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={10}>
+        <Typography variant="h3" gutterBottom>
+          스터디
+        </Typography>
+        <Button
+          variant="contained"
+          component={RouterLink}
+          to="create"
+          startIcon={<Icon icon={plusFill} />}
+        >
+          스터디 생성
+        </Button>
+      </Stack>
+      <Container>
+        <StudyList studyList={studyList} />
       </Container>
-    </Page>
+    </Container>
   );
 }

@@ -1,11 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 //
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { TextField, Button, FormControl, InputLabel, NativeSelect, Stack } from '@mui/material';
+import {
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  Stack,
+  Container,
+  MenuItem,
+  Grid
+} from '@mui/material';
 //
 import { updateProject } from '../../../_actions/project_actions';
 import { getTechList, getPositionList } from '../../../_actions/team_actions';
@@ -18,6 +28,7 @@ ProjectUpdateForm.propTypes = {
 export default function ProjectUpdateForm({ projectDetail }) {
   // STATE
   const teamSeq = useParams().id;
+  const navigate = useNavigate();
   // 기술스택
   const [allTechList, setAllTech] = useState([]);
   const [myTechList, setMyTech] = useState([]);
@@ -65,6 +76,7 @@ export default function ProjectUpdateForm({ projectDetail }) {
           await dispatch(updateProject({ dataToSubmit, teamSeq }))
             .then((response) => {
               console.log(response, '프로젝트 수정 성공');
+              navigate(`/project/${teamSeq}`);
             })
             .catch((error) => {
               console.log(dataToSubmit);
@@ -180,7 +192,7 @@ export default function ProjectUpdateForm({ projectDetail }) {
   //     case 'clear': // clear button is clicked
   //       setMyTech(myTechList.filter((v) => v.isFixed));
   //       return;
-  //     case 'select-option': {
+  //     case 'select-MenuItem': {
   //       setMyTech(inputValue);
   //       break;
   //     }
@@ -189,14 +201,16 @@ export default function ProjectUpdateForm({ projectDetail }) {
   // });
 
   return (
-    <div>
+    <Container sx={{ mt: 5 }}>
       <form onSubmit={formik.handleSubmit}>
-        <Stack spacing={3}>
+        <Stack spacing={3} sx={{ ml: 10, alignItems: 'start', width: '80%' }}>
           {/* teamName */}
           <TextField
             id="teamName"
             name="teamName"
-            label="teamName"
+            label="팀 이름"
+            variant="standard"
+            fullWidth
             value={formik.values.teamName}
             onChange={formik.handleChange}
             error={formik.touched.teamName && Boolean(formik.errors.teamName)}
@@ -206,28 +220,34 @@ export default function ProjectUpdateForm({ projectDetail }) {
           <TextField
             id="teamDesc"
             name="teamDesc"
-            label="teamDesc"
+            label="팀 설명"
             type="text"
+            variant="standard"
+            fullWidth
+            multiline
+            maxRows={4}
             value={formik.values.teamDesc}
             onChange={formik.handleChange}
             error={formik.touched.teamDesc && Boolean(formik.errors.teamDesc)}
             helperText={formik.touched.teamDesc && formik.errors.teamDesc}
           />
           {/* teamTech */}
-          <FormControl>
-            <InputLabel htmlFor="select-tech">teamTech</InputLabel>
-            <NativeSelect
-              label="select-tech"
+          <FormControl sx={{ width: '100%' }}>
+            <InputLabel id="select-tech">기술스택 선택</InputLabel>
+            <Select
+              labelId="select-tech"
+              label="teamTech"
               defaultValue={selectedTech}
               value={selectedTech}
               onChange={(e) => handleChange(e, 'tech')}
+              sx={{ mb: 2 }}
             >
               {allTechList.map((tech) => (
-                <option key={tech.techSeq} value={tech.techName}>
+                <MenuItem key={tech.techSeq} value={tech.techName}>
                   {tech.techName}
-                </option>
+                </MenuItem>
               ))}
-            </NativeSelect>
+            </Select>
             <div>
               {myTechList.map((tech) => (
                 <span key={tech.techSeq}>{tech.techName} </span>
@@ -235,20 +255,21 @@ export default function ProjectUpdateForm({ projectDetail }) {
             </div>
           </FormControl>
           {/* teamPosition */}
-          <FormControl>
-            <InputLabel htmlFor="select-position">teamPosition</InputLabel>
-            <NativeSelect
-              label="select-position"
+          <FormControl sx={{ width: '100%' }}>
+            <InputLabel id="select-team-recruit-cnt">모집 멤버 수</InputLabel>
+            <Select
+              labelId="select-team-recruit-cnt"
+              label="teamRecruitCnt"
               defaultValue={selectedPos}
               value={selectedPos}
               onChange={(e) => handleChange(e, 'position')}
             >
               {allPositionList.map((pos) => (
-                <option key={pos.detailPositionName} value={pos.detailPositionName}>
+                <MenuItem key={pos.detailPositionName} value={pos.detailPositionName}>
                   {pos.detailPositionName}
-                </option>
+                </MenuItem>
               ))}
-            </NativeSelect>
+            </Select>
             <div>
               {myPositionList.map((pos) => (
                 <div key={pos.detailPositionName}>
@@ -263,11 +284,13 @@ export default function ProjectUpdateForm({ projectDetail }) {
             </div>
           </FormControl>
           {/* Submit Btn */}
-          <Button color="primary" variant="contained" fullWidth type="submit">
-            Update
-          </Button>
+          <Grid container justifyContent="flex-end">
+            <Button color="primary" variant="contained" type="submit">
+              수정하기
+            </Button>
+          </Grid>
         </Stack>
       </form>
-    </div>
+    </Container>
   );
 }

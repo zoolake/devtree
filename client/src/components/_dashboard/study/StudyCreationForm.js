@@ -281,11 +281,11 @@ export default function StudyCreationForm() {
                 </MenuItem>
               ))}
             </Select>
-            <div>
+            <Stack direction="row" spacing={3}>
               {myTechList.map((tech) => (
-                <span key={tech.techSeq}>{tech.techName} </span>
+                <div key={tech.techSeq}>{tech.techName} </div>
               ))}
-            </div>
+            </Stack>
           </FormControl>
           {/* teamRecruitCnt */}
           <FormControl sx={{ width: '100%' }}>

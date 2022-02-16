@@ -17,7 +17,12 @@ export default function ProjectListCard({ project }) {
   ];
 
   // FUNC
-  const showTechs = project.teamTech.map((tech) => <div key={tech.techSeq}>{tech.techName}</div>);
+  const showTechs = () => {
+    if (project.teamTech.length < 6) {
+      return project.teamTech.map((tech) => <div key={tech.techSeq}>{tech.techName}</div>);
+    }
+    return project.teamTech.slice(6).map((tech) => <div key={tech.techSeq}>{tech.techName}</div>);
+  };
   // eslint-disable-next-line consistent-return
   const getStateName = () => {
     for (let i = 0; i < TEAM_STATE.length; i += 1) {
@@ -55,7 +60,11 @@ export default function ProjectListCard({ project }) {
             justifyContent="space-between"
             sx={{ alignItems: 'center' }}
           >
-            <Stack direction="row" spacing={3} sx={{ alignItems: 'center' }}>
+            <Stack
+              direction={{ xs: 'column', md: 'row' }}
+              spacing={3}
+              sx={{ alignItems: 'center', width: '80%' }}
+            >
               <Typography
                 variant="h4"
                 color="primary"
@@ -63,12 +72,17 @@ export default function ProjectListCard({ project }) {
                 to={`${project.teamSeq}`}
                 component={RouterLink}
                 style={{ textDecoration: 'none' }}
+                sx={{ width: '40%', textOverflow: 'ellipsis' }}
               >
                 {project.teamName}
               </Typography>
               <Typography variant="subtitle1">
-                <Stack direction="row" spacing={2}>
-                  {showTechs}
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  sx={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
+                >
+                  {showTechs()}
                 </Stack>
               </Typography>
             </Stack>

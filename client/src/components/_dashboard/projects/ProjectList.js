@@ -10,5 +10,5 @@ ProjectList.propTypes = {
 export default function ProjectList({ pjtList }) {
   // PAGE
   const showEachPjt = pjtList.map((pjt) => <ProjectListCard key={pjt.teamSeq} project={pjt} />);
-  return <Container>{showEachPjt}</Container>;
+  return <Container fixed>{showEachPjt}</Container>;
 }

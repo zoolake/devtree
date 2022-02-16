@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
+//
+import { Container } from '@mui/material';
+//
 import { ProjectUpdateForm } from '../../components/_dashboard/projects';
 import { getProjectDetail } from '../../_actions/project_actions';
 
@@ -35,9 +38,9 @@ export default function ProjectUpdate() {
   // PAGE
   if (loading || projectDetail.length === 0) return <div>로딩 중</div>;
   return (
-    <div>
-      <h1>Project Update</h1>
-      <ProjectUpdateForm projectDetail={projectDetail} />
-    </div>
+    <Container sx={{ mt: 10 }}>
+      <h1>프로젝트 수정</h1>
+      <ProjectUpdateForm studyDetail={projectDetail} />
+    </Container>
   );
 }

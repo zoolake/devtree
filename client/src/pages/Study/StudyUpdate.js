@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
+//
+import { Container } from '@mui/material';
+//
 import { StudyUpdateForm } from '../../components/_dashboard/study';
 import { getStudyDetail } from '../../_actions/study_actions';
 
@@ -35,9 +38,9 @@ export default function StudyUpdate() {
   // PAGE
   if (loading || studyDetail.length === 0) return <div>로딩 중</div>;
   return (
-    <div>
-      <h1>Study Update</h1>
+    <Container sx={{ mt: 10 }}>
+      <h1>스터디 수정</h1>
       <StudyUpdateForm studyDetail={studyDetail} />
-    </div>
+    </Container>
   );
 }

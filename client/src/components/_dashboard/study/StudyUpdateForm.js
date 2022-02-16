@@ -163,6 +163,7 @@ export default function StudyUpdateForm({ studyDetail }) {
             id="teamName"
             name="teamName"
             label="팀 이름"
+            variant="standard"
             fullWidth
             value={formik.values.teamName}
             onChange={formik.handleChange}

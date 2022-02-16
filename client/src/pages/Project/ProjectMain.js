@@ -46,25 +46,23 @@ export default function ProjectMain() {
 
   // PAGE
   return (
-    <Page title="Dashboard: Projects | Minimal-UI">
+    <Container sx={{ mt: 10 }}>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        <Typography variant="h3" gutterBottom>
+          프로젝트
+        </Typography>
+        <Button
+          variant="contained"
+          component={RouterLink}
+          to="create"
+          startIcon={<Icon icon={plusFill} />}
+        >
+          프로젝트 생성
+        </Button>
+      </Stack>
       <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            Project
-          </Typography>
-          <Button
-            variant="contained"
-            component={RouterLink}
-            to="create"
-            startIcon={<Icon icon={plusFill} />}
-          >
-            프로젝트 생성
-          </Button>
-        </Stack>
-        <Container>
-          <ProjectList pjtList={projectList} />
-        </Container>
+        <ProjectList pjtList={projectList} />
       </Container>
-    </Page>
+    </Container>
   );
 }

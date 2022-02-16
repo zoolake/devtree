@@ -18,7 +18,6 @@ export default function StudyListCard({ study }) {
 
   // SHOW
   const showTechs = () => {
-    console.log(study.teamTech);
     if (study.teamTech.length < 6) {
       return study.teamTech.map((tech) => <div key={tech.techSeq}>{tech.techName}</div>);
     }

@@ -12,7 +12,7 @@ const getIcon = (name) => <Icon icon={name} width={22} height={22} />;
 
 const sidebarConfig = [
   {
-    title: 'Main',
+    title: '메인',
     path: '/MainPage/app',
     icon: getIcon(homefill)
   },
@@ -28,22 +28,22 @@ const sidebarConfig = [
   //   icon: getIcon(fileTextFill)
   // },
   {
-    title: 'project',
+    title: '프로젝트',
     path: '/project',
     icon: getIcon(fileTextFill)
   },
   {
-    title: 'study',
+    title: '스터디',
     path: '/study',
     icon: getIcon(fileTextFill)
   },
   {
-    title: 'mentor',
+    title: '멘토',
     path: '/mentor',
     icon: getIcon(fileTextFill)
   },
   {
-    title: 'Ranking',
+    title: '랭크',
     path: '/MainPage/ranking',
     icon: getIcon(peopleFill)
   }

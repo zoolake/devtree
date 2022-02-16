@@ -4,8 +4,10 @@ import { Link as RouterLink } from 'react-router-dom';
 import messageCircleFill from '@iconify/icons-eva/message-circle-fill';
 // material
 import { styled } from '@mui/material/styles';
+import { orange, green, blue, purple, red } from '@mui/material/colors';
 import { Box, Link, Card, Grid, Avatar, Typography, CardContent } from '@mui/material';
 // utils
+import { TechImgAvatar } from '../../../utils/mockImages';
 
 const CardMediaStyle = styled('div')({
   position: 'relative',
@@ -13,6 +15,7 @@ const CardMediaStyle = styled('div')({
 });
 
 const TitleStyle = styled(Link)({
+  zIndex: 14,
   height: 20,
   overflow: 'hidden',
   WebkitLineClamp: 2,
@@ -27,7 +30,8 @@ const AvatarStyle = styled(Avatar)(({ theme }) => ({
   position: 'absolute',
   left: '50%',
   transform: 'translateX(-50%)',
-  bottom: theme.spacing(0)
+  bottom: theme.spacing(0),
+  vaule: 'd'
 }));
 
 const InfoStyle = styled('div')(({ theme }) => ({
@@ -59,16 +63,20 @@ export default function MentorCard({ post, index }) {
   const { mentorSeq, mentorCareer, mentorNickname, mentorExp, mentorTechList } = post;
   console.log(mentorTechList);
   const POST_INFO = [{ text: mentorExp, icon: messageCircleFill }];
-
+  const colours = [blue[800], green[500], orange[500], purple[800], red[800]];
+  const getColour = () => colours[Math.floor(Math.random() * colours.length)];
   return (
     <Grid item xs={12} sm={6} md={3}>
-      {' '}
       <Card sx={{ position: 'relative', backgourdcolor: 'red' }}>
         <CardMediaStyle>
-          <AvatarStyle />
+          <AvatarStyle alt={mentorNickname} src="/imsi" sx={{ bgcolor: getColour() }} />
         </CardMediaStyle>
         <CardContent>
-          <Typography align="center" gutterBottom>
+          <Typography
+            sx={{ fontSize: '15px', fontWeight: 'bold', color: '#565656' }}
+            align="center"
+            gutterBottom
+          >
             {mentorCareer}
           </Typography>
           <TitleStyle
@@ -78,6 +86,7 @@ export default function MentorCard({ post, index }) {
             variant="subtitle2"
             underline="hover"
             component={RouterLink}
+            sx={{ fontSize: '18px' }}
           >
             {mentorNickname}
           </TitleStyle>
@@ -86,6 +95,13 @@ export default function MentorCard({ post, index }) {
             {mentorTechList.map((info, index) => (
               <Box key={index}>
                 <Typography variant="caption">#{info.techName}&nbsp; </Typography>
+              </Box>
+            ))}
+          </InfoStyle>
+          <InfoStyle>
+            {mentorTechList.map((info, index) => (
+              <Box key={index}>
+                <Avatar variant="caption" src={TechImgAvatar(info.techSeq)} />
               </Box>
             ))}
           </InfoStyle>

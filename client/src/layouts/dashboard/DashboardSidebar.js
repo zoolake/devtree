@@ -72,8 +72,8 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          //  backgroundColor: '#02c87e',
-          background: 'url(/static/images/sidebar.png)'
+          backgroundColor: '#C2DABC'
+          // background: 'url(/static/images/sidebar.png)'
         }
       }}
     >

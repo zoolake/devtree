@@ -67,19 +67,16 @@ export default function Week6({ week, day, date }) {
     await dispatch(getSchedule(dataToSubmit))
       .then((response) => {
         if (response) {
-          console.log('나오나요');
           console.log(response.payload.data);
           setTime(response.payload.data);
         }
       })
       .catch((err) => {
         console.log(err);
-        console.log('안나오네요');
         setTimeout(() => {}, 3000);
       });
   };
   const submit = async () => {
-    console.log('신청하기');
     const dataToSubmit = {
       mentorSeq: id,
       selectedTime: selectedHour,
@@ -130,56 +127,60 @@ export default function Week6({ week, day, date }) {
   }, []);
   return (
     <Grid item xs={0} sm={0} md={0}>
-      <Card sx={{ minWidth: 275 }}>
-        <CardContent>{day}일 예약 일정</CardContent>
-        <CardContent>
-          {!times && <CardContent>가능한 시간이 없습니다.</CardContent>}
-          {times && (
-            <FormControl>
-              <FormLabel id="demo-row-radio-buttons-group-label">시간 선택</FormLabel>
-              <RadioGroup
-                row
-                aria-labelledby="demo-row-radio-buttons-group-label"
-                name="row-radio-buttons-group"
-              >
-                {times.map((post, index) => (
-                  // eslint-disable-next-line react/jsx-key
-                  <FormControlLabel
-                    control={<Radio onChange={handleTimeChange} />}
-                    value={post}
-                    label={post}
-                  />
-                ))}
-              </RadioGroup>
-            </FormControl>
-          )}
-        </CardContent>
-      </Card>{' '}
-      <Card sx={{ minWidth: 275 }}>
-        <CardContent>멘토링 할 스터디 / 프로젝트 </CardContent>
-        <CardContent>
-          {!teams && <CardContent>멘토링을 신청할 수 있는 팀이 없습니다.</CardContent>}
-          {teams && (
-            <FormControl>
-              <FormLabel id="demo-row-radio-buttons-group-label">팀 선택</FormLabel>
-              <RadioGroup
-                row
-                aria-labelledby="demo-row-radio-buttons-group-label"
-                name="row-radio-buttons-group"
-              >
-                {teams.map((post, index) => (
-                  // eslint-disable-next-line react/jsx-key
-                  <FormControlLabel
-                    control={<Radio onChange={handleTeamChange} />}
-                    value={post.teamSeq}
-                    label={post.teamName}
-                  />
-                ))}
-              </RadioGroup>
-            </FormControl>
-          )}
-        </CardContent>
-      </Card>
+      <CardContent sx={{ fontSize: '20px', fontWeight: 'bold' }}>{day}일 예약 일정</CardContent>
+      <CardContent sx={{ border: '1px solid #C2DABC', borderRadius: '30px' }}>
+        {!times && <CardContent>가능한 시간이 없습니다.</CardContent>}
+        {times && (
+          <FormControl>
+            <FormLabel id="demo-row-radio-buttons-group-label" sx={{ color: '#8fa38a' }}>
+              시간 선택
+            </FormLabel>
+            <RadioGroup
+              row
+              aria-labelledby="demo-row-radio-buttons-group-label"
+              name="row-radio-buttons-group"
+            >
+              {times.map((post, index) => (
+                // eslint-disable-next-line react/jsx-key
+                <FormControlLabel
+                  control={<Radio onChange={handleTimeChange} />}
+                  value={post}
+                  label={post}
+                />
+              ))}
+            </RadioGroup>
+          </FormControl>
+        )}
+      </CardContent>
+
+      <CardContent sx={{ fontSize: '20px', fontWeight: 'bold' }}>
+        멘토링 할 스터디 / 프로젝트
+      </CardContent>
+      <CardContent sx={{ border: '1px solid #C2DABC', borderRadius: '30px' }}>
+        {!teams && <CardContent>멘토링을 신청할 수 있는 팀이 없습니다.</CardContent>}
+        {teams && (
+          <FormControl>
+            <FormLabel id="demo-row-radio-buttons-group-label" sx={{ color: '#8fa38a' }}>
+              팀 선택
+            </FormLabel>
+            <RadioGroup
+              row
+              aria-labelledby="demo-row-radio-buttons-group-label"
+              name="row-radio-buttons-group"
+            >
+              {teams.map((post, index) => (
+                // eslint-disable-next-line react/jsx-key
+                <FormControlLabel
+                  control={<Radio onChange={handleTeamChange} />}
+                  value={post.teamSeq}
+                  label={post.teamName}
+                />
+              ))}
+            </RadioGroup>
+          </FormControl>
+        )}
+      </CardContent>
+
       {selectedTeam && selectedHour && (
         <div>
           <TextField
@@ -188,8 +189,20 @@ export default function Week6({ week, day, date }) {
             value={text}
             variant="filled"
             color="success"
+            sx={{ padding: '10px', width: '80%' }}
           />
-          <Button onClick={submit}>신청하기</Button>
+          <Button
+            sx={{
+              width: '20%',
+              marginTop: '10px',
+              height: '57px',
+              background: 'linear-gradient(to right, #dad299, #b0dab9)',
+              color: 'white'
+            }}
+            onClick={submit}
+          >
+            신청하기
+          </Button>
         </div>
       )}
     </Grid>

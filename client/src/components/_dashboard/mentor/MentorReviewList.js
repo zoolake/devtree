@@ -52,7 +52,7 @@ export default function MentorReviewList(data) {
   return (
     <Box>
       <Container className="container">
-        <CardHeader title="멘토링 리뷰" />
+        <CardHeader style={{ color: '#919191' }} title="멘토링 리뷰" />
         <ScrollMenu>
           {' '}
           {reviews.map((post, index) => (

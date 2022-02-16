@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import jwtdecode from 'jwt-decode';
 // material
-import { styled } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 import {
   Box,
   Link,
@@ -14,7 +14,7 @@ import {
   // Stack
 } from '@mui/material';
 // components
-import Logo from '../../components/Logo';
+import Logo from '../../components/Logo_white';
 
 import Scrollbar from '../../components/Scrollbar';
 import NavSection from '../../components/NavSection';
@@ -26,26 +26,24 @@ import account from '../../_mocks_/account';
 // ----------------------------------------------------------------------
 
 const DRAWER_WIDTH = 280;
-let token = localStorage.getItem('user') || '로그인 해주세요';
+let token = localStorage.getItem('user') || '로그인 하기';
 let a;
 if (localStorage.getItem('user')) {
-  token = `${jwtdecode(localStorage.getItem('user')).sub}님, \n안녕하세요😃`;
+  token = `${jwtdecode(localStorage.getItem('user')).sub}님`;
   console.log();
   a = '/MainPage/profile';
 } else {
   a = '/login';
 }
 const RootStyle = styled('div')(({ theme }) => ({
-  [theme.breakpoints.up('lg')]: {
-    flexShrink: 0,
-    width: DRAWER_WIDTH
-  }
+  margin: '10px',
+  [theme.breakpoints.up('lg')]: { flexShrink: 0, width: DRAWER_WIDTH }
 }));
 
 const AccountStyle = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  padding: theme.spacing(2, 2.5),
+  padding: theme.spacing(2, 3),
   borderRadius: theme.shape.borderRadiusSm,
   backgroundColor: theme.palette.grey[200]
 }));
@@ -69,7 +67,14 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
     <Scrollbar
       sx={{
         height: '100%',
-        '& .simplebar-content': { height: '100%', display: 'flex', flexDirection: 'column' }
+        padding: '10px',
+        '& .simplebar-content': {
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          //  backgroundColor: '#02c87e',
+          background: 'url(/static/images/sidebar.png)'
+        }
       }}
     >
       <Box sx={{ px: 2.5, py: 3 }}>
@@ -81,12 +86,12 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none" component={RouterLink} to={a}>
           <AccountStyle>
-            <Avatar src={account.photoURL} alt="photoURL" />
+            <Avatar alt="photoURL" />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
                 {token}
               </Typography>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              <Typography variant="body2" sx={{ color: 'white' }}>
                 {account.role}
               </Typography>
             </Box>
@@ -105,7 +110,11 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           open={isOpenSidebar}
           onClose={onCloseSidebar}
           PaperProps={{
-            sx: { width: DRAWER_WIDTH }
+            sx: {
+              width: DRAWER_WIDTH,
+              borderRadius: '30px',
+              margin: '10px'
+            }
           }}
         >
           {renderContent}
@@ -116,8 +125,10 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         <Drawer
           open
           variant="persistent"
+          elevation="0"
           PaperProps={{
             sx: {
+              elevation: 0,
               width: DRAWER_WIDTH,
               bgcolor: 'background.default'
             }

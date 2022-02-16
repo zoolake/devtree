@@ -1,11 +1,8 @@
-import faker from 'faker';
-import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 // material
-import { Box, Card, Typography, CardHeader, CardContent } from '@mui/material';
+import { Box, Card, CardHeader } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // utils
-import { fDateTime } from '../../utils/formatTime';
 
 import { deleteUser } from '../../_actions/user_actions';
 // ---------------------------------------------------------------------

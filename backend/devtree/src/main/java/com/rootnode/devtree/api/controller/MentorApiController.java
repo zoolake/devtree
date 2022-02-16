@@ -232,4 +232,13 @@ public class MentorApiController {
         private int status;
         private String message;
     }
+
+    /**
+     * 기능: 멘토링 상태 변경 (ACTIVATE)
+     */
+    @GetMapping("/v1/mentoring/state/{mentoringSeq}")
+    public CommonResponseDto mentoringApplyResponse(@PathVariable Long mentoringSeq) {
+        return mentorService.changeMentoringState(mentoringSeq);
+    }
 }
+

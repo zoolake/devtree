@@ -1,4 +1,4 @@
-export { default as AppCommunityMain } from './AppCommunityMain';
+export { default as AppRankMain } from './AppRankMain';
 export { default as AppCurrentVisits } from './AppCurrentVisits';
 export { default as AppMentorMain } from './AppMentorMain';
 export { default as AppNewsUpdate } from './AppNewsUpdate';
@@ -7,3 +7,5 @@ export { default as AppOrderTimeline } from './AppOrderTimeline';
 export { default as AppTasks } from './AppTasks';
 export { default as AppTrafficBySite } from './AppTrafficBySite';
 export { default as AppProjectMain } from './AppProjectMain';
+export { default as SliderBanner } from './SliderBanner';
+export { default as AppMainBanner } from './AppMainBanner';

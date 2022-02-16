@@ -1,15 +1,11 @@
 import PropTypes from 'prop-types';
 import { Icon } from '@iconify/react';
-import eyeFill from '@iconify/icons-eva/eye-fill';
 import { Link as RouterLink } from 'react-router-dom';
-import shareFill from '@iconify/icons-eva/share-fill';
 import messageCircleFill from '@iconify/icons-eva/message-circle-fill';
 // material
-import { alpha, styled } from '@mui/material/styles';
-import { Stack, Box, Link, Card, Grid, Avatar, Typography, CardContent } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { Box, Link, Card, Grid, Avatar, Typography, CardContent } from '@mui/material';
 // utils
-import { fDate } from '../../../utils/formatTime';
-import { fShortenNumber } from '../../../utils/formatNumber';
 
 const CardMediaStyle = styled('div')({
   position: 'relative',
@@ -17,7 +13,7 @@ const CardMediaStyle = styled('div')({
 });
 
 const TitleStyle = styled(Link)({
-  height: 44,
+  height: 20,
   overflow: 'hidden',
   WebkitLineClamp: 2,
   display: '-webkit-box',
@@ -29,8 +25,9 @@ const AvatarStyle = styled(Avatar)(({ theme }) => ({
   width: 100,
   height: 100,
   position: 'absolute',
-  left: theme.spacing(3),
-  bottom: theme.spacing(-2)
+  left: '50%',
+  transform: 'translateX(-50%)',
+  bottom: theme.spacing(0)
 }));
 
 const InfoStyle = styled('div')(({ theme }) => ({
@@ -57,44 +54,38 @@ MentorCard.propTypes = {
 };
 
 export default function MentorCard({ post, index }) {
-  console.log(post);
+  console.log('post', post);
   console.log(index);
-  const { stack, mentorname, tier, mentorcarrer } = post;
-  console.log(`tier:${tier}`);
-  const latestPostLarge = index === 0;
-  const latestPost = index === 1 || index === 2;
-
-  const POST_INFO = [{ text: tier, icon: messageCircleFill }];
+  const { mentorSeq, mentorCareer, mentorNickname, mentorExp, mentorTechList } = post;
+  console.log(mentorTechList);
+  const POST_INFO = [{ text: mentorExp, icon: messageCircleFill }];
 
   return (
     <Grid item xs={12} sm={6} md={3}>
       {' '}
-      <Card sx={{ position: 'relative' }}>
+      <Card sx={{ position: 'relative', backgourdcolor: 'red' }}>
         <CardMediaStyle>
           <AvatarStyle />
-          <CoverImgStyle alt={mentorname} src="/static/mock-images/covers/cover_1.jpg" />
         </CardMediaStyle>
         <CardContent>
-          <Typography gutterBottom variant="caption">
-            {mentorcarrer}
+          <Typography align="center" gutterBottom>
+            {mentorCareer}
           </Typography>
           <TitleStyle
-            to={`${post.id}`}
+            align="center"
+            to={`${mentorSeq}`}
             color="inherit"
             variant="subtitle2"
             underline="hover"
             component={RouterLink}
           >
-            {mentorname}
+            {mentorNickname}
           </TitleStyle>
-          <Typography gutterBottom variant="caption">
-            {stack}
-          </Typography>
+
           <InfoStyle>
-            {POST_INFO.map((info, index) => (
+            {mentorTechList.map((info, index) => (
               <Box key={index}>
-                <Box component={Icon} icon={info.icon} />
-                <Typography variant="caption">{info.text}</Typography>
+                <Typography variant="caption">#{info.techName}&nbsp; </Typography>
               </Box>
             ))}
           </InfoStyle>

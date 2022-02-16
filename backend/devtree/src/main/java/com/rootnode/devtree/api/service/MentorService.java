@@ -441,7 +441,6 @@ public class MentorService {
         }
         return new CommonResponseDto(201, "멘토링 요청 응답에 성공하였습니다.");
     }
-
     @Transactional
     public CommonResponseDto changeMentoringState(Long mentoringSeq) {
         Mentoring mentoring = mentoringRepository.findById(mentoringSeq).get();

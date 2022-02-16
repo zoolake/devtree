@@ -27,7 +27,7 @@ export default function RegisterForm(props) {
           test: async (values) => {
             if (values) {
               try {
-                const response = await fetch('http://localhost:8080/v1/user/idcheck', {
+                const response = await fetch('/user/idcheck', {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json'

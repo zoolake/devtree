@@ -1,13 +1,24 @@
-import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+//
+import jwtdecode from 'jwt-decode';
 import * as Yup from 'yup';
-import { useEffect, useState, useMemo, useCallback } from 'react';
-import { useFormik, Form, FormikProvider } from 'formik';
-import Select from 'react-select';
-import makeAnimated from 'react-select/animated';
-import { Stack, TextField, Box } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+import { useFormik } from 'formik';
+import { TextField, Button, FormControl, InputLabel, NativeSelect, Stack } from '@mui/material';
+//
+import { createStudy } from '../../../_actions/study_actions';
+import { getTechList } from '../../../_actions/team_actions';
 
 export default function StudyCreationForm() {
+  // STATE
+  // 기술스택
+  const [allTechList, setAllTech] = useState([]);
+  const [myTechList, setMyTech] = useState([]);
+  const [selectedTech, setSelectedTech] = useState('');
+  // 멤버 수
+  const MEMBER_CNT_OPTION = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+  const [selectedCnt, setSelectedCnt] = useState('');
+  // 입력 조건
   const RegisterSchema = Yup.object().shape({
     teamName: Yup.string()
       .required('스터디 제목은 필수 값 입니다.')
@@ -18,200 +29,264 @@ export default function StudyCreationForm() {
       .min(10, '스터디 설명은 10자 이상이여야 합니다.')
   });
 
+  // INIT
+  const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
       teamManagerSeq: '',
       teamName: '',
       teamDesc: '',
-      teamState: 'RECRUIT',
-      teamType: 'STUDY',
-      teamTech: [],
-      teamRecruitCnt: 10
+      teamState: '',
+      teamType: '',
+      teamRecruitCnt: '',
+      teamTech: []
     },
     validationSchema: RegisterSchema,
     onSubmit: (values, { setSubmitting }) => {
       setTimeout(() => {
+        // 스터디 생성시 요청할 데이터
         const dataToSubmit = {
-          teamManagerSeq: 1,
+          teamManagerSeq: jwtdecode(localStorage.getItem('user')).userSeq,
           teamName: values.teamName,
           teamDesc: values.teamDesc,
-          teamState: formik.initialValues.teamState, // RECRUIT, COMPLETED, FINISH
-          teamType: formik.initialValues.teamType, // STUDY, PROJECT
-          teamRecruitCnt: formik.initialValues.teamRecruitCnt,
-          teamTech: techList
+          teamState: 'RECRUIT', // RECRUIT, COMPLETED, FINISH
+          teamType: 'STUDY', // STUDY, PROJECT
+          teamRecruitCnt: selectedCnt,
+          teamTech: myTechList.map((tech) => tech.techSeq)
         };
-
-        const createStudy = async () => {
-          const createUrl = '/study'; // http://127.26.1.146:8080/v1/study
-          await axios
-            .post(createUrl, dataToSubmit)
+        // 스터디 생성하기
+        const makeStudy = async () => {
+          await dispatch(createStudy(dataToSubmit))
             .then((response) => {
               console.log(response, '스터디 생성 성공');
             })
             .catch((error) => {
-              console.log(error, '스터디 생성 실패');
               console.log(dataToSubmit);
+              console.log(error, '스터디 생성 실패');
             });
         };
-        // dispatch(registerUser(dataToSubmit)).then((response) => {});
-        createStudy();
-
+        makeStudy();
         setSubmitting(false);
       }, 500);
     }
   });
-
-  const [allTechList, setAllTech] = useState([]);
-
-  const SetSelections = async () => {
-    // 기술테크 리스트 불러오기
-    const techUrl = '/tech'; // http://127.26.1.146:8080/v1/tech
-    await axios
-      .get(techUrl)
+  const SetOption = async () => {
+    // 기술스택 리스트 불러오기
+    await dispatch(getTechList())
       .then((response) => {
-        console.log(response.data.message);
-        return response.data.data;
-      })
-      .then((dataList) => {
-        const allTechs = dataList.reduce((total, data) => {
-          total = [...total, { value: data.techSeq, label: data.techName }];
-          return total;
-        }, []);
-        return allTechs;
-      })
-      .then((allTechs) => {
-        setAllTech(allTechs);
+        const techData = response.payload.data.data;
+        console.log(techData, '기술스택 리스트 불러오기 성공');
+        setAllTech(techData);
       })
       .catch((error) => {
-        console.log(error, '테크 불러오기 실패');
+        console.log(error, '기술스택 리스트 불러오기 실패');
       });
   };
 
-  // 초기 렌더링
+  // RENDER
   useEffect(() => {
-    SetSelections();
+    SetOption();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 사용자가 추가하기
-  const [techList, setTech] = useState([]);
-
-  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
-
-  // Selection Form
-  // ---------------------------------------
-  // multiselect
-  const animatedComponents = makeAnimated();
-  // styles that do not show 'x' for fixed options
-  const styles = useMemo(
-    () => ({
-      multiValueRemove: (base, state) => (state.data.isFixed ? { ...base, display: 'none' } : base)
-    }),
-    []
-  );
-
-  // sort options with alphabet order
-  const orderByLabel = useCallback((a, b) => a.label.localeCompare(b.label), []);
-
-  // listed fixed options first and then the delete-able options
-  const orderOptions = useCallback(
-    (values) =>
-      values
-        .filter((v) => v.isFixed)
-        .sort(orderByLabel)
-        .concat(values.filter((v) => !v.isFixed).sort(orderByLabel)),
-    [orderByLabel]
-  );
-
-  // selected values, initially it lists all options in order
-  const [techValue, setTechValue] = useState(orderOptions(allTechList));
-
-  // handler for Tech changes
-  const handleTechs = useCallback(
-    (inputValue, { action, removedValue }) => {
-      switch (action) {
-        case 'remove-value': // delete with 'x'
-          setTech(orderOptions(techList.filter((tech) => tech !== removedValue)));
-          return;
-
-        case 'pop-value': {
-          // delete with backspace
-          if (removedValue.isFixed) {
-            setTech(orderOptions([...inputValue, removedValue]));
-          }
-          return;
-        }
-
-        case 'clear': // clear button is clicked
-          setTech(techList.filter((v) => v.isFixed));
-          return;
-
-        case 'select-option': {
-          const newInput = inputValue.reduce((total, data, i) => {
-            const ret = [...total, data.value];
-            return ret;
-          }, []);
-          setTech(newInput);
-          return;
-        }
-
-        default:
-          setTechValue(inputValue);
+  // HANDLE
+  const handleChange = (event, type) => {
+    if (type === 'tech') {
+      setSelectedTech(event.target.value);
+      if (myTechList.includes(findOrigin(allTechList, 'techName', event.target.value))) {
+        return;
       }
-    },
-    [techList, orderOptions]
-  );
+      setMyTech([...myTechList, findOrigin(allTechList, 'techName', event.target.value)]);
+    } else {
+      setSelectedCnt(event.target.value);
+    }
+  };
 
+  // const getPositionData = useCallback(() => {
+  //   const date = `${myPositionList}-${myPositionList.toString().padStart(2, '0')}`;
+  //   console.log(date);
+  // }, [searchYear, searchMonth]);
+  // handle Tech Change
+  // const handleTechs = useCallback(
+  //   (inputValue, { action, removedValue }) => {
+  //     switch (action) {
+  //       case 'remove-value': // delete with 'x'
+  //         setMyTech(orderOptions(myTechList.filter((tech) => tech !== removedValue)));
+  //         return;
+  //       case 'pop-value': {
+  //         // delete with backspace
+  //         if (removedValue.isFixed) {
+  //           setMyTech(orderOptions([...inputValue, removedValue]));
+  //         }
+  //         return;
+  //       }
+  //       case 'clear': // clear button is clicked
+  //         setMyTech(myTechList.filter((v) => v.isFixed));
+  //         return;
+  //       case 'select-option': {
+  //         setMyTech(inputValue.map((each) => each.value));
+  //         return;
+  //       }
+  //       default:
+  //     }
+  //     setTechValue(inputValue);
+  //     // console.log(techValue);
+  //   },
+  //   [myTechList, orderOptions]
+  // );
+
+  // handle Position Change
+  // const handlePositions = useCallback(
+  //   (inputValue, { action, removedValue }) => {
+  //     switch (action) {
+  //       case 'remove-value': // delete with 'x'
+  //         setMyPosition(orderOptions(myPositionList.filter((tech) => tech !== removedValue)));
+  //         return;
+  //       case 'pop-value': // delete with backspace
+  //         if (removedValue.isFixed) {
+  //           setMyPosition(orderOptions([...inputValue, removedValue]));
+  //           return;
+  //         }
+  //         break;
+  //       case 'clear': // clear button is clicked
+  //         setMyPosition(myPositionList.filter((v) => v.isFixed));
+  //         return;
+  //       case 'select-option': {
+  //         const newInput = inputValue.reduce((total, data) => {
+  //           const ret = [
+  //             ...total,
+  //             {
+  //               position: {
+  //                 detailPositionName: data.label,
+  //                 positionName: data.positionName
+  //               },
+  //               positionRecruitCnt: 10
+  //             }
+  //           ];
+  //           return ret;
+  //         }, []);
+  //         console.log(newInput);
+  //         setMyPosition(newInput);
+  //         return;
+  //       }
+  //       default:
+  //     }
+  //     setPositionValue(inputValue);
+  //     // console.log(positionValue);
+  //   },
+  //   [myPositionList, orderOptions]
+  // );
+
+  // const handleCallback = (childData) => {
+  //   console.log('childData', childData[0]);
+  //   const childkey = childData[0].position.position.detailPositionName;
+  //   if (myPositionCnt.length === 0) {
+  //     setMyPositionCnt([
+  //       ...myPositionCnt,
+  //       {
+  //         position: childData[0].position.position,
+  //         positionRecruitCnt: childData[0].cnt
+  //       }
+  //     ]);
+  //     console.log('없음');
+  //   } else if (
+  //     myPositionCnt.map((position) => position.position.detailPositionName).includes(childkey)
+  //   ) {
+  //     myPositionCnt[
+  //       myPositionCnt.map((position) => position.position.detailPositionName).indexOf(childkey)
+  //     ].positionRecruitCnt = childData[0].cnt;
+  //     console.log('있음');
+  //   } else {
+  //     setMyPositionCnt([
+  //       ...myPositionCnt,
+  //       {
+  //         position: childData[0].position.position,
+  //         positionRecruitCnt: childData[0].cnt
+  //       }
+  //     ]);
+  //     console.log('없음');
+  //   }
+  //   console.log(myPositionCnt);
+  // };
+
+  // FUNC
+  const findOrigin = (originArray, findKey, findValue) => {
+    for (let i = 0; i < originArray.length; i += 1) {
+      if (originArray[i][findKey] === findValue) {
+        return originArray[i];
+      }
+    }
+  };
+
+  // PAGE
   return (
-    <FormikProvider value={formik}>
-      <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+    <div>
+      <form onSubmit={formik.handleSubmit}>
         <Stack spacing={3}>
+          {/* teamName */}
           <TextField
-            fullWidth
-            label="Name"
-            {...getFieldProps('teamName')}
-            error={Boolean(touched.teamName && errors.teamName)}
-            helperText={touched.teamName && errors.teamName}
+            id="teamName"
+            name="teamName"
+            label="teamName"
+            value={formik.values.teamName}
+            onChange={formik.handleChange}
+            error={formik.touched.teamName && Boolean(formik.errors.teamName)}
+            helperText={formik.touched.teamName && formik.errors.teamName}
           />
-
+          {/* teamDesc */}
           <TextField
-            fullWidth
-            multiline
-            rows={5}
-            label="desc"
-            {...getFieldProps('teamDesc')}
-            error={Boolean(touched.teamDesc && errors.teamDesc)}
-            helperText={touched.teamDesc && errors.teamDesc}
+            id="teamDesc"
+            name="teamDesc"
+            label="teamDesc"
+            type="text"
+            value={formik.values.teamDesc}
+            onChange={formik.handleChange}
+            error={formik.touched.teamDesc && Boolean(formik.errors.teamDesc)}
+            helperText={formik.touched.teamDesc && formik.errors.teamDesc}
           />
-
-          <Box sx={7}>
-            <Select
-              // closeMenuOnSelect={false}
-              components={animatedComponents}
-              isMulti
-              options={allTechList}
-              placeholder="기술 스택 추가"
-              // // isClearable={techList.some((v) => !v.isFixed)} // clear button shows conditionally
-              styles={styles} // styles that do not show 'x' for fixed options
-              // value={addTech(value)} // selected values
-              onChange={handleTechs} // handler for changes
-              // // error={Boolean(touched.team_position && errors.team_position)}
-              // // helperText={touched.team_position && errors.team_position}
-            />
-          </Box>
-
-          <LoadingButton
-            fullWidth
-            size="large"
-            type="submit"
-            variant="contained"
-            loading={isSubmitting}
-            onChange={formik.onSubmit}
-          >
-            생성
-          </LoadingButton>
+          {/* teamTech */}
+          <FormControl>
+            <InputLabel htmlFor="select-tech">teamTech</InputLabel>
+            <NativeSelect
+              label="select-tech"
+              defaultValue={selectedTech}
+              value={selectedTech}
+              onChange={(e) => handleChange(e, 'tech')}
+            >
+              {allTechList.map((tech) => (
+                <option key={tech.techSeq} value={tech.techName}>
+                  {tech.techName}
+                </option>
+              ))}
+            </NativeSelect>
+            <div>
+              {myTechList.map((tech) => (
+                <span key={tech.techSeq}>{tech.techName} </span>
+              ))}
+            </div>
+          </FormControl>
+          {/* teamRecruitCnt */}
+          <FormControl>
+            <InputLabel htmlFor="select-team-recruit-cnt">teamRecruitCnt</InputLabel>
+            <NativeSelect
+              label="select-team-recruit-cnt"
+              defaultValue={selectedCnt}
+              value={selectedCnt}
+              onChange={(e) => handleChange(e, 'cnt')}
+            >
+              {MEMBER_CNT_OPTION.map((value) => (
+                <option key={value} value={value}>
+                  {value}명
+                </option>
+              ))}
+            </NativeSelect>
+          </FormControl>
+          {/* Submit Btn */}
+          <Button color="primary" variant="contained" fullWidth type="submit">
+            Submit
+          </Button>
         </Stack>
-      </Form>
-    </FormikProvider>
+      </form>
+    </div>
   );
 }

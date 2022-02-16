@@ -30,16 +30,18 @@ const TitleStyle = styled(Link)({
 export default function ReviewCard({ post, index }) {
   console.log(post);
   console.log(index);
-  const { userName, mentor_comment } = post;
-  const [username, setUserName] = useState([]);
+  const { userName, comment } = post;
+  const [name, setUserName] = useState([]);
 
   const setAnonymous = (name) => {
-    setUserName(`${name.substring(0, 1)}****님`);
+    // setUserName(`${name.substring(0, 1)}****님`);
+    setUserName(name);
   };
 
   useEffect(() => {
+    console.log(userName);
     setAnonymous(userName);
-  }, []);
+  }, [name]);
 
   return (
     <Grid item xs={0} sm={0} md={0}>
@@ -47,10 +49,10 @@ export default function ReviewCard({ post, index }) {
       <Card sx={{ position: 'relative' }}>
         <CardContent>
           <Typography gutterBottom variant="caption">
-            {username}
+            {name}
           </Typography>
           <TitleStyle color="inherit" variant="subtitle2" underline="hover">
-            {mentor_comment}
+            {comment}
           </TitleStyle>
         </CardContent>
       </Card>

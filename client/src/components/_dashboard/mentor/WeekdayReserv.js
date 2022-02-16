@@ -57,21 +57,22 @@ export default function WeekdayReserv({ week, day, date }) {
     setSelectedTeam(event.target.value);
     console.log(event.target.value);
   };
-  console.log('--mentorseq--');
-  console.log(id);
-  console.log('-----------');
   const getTime = async () => {
     const dataToSubmit = {
-      mentorTime: date,
+      mentorDate: date,
       mentorSeq: id
     };
     await dispatch(getSchedule(dataToSubmit))
       .then((response) => {
         if (response) {
-          setTime(response.payload);
+          console.log('나오나요');
+          console.log(response.payload.data);
+          setTime(response.payload.data);
         }
       })
       .catch((err) => {
+        console.log(err);
+        console.log('안나오네요');
         setTimeout(() => {}, 3000);
       });
   };
@@ -79,7 +80,7 @@ export default function WeekdayReserv({ week, day, date }) {
     console.log('신청하기');
     const dataToSubmit = {
       mentorSeq: id,
-      mentorTime: selectedTime,
+      mentorDate: selectedTime,
       teamSeq: selectedTeam
     };
     await dispatch(getSchedule(dataToSubmit))
@@ -102,13 +103,11 @@ export default function WeekdayReserv({ week, day, date }) {
   };
 
   const getTeam = async () => {
-    const dataToSubmit = {
-      mentorSeq: id
-    };
-    await dispatch(getTeams(dataToSubmit))
+    await dispatch(getTeams())
       .then((response) => {
         if (response) {
-          setTeams(response.payload);
+          console.log(response);
+          setTeams(response.payload.data);
         }
       })
       .catch((err) => {
@@ -118,11 +117,7 @@ export default function WeekdayReserv({ week, day, date }) {
 
   useEffect(() => {
     getTime();
-
-    console.log('=================check=');
-    console.log(teams);
     getTeam();
-    console.log(times);
   }, []);
   return (
     <Grid item xs={0} sm={0} md={0}>
@@ -132,18 +127,18 @@ export default function WeekdayReserv({ week, day, date }) {
           {!times && <CardContent>가능한 시간이 없습니다.</CardContent>}
           {times && (
             <FormControl>
-              <FormLabel id="demo-row-radio-buttons-group-label">팀 선택</FormLabel>
+              <FormLabel id="demo-row-radio-buttons-group-label">시간 선택</FormLabel>
               <RadioGroup
                 row
                 aria-labelledby="demo-row-radio-buttons-group-label"
                 name="row-radio-buttons-group"
               >
                 {times.map((post, index) => (
+                  // eslint-disable-next-line react/jsx-key
                   <FormControlLabel
-                    onChange={handleTimeChange}
-                    control={<Radio />}
-                    value={post.mentorTime}
-                    label={post.mentorTime}
+                    control={<Radio onChange={handleTimeChange} />}
+                    value={post}
+                    label={post}
                   />
                 ))}
               </RadioGroup>
@@ -164,6 +159,7 @@ export default function WeekdayReserv({ week, day, date }) {
                 name="row-radio-buttons-group"
               >
                 {teams.map((post, index) => (
+                  // eslint-disable-next-line react/jsx-key
                   <FormControlLabel
                     control={<Radio onChange={handleTeamChange} />}
                     value={post.teamSeq}

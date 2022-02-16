@@ -41,7 +41,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 export default function Login() {
   return (
-    <RootStyle title="Login | Minimal-UI">
+    <RootStyle title="devtree - login">
       <AuthLayout>
         계정이 없으신가요? &nbsp;
         <Link underline="none" variant="subtitle2" component={RouterLink} to="/register">

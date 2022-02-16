@@ -1,23 +1,35 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 //
 import jwtdecode from 'jwt-decode';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { TextField, Button, FormControl, InputLabel, NativeSelect, Stack } from '@mui/material';
+import {
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  Stack,
+  Container,
+  MenuItem,
+  Grid
+} from '@mui/material';
 //
 import { createStudy } from '../../../_actions/study_actions';
 import { getTechList } from '../../../_actions/team_actions';
 
 export default function StudyCreationForm() {
   // STATE
+  const navigate = useNavigate();
   // 기술스택
   const [allTechList, setAllTech] = useState([]);
   const [myTechList, setMyTech] = useState([]);
-  const [selectedTech, setSelectedTech] = useState('');
+  const [selectedTech, setSelectedTech] = useState('ㅁ');
   // 멤버 수
   const MEMBER_CNT_OPTION = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-  const [selectedCnt, setSelectedCnt] = useState('');
+  const [selectedCnt, setSelectedCnt] = useState('ㅁ');
   // 입력 조건
   const RegisterSchema = Yup.object().shape({
     teamName: Yup.string()
@@ -59,6 +71,7 @@ export default function StudyCreationForm() {
           await dispatch(createStudy(dataToSubmit))
             .then((response) => {
               console.log(response, '스터디 생성 성공');
+              navigate('/study');
             })
             .catch((error) => {
               console.log(dataToSubmit);
@@ -210,6 +223,7 @@ export default function StudyCreationForm() {
   // };
 
   // FUNC
+  // eslint-disable-next-line consistent-return
   const findOrigin = (originArray, findKey, findValue) => {
     for (let i = 0; i < originArray.length; i += 1) {
       if (originArray[i][findKey] === findValue) {
@@ -220,14 +234,16 @@ export default function StudyCreationForm() {
 
   // PAGE
   return (
-    <div>
+    <Container sx={{ mt: 5 }}>
       <form onSubmit={formik.handleSubmit}>
-        <Stack spacing={3}>
+        <Stack spacing={4} sx={{ ml: 10, alignItems: 'start', width: '80%' }}>
           {/* teamName */}
           <TextField
             id="teamName"
             name="teamName"
-            label="teamName"
+            label="팀 이름"
+            variant="standard"
+            fullWidth
             value={formik.values.teamName}
             onChange={formik.handleChange}
             error={formik.touched.teamName && Boolean(formik.errors.teamName)}
@@ -237,56 +253,64 @@ export default function StudyCreationForm() {
           <TextField
             id="teamDesc"
             name="teamDesc"
-            label="teamDesc"
+            label="팀 설명"
             type="text"
+            variant="standard"
+            fullWidth
+            multiline
+            maxRows={4}
             value={formik.values.teamDesc}
             onChange={formik.handleChange}
             error={formik.touched.teamDesc && Boolean(formik.errors.teamDesc)}
             helperText={formik.touched.teamDesc && formik.errors.teamDesc}
           />
           {/* teamTech */}
-          <FormControl>
-            <InputLabel htmlFor="select-tech">teamTech</InputLabel>
-            <NativeSelect
-              label="select-tech"
-              defaultValue={selectedTech}
+          <FormControl sx={{ width: '100%' }}>
+            <InputLabel id="select-tech">기술스택 선택</InputLabel>
+            <Select
+              labelId="select-tech"
+              label="teamTech"
               value={selectedTech}
+              fullWidth
               onChange={(e) => handleChange(e, 'tech')}
+              sx={{ mb: 2 }}
             >
               {allTechList.map((tech) => (
-                <option key={tech.techSeq} value={tech.techName}>
+                <MenuItem key={tech.techSeq} value={tech.techName}>
                   {tech.techName}
-                </option>
+                </MenuItem>
               ))}
-            </NativeSelect>
-            <div>
+            </Select>
+            <Stack direction="row" spacing={3}>
               {myTechList.map((tech) => (
-                <span key={tech.techSeq}>{tech.techName} </span>
+                <div key={tech.techSeq}>{tech.techName} </div>
               ))}
-            </div>
+            </Stack>
           </FormControl>
           {/* teamRecruitCnt */}
-          <FormControl>
-            <InputLabel htmlFor="select-team-recruit-cnt">teamRecruitCnt</InputLabel>
-            <NativeSelect
-              label="select-team-recruit-cnt"
-              defaultValue={selectedCnt}
+          <FormControl sx={{ width: '100%' }}>
+            <InputLabel id="select-team-recruit-cnt">모집 멤버 수</InputLabel>
+            <Select
+              labelId="select-team-recruit-cnt"
+              label="teamRecruitCnt"
               value={selectedCnt}
               onChange={(e) => handleChange(e, 'cnt')}
             >
               {MEMBER_CNT_OPTION.map((value) => (
-                <option key={value} value={value}>
+                <MenuItem key={value} value={value}>
                   {value}명
-                </option>
+                </MenuItem>
               ))}
-            </NativeSelect>
+            </Select>
           </FormControl>
           {/* Submit Btn */}
-          <Button color="primary" variant="contained" fullWidth type="submit">
-            Submit
-          </Button>
+          <Grid container justifyContent="flex-end">
+            <Button color="primary" variant="contained" type="submit">
+              생성하기
+            </Button>
+          </Grid>
         </Stack>
       </form>
-    </div>
+    </Container>
   );
 }

@@ -13,4 +13,7 @@ public interface ProjectPositionUserRepository extends JpaRepository<ProjectPosi
 
     @Query(value = "select p.user.userSeq from ProjectPositionUser p where p.projectPosition.team.teamSeq = :teamSeq")
     List<Long> findUserSeqByTeamSeq(Long teamSeq);
+
+    @Query(value = "select p from ProjectPositionUser p where p.projectPosition.team.teamSeq = :teamSeq")
+    List<ProjectPositionUser> findUserByTeamSeq(Long teamSeq);
 }

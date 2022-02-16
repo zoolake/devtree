@@ -76,7 +76,6 @@ export function deleteUser(dataToSubmit) {
   const request = axios
     .delete(`${USER_SERVER}/password/1`, dataToSubmit)
     .then((response) => response.data);
-
   return {
     type: DELETE_USER,
     payload: request

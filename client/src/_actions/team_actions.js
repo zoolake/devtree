@@ -16,6 +16,7 @@ export function getPositionList() {
 }
 
 export function changeTeamState(data) {
+  console.log(data);
   const request = axios
     .put('/team/change/state', data) // https://127.26.1.146:8080/v1/team/change/state
     .then((response) => response);

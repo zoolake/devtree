@@ -9,7 +9,6 @@ import com.rootnode.devtree.db.entity.compositeKey.ProjectPositionUserId;
 import com.rootnode.devtree.db.entity.compositeKey.TeamTechId;
 import com.rootnode.devtree.db.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -95,6 +94,20 @@ public class ProjectService {
         // 4. DTO로 변환하여 반환 (userRepository 완성되면 바로 아래 주석 처리한 코드로 사용)
         return new ProjectDetailResponseDto(team, managerName, projectPositions);
     }
+
+
+    public List<ProjectMemberListResponseDto> findProjectMember(Long teamSeq) {
+        // 1. 팀 테이블을 조회
+        List<ProjectPositionUser> userList = projectPositionUserRepository.findUserByTeamSeq(teamSeq);
+
+        return userList.stream().map(user -> {
+            String userName = userRepository.findByUserSeq(user.getUser().getUserSeq()).get().getUserName();
+            return new ProjectMemberListResponseDto(user, userName);
+        }).collect(Collectors.toList());
+    }
+
+
+
 
     @Transactional
     public CommonResponseDto joinProject(Long userSeq,Long teamSeq, ProjectJoinRequestDto requestDto) {

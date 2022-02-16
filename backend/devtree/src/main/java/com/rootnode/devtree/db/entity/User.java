@@ -47,6 +47,8 @@ public class User{
 
 
     public void changeUserNickName(String userNickname) { this.userNickname = userNickname; }
+    public void changeUserName(String userName) { this.userName = userName; }
+    public void changeUserDesc(String userDesc) { this.userDesc = userDesc; }
     public void changeUserEmail(String userEmail) { this.userEmail = userEmail; }
     public void changeUserRole(UserRole userRole) { this.userRole = userRole; }
     public void changeVerificationCode(String verificationCode) {

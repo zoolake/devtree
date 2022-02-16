@@ -1,23 +1,18 @@
-import { Icon } from '@iconify/react';
-import plusFill from '@iconify/icons-eva/plus-fill';
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
-import { Button, Container, Stack, Typography } from '@mui/material';
-import Page from '../../components/Page';
-import { StudyPostsSort, StudySearch, StudyList } from '../../components/_dashboard/study';
+//
+import { Icon } from '@iconify/react';
+import plusFill from '@iconify/icons-eva/plus-fill';
+import { Button, Container, Stack, Typography, Divider } from '@mui/material';
+//
+import { StudyList } from '../../components/_dashboard/study';
 import { getStudyList } from '../../_actions/study_actions';
 
 export default function StudyMain() {
   // state
   const [studyList, setStudyList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [filterKeyword, setFilterKeyword] = useState(null);
-  const SORT_OPTIONS = [
-    { value: 'latest', label: 'Latest' },
-    { value: 'popular', label: 'Popular' },
-    { value: 'oldest', label: 'Oldest' }
-  ];
 
   // axios
   const dispatch = useDispatch();
@@ -52,31 +47,24 @@ export default function StudyMain() {
 
   // page
   return (
-    <Page title="Dashboard: Studys | Minimal-UI">
+    <Container sx={{ mt: 10 }}>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        <Typography variant="h3" gutterBottom>
+          스터디
+        </Typography>
+        <Button
+          variant="contained"
+          component={RouterLink}
+          to="create"
+          startIcon={<Icon icon={plusFill} />}
+        >
+          스터디 생성
+        </Button>
+      </Stack>
+      <Divider sx={{ mt: 2, mb: 5 }} />
       <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            Study
-          </Typography>
-          <Button
-            variant="contained"
-            component={RouterLink}
-            to="create"
-            startIcon={<Icon icon={plusFill} />}
-          >
-            스터디 생성
-          </Button>
-        </Stack>
-
-        <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
-          <StudySearch studyList={studyList} setFilterKeyword={setFilterKeyword} />
-          <StudyPostsSort options={SORT_OPTIONS} />
-        </Stack>
-
-        <Container>
-          <StudyList studyList={studyList} />
-        </Container>
+        <StudyList studyList={studyList} />
       </Container>
-    </Page>
+    </Container>
   );
 }

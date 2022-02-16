@@ -2,17 +2,16 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 //
-import { Card, CardContent, Typography, CardActions, Button, Stack } from '@mui/material';
+import { Card, CardContent, Typography, Stack } from '@mui/material';
 
 StudyListCard.propTypes = {
   study: PropTypes.object.isRequired
 };
 
 export default function StudyListCard({ study }) {
-  console.log(study);
   // STATE
   const TEAM_STATE = [
-    { state: 'RECRUIT', stateName: '진행 중' },
+    { state: 'RECRUIT', stateName: '모집 중' },
     { state: 'COMPLETED', stateName: '모집 완료됨' },
     { state: 'FINISH', stateName: '종료됨' }
   ];

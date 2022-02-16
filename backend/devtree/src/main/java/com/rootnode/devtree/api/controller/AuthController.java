@@ -88,9 +88,9 @@ public class AuthController {
 //		userdetails를 통해서 user를 가져온다.
         UserDetail userDetails = (UserDetail)authentication.getDetails();
 //      user_seq 가져오기
-        Long user_seq = userDetails.getUser().getUserSeq();
+        Long userSeq = userDetails.getUser().getUserSeq();
 //      프로필을 수정하자!
-        userService.updateUser(user_seq,userUpdateRequestDto);
+        userService.updateUser(userSeq,userUpdateRequestDto);
     }
 
     @Data

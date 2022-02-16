@@ -100,6 +100,7 @@ class SessionPage extends Component {
             this.handlerLeaveSessionEvent();
           });
       } else {
+        this.changeSessionState();
         this.quitSession(); // 백엔드의 세션 관련 데이터들을 먼저 정리해준다.
         this.handlerLeaveSessionEvent();
       }
@@ -118,7 +119,12 @@ class SessionPage extends Component {
     console.log('Leave session');
   }
 
-  // 세션을 나가게되면 백엔드의 세션을 관리하기 위한 메소드
+  // 세션을 나가는 경우 세션의 상태를 변경하는 함수
+  changeSessionState() {
+    axios.get(`/v1/mentoring/state/${this.state.mentoringSeq}`);
+  }
+
+  // 세션을 나가게되면 백엔드의 세션을 관리하기 위한 함수
   quitSession() {
     const request = {
       mentoringSeq: this.state.mentoringSeq,

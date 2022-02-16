@@ -25,6 +25,14 @@ export function menteementoring() {
   return { type: GET_MENTORINGLIST, payload: request };
 }
 
+// 멘토 - 멘토링 세션 생성
+export function createSession(dataToSubmit) {
+  const request = axios
+    .get(`/mentoring/state/${dataToSubmit.mentoringSeq}`, dataToSubmit)
+    .then((response) => response.data);
+  return { type: GET_MENTORINGLIST, payload: request };
+}
+
 // 멘토 - 멘토링 거절
 export function rejectMentoring(dataToSubmit) {
   const request = axios

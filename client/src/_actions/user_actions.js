@@ -53,7 +53,6 @@ export function getProject() {
 }
 
 // 기술스택 가져오기
-// 아직 미완성
 export function getTech() {
   const request = axios.get(`/tech`).then((response) => response.data.data);
   return {
@@ -65,6 +64,7 @@ export function getTech() {
 // 유저 프로필 바꾸기
 export function updateUser(dataToSubmit) {
   const request = axios.put(`/user`, dataToSubmit).then((response) => response.data);
+
   return {
     type: UPDATE_USER,
     payload: request

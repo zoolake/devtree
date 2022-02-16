@@ -25,7 +25,8 @@ const AvatarStyle = styled(Avatar)(({ theme }) => ({
   width: 100,
   height: 100,
   position: 'absolute',
-  left: theme.spacing(10),
+  left: '50%',
+  transform: 'translateX(-50%)',
   bottom: theme.spacing(0)
 }));
 
@@ -56,8 +57,7 @@ export default function MentorCard({ post, index }) {
   console.log('post', post);
   console.log(index);
   const { mentorSeq, mentorCareer, mentorNickname, mentorExp, mentorTechList } = post;
-  console.log(`tier:${mentorExp}`);
-  console.log(`${mentorTechList}`);
+  console.log(mentorTechList);
   const POST_INFO = [{ text: mentorExp, icon: messageCircleFill }];
 
   return (
@@ -83,10 +83,9 @@ export default function MentorCard({ post, index }) {
           </TitleStyle>
 
           <InfoStyle>
-            {POST_INFO.map((info, index) => (
+            {mentorTechList.map((info, index) => (
               <Box key={index}>
-                <Box component={Icon} icon={info.icon} />
-                <Typography variant="caption">{info.text}</Typography>
+                <Typography variant="caption">#{info.techName}&nbsp; </Typography>
               </Box>
             ))}
           </InfoStyle>

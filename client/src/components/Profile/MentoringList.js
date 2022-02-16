@@ -30,7 +30,12 @@ import Label from '../Label';
 import Scrollbar from '../Scrollbar';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../_dashboard/profileHistory';
 
-import { getMentoringlist, rejectMentoring, acceptMentoring } from '../../_actions/mentor_actions';
+import {
+  getMentoringlist,
+  rejectMentoring,
+  acceptMentoring,
+  createSession
+} from '../../_actions/mentor_actions';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -219,17 +224,31 @@ export default function MentoringList() {
       }
     });
   };
-  const createSession = () => {
-    dispatch(rejectMentoring())
+  const sessionOpen = (event) => {
+    const dataToSubmit = {
+      mentoringSeq: event.target.id
+    };
+    dispatch(createSession(dataToSubmit))
       .then((response) => {
         if (response) {
-          console.log(response.payload);
+          console.log(response);
+          localStorage.removeItem('mentoringSeq');
+          localStorage.setItem('mentoringSeq', event.target.id);
+          document.location.assign(`/session/join`);
         }
       })
       .catch((err) => {
         setTimeout(() => {}, 3000);
       });
   };
+
+  const sessionEnter = (event) => {
+    console.log();
+    localStorage.removeItem('mentoringSeq');
+    localStorage.setItem('mentoringSeq', event.target.id);
+    document.location.assign(`/session/join`);
+  };
+
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - projectList.length) : 0;
   const filteredUsers = applySortFilter(projectList, getComparator(order, orderBy), filterName);
   return (
@@ -251,7 +270,6 @@ export default function MentoringList() {
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
-
                 <TableBody>
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -311,18 +329,17 @@ export default function MentoringList() {
                                     &nbsp;멘토링
                                   </>
                                 ) : (
-                                  <Button
-                                    to={`/session/${mentoringSeq}`}
-                                    color="inherit"
-                                    underline="hover"
-                                    component={RouterLink}
-                                  >
+                                  <Button id={mentoringSeq} onClick={sessionOpen}>
                                     세션 생성하기
                                   </Button>
                                 )}
                               </div>
                             ) : null}
-                            {mentoringState === 'ACTIVATE' ? <Button>세션입장</Button> : null}
+                            {mentoringState === 'ACTIVATE' ? (
+                              <Button id={mentoringSeq} onClick={sessionEnter}>
+                                세션입장
+                              </Button>
+                            ) : null}
                             {mentoringState === 'FINISH' ? <Button>완료</Button> : null}
                           </TableCell>
                         </TableRow>

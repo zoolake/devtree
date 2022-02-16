@@ -1,11 +1,13 @@
-import { Icon } from '@iconify/react';
-import plusFill from '@iconify/icons-eva/plus-fill';
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
-import { Button, Container, Stack, Typography } from '@mui/material';
-import Page from '../../components/Page';
+//
+import { Icon } from '@iconify/react';
+import plusFill from '@iconify/icons-eva/plus-fill';
+import { Button, Container, Stack, Typography, Divider } from '@mui/material';
+//
 import { ProjectList } from '../../components/_dashboard/projects';
+import MyProgress from '../../components/_dashboard/MyProgress';
 import { getProjectList } from '../../_actions/project_actions';
 
 export default function ProjectMain() {
@@ -41,7 +43,7 @@ export default function ProjectMain() {
 
   // CONDITION
   if (loading) {
-    return <div>'로딩 중'</div>;
+    return <MyProgress />;
   }
 
   // PAGE
@@ -60,6 +62,7 @@ export default function ProjectMain() {
           프로젝트 생성
         </Button>
       </Stack>
+      <Divider sx={{ mt: 2, mb: 5 }} />
       <Container>
         <ProjectList pjtList={projectList} />
       </Container>

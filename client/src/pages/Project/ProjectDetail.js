@@ -41,7 +41,7 @@ export default function ProjectDetail() {
       .then((response) => {
         const projectData = response.payload.data.data;
         setProjectDetail(projectData);
-        console.log('프로젝트 상세 조회 성공');
+        console.log(projectData, '프로젝트 상세 조회 성공');
         return projectData.teamState;
       })
       .then((state) => {

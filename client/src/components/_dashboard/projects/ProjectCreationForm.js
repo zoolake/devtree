@@ -321,7 +321,7 @@ export default function ProjectCreationForm() {
           </FormControl>
           {/* teamPosition */}
           <FormControl sx={{ width: '100%' }}>
-            <InputLabel id="select-team-recruit-cnt">모집 멤버 수</InputLabel>
+            <InputLabel id="select-team-recruit-cnt">포지션 선택</InputLabel>
             <Select
               labelId="select-team-recruit-cnt"
               label="teamRecruitCnt"

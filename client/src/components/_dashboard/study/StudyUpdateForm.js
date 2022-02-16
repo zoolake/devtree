@@ -25,8 +25,6 @@ export default function StudyUpdateForm({ studyDetail }) {
   // 멤버 수
   const MEMBER_CNT_OPTION = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
   const [myMemberCnt, setMyMemberCnt] = useState('');
-  // 상태
-  const [teamState, setTeamState] = useState('');
 
   // 입력 조건
   const RegisterSchema = Yup.object().shape({
@@ -112,6 +110,7 @@ export default function StudyUpdateForm({ studyDetail }) {
   };
 
   // FUNC
+  // eslint-disable-next-line consistent-return
   const findOrigin = (originArray, findKey, findValue) => {
     for (let i = 0; i < originArray.length; i += 1) {
       if (originArray[i][findKey] === findValue) {

@@ -16,8 +16,15 @@ export default function StudyListCard({ study }) {
     { state: 'FINISH', stateName: '종료됨' }
   ];
 
-  // FUNC
-  const showTechs = study.teamTech.map((tech) => <div key={tech.techSeq}>{tech.techName}</div>);
+  // SHOW
+  const showTechs = () => {
+    console.log(study.teamTech);
+    if (study.teamTech.length < 6) {
+      return study.teamTech.map((tech) => <div key={tech.techSeq}>{tech.techName}</div>);
+    }
+    return study.teamTech.slice(6).map((tech) => <div key={tech.techSeq}>{tech.techName}</div>);
+  };
+  // eslint-disable-next-line consistent-return
   const getStateName = () => {
     for (let i = 0; i < TEAM_STATE.length; i += 1) {
       if (TEAM_STATE[i].state === study.teamState) {
@@ -27,12 +34,24 @@ export default function StudyListCard({ study }) {
   };
   const showState = () => {
     if (study.teamState === 'RECRUIT') {
-      return <Typography color="blue">{getStateName()}</Typography>;
+      return (
+        <Typography sx={{ fontWeight: 'bold' }} color="blue">
+          {getStateName()}
+        </Typography>
+      );
     }
     if (study.teamState === 'COMPLETED') {
-      return <Typography color="primary">{getStateName()}</Typography>;
+      return (
+        <Typography sx={{ fontWeight: 'bold' }} color="primary">
+          {getStateName()}
+        </Typography>
+      );
     }
-    return <Typography color="red">{getStateName()}</Typography>;
+    return (
+      <Typography sx={{ fontWeight: 'bold' }} color="red">
+        {getStateName()}
+      </Typography>
+    );
   };
 
   // PAGE
@@ -54,7 +73,7 @@ export default function StudyListCard({ study }) {
             justifyContent="space-between"
             sx={{ alignItems: 'center' }}
           >
-            <Stack direction="row" spacing={3} sx={{ alignItems: 'center' }}>
+            <Stack direction="row" spacing={3} sx={{ alignItems: 'center', width: '80%' }}>
               <Typography
                 variant="h4"
                 color="primary"
@@ -62,12 +81,17 @@ export default function StudyListCard({ study }) {
                 to={`${study.teamSeq}`}
                 component={RouterLink}
                 style={{ textDecoration: 'none' }}
+                sx={{ width: '40%', textOverflow: 'ellipsis' }}
               >
                 {study.teamName}
               </Typography>
               <Typography variant="subtitle1">
-                <Stack direction="row" spacing={2}>
-                  {showTechs}
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  sx={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
+                >
+                  {showTechs()}
                 </Stack>
               </Typography>
             </Stack>

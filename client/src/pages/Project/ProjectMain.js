@@ -5,23 +5,13 @@ import { useDispatch } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import { Button, Container, Stack, Typography } from '@mui/material';
 import Page from '../../components/Page';
-import {
-  ProjectsPostsSort,
-  ProjectSearch,
-  ProjectList
-} from '../../components/_dashboard/projects';
+import { ProjectList } from '../../components/_dashboard/projects';
 import { getProjectList } from '../../_actions/project_actions';
 
 export default function ProjectMain() {
   // STATE
   const [projectList, setProjectList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [filterKeyword, setFilterKeyword] = useState(null);
-  const SORT_OPTIONS = [
-    { value: 'latest', label: 'Latest' },
-    { value: 'popular', label: 'Popular' },
-    { value: 'oldest', label: 'Oldest' }
-  ];
 
   // INIT
   const dispatch = useDispatch();

@@ -210,6 +210,7 @@ export default function StudyCreationForm() {
   // };
 
   // FUNC
+  // eslint-disable-next-line consistent-return
   const findOrigin = (originArray, findKey, findValue) => {
     for (let i = 0; i < originArray.length; i += 1) {
       if (originArray[i][findKey] === findValue) {

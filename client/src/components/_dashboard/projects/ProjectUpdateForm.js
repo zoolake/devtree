@@ -27,8 +27,6 @@ export default function ProjectUpdateForm({ projectDetail }) {
   const [myPositionList, setMyPosition] = useState([]);
   const [sendingPositionList, setsendingPositionList] = useState([]);
   const [selectedPos, setSelectedPos] = useState('');
-  // 상태
-  const [teamState, setTeamState] = useState('');
 
   // 입력 조건
   const RegisterSchema = Yup.object().shape({
@@ -157,6 +155,7 @@ export default function ProjectUpdateForm({ projectDetail }) {
   };
 
   // FUNC
+  // eslint-disable-next-line consistent-return
   const findOrigin = (originArray, findKey, findValue) => {
     for (let i = 0; i < originArray.length; i += 1) {
       if (originArray[i][findKey] === findValue) {

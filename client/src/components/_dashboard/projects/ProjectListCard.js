@@ -18,6 +18,7 @@ export default function ProjectListCard({ project }) {
 
   // FUNC
   const showTechs = project.teamTech.map((tech) => <div key={tech.techSeq}>{tech.techName}</div>);
+  // eslint-disable-next-line consistent-return
   const getStateName = () => {
     for (let i = 0; i < TEAM_STATE.length; i += 1) {
       if (TEAM_STATE[i].state === project.teamState) {

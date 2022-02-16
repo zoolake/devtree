@@ -18,6 +18,7 @@ export default function SelectPositionCnt(props) {
   const handleChange = (e) => {
     setselectedPositionCnt((e.target.value *= 1));
   };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const getData = useCallback(() => {
     props.onSetCnt(selectedPositionCnt, props.pos, props.defaultValue);
     setCleared(true);

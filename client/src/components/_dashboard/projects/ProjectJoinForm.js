@@ -28,7 +28,7 @@ export default function ProjectJoinForm({ projectPosition }) {
   };
 
   // SUBMIT
-  const sendData = useCallback((event) => {
+  const sendData = (event) => {
     event.preventDefault();
     const dataToSubmit = {
       userSeq: userSeq * 1,
@@ -45,7 +45,7 @@ export default function ProjectJoinForm({ projectPosition }) {
         });
     };
     joinPjt();
-  });
+  };
 
   return (
     <Box>

@@ -5,19 +5,13 @@ import { useDispatch } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import { Button, Container, Stack, Typography } from '@mui/material';
 import Page from '../../components/Page';
-import { StudyPostsSort, StudySearch, StudyList } from '../../components/_dashboard/study';
+import { StudyList } from '../../components/_dashboard/study';
 import { getStudyList } from '../../_actions/study_actions';
 
 export default function StudyMain() {
   // state
   const [studyList, setStudyList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [filterKeyword, setFilterKeyword] = useState(null);
-  const SORT_OPTIONS = [
-    { value: 'latest', label: 'Latest' },
-    { value: 'popular', label: 'Popular' },
-    { value: 'oldest', label: 'Oldest' }
-  ];
 
   // axios
   const dispatch = useDispatch();
@@ -53,9 +47,9 @@ export default function StudyMain() {
   // page
   return (
     <Page>
-      <Container>
+      <Container sx={{ mt: 10 }}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={10}>
-          <Typography variant="h4" gutterBottom>
+          <Typography variant="h3" gutterBottom>
             STUDY
           </Typography>
           <Button

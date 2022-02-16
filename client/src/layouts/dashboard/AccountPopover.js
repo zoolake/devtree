@@ -4,6 +4,7 @@ import homeFill from '@iconify/icons-eva/home-fill';
 import personFill from '@iconify/icons-eva/person-fill';
 import settings2Fill from '@iconify/icons-eva/settings-2-fill';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
+import jwtdecode from 'jwt-decode';
 // material
 import { alpha } from '@mui/material/styles';
 import {
@@ -21,38 +22,57 @@ import {
 import MenuPopover from '../../components/MenuPopover';
 import account from '../../_mocks_/account';
 
-const MENU_OPTIONS_SIGNED = [
-  {
-    label: 'Home',
-    icon: homeFill,
-    linkTo: '/'
-  },
-  {
-    label: 'Profile',
-    icon: personFill,
-    linkTo: '/MainPage/profile'
-  }
-];
-
-const MENU_OPTIONS_GUEST = [
-  {
-    label: 'Home',
-    icon: homeFill,
-    linkTo: '/'
-  },
-  {
-    label: 'SignUp',
-    icon: personFill,
-    linkTo: '/Register'
-  }
-];
-
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
   let btn;
+  console.log(jwtdecode(localStorage.getItem('user')));
+  const token = jwtdecode(localStorage.getItem('user')).userRole;
+  const MENU_OPTIONS_SIGNED = [
+    {
+      label: 'Home',
+      icon: homeFill,
+      linkTo: '/'
+    },
+    {
+      label: 'Profile',
+      icon: personFill,
+      linkTo: '/MainPage/profile/MainPage/profile'
+    }
+  ];
+
+  const MENU_OPTIONS_GUEST = [
+    {
+      label: 'Home',
+      icon: homeFill,
+      linkTo: '/'
+    },
+    {
+      label: 'SignUp',
+      icon: personFill,
+      linkTo: '/Register'
+    }
+  ];
+
+  const MENU_OPTIONS_MENTOR = [
+    {
+      label: 'Home',
+      icon: homeFill,
+      linkTo: '/'
+    },
+    {
+      label: 'Profile',
+      icon: personFill,
+      linkTo: '/profile/menu'
+    },
+    {
+      label: 'Mentor',
+      icon: settings2Fill,
+      linkTo: `/mentorprofile/${jwtdecode(localStorage.getItem('user')).userSeq}`
+    }
+  ];
 
   const handleOpen = () => {
     setOpen(true);
@@ -82,7 +102,11 @@ export default function AccountPopover() {
   }
   let MENU_OPTIONS;
   if (localStorage.getItem('user')) {
-    MENU_OPTIONS = MENU_OPTIONS_SIGNED;
+    if (jwtdecode(localStorage.getItem('user')).userRole === 'MENTOR') {
+      MENU_OPTIONS = MENU_OPTIONS_MENTOR;
+    } else {
+      MENU_OPTIONS = MENU_OPTIONS_SIGNED;
+    }
   } else {
     MENU_OPTIONS = MENU_OPTIONS_GUEST;
   }

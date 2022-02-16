@@ -209,6 +209,9 @@ export default function NotificationsPopover() {
         ref={anchorRef}
         size="large"
         color={open ? 'primary' : 'default'}
+        variant="contained"
+        component={RouterLink}
+        to="/profile/alarm"
         sx={{
           ...(open && {
             bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.focusOpacity)

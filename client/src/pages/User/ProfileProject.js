@@ -42,46 +42,15 @@ const Tab = [
         <Grid item xs={12} md={6} lg={12}>
           <StudyChart />
         </Grid>
-        <Grid item xs={12} md={6} lg={12}>
-          <ProjectList />
-        </Grid>
-        <Grid item xs={12} md={6} lg={12}>
-          <ProjectChart />
-        </Grid>
-        <Grid item xs={12} md={6} lg={12}>
-          <MenteeMentoringList />
-        </Grid>
       </Grid>
     )
   },
   {
     title: '멘토 프로필',
-    content:
-      ismentor === 'true' ? (
-        <Grid container spacing={1}>
-          <Grid item xs={12} md={6} lg={12}>
-            <MentorProfile />
-          </Grid>
-          <Grid item xs={12} md={6} lg={12}>
-            <MentoringTime />
-          </Grid>
-          <Grid item xs={12} md={6} lg={12}>
-            <MentorReviewList mentorId={usersq} />
-          </Grid>
-        </Grid>
-      ) : (
-        <Grid item xs={12} md={6} lg={8}>
-          <MentorAuth />
-        </Grid>
-      )
+    content: 'd'
   },
   {
-    title: '알림함',
-    content: (
-      <Grid item xs={12} md={6} lg={8}>
-        <AlarmList />
-      </Grid>
-    )
+    title: '알림함'
   }
 ];
 
@@ -150,9 +119,12 @@ export default function Profile() {
           </Button>
         </ButtonGroup>
         <div>
-          <Grid container spacing={1}>
-            <Grid item xs={12} md={6} lg={10}>
-              <UserProfile />
+          <Grid>
+            <Grid item xs={12} md={6} lg={12}>
+              <ProjectList />
+            </Grid>
+            <Grid item xs={12} md={6} lg={12}>
+              <ProjectChart />
             </Grid>
           </Grid>
         </div>

@@ -26,7 +26,7 @@ import {
 import { MentorReviewList } from '../../components/_dashboard/mentor';
 
 // ----------------------------------------------------------------------
-const usersq = localStorage.getItem('user') ? jwtdecode(localStorage.getItem('user')).userSeq : 0;
+const usersq = localStorage.getItem('user') ? jwtdecode(localStorage.getItem('user')).userRole : 0;
 const ismentor = 'true';
 const Tab = [
   {
@@ -56,32 +56,10 @@ const Tab = [
   },
   {
     title: '멘토 프로필',
-    content:
-      ismentor === 'true' ? (
-        <Grid container spacing={1}>
-          <Grid item xs={12} md={6} lg={12}>
-            <MentorProfile />
-          </Grid>
-          <Grid item xs={12} md={6} lg={12}>
-            <MentoringTime />
-          </Grid>
-          <Grid item xs={12} md={6} lg={12}>
-            <MentorReviewList mentorId={usersq} />
-          </Grid>
-        </Grid>
-      ) : (
-        <Grid item xs={12} md={6} lg={8}>
-          <MentorAuth />
-        </Grid>
-      )
+    content: 'd'
   },
   {
-    title: '알림함',
-    content: (
-      <Grid item xs={12} md={6} lg={8}>
-        <AlarmList />
-      </Grid>
-    )
+    title: '알림함'
   }
 ];
 
@@ -150,11 +128,23 @@ export default function Profile() {
           </Button>
         </ButtonGroup>
         <div>
+          ismentor === 'true' ? (
           <Grid container spacing={1}>
-            <Grid item xs={12} md={6} lg={10}>
-              <UserProfile />
+            <Grid item xs={12} md={6} lg={12}>
+              <MentorProfile />
+            </Grid>
+            <Grid item xs={12} md={6} lg={12}>
+              <MentoringTime />
+            </Grid>
+            <Grid item xs={12} md={6} lg={12}>
+              <MentorReviewList mentorId={usersq} />
             </Grid>
           </Grid>
+          ) : (
+          <Grid item xs={12} md={6} lg={8}>
+            <MentorAuth />
+          </Grid>
+          )
         </div>
       </Container>
     </Page>

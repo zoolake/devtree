@@ -41,7 +41,7 @@ export default function ProfileMentoring() {
               멘토인증
             </Button>
             <Button component={RouterLink} to="/profile/alarm" sx={{ width: 190, fontSize: 20 }}>
-              알람
+              알림
             </Button>
           </ButtonGroup>
         </Box>

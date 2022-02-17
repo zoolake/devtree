@@ -22,7 +22,7 @@ import { MHidden } from '../../components/@material-extend';
 //
 import sidebarConfig from './SidebarConfig';
 import account from '../../_mocks_/account';
-
+import { RoleImgAvatar } from '../../utils/mockImages';
 // ----------------------------------------------------------------------
 
 const DRAWER_WIDTH = 280;
@@ -56,6 +56,12 @@ DashboardSidebar.propTypes = {
 };
 
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
+  let avatarname = '';
+  if (localStorage.getItem('user')) {
+    avatarname = jwtdecode(localStorage.getItem('user')).userRole;
+  } else {
+    avatarname = 'GUSET';
+  }
   useEffect(() => {
     if (isOpenSidebar) {
       onCloseSidebar();
@@ -72,8 +78,9 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: '#C2DABC'
-          // background: 'url(/static/images/sidebar.png)'
+          // backgroundColor: '#C2DABC',
+          background: 'url(/static/images/sidebar6.png)'
+          //          ShadowRoot: '30'
         }
       }}
     >
@@ -86,7 +93,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none" component={RouterLink} to={a}>
           <AccountStyle>
-            <Avatar alt="photoURL" />
+            <Avatar src={RoleImgAvatar(avatarname)} />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
                 {token}

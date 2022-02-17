@@ -39,12 +39,12 @@ export default function MentorInfo() {
       {' '}
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
+          <Typography variant="h3" gutterBottom>
             멘토 프로필
           </Typography>
         </Stack>
       </Container>
-      <Box sx={{ width: '100%', typography: 'body1' }}>
+      <Box sx={{ paddingLeft: '10%', paddingRight: '20%', width: '100%', typography: 'body1' }}>
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={handleChange} aria-label="lab API tabs example">

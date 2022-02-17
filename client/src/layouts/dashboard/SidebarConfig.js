@@ -28,7 +28,7 @@ const sidebarConfig = [
     icon: getIcon(fileTextFill)
   },
   {
-    title: '랭크',
+    title: '랭킹',
     path: '/MainPage/ranking',
     icon: getIcon(peopleFill)
   }

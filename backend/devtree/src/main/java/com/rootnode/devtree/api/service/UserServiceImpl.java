@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -81,30 +82,27 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updateUser(Long userSeq, UserUpdateRequestDto userUpdateRequestDto) {
 
-        Optional<User>Ouser = userRepository.findByUserSeq(userSeq);
-//      이름 닉네임 설명 테크
-        if(Ouser.isPresent()){
-            Tech tech;
-            User user= Ouser.get();
-            user = User.builder()
-                    .userSeq(user.getUserSeq())
-                    .userId(user.getUserId())
-                    .userPassword(user.getUserPassword())
-                    .userRole(user.getUserRole())
-                    .userEmail(userUpdateRequestDto.getUserEmail())
-                    .userDesc(userUpdateRequestDto.getUserDesc())
-                    .userName(userUpdateRequestDto.getUserName())
-                    .userNickname(userUpdateRequestDto.getUserNickname())
-                    .build();
-            userRepository.save(user);
-            userTechRepository.deleteByUserTechIdUserSeq(user.getUserSeq());
-            //기술 스택 관련 정보(사용자 기술스택)먼저  save 해야한다.
-            for (Long t : userUpdateRequestDto.getUserTech()){
-                System.out.println(t);
-                userTechRepository.save(new UserTech(new UserTechId(user.getUserSeq(),t),user,techRepository.findByTechSeq(t)));
-            }
+        User user = userRepository.findByUserSeq(userSeq).get();
 
+        if(StringUtils.hasText(userUpdateRequestDto.getUserName())){
+            user.changeUserName(userUpdateRequestDto.getUserName());
         }
+        if(StringUtils.hasText(userUpdateRequestDto.getUserEmail())){
+            user.changeUserEmail(userUpdateRequestDto.getUserEmail());
+        }
+        if(StringUtils.hasText(userUpdateRequestDto.getUserDesc())){
+            user.changeUserDesc(userUpdateRequestDto.getUserDesc());
+        }
+        if(StringUtils.hasText(userUpdateRequestDto.getUserNickname())){
+            user.changeUserNickName(userUpdateRequestDto.getUserNickname());
+        }
+
+        userTechRepository.deleteByUserTechIdUserSeq(user.getUserSeq());
+        //기술 스택 관련 정보(사용자 기술스택)먼저  save 해야한다.
+        for (Long t : userUpdateRequestDto.getUserTech()){
+            userTechRepository.save(new UserTech(new UserTechId(user.getUserSeq(),t),user,techRepository.findByTechSeq(t)));
+        }
+
     }
 
     /**
@@ -360,7 +358,7 @@ public class UserServiceImpl implements UserService {
         if(verificationCode.equals(enteredCode)) {
             user.changeUserRole(UserRole.MENTOR);
             user.changeVerificationCode("");
-            mentorRepository.save(Mentor.builder().user(user).mentorSeq(user.getUserSeq()).verificationDate(LocalDateTime.now()).build());
+            mentorRepository.save(Mentor.builder().user(user).mentorExp(new Long(0)).mentorSeq(user.getUserSeq()).verificationDate(LocalDateTime.now()).build());
             String accessToken = JwtTokenUtil.getToken(user.getUserId(),user.getUserSeq(),user.getUserRole().name());
             return accessToken;
         } else {

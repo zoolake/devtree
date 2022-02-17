@@ -13,6 +13,12 @@ import {
   UPDATE_MENTOR
 } from './types';
 
+// 멘토 기술별 조회
+export function mentorTechGet(dataToSubmit) {
+  const request = axios.post(`/mentor/tech`, dataToSubmit).then((response) => response.data);
+  return { type: GET_MENTORS, payload: request };
+}
+
 // 멘티 - 팀별 멘토링 신청 내역 조회
 export function mymentorProfile() {
   const request = axios.get(`/v1/user/mentor`).then((response) => response.data);
@@ -25,8 +31,8 @@ export function menteementoring() {
   return { type: GET_MENTORINGLIST, payload: request };
 }
 
-// 멘토 - 멘토링 세션 생성
-export function createSession(dataToSubmit) {
+// 멘토 - 멘토링 세션 생성, 종료
+export function changeState(dataToSubmit) {
   const request = axios
     .get(`/v1/mentoring/state/${dataToSubmit.mentoringSeq}`, dataToSubmit)
     .then((response) => response.data);

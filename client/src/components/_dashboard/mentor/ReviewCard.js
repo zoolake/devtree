@@ -45,8 +45,17 @@ export default function ReviewCard({ post, index }) {
 
   return (
     <Grid item xs={0} sm={0} md={0}>
-      {' '}
-      <Card sx={{ position: 'relative' }}>
+      <Card
+        sx={{
+          position: 'relative',
+          boxShadow: 16,
+          bgcolor: '#ededed',
+          marginTop: '30px',
+          marginBottom: '30px',
+          marginLeft: '20px',
+          marginRight: '20px'
+        }}
+      >
         <CardContent>
           <Typography gutterBottom variant="caption">
             {name}

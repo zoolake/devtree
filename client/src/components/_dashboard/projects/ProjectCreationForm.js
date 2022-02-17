@@ -1,10 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 //
 import jwtdecode from 'jwt-decode';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { TextField, Button, FormControl, InputLabel, NativeSelect, Stack } from '@mui/material';
+import {
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  Stack,
+  Container,
+  MenuItem,
+  Grid
+} from '@mui/material';
 //
 import { createProject } from '../../../_actions/project_actions';
 import { getTechList, getPositionList } from '../../../_actions/team_actions';
@@ -12,6 +23,7 @@ import SelectPositionCnt from '../../team/SelectPositionCnt';
 
 export default function ProjectCreationForm() {
   // STATE
+  const navigate = useNavigate();
   // 기술스택
   const [allTechList, setAllTech] = useState([]);
   const [myTechList, setMyTech] = useState([]);
@@ -62,6 +74,7 @@ export default function ProjectCreationForm() {
           await dispatch(createProject(dataToSubmit))
             .then((response) => {
               console.log(response, '프로젝트 생성 성공');
+              navigate('/project');
             })
             .catch((error) => {
               console.log(dataToSubmit);
@@ -243,6 +256,7 @@ export default function ProjectCreationForm() {
   // };
 
   // FUNC
+  // eslint-disable-next-line consistent-return
   const findOrigin = (originArray, findKey, findValue) => {
     for (let i = 0; i < originArray.length; i += 1) {
       if (originArray[i][findKey] === findValue) {
@@ -253,14 +267,16 @@ export default function ProjectCreationForm() {
 
   // PAGE
   return (
-    <div>
+    <Container sx={{ mt: 5 }}>
       <form onSubmit={formik.handleSubmit}>
-        <Stack spacing={3}>
+        <Stack spacing={4} sx={{ ml: 10, alignItems: 'start', width: '80%' }}>
           {/* teamName */}
           <TextField
             id="teamName"
             name="teamName"
-            label="teamName"
+            label="팀 이름"
+            variant="standard"
+            fullWidth
             value={formik.values.teamName}
             onChange={formik.handleChange}
             error={formik.touched.teamName && Boolean(formik.errors.teamName)}
@@ -270,68 +286,82 @@ export default function ProjectCreationForm() {
           <TextField
             id="teamDesc"
             name="teamDesc"
-            label="teamDesc"
+            label="팀 설명"
             type="text"
+            variant="standard"
+            fullWidth
+            multiline
             value={formik.values.teamDesc}
             onChange={formik.handleChange}
             error={formik.touched.teamDesc && Boolean(formik.errors.teamDesc)}
             helperText={formik.touched.teamDesc && formik.errors.teamDesc}
           />
           {/* teamTech */}
-          <FormControl>
-            <InputLabel htmlFor="select-tech">teamTech</InputLabel>
-            <NativeSelect
-              label="select-tech"
-              defaultValue={selectedTech}
+          <FormControl sx={{ width: '100%' }}>
+            <InputLabel id="select-tech">기술스택 선택</InputLabel>
+            <Select
+              labelId="select-tech"
+              label="teamTech"
               value={selectedTech}
+              fullWidth
               onChange={(e) => handleChange(e, 'tech')}
+              sx={{ mb: 2 }}
             >
               {allTechList.map((tech) => (
-                <option key={tech.techSeq} value={tech.techName}>
+                <MenuItem key={tech.techSeq} value={tech.techName}>
                   {tech.techName}
-                </option>
+                </MenuItem>
               ))}
-            </NativeSelect>
-            <div>
+            </Select>
+            <Stack direction="row" spacing={3}>
               {myTechList.map((tech) => (
-                <span key={tech.techSeq}>{tech.techName} </span>
+                <div key={tech.techSeq}>{tech.techName} </div>
               ))}
-            </div>
+            </Stack>
           </FormControl>
           {/* teamPosition */}
-          <FormControl>
-            <InputLabel htmlFor="select-position">teamPosition</InputLabel>
-            <NativeSelect
-              label="select-position"
-              defaultValue={selectedPos}
+          <FormControl sx={{ width: '100%' }}>
+            <InputLabel id="select-team-recruit-cnt">포지션 선택</InputLabel>
+            <Select
+              labelId="select-team-recruit-cnt"
+              label="teamRecruitCnt"
               value={selectedPos}
               onChange={(e) => handleChange(e, 'position')}
             >
               {allPositionList.map((pos) => (
-                <option key={pos.detailPositionName} value={pos.detailPositionName}>
+                <MenuItem key={pos.detailPositionName} value={pos.detailPositionName}>
                   {pos.detailPositionName}
-                </option>
+                </MenuItem>
               ))}
-            </NativeSelect>
-            <div>
+            </Select>
+            <Grid container sx={{ mt: 3 }}>
               {myPositionList.map((pos) => (
-                <div key={pos.detailPositionName}>
-                  {pos.detailPositionName}
-                  <SelectPositionCnt
-                    onSetCnt={handlePositionCntChange}
-                    pos={pos.detailPositionName}
-                    defaultValue={1}
-                  />
-                </div>
+                <Grid item xs={2.2} key={pos.detailPositionName}>
+                  <Stack
+                    direction="column"
+                    sx={{ minWidth: '30%' }}
+                    alignItems="center"
+                    spacing={2}
+                  >
+                    {pos.detailPositionName}
+                    <SelectPositionCnt
+                      onSetCnt={handlePositionCntChange}
+                      pos={pos.detailPositionName}
+                      defaultValue={1}
+                    />
+                  </Stack>
+                </Grid>
               ))}
-            </div>
+            </Grid>
           </FormControl>
           {/* Submit Btn */}
-          <Button color="primary" variant="contained" fullWidth type="submit">
-            Submit
-          </Button>
+          <Grid container justifyContent="flex-end">
+            <Button color="primary" variant="contained" type="submit">
+              생성하기
+            </Button>
+          </Grid>
         </Stack>
       </form>
-    </div>
+    </Container>
   );
 }

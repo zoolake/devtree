@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState, useCallback } from 'react';
-import { FormControl, InputLabel, NativeSelect, Button } from '@mui/material';
+import { FormControl, InputLabel, Select, Button, MenuItem } from '@mui/material';
 
 SelectPositionCnt.propTypes = {
   onSetCnt: PropTypes.func.isRequired,
@@ -18,6 +18,7 @@ export default function SelectPositionCnt(props) {
   const handleChange = (e) => {
     setselectedPositionCnt((e.target.value *= 1));
   };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const getData = useCallback(() => {
     props.onSetCnt(selectedPositionCnt, props.pos, props.defaultValue);
     setCleared(true);
@@ -27,39 +28,38 @@ export default function SelectPositionCnt(props) {
   if (!cleared) {
     return (
       <FormControl>
-        <InputLabel htmlFor="select-position-cnt" />
-        <NativeSelect
+        <InputLabel id="select-position-cnt" />
+        <Select
+          labelId="select-position-cnt"
           label="select-position-cnt"
-          defaultValue={props.defaultValue}
-          // value={selectedPositionCnt}
+          value={selectedPositionCnt}
           onChange={handleChange}
         >
           {MEMBER_SELECT.map((month, idx) => (
-            <option key={idx} value={month}>
+            <MenuItem key={idx} value={month}>
               {month}
-            </option>
+            </MenuItem>
           ))}
-        </NativeSelect>
+        </Select>
         <Button onClick={getData}>확정</Button>
       </FormControl>
     );
   }
   return (
     <FormControl disabled>
-      <InputLabel htmlFor="select-position-cnt" />
-
-      <NativeSelect
+      <InputLabel id="select-position-cnt" />
+      <Select
+        labelId="select-position-cnt"
         label="select-position-cnt"
-        defaultValue={props.defaultValue}
-        // value={selectedPositionCnt}
+        value={selectedPositionCnt}
         onChange={handleChange}
       >
         {MEMBER_SELECT.map((month, idx) => (
-          <option key={idx} value={month}>
+          <MenuItem key={idx} value={month}>
             {month}
-          </option>
+          </MenuItem>
         ))}
-      </NativeSelect>
+      </Select>
     </FormControl>
   );
 

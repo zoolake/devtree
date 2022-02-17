@@ -31,7 +31,7 @@ let a;
 if (localStorage.getItem('user')) {
   token = `${jwtdecode(localStorage.getItem('user')).sub}님`;
   console.log();
-  a = '/MainPage/profile';
+  a = '/profile/menu';
 } else {
   a = '/login';
 }
@@ -72,13 +72,13 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          //  backgroundColor: '#02c87e',
-          background: 'url(/static/images/sidebar.png)'
+          backgroundColor: '#C2DABC'
+          // background: 'url(/static/images/sidebar.png)'
         }
       }}
     >
       <Box sx={{ px: 2.5, py: 3 }}>
-        <Box component={RouterLink} to="/" sx={{ display: 'inline-flex' }}>
+        <Box component={RouterLink} to="/Mainpage/app" sx={{ display: 'inline-flex' }}>
           <Logo />
         </Box>
       </Box>

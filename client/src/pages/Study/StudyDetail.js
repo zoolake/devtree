@@ -2,8 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link as RouterLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import jwtdecode from 'jwt-decode';
-import { ToggleButton, ToggleButtonGroup, Button } from '@mui/material';
 //
+import {
+  Container,
+  Typography,
+  Stack,
+  ToggleButton,
+  ToggleButtonGroup,
+  Button,
+  Divider,
+  Box,
+  Grid
+} from '@mui/material';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 //
@@ -19,8 +29,9 @@ export default function StudyDetail() {
   const [userSeq] = useState(jwtdecode(localStorage.getItem('user')).userSeq);
   const [alignment, setAlignment] = useState();
   const [belonged, setBelonged] = useState(false);
+  const [isLoad, setIsLoad] = useState(false);
   const TEAM_STATE = [
-    { state: 'RECRUIT', stateName: '진행 중' },
+    { state: 'RECRUIT', stateName: '모집 중' },
     { state: 'COMPLETED', stateName: '모집 완료됨' },
     { state: 'FINISH', stateName: '종료됨' }
   ];
@@ -52,18 +63,18 @@ export default function StudyDetail() {
 
   // HANDLE
   const handleAlignment = (newAlignment) => {
-    if (newAlignment !== null) {
-      setAlignment(newAlignment);
+    if (newAlignment.target.value !== null) {
+      setAlignment(newAlignment.target.value);
       const teamSeqNum = teamSeq * 1;
       const dataToSubmit = {
         teamSeq: teamSeqNum,
-        teamState: newAlignment
+        teamState: newAlignment.target.value
       };
       const changeStudyState = async () => {
         await dispatch(changeTeamState(dataToSubmit))
           .then(() => {
             console.log('스터디 상태 수정 성공');
-            makeStudyDetail();
+            setIsLoad(!isLoad);
           })
           .catch((error) => {
             console.log(error, '스터디 상태 수정 실패');
@@ -79,16 +90,7 @@ export default function StudyDetail() {
     makeStudyDetail();
     getBelonged();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // CONDITION
-  let joinBtn;
-  if (belonged || alignment !== 'RECRUIT') {
-    joinBtn = null;
-  } else {
-    joinBtn = <RouterLink to="join">스터디 신청</RouterLink>;
-  }
-  if (loading || studyDetail.length === 0) return null;
+  }, [isLoad]);
 
   // MODAL
   const MySwal = withReactContent(Swal);
@@ -108,6 +110,7 @@ export default function StudyDetail() {
         dispatch(joinStudy({ teamSeq, joinData }))
           .then(() => {
             console.log('스터디 신청 성공');
+            setIsLoad(!isLoad);
           })
           .catch((error) => {
             console.log(error, '스터디 신청 실패');
@@ -115,74 +118,317 @@ export default function StudyDetail() {
       }
     });
   };
-  // const JoinStudyConfirm = Swal.fire({
-  //   title: 'Are you sure?',
-  //   text: "You won't be able to revert this!",
-  //   icon: 'warning',
-  //   showCancelButton: true,
-  //   confirmButtonColor: '#3085d6',
-  //   cancelButtonColor: '#d33',
-  //   confirmButtonText: 'Yes, delete it!'
-  // }).then((result) => {
-  //   if (result.isConfirmed) {
-  //     Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
-  //   }
-  // });
+
+  // CONDITION
+  let joinBtn;
+  if (belonged) {
+    joinBtn = (
+      <Button
+        variant="outlined"
+        color="primary"
+        sx={{ fontSize: 23 }}
+        size="large"
+        onClick={clickJoinBtn}
+        disabled
+      >
+        소속됨
+      </Button>
+    );
+  } else if (alignment !== 'RECRUIT') {
+    joinBtn = (
+      <Button
+        variant="outlined"
+        color="primary"
+        sx={{ fontSize: 23 }}
+        size="large"
+        onClick={clickJoinBtn}
+        disabled
+      >
+        스터디 신청
+      </Button>
+    );
+  } else {
+    joinBtn = (
+      <Button
+        variant="outlined"
+        color="primary"
+        sx={{ fontSize: 23 }}
+        size="large"
+        onClick={clickJoinBtn}
+      >
+        스터디 신청
+      </Button>
+    );
+  }
+  if (loading || studyDetail.length === 0) return null;
+
+  // SHOW
+  const showTechs = studyDetail.teamTech.map((tech) => (
+    <Grid item xs={3} key={tech.techSeq}>
+      <Typography align="center">{tech.techName}</Typography>
+    </Grid>
+  ));
+  // eslint-disable-next-line consistent-return
+  const getStateName = () => {
+    for (let i = 0; i < TEAM_STATE.length; i += 1) {
+      if (TEAM_STATE[i].state === studyDetail.teamState) {
+        return TEAM_STATE[i].stateName;
+      }
+    }
+  };
+  const showState = () => {
+    if (studyDetail.teamState === 'RECRUIT') {
+      return (
+        <Typography color="blue" variant="h6">
+          {getStateName()}
+        </Typography>
+      );
+    }
+    if (studyDetail.teamState === 'COMPLETED') {
+      return (
+        <Typography color="primary" variant="h6">
+          {getStateName()}
+        </Typography>
+      );
+    }
+    return (
+      <Typography color="red" variant="h6">
+        {getStateName()}
+      </Typography>
+    );
+  };
+  const showDate = (dateData) => {
+    if (dateData) {
+      const [left, right] = dateData.slice(0, 17).split(' ');
+      const [year, month, day] = left.split('-');
+      const [hour, minute] = right.split(':');
+      return (
+        <div>
+          {year}년 {month}월 {day}일 {hour}시 {minute}분
+        </div>
+      );
+    }
+    return <div> 미정 </div>;
+  };
 
   // PAGE
   if (studyDetail.teamManagerSeq === userSeq) {
     return (
-      <div>
-        <h1>Study Detail of {studyDetail.teamSeq}</h1>
-        <ToggleButtonGroup value={alignment} exclusive onChange={handleAlignment}>
-          {TEAM_STATE.map((state, idx) => (
-            <ToggleButton value={state.state} key={idx}>
-              {state.stateName}
-            </ToggleButton>
-          ))}
-        </ToggleButtonGroup>
-        <ul>
-          <li>teamCreateTime: {studyDetail.teamCreateTime}</li>
-          <li>teamDesc: {studyDetail.teamDesc}</li>
-          <li>teamEndTime: {studyDetail.teamEndTime}</li>
-          <li>teamManagerName: {studyDetail.teamManagerName}</li>
-          <li>teamManagerSeq: {studyDetail.teamManagerSeq}</li>
-          <li>teamMemberCnt: {studyDetail.teamMemberCnt}</li>
-          <li>teamRecruitCnt: {studyDetail.teamRecruitCnt}</li>
-          <li>teamStartTime: {studyDetail.teamStartTime}</li>
-          <li>teamState: {studyDetail.teamState}</li>
-          <li>teamTech: {JSON.stringify(studyDetail.teamTech.map((pos) => pos))}</li>
-          <li>teamType: {studyDetail.teamType}</li>
-          <li>teamUpdateTime: {studyDetail.teamUpdateTime}</li>
-        </ul>
-        <RouterLink to="update">스터디 수정</RouterLink>
-        <RouterLink to="delete">스터디 삭제</RouterLink>
-        {joinBtn}
-        <RouterLink to="response">스터디 신청 목록</RouterLink>
-      </div>
+      <Container sx={{ mt: 10 }}>
+        <Stack
+          direction={{ xs: 'column', md: 'row' }}
+          justifyContent="space-between"
+          alignItems="flex-end"
+          sx={{ alignItems: { xs: 'center', md: 'end' } }}
+          spacing={{ xs: 2, md: 5 }}
+        >
+          <Stack
+            direction="row"
+            justifyContent="flex-start"
+            alignItems="flex-end"
+            spacing={{ xs: 2, md: 5 }}
+          >
+            <Typography variant="h3" sx={{ maxWidth: '55%' }}>
+              {studyDetail.teamName}
+            </Typography>
+            <ToggleButtonGroup
+              value={alignment}
+              exclusive
+              onChange={handleAlignment}
+              size="small"
+              sx={{ m: 0, minWidth: 225, maxHeight: 50 }}
+            >
+              {TEAM_STATE.map((state, idx) => (
+                <ToggleButton
+                  value={state.state}
+                  color="primary"
+                  key={idx}
+                  sx={{ m: 0, p: 1.5, fontSize: 13, fontWeight: 'light' }}
+                >
+                  {state.stateName}
+                </ToggleButton>
+              ))}
+            </ToggleButtonGroup>
+          </Stack>
+          <Stack
+            direction="row"
+            justifyContent={{ xs: 'center', md: 'flex-end' }}
+            spacing={1}
+            sx={{ minWidth: '35%' }}
+          >
+            <Button color="primary" to="response" component={RouterLink}>
+              스터디 신청 목록
+            </Button>
+            <Button color="primary" to="update" component={RouterLink}>
+              스터디 수정
+            </Button>
+            <Button color="primary" to="delete" component={RouterLink}>
+              스터디 삭제
+            </Button>
+          </Stack>
+          <Typography variant="h6" sx={{ minWidth: '6%' }}>
+            {studyDetail.teamManagerName}
+          </Typography>
+        </Stack>
+        <Divider sx={{ mt: 2, mb: 5 }} />
+        <Grid container spacing={2}>
+          <Grid item xs={7.4}>
+            <Box sx={{ height: 300, p: 4, border: '2px solid white', fontSize: 23 }}>
+              <Typography variant="inherit">{studyDetail.teamDesc}</Typography>
+            </Box>
+          </Grid>
+          <Divider orientation="vertical" flexItem />
+          <Grid item xs={4.5}>
+            <Stack
+              direction="column"
+              sx={{ alignItems: { xs: 'center', md: 'end' }, fontSize: 22 }}
+              spacing={4}
+            >
+              <Grid direction="row-reverse" container spacing={1}>
+                {showTechs}
+              </Grid>
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                spacing={4}
+                sx={{ width: '100%' }}
+              >
+                <div style={{ fontWeight: 'bold' }}>인원 </div>
+                <div>
+                  {studyDetail.teamMemberCnt}/{studyDetail.teamRecruitCnt}
+                </div>
+              </Stack>
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                spacing={4}
+                sx={{ width: '100%' }}
+              >
+                <div style={{ fontWeight: 'bold' }}>상태 </div>
+                <div>{showState()}</div>
+              </Stack>
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                spacing={4}
+                sx={{ width: '100%', alignItems: 'center' }}
+              >
+                <div style={{ fontWeight: 'bold' }}>생성 날짜 </div>
+                <div style={{ fontSize: 15 }}>{showDate(studyDetail.teamCreateTime)}</div>
+              </Stack>
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                spacing={4}
+                sx={{ width: '100%', alignItems: 'center' }}
+              >
+                <div style={{ fontWeight: 'bold' }}>시작 날짜 </div>
+                <div style={{ fontSize: 15 }}>{showDate(studyDetail.teamStartTime)}</div>
+              </Stack>
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                spacing={4}
+                sx={{ width: '100%', alignItems: 'center' }}
+              >
+                <div style={{ fontWeight: 'bold' }}>종료 날짜 </div>
+                <div style={{ fontSize: 15 }}>{showDate(studyDetail.teamEndTime)}</div>
+              </Stack>
+              {joinBtn}
+            </Stack>
+          </Grid>
+        </Grid>
+      </Container>
     );
   }
 
   return (
-    <div>
-      <h1>Study Detail of {studyDetail.teamSeq}</h1>
-      <ul>
-        <li>teamName: {studyDetail.teamName}</li>
-        <li>teamCreateTime: {studyDetail.teamCreateTime}</li>
-        <li>teamDesc: {studyDetail.teamDesc}</li>
-        <li>teamEndTime: {studyDetail.teamEndTime}</li>
-        <li>teamManagerName: {studyDetail.teamManagerName}</li>
-        <li>teamManagerSeq: {studyDetail.teamManagerSeq}</li>
-        <li>teamMemberCnt: {studyDetail.teamMemberCnt}</li>
-        <li>teamRecruitCnt: {studyDetail.teamRecruitCnt}</li>
-        <li>teamStartTime: {studyDetail.teamStartTime}</li>
-        <li>teamState: {studyDetail.teamState}</li>
-        <li>teamTech: {JSON.stringify(studyDetail.teamTech.map((pos) => pos))}</li>
-        <li>teamType: {studyDetail.teamType}</li>
-        <li>teamUpdateTime: {studyDetail.teamUpdateTime}</li>
-      </ul>
-      <Button onClick={clickJoinBtn}>스터디 신청</Button>
-      {/* Swal.fire(<p>스터디 신청</p>)<RouterLink to="join">스터디 신청</RouterLink> */}
-    </div>
+    <Container sx={{ mt: 10 }}>
+      <Stack
+        direction={{ xs: 'column', md: 'row' }}
+        justifyContent="space-between"
+        alignItems="flex-end"
+        sx={{ alignItems: { xs: 'center', md: 'end' } }}
+        spacing={{ xs: 2, md: 5 }}
+      >
+        <Stack
+          direction="row"
+          justifyContent="flex-start"
+          alignItems="flex-end"
+          spacing={{ xs: 2, md: 5 }}
+        >
+          <Typography variant="h3">{studyDetail.teamName}</Typography>
+        </Stack>
+        <Typography variant="h6">{studyDetail.teamManagerName}</Typography>
+      </Stack>
+      <Divider sx={{ mt: 2, mb: 5 }} />
+      <Grid container spacing={2}>
+        <Grid item xs={7.4}>
+          <Box sx={{ height: 300, p: 4, border: '2px solid white', fontSize: 23 }}>
+            <Typography variant="inherit">{studyDetail.teamDesc}</Typography>
+          </Box>
+        </Grid>
+        <Divider orientation="vertical" flexItem />
+        <Grid item xs={4.5}>
+          <Stack
+            direction="column"
+            sx={{ alignItems: { xs: 'center', md: 'flex-end' }, fontSize: 22 }}
+            spacing={4}
+          >
+            <Grid direction="row-reverse" container spacing={1}>
+              {showTechs}
+            </Grid>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              spacing={4}
+              sx={{ width: '100%' }}
+            >
+              <div style={{ fontWeight: 'bold' }}>인원 </div>
+              <div>
+                {studyDetail.teamMemberCnt}/{studyDetail.teamRecruitCnt}
+              </div>
+            </Stack>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              spacing={4}
+              sx={{ width: '100%' }}
+            >
+              <div style={{ fontWeight: 'bold' }}>상태 </div>
+              <div>{showState()}</div>
+            </Stack>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              spacing={4}
+              sx={{ width: '100%', alignItems: 'center' }}
+            >
+              <div style={{ fontWeight: 'bold' }}>생성 날짜 </div>
+              <div style={{ fontSize: 15 }}>{showDate(studyDetail.teamCreateTime)}</div>
+            </Stack>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              spacing={4}
+              sx={{ width: '100%', alignItems: 'center' }}
+            >
+              <div style={{ fontWeight: 'bold' }}>시작 날짜 </div>
+              <div style={{ fontSize: 15 }}>{showDate(studyDetail.teamStartTime)}</div>
+            </Stack>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              spacing={4}
+              sx={{ width: '100%', alignItems: 'center' }}
+            >
+              <div style={{ fontWeight: 'bold' }}>종료 날짜 </div>
+              <div style={{ fontSize: 15 }}>{showDate(studyDetail.teamEndTime)}</div>
+            </Stack>
+            {joinBtn}
+          </Stack>
+        </Grid>
+      </Grid>
+    </Container>
   );
 }

@@ -213,6 +213,14 @@ public class MentorApiController {
         return mentorService.respondMentoring(mentorSeq, mentoringSeq, requestDto);
     }
 
+    @Data
+    @AllArgsConstructor
+    @Builder
+    static class Result<T> {
+        private T data;
+        private int status;
+        private String message;
+    }
 
     /**
      * 기능: 멘토링 상태 변경 (ACTIVATE)

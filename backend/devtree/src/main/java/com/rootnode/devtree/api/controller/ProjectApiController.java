@@ -68,6 +68,22 @@ public class ProjectApiController {
     }
 
     /**
+     * 기능: 프로젝트 멤버 조회
+     */
+    @GetMapping("/v1/project/member/{teamSeq}")
+    public ResponseEntity<Result> projectMemberList(@PathVariable Long teamSeq) {
+        List<ProjectMemberListResponseDto> responseDto = projectService.findProjectMember(teamSeq);
+        return ResponseEntity
+                .status(200)
+                .body(Result.builder()
+                        .data(responseDto)
+                        .status(200)
+                        .message("프로젝트 멤버 조회 성공")
+                        .build());
+    }
+
+
+    /**
      * 기능: 프로젝트 신청
      */
     @PostMapping("/v1/project/join/{teamSeq}")
@@ -151,6 +167,8 @@ public class ProjectApiController {
         projectService.deleteProject(teamSeq);
         return new CommonResponseDto(204, "프로젝트 삭제에 성공하였습니다.");
     }
+
+
 
 
     /**

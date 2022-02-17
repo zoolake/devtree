@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 //
-import { Button } from '@mui/material';
+import { Button, Typography, Container, Divider, Stack } from '@mui/material';
 //
+import MyProgress from '../../components/_dashboard/MyProgress';
 import { getStudyResponse, answerStudyResponse } from '../../_actions/study_actions';
 
 export default function StudyResponse() {
   // STATE
   const teamSeq = useParams().id;
+  const navigate = useNavigate();
   const [studyRequest, setstudyRequest] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isLoad, setIsLoad] = useState(false);
 
   // AXIOS
   const dispatch = useDispatch();
@@ -39,6 +42,7 @@ export default function StudyResponse() {
       await dispatch(answerStudyResponse({ teamSeq, dataToSubmit }))
         .then(() => {
           console.log('스터디 신청 응답 성공');
+          setIsLoad(!isLoad);
         })
         .catch((error) => {
           console.log(error, '스터디 신청 응답 실패');
@@ -57,6 +61,7 @@ export default function StudyResponse() {
       await dispatch(answerStudyResponse({ teamSeq, dataToSubmit }))
         .then(() => {
           console.log('스터디 신청 응답 성공');
+          setIsLoad(!isLoad);
         })
         .catch((error) => {
           console.log(error, '스터디 신청 응답 실패');
@@ -65,21 +70,39 @@ export default function StudyResponse() {
     sendAnswer();
     getStyResponse();
   };
+  const goBack = () => {
+    navigate(`/study/${teamSeq}`);
+  };
 
   // RENDER
   useEffect(() => {
     getStyResponse();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isLoad]);
 
   // LOADING
-  if (loading) return <div>로딩 중</div>;
+  if (loading) return <MyProgress />;
 
-  // PAGE
-  if (studyRequest.length === 0) return <div>요청이 없음</div>;
+  // PAGE</Typography>
+  if (studyRequest.length === 0)
+    return (
+      <Container sx={{ mt: 10 }}>
+        <Stack direction="row" justifyContent="space-between">
+          <h1>스터디 신청 목록</h1>
+          <Button variant="outlined" sx={{ width: 100 }} onClick={goBack}>
+            돌아가기
+          </Button>
+        </Stack>
+        <Divider sx={{ mt: 2, mb: 5 }} />
+        <Typography variant="h4" color="primary" sx={{ ml: 45, mt: 30 }}>
+          해당 스터디에 남아있는 신청이 없습니다.
+        </Typography>
+      </Container>
+    );
   return (
-    <div>
+    <Container sx={{ mt: 10 }}>
       <h1>스터디 신청 목록</h1>
+      <Divider sx={{ mt: 2, mb: 5 }} />
       {studyRequest.map((request) => (
         <div key={request.userSeq}>
           {request.userId}의 신청
@@ -91,6 +114,6 @@ export default function StudyResponse() {
           </Button>
         </div>
       ))}
-    </div>
+    </Container>
   );
 }

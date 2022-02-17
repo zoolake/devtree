@@ -189,6 +189,7 @@ export default function MentorProfile() {
                 <TextField
                   {...getFieldProps('mentorNickname')}
                   disabled={!visible}
+                  placeholder={mentor.mentorNickname}
                   fullWidth
                   type="text"
                 />
@@ -196,6 +197,7 @@ export default function MentorProfile() {
                 <TextField
                   {...getFieldProps('mentorCareer')}
                   disabled={!visible}
+                  placeholder={mentor.mentorCareer}
                   fullWidth
                   autoComplete="username"
                   type="text"
@@ -205,6 +207,7 @@ export default function MentorProfile() {
                   {...getFieldProps('mentorEmail')}
                   disabled={!visible}
                   fullWidth
+                  placeholder={mentor.mentorEmail}
                   autoComplete="username"
                   type="text"
                   error={Boolean(touched.mentorEmail && errors.mentorEmail)}
@@ -230,6 +233,7 @@ export default function MentorProfile() {
                   multiline
                   fullWidth
                   variant="filled"
+                  placeholder={mentor.mentorDesc}
                 />
               </Box>
             </div>

@@ -6,23 +6,27 @@ import jwtdecode from 'jwt-decode';
 import makeAnimated from 'react-select/animated';
 import { useDispatch } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
-
+import Grid from '@mui/material/Grid';
 // material
 import {
+  Avatar,
   TextField,
   Multiline,
   Divider,
   Box,
+  Item,
   Card,
   Stack,
   Text,
   Typography,
   CardHeader,
   Button,
-  CardContent
+  CardContent,
+  Paper
 } from '@mui/material';
 import Swal from 'sweetalert2';
 import { LoadingButton } from '@mui/lab';
+import { TierImgAvatar } from '../../../utils/mockImages';
 // utils
 import { fDateTime } from '../../../utils/formatTime';
 import { getTech } from '../../../_actions/user_actions';
@@ -34,6 +38,7 @@ export default function UserProfile({ index }) {
   const [mentor, setMentor] = useState([]);
   const [loading, setLoading] = useState(false);
   const [tiername, setTiername] = useState([]);
+  const [techname, setTechname] = useState([]);
   const [opti, setOptions] = useState([]);
   const dispatch = useDispatch();
 
@@ -108,7 +113,9 @@ export default function UserProfile({ index }) {
       .then((response) => {
         if (response) {
           setMentor(response.payload.data);
-          setTiername(response.payload.data.tier.tierName);
+          console.log(response.payload.data.mentorTechList);
+          setTiername(response.payload.data.tier.tierSeq);
+          setTechname(response.payload.data.mentorTechList.techSeq);
           const data = response.payload.data.mentorTechList;
           const all = data.reduce((total, data) => {
             total = [...total, { value: data.techSeq, label: data.techName }];
@@ -148,41 +155,69 @@ export default function UserProfile({ index }) {
   if (!mentor) {
     return null;
   }
+
   return (
-    <div>
+    <div style={{ color: '#90998e' }}>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography sx={{ p: 3 }} variant="h4">
-          {mentor.mentorNickname} <h5>{}</h5>
-          <h5> {mentor.mentorCareer}</h5> <h5>{tiername} </h5>
-        </Typography>
-        <Button onClick={usercheck}>멘토링 신청하기</Button>
+        <Card>
+          <Typography style={{ color: '#303030' }} sx={{ p: 3 }} variant="h3">
+            {mentor.mentorNickname} <h5>{}</h5>{' '}
+            <h6 style={{ color: '#586356' }}> {mentor.mentorCareer}</h6>{' '}
+            <Avatar src={TierImgAvatar(tiername)}> </Avatar>
+          </Typography>{' '}
+        </Card>
+        <Button
+          onClick={usercheck}
+          sx={{
+            background: 'linear-gradient(to right, #dad299, #b0dab9)',
+            boxShadow: 20,
+            color: 'white'
+          }}
+        >
+          멘토링 신청하기
+        </Button>
       </Stack>
-      <CardHeader />
+
       <Box sx={{ p: 3 }}>
-        {' '}
-        이메일
-        <TextField value={mentor.mentorEmail} fullWidth type="text" />
-        소개말
-        <TextField
-          id="filled-textarea"
-          value={mentor.mentorDesc}
-          multiline
-          fullWidth
-          variant="filled"
+        <CardHeader title="멘토링 기술 스택" />
+        <Select
+          isDisabled
+          isMulti // show multiple options
+          components={animatedComponents} // animate builtin components
+          isClearable={value.some((v) => !v.isFixed)} // clear button shows conditionally
+          styles={styles} // styles that do not show 'x' for fixed options
+          options={opti} // all options
+          value={value} // selected values
+          onChange={handleChange} // handler for changes
         />
-        <CardHeader title="멘토의 기술 스택" />
-        <div>
-          <Select
-            isDisabled
-            isMulti // show multiple options
-            components={animatedComponents} // animate builtin components
-            isClearable={value.some((v) => !v.isFixed)} // clear button shows conditionally
-            styles={styles} // styles that do not show 'x' for fixed options
-            options={opti} // all options
-            value={value} // selected values
-            onChange={handleChange} // handler for changes
-          />
-        </div>
+      </Box>
+
+      <Box sx={{ p: 3 }}>
+        <CardHeader title="이메일" />
+        <Paper
+          fullWidth
+          sx={{
+            padding: '8px',
+            height: '40px',
+            backgroundColor: 'white',
+            border: '1px solid #D3D8D2'
+          }}
+        >
+          {mentor.mentorEmail}
+        </Paper>
+        <CardHeader title="멘토소개" />
+        <Paper
+          fullWidth
+          sx={{
+            padding: '8px',
+            height: '100px',
+            backgroundColor: 'white',
+            border: '1px solid #D3D8D2'
+          }}
+        >
+          {mentor.mentorDesc}
+        </Paper>
+
         <Divider />
       </Box>
     </div>

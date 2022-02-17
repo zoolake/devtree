@@ -52,9 +52,9 @@ export default function Login() {
       <MHidden width="mdDown">
         <SectionStyle>
           <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-            `데브트리 소개글`
+            개발자의 성장을 돕습니다. devtree
           </Typography>
-          <img src="/static/illustrations/illustration_login.png" alt="login" />
+          <img src="/static/images/login.gif" alt="login" />
         </SectionStyle>
       </MHidden>
 
@@ -68,7 +68,7 @@ export default function Login() {
               가입된 계정으로 로그인해주세요.
             </Typography>
           </Stack>
-          <AuthSocial />
+          {/* //          <AuthSocial /> */}
 
           <LoginForm />
 

@@ -4,10 +4,7 @@ import com.rootnode.devtree.api.request.StudyCreateRequestDto;
 import com.rootnode.devtree.api.request.StudyJoinRequestDto;
 import com.rootnode.devtree.api.request.StudyRespondRequestDto;
 import com.rootnode.devtree.api.request.StudyUpdateRequestDto;
-import com.rootnode.devtree.api.response.CommonResponseDto;
-import com.rootnode.devtree.api.response.StudyDetailResponseDto;
-import com.rootnode.devtree.api.response.StudyJoinListResponseDto;
-import com.rootnode.devtree.api.response.StudyListResponseDto;
+import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.db.entity.*;
 import com.rootnode.devtree.db.entity.compositeKey.StudyReservationId;
 import com.rootnode.devtree.db.entity.compositeKey.StudyUserId;
@@ -87,6 +84,14 @@ public class StudyService {
         //3. Dto로 변환하여 반환
         return new StudyDetailResponseDto(team, managerName);
     }
+
+    // 스터디 멤버 조회
+    public List<StudyMemberListResponseDto> findStudyMember(Long teamSeq) {
+        // 1. 팀 테이블 조회
+        List<User> userList = studyUserRepository.findUserByTeamSeq(teamSeq);
+        return userList.stream().map(user -> new StudyMemberListResponseDto(user)).collect(Collectors.toList());
+    }
+
 
     // 스터디 신청
     public CommonResponseDto joinStudy(Long userSeq, Long teamSeq, StudyJoinRequestDto requestDto) {

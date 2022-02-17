@@ -17,6 +17,28 @@ import {
 import { USER_SERVER } from '../components/config';
 import setAuthorizationToken from '../utils/setAuthorizationToken';
 
+// 멘토 이메일인증하기
+export function authCode(dataToSubmit) {
+  const request = axios
+    .post(`/user/mentor/verification/confirm`, dataToSubmit)
+    .then((response) => response.data.data);
+  return {
+    type: GET_TECH,
+    payload: request
+  };
+}
+
+// 멘토 이메일인증하기
+export function emailAuth(dataToSubmit) {
+  const request = axios
+    .post(`/user/mentor/verification`, dataToSubmit)
+    .then((response) => response.data.data);
+  return {
+    type: GET_TECH,
+    payload: request
+  };
+}
+
 // 알림 페이지 데이터 불러오기
 export function getAlarmdata(notificationSeq) {
   const request = axios
@@ -76,7 +98,6 @@ export function deleteUser(dataToSubmit) {
   const request = axios
     .delete(`${USER_SERVER}/password/1`, dataToSubmit)
     .then((response) => response.data);
-
   return {
     type: DELETE_USER,
     payload: request

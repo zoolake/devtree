@@ -96,6 +96,9 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
             <Avatar src={RoleImgAvatar(avatarname)} />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
+                멘토
+              </Typography>
+              <Typography variant="subtitle2" sx={{ color: 'text.primary', fontSize: '20px' }}>
                 {token}
               </Typography>
               <Typography variant="body2" sx={{ color: 'white' }}>

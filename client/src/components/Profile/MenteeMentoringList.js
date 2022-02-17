@@ -152,6 +152,12 @@ export default function MenteeMentoringList() {
     setFilterName(event.target.value);
   };
 
+  const joinSession = (event) => {
+    localStorage.removeItem('mentoringSeq');
+    localStorage.setItem('mentoringSeq', event.target.id);
+    document.location.assign(`/session/join`);
+  };
+
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - mentoring.length) : 0;
   const filteredUsers = applySortFilter(mentoring, getComparator(order, orderBy), filterName);
   return (
@@ -235,7 +241,9 @@ export default function MenteeMentoringList() {
                                 )}
                               </div>
                             ) : null}
-                            {mentoringState === 'ACTIVATE' ? <Button>세션입장</Button> : null}
+                            {mentoringState === 'ACTIVATE' ? (
+                              <Button onClick={joinSession}>세션입장</Button>
+                            ) : null}
                             {mentoringState === 'FINISH' ? <Button>완료</Button> : null}
                           </TableCell>
                         </TableRow>

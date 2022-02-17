@@ -3,6 +3,7 @@ import { useParams, Link as RouterLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import jwtdecode from 'jwt-decode';
 import {
+  Avatar,
   ToggleButton,
   ToggleButtonGroup,
   Button,
@@ -17,6 +18,7 @@ import {
 import { getProjectDetail } from '../../_actions/project_actions';
 import { changeTeamState } from '../../_actions/team_actions';
 import { checkTeamMember } from '../../_actions/user_actions';
+import { TechImgAvatar } from '../../utils/mockImages';
 
 export default function ProjectDetail() {
   // STATE
@@ -130,7 +132,7 @@ export default function ProjectDetail() {
   // SHOW
   const showTechs = projectDetail.teamTech.map((tech) => (
     <Grid item xs={3} key={tech.techSeq}>
-      <Typography align="center">{tech.techName}</Typography>
+      <Avatar src={TechImgAvatar(tech.techSeq)} />
     </Grid>
   ));
   // eslint-disable-next-line consistent-return

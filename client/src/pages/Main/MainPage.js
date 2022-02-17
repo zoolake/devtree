@@ -24,9 +24,7 @@ export default function MainPage() {
     <Page title="devtree">
       <Container maxWidth="xl">
         <Grid container spacing={4}>
-          <Grid item xs={12} sm={6} lg={12}>
-            <SliderBanner />
-          </Grid>
+          <SliderBanner />
 
           <Grid item xs={12} sm={6} md={3}>
             <Link underline="none" component={RouterLink} to="/project/">

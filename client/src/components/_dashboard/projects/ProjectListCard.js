@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 //
-import { Card, CardContent, Typography, Stack } from '@mui/material';
-//
+import { TechImgAvatar } from '../../../utils/mockImages';
+import { Avatar, Card, CardContent, Typography, Stack } from '@mui/material';
 import MyProgress from '../MyProgress';
 
 ProjectListCard.propTypes = {
@@ -21,9 +21,13 @@ export default function ProjectListCard({ project }) {
   // FUNC
   const showTechs = () => {
     if (project.teamTech.length < 6) {
-      return project.teamTech.map((tech) => <div key={tech.techSeq}>{tech.techName}</div>);
+      return project.teamTech.map((tech) => (
+        <Avatar variant="caption" src={TechImgAvatar(tech.techSeq)} />
+      ));
     }
-    return project.teamTech.slice(6).map((tech) => <div key={tech.techSeq}>{tech.techName}</div>);
+    return project.teamTech
+      .slice(6)
+      .map((tech) => <Avatar variant="caption" src={TechImgAvatar(tech.techSeq)} />);
   };
   // eslint-disable-next-line consistent-return
   const getStateName = () => {

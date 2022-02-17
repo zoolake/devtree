@@ -9,9 +9,6 @@ export default function MentoringTime() {
       <CardHeader title="멘토링 가능 시간" />
       <Box sx={{ p: 3 }}>
         <MentoringDaySelect />
-      </Box>{' '}
-      <Box sx={{ p: 3 }}>
-        <MentoringList />
       </Box>
     </Card>
   );

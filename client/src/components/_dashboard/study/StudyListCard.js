@@ -2,9 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 //
-import { Card, CardContent, Typography, Stack } from '@mui/material';
+import { Card, CardContent, Typography, Stack, Avatar } from '@mui/material';
 //
 import MyProgress from '../MyProgress';
+import { TechImgAvatar } from '../../../utils/mockImages';
 
 StudyListCard.propTypes = {
   study: PropTypes.object.isRequired
@@ -21,9 +22,23 @@ export default function StudyListCard({ study }) {
   // SHOW
   const showTechs = () => {
     if (study.teamTech.length < 6) {
-      return study.teamTech.map((tech) => <div key={tech.techSeq}>{tech.techName}</div>);
+      return study.teamTech.map((tech) => (
+        <Avatar
+          variant="caption"
+          sx={{ border: '1px solid #efefef', width: '50px', height: '50px' }}
+          src={TechImgAvatar(tech.techSeq)}
+        />
+      ));
     }
-    return study.teamTech.slice(6).map((tech) => <div key={tech.techSeq}>{tech.techName}</div>);
+    return study.teamTech
+      .slice(6)
+      .map((tech) => (
+        <Avatar
+          variant="caption"
+          sx={{ border: '1px solid #efefef', width: '50px', height: '50px' }}
+          src={TechImgAvatar(tech.techSeq)}
+        />
+      ));
   };
   // eslint-disable-next-line consistent-return
   const getStateName = () => {
@@ -65,7 +80,7 @@ export default function StudyListCard({ study }) {
     return null;
   };
   // PAGE
-  if (!study.teamTech) return <MyProgress />;
+  // if (!study.teamTech) return <MyProgress />;
   return (
     <ul>
       <Card

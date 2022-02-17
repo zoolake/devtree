@@ -95,9 +95,8 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           <AccountStyle>
             <Avatar src={RoleImgAvatar(avatarname)} />
             <Box sx={{ ml: 2 }}>
-              <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                멘토
-              </Typography>
+              {avatarname === 'MENTOR' && <div>멘토</div>}
+              {avatarname === 'USER' && <div>일반유저</div>}
               <Typography variant="subtitle2" sx={{ color: 'text.primary', fontSize: '20px' }}>
                 {token}
               </Typography>

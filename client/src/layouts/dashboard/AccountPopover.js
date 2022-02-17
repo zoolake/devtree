@@ -28,8 +28,6 @@ export default function AccountPopover() {
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
   let btn;
-  console.log(jwtdecode(localStorage.getItem('user')));
-  const token = jwtdecode(localStorage.getItem('user')).userRole;
   const MENU_OPTIONS_SIGNED = [
     {
       label: 'Home',
@@ -69,8 +67,8 @@ export default function AccountPopover() {
     },
     {
       label: 'Mentor',
-      icon: settings2Fill,
-      linkTo: `/mentorprofile/${jwtdecode(localStorage.getItem('user')).userSeq}`
+      icon: settings2Fill
+      // linkTo: `/mentorprofile/${jwtdecode(localStorage.getItem('user')).userSeq}`
     }
   ];
 

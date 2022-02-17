@@ -3,10 +3,21 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { useDispatch } from 'react-redux';
 // material
-import { TextField, Divider, Box, CardHeader } from '@mui/material';
+import {
+  Stack,
+  Avatar,
+  Typography,
+  Card,
+  TextField,
+  Divider,
+  Paper,
+  Box,
+  CardHeader
+} from '@mui/material';
 // utils
 import { detailUser, getTech } from '../../_actions/user_actions';
 import { mymentorProfile } from '../../_actions/mentor_actions';
+import { TierImgAvatar } from '../../utils/mockImages';
 // ----------------------------------------------------------------------
 
 const animatedComponents = makeAnimated();
@@ -14,6 +25,7 @@ const animatedComponents = makeAnimated();
 export default function MentorProfileUpdate() {
   const [visible, setVisible] = useState(false);
   const [mentor, setMentor] = useState(null);
+  const [tiername, setTiername] = useState([]);
   const [loading, setLoading] = useState(false);
   const [opti, setOptions] = useState([]);
   const dispatch = useDispatch();
@@ -91,6 +103,7 @@ export default function MentorProfileUpdate() {
           console.log('test');
           setMentor(response.payload.data);
           console.log(response.payload.data.mentorTechList);
+          setTiername(response.payload.data.tier.tierSeq);
           const data = response.payload.data.mentorTechList;
           const all = data.reduce((total, data) => {
             total = [...total, { value: data.techSeq, label: data.techName }];
@@ -114,24 +127,18 @@ export default function MentorProfileUpdate() {
     <div>
       <CardHeader title="멘토 프로필 정보" />
       <Box sx={{ p: 3 }}>
-        내 티어
-        <TextField disabled={!visible} fullWidth type="text" value={mentor.tier.tierName} />
-        내 경험치
-        <TextField disabled={!visible} fullWidth type="text" value={mentor.tier.tierName} />
-        멘토 닉네임
-        <TextField disabled={!visible} fullWidth type="text" value={mentor.mentorNickname} />
-        멘토 커리어
-        <TextField disabled={!visible} fullWidth type="text" value={mentor.mentorCareer} />
-        멘토 이메일
-        <TextField
-          disabled={!visible}
-          fullWidth
-          autoComplete="username"
-          type="text"
-          value={mentor.mentorEmail}
-        />
-        <CardHeader title="관심있는 기술 스택" />
-        <div>
+        {' '}
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+          <Card>
+            <Typography style={{ color: '#303030' }} sx={{ p: 3 }} variant="h3">
+              {mentor.mentorNickname} <h5>{}</h5>{' '}
+              <h6 style={{ color: '#586356' }}> {mentor.mentorCareer}</h6>{' '}
+              <Avatar src={TierImgAvatar(tiername)}> </Avatar>
+            </Typography>{' '}
+          </Card>
+        </Stack>
+        <Box sx={{ p: 3 }}>
+          <CardHeader title="멘토링 기술 스택" />
           <Select
             isDisabled
             isMulti // show multiple options
@@ -142,17 +149,34 @@ export default function MentorProfileUpdate() {
             value={value} // selected values
             onChange={handleChange} // handler for changes
           />
-        </div>
-        멘토 자기소개
-        <TextField
-          id="filled-textarea"
-          disabled={!visible}
-          multiline
-          fullWidth
-          variant="filled"
-          value={mentor.mentorDesc}
-        />
-        <Divider />
+        </Box>
+        <Box sx={{ p: 3 }}>
+          <CardHeader title="이메일" />
+          <Paper
+            fullWidth
+            sx={{
+              padding: '8px',
+              height: '40px',
+              backgroundColor: 'white',
+              border: '1px solid #D3D8D2'
+            }}
+          >
+            {mentor.mentorEmail}
+          </Paper>
+          <CardHeader title="멘토소개" />
+          <Paper
+            fullWidth
+            sx={{
+              padding: '8px',
+              height: '100px',
+              backgroundColor: 'white',
+              border: '1px solid #D3D8D2'
+            }}
+          >
+            {mentor.mentorDesc}
+          </Paper>
+          <Divider />{' '}
+        </Box>
       </Box>
     </div>
   );

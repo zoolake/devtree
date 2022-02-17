@@ -25,4 +25,5 @@ public interface MentorTechRepository extends JpaRepository<MentorTech, MentorTe
 
     @Query(value = "select t.mentor from MentorTech t where t.tech.techSeq = :techSeq")
     List<Mentor> findByTechSeq(Long techSeq);
+
 }

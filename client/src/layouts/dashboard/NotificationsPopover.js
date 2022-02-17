@@ -10,7 +10,6 @@ import { Icon } from '@iconify/react';
 
 import bellFill from '@iconify/icons-eva/bell-fill';
 import clockFill from '@iconify/icons-eva/clock-fill';
-import doneAllFill from '@iconify/icons-eva/done-all-fill';
 
 // material
 import { alpha } from '@mui/material/styles';
@@ -35,8 +34,6 @@ import { getAlarmList } from '../../_actions/user_actions';
 // utils
 import { mockImgAvatar } from '../../utils/mockImages';
 // components
-import Scrollbar from '../../components/Scrollbar';
-import MenuPopover from '../../components/MenuPopover';
 
 // ----------------------------------------------------------------------
 
@@ -190,7 +187,6 @@ export default function NotificationsPopover() {
   };
 
   useEffect(() => {
-    console.log('dd');
     getUncheckedCount();
   }, []);
 
@@ -209,6 +205,9 @@ export default function NotificationsPopover() {
         ref={anchorRef}
         size="large"
         color={open ? 'primary' : 'default'}
+        variant="contained"
+        component={RouterLink}
+        to="/profile/alarm"
         sx={{
           ...(open && {
             bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.focusOpacity)

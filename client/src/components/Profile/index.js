@@ -1,5 +1,6 @@
 export { default as PasswordUpdate } from './PasswordUpdate';
 export { default as MentorProfile } from './MentorProfile';
+export { default as GetUserProfile } from './GetUserProfile';
 export { default as UserProfile } from './UserProfile';
 export { default as UserStack } from './UserStack';
 export { default as MyProfile } from './MyProfile';
@@ -18,3 +19,4 @@ export { default as MentorWeeklySetting } from './MentorWeeklySetting';
 export { default as MentoringList } from './MentoringList';
 export { default as MenteeMentoringList } from './MenteeMentoringList';
 export { default as AlarmList } from './AlarmList';
+export { default as UpdateUserProfileForm } from './UpdateUserProfileForm';

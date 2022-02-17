@@ -27,7 +27,7 @@ import Label from '../Label';
 import Scrollbar from '../Scrollbar';
 import { UserListHead } from '../_dashboard/profileHistory';
 
-import { menteementoring } from '../../_actions/mentor_actions';
+import { menteeMentoring } from '../../_actions/mentor_actions';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [

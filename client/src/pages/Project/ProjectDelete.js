@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 //
 import { Snackbar, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+// import CloseIcon from '@mui/icons-material/Close';
 //
 import { deleteProject } from '../../_actions/project_actions';
 
@@ -48,7 +48,7 @@ export default function ProjectDelete() {
   const action = (
     <>
       <IconButton size="small" aria-label="close" color="primary" onClick={handleClose}>
-        <CloseIcon fontSize="small" />
+        {/* <CloseIcon fontSize="small" /> */}
       </IconButton>
     </>
   );

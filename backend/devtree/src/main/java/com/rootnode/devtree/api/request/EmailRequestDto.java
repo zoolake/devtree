@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class EmailRequestDto {
-    private Long userSeq;
     private String userEmailId;
     private EmailDomain userEmailDomain;
 }

@@ -358,7 +358,7 @@ public class UserServiceImpl implements UserService {
         if(verificationCode.equals(enteredCode)) {
             user.changeUserRole(UserRole.MENTOR);
             user.changeVerificationCode("");
-            mentorRepository.save(Mentor.builder().user(user).mentorSeq(user.getUserSeq()).verificationDate(LocalDateTime.now()).build());
+            mentorRepository.save(Mentor.builder().user(user).mentorExp(new Long(0)).mentorSeq(user.getUserSeq()).verificationDate(LocalDateTime.now()).build());
             String accessToken = JwtTokenUtil.getToken(user.getUserId(),user.getUserSeq(),user.getUserRole().name());
             return accessToken;
         } else {

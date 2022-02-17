@@ -49,7 +49,7 @@ export default function StudyList() {
         </Typography>
       );
     }
-    return studyList.map((sty) => <StudyListCard key={sty.teamSeq} project={sty} />);
+    return studyList.map((sty) => <StudyListCard key={sty.teamSeq} study={sty} />);
   };
   return <Container fixed>{showEachStudy()}</Container>;
 }

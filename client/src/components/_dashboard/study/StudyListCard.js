@@ -23,12 +23,22 @@ export default function StudyListCard({ study }) {
   const showTechs = () => {
     if (study.teamTech.length < 6) {
       return study.teamTech.map((tech) => (
-        <Avatar variant="caption" src={TechImgAvatar(tech.techSeq)}>
-          {tech.techName}
-        </Avatar>
+        <Avatar
+          variant="caption"
+          sx={{ border: '1px solid #efefef', width: '50px', height: '50px' }}
+          src={TechImgAvatar(tech.techSeq)}
+        />
       ));
     }
-    return study.teamTech.slice(6).map((tech) => <div key={tech.techSeq}>{tech.techName}</div>);
+    return study.teamTech
+      .slice(6)
+      .map((tech) => (
+        <Avatar
+          variant="caption"
+          sx={{ border: '1px solid #efefef', width: '50px', height: '50px' }}
+          src={TechImgAvatar(tech.techSeq)}
+        />
+      ));
   };
   // eslint-disable-next-line consistent-return
   const getStateName = () => {
@@ -70,7 +80,7 @@ export default function StudyListCard({ study }) {
     return null;
   };
   // PAGE
-  if (!study.teamTech) return <MyProgress />;
+  // if (!study.teamTech) return <MyProgress />;
   return (
     <ul>
       <Card

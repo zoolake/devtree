@@ -22,12 +22,22 @@ export default function ProjectListCard({ project }) {
   const showTechs = () => {
     if (project.teamTech.length < 6) {
       return project.teamTech.map((tech) => (
-        <Avatar variant="caption" src={TechImgAvatar(tech.techSeq)} />
+        <Avatar
+          variant="caption"
+          sx={{ border: '1px solid #efefef', width: '50px', height: '50px' }}
+          src={TechImgAvatar(tech.techSeq)}
+        />
       ));
     }
     return project.teamTech
       .slice(6)
-      .map((tech) => <Avatar variant="caption" src={TechImgAvatar(tech.techSeq)} />);
+      .map((tech) => (
+        <Avatar
+          variant="caption"
+          sx={{ border: '1px solid #efefef', width: '50px', height: '50px' }}
+          src={TechImgAvatar(tech.techSeq)}
+        />
+      ));
   };
   // eslint-disable-next-line consistent-return
   const getStateName = () => {

@@ -132,7 +132,11 @@ export default function ProjectDetail() {
   // SHOW
   const showTechs = projectDetail.teamTech.map((tech) => (
     <Grid item xs={3} key={tech.techSeq}>
-      <Avatar src={TechImgAvatar(tech.techSeq)} />
+      <Avatar
+        variant="caption"
+        sx={{ border: '1px solid #efefef', width: '50px', height: '50px' }}
+        src={TechImgAvatar(tech.techSeq)}
+      />
     </Grid>
   ));
   // eslint-disable-next-line consistent-return

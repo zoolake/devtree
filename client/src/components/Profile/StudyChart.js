@@ -95,7 +95,7 @@ export default function StudyChart() {
         <Card sx={{ minWidth: 275 }}>
           <CardContent>
             <Typography sx={{ fontSize: 14, mb: 5 }} color="primary" gutterBottom>
-              프로젝트 기록
+              스터디 기록
             </Typography>
             <ChartWrapperStyle dir="ltr">
               <ReactApexChart type="pie" series={CHART_DATA} options={chartOptions} height={280} />

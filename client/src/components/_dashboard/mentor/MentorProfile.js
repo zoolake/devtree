@@ -199,8 +199,7 @@ export default function UserProfile({ index }) {
           sx={{
             padding: '8px',
             height: '40px',
-            backgroundColor: 'white',
-            border: '1px solid #D3D8D2'
+            backgroundColor: 'white'
           }}
         >
           {mentor.mentorEmail}
@@ -211,8 +210,7 @@ export default function UserProfile({ index }) {
           sx={{
             padding: '8px',
             height: '100px',
-            backgroundColor: 'white',
-            border: '1px solid #D3D8D2'
+            backgroundColor: 'white'
           }}
         >
           {mentor.mentorDesc}

@@ -89,7 +89,7 @@ export default function Week4({ week, day, date }) {
       .then((response) => {
         if (response) {
           Swal.fire('완료', '멘토링이 신청되었습니다.', 'success').then(() => {
-            document.location.assign('/');
+            document.location.assign('/Mainpage/app');
           });
         }
       })

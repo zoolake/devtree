@@ -16,7 +16,8 @@ function MentorDetail() {
     <Card
       sx={{
         marginLeft: '10%',
-        paddingRight: '20%',
+        marginRight: '30%',
+
         paddingBottom: '80px',
         boxShadow: 15
       }}

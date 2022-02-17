@@ -1,37 +1,27 @@
 import { filter } from 'lodash';
-import { Icon } from '@iconify/react';
 import { useState, useEffect } from 'react';
-import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-// material
+//
 import {
   Card,
   Table,
   Stack,
   Avatar,
-  Button,
   TableRow,
   TableBody,
   TableCell,
   Container,
   Typography,
   TableContainer,
-  TablePagination
+  TablePagination,
+  Divider
 } from '@mui/material';
-// components
-import Page from '../components/Page';
-import Label from '../components/Label';
+//
 import Scrollbar from '../components/Scrollbar';
-import {
-  UserListHead,
-  UserListToolbar,
-  UserMoreMenu
-} from '../components/_dashboard/profileHistory';
-
-import { getStudy, getRank } from '../_actions/user_actions';
+import { UserListHead } from '../components/_dashboard/profileHistory';
+import { getRank } from '../_actions/user_actions';
 import { TierImgAvatar } from '../utils/mockImages';
-// ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Rank', alignRight: false },
@@ -39,8 +29,6 @@ const TABLE_HEAD = [
   { id: 'role', label: '티어', alignRight: false },
   { id: 'status', label: '경험치', alignRight: false }
 ];
-
-// ---------------------------------------------------------------------
 
 function applySortFilter(array, comparator, query) {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -55,104 +43,69 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function StudyList() {
+export default function Ranking() {
+  // STATE
   const [studyList, setStudyList] = useState([]);
+  const [page, setPage] = useState(0);
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('name');
+  const [rowsPerPage, setRowsPerPage] = useState(25);
+
+  // INIT
+  const dispatch = useDispatch();
   const getUserist = async () => {
     dispatch(getRank())
       .then((response) => {
         if (response) {
-          console.log(response.payload.data);
-          console.log(response);
-          const data = response.payload;
           setStudyList(response.payload.data);
         }
       })
       .catch((err) => {
+        console.log(err);
         setTimeout(() => {}, 3000);
       });
   };
+
+  // RENDER
   useEffect(() => {
     getUserist();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const [page, setPage] = useState(0);
-  const [order, setOrder] = useState('asc');
-  const [selected, setSelected] = useState([]);
-  const [orderBy, setOrderBy] = useState('name');
-  const [filterName, setFilterName] = useState('');
-  const [rowsPerPage, setRowsPerPage] = useState(25);
-  const dispatch = useDispatch();
-  useEffect(() => {}, []);
 
+  // HANDLE
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = studyList.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
-  };
-
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (newPage) => {
     setPage(newPage);
   };
-
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-  const handleFilterByName = (event) => {
-    setFilterName(event.target.value);
-  };
-
+  // FORM
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - studyList.length) : 0;
 
+  // PAGE
   return (
-    <Page title="devtree - ranking">
+    <Container sx={{ mt: 10 }}>
+      <Typography variant="h3" gutterBottom>
+        멘토 랭킹
+      </Typography>
+      <Divider sx={{ mt: 5, mb: 5 }} />
       <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Typography variant="h4" gutterBottom>
-            Ranking
-          </Typography>
-        </Stack>
-
         <Card>
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
-                <UserListHead
-                  headLabel={TABLE_HEAD}
-                  onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
-                />
+                <UserListHead headLabel={TABLE_HEAD} onRequestSort={handleRequestSort} />
                 <TableBody>
                   {studyList
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) => {
+                    .map((row) => {
                       const { mentorSeq, mentorRank, mentorNickname, tier, mentorExp } = row;
                       return (
                         <TableRow hover key={mentorSeq} tabIndex={-1}>
@@ -199,6 +152,6 @@ export default function StudyList() {
           />
         </Card>
       </Container>
-    </Page>
+    </Container>
   );
 }

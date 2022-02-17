@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
 // material
-import { Avatar, Card, Box, Grid, Button, Container, Stack, Typography } from '@mui/material';
+import { Avatar, Card, Divider, Grid, Button, Container, Stack, Typography } from '@mui/material';
 // components
 import Page from '../../components/Page';
 
@@ -92,14 +92,13 @@ export default function Mentor() {
     getMentorlist();
     getTechlist();
   }, []);
+
   return (
-    <Page title="devtree - Mentor">
-      <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            멘토 목록
-          </Typography>
-        </Stack>
+    <Container sx={{ mt: 10 }}>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        <Typography variant="h3" gutterBottom>
+          멘토 목록
+        </Typography>
         <Button
           onClick={getMentorlist}
           id="all"
@@ -112,32 +111,34 @@ export default function Mentor() {
         >
           ALL
         </Button>
-        <Card>
+      </Stack>
+      <Divider sx={{ mt: 5, mb: 5 }} />
+      <Container>
+        <Card sx={{ mb: 8 }}>
           <ScrollMenu>
-            <Stack direction="row">
+            <Stack direction="row" spacing={3}>
               {techlist.map((info, index) => (
                 <Avatar
+                  key={index}
                   onClick={() => {
                     techSearch(info.techSeq);
                   }}
                   id={info.techSeq}
                   src={TechImgAvatar(info.techSeq)}
-                  sx={{ width: 80, height: 80 }}
+                  sx={{ width: 70, height: 80 }}
                   alt={info.techName}
+                  style={{ cursor: 'pointer' }}
                 />
-              ))}{' '}
+              ))}
             </Stack>
           </ScrollMenu>
         </Card>
-        <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
-          {' '}
-        </Stack>
         <Grid container spacing={3}>
           {mentorlist.map((post, index) => (
             <MentorCard key={post.mentorSeq} post={post} index={index} />
           ))}
         </Grid>
       </Container>
-    </Page>
+    </Container>
   );
 }

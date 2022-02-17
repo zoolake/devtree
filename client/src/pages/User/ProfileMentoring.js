@@ -9,12 +9,10 @@ import jwtdecode from 'jwt-decode';
 import Page from '../../components/Page';
 import { AppNewsUpdate } from '../../components/_dashboard/app';
 import {
-  MentoringStack,
-  MentoringTime,
   ProjectChart,
-  ProjectList,
   StudyChart,
-  StudyList,
+  UserStudyList,
+  UserProjectList,
   UserStack,
   MentorProfile,
   UserProfile,
@@ -37,13 +35,13 @@ const Tab = [
     content: (
       <Grid container spacing={1}>
         <Grid item xs={12} md={6} lg={12}>
-          <StudyList />
+          <UserStudyList />
         </Grid>
         <Grid item xs={12} md={6} lg={12}>
           <StudyChart />
         </Grid>
         <Grid item xs={12} md={6} lg={12}>
-          <ProjectList />
+          <UserProjectList />
         </Grid>
         <Grid item xs={12} md={6} lg={12}>
           <ProjectChart />

@@ -2,9 +2,11 @@ import { Icon } from '@iconify/react';
 import { useRef, useState } from 'react';
 import homeFill from '@iconify/icons-eva/home-fill';
 import personFill from '@iconify/icons-eva/person-fill';
+
 import settings2Fill from '@iconify/icons-eva/settings-2-fill';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import jwtdecode from 'jwt-decode';
+
 // material
 import { alpha } from '@mui/material/styles';
 import {
@@ -21,10 +23,16 @@ import {
 // components
 import MenuPopover from '../../components/MenuPopover';
 import account from '../../_mocks_/account';
-
+import { RoleImgAvatar } from '../../utils/mockImages';
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
+  let avatarname = '';
+  if (localStorage.getItem('user')) {
+    avatarname = jwtdecode(localStorage.getItem('user')).userRole;
+  } else {
+    avatarname = 'GUSET';
+  }
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
   let btn;
@@ -128,7 +136,7 @@ export default function AccountPopover() {
           })
         }}
       >
-        <Avatar src={account.photoURL} alt="photoURL" />
+        <Avatar src={RoleImgAvatar(avatarname)} />
       </IconButton>
 
       <MenuPopover

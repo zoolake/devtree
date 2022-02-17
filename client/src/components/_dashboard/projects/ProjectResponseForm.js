@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 //
-import { Button } from '@mui/material';
+import { Button, Stack, Typography } from '@mui/material';
 // //
 import { answerProjectResponse } from '../../../_actions/project_actions';
 
@@ -57,16 +57,16 @@ export default function ProjectResponseForm({ volunteer }) {
 
   // PAGE
   return (
-    <div>
+    <Stack direction="row" key={volunteer.userSeq} spacing={3} justifyContent="space-between">
+      <Typography variant="h4">{volunteer.userId}</Typography>
       <div>
-        {volunteer.userSeq}번 {volunteer.userId}가 {volunteer.detailPositionName}에 지원함
+        <Button value={volunteer.userSeq} onClick={sendGoodResponse}>
+          수락
+        </Button>
+        <Button value={volunteer.userSeq} onClick={sendBadResponse}>
+          거절
+        </Button>
       </div>
-      <Button value={volunteer.userSeq} onClick={sendGoodResponse}>
-        수락
-      </Button>
-      <Button value={volunteer.userSeq} onClick={sendBadResponse}>
-        거절
-      </Button>
-    </div>
+    </Stack>
   );
 }

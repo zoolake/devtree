@@ -12,7 +12,9 @@ import {
   GET_RANK,
   GET_ALARMLIST,
   CHECK_TEAM_MEMBER,
-  GET_TECH
+  GET_TECH,
+  GET_MY_STUDY_CNT,
+  GET_MY_PROJECT_CNT
 } from './types';
 import { USER_SERVER } from '../components/config';
 import setAuthorizationToken from '../utils/setAuthorizationToken';
@@ -190,6 +192,22 @@ export function checkTeamMember(teamSeq) {
   const request = axios.get(`/v1/member/check/${teamSeq}`).then((response) => response);
   return {
     type: CHECK_TEAM_MEMBER,
+    payload: request
+  };
+}
+
+export function getMyStudyCnt() {
+  const request = axios.get('/user/study/count').then((response) => response);
+  return {
+    type: GET_MY_STUDY_CNT,
+    payload: request
+  };
+}
+
+export function getMyProjectCnt() {
+  const request = axios.get('/user/project/count').then((response) => response);
+  return {
+    type: GET_MY_PROJECT_CNT,
     payload: request
   };
 }

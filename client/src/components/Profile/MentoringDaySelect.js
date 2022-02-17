@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Grid, Container } from '@mui/material';
+import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 import Page from '../Page';
 import { WeekdayReserv, MentorStack, MentorProfile, MentorReviewList } from '../_dashboard/mentor';
 import { MentorWeeklySetting } from '.';
 import { Week1, Week2, Week3, Week4, Week5, Week6, Week7 } from './week';
 
 function MentoringReservation() {
+  const [value, setValue] = React.useState('1');
   const now = new Date();
   const todayWeak = now.getDay() + 1;
   const today = now.getDate() + 1;
@@ -74,81 +80,9 @@ function MentoringReservation() {
     setDaylist(dates);
   };
 
-  const Tab = [
-    {
-      title: `${weeklist[0]} / ${daylist[0]}일`,
-      content: (
-        <Grid container spacing={1}>
-          <Grid item xs={12} md={6} lg={8}>
-            <Week1 week={weeknum[0]} day={daylist[0]} date={addDays(now, 1)} />
-          </Grid>
-        </Grid>
-      )
-    },
-    {
-      title: `${weeklist[1]} / ${daylist[1]}일`,
-      content: (
-        <Grid container spacing={1}>
-          <Grid item xs={12} md={6} lg={8}>
-            <Week2 week={weeknum[1]} day={daylist[1]} date={addDays(now, 2)} />
-          </Grid>
-        </Grid>
-      )
-    },
-    {
-      title: `${weeklist[2]} / ${daylist[2]}일`,
-      content: (
-        <Grid item xs={12} md={6} lg={8}>
-          <Week3 week={weeknum[2]} day={daylist[2]} date={addDays(now, 3)} />
-        </Grid>
-      )
-    },
-    {
-      title: `${weeklist[3]} / ${daylist[3]}일`,
-      content: (
-        <Grid item xs={12} md={6} lg={8}>
-          <Week4 week={weeknum[3]} day={daylist[3]} date={addDays(now, 4)} />
-        </Grid>
-      )
-    },
-    {
-      title: `${weeklist[4]} / ${daylist[4]}일`,
-      content: (
-        <Grid item xs={12} md={6} lg={8}>
-          <Week5 week={weeknum[4]} day={daylist[4]} date={addDays(now, 5)} />
-        </Grid>
-      )
-    },
-    {
-      title: `${weeklist[5]} / ${daylist[5]}일`,
-      content: (
-        <Grid item xs={12} md={6} lg={8}>
-          <Week6 week={weeknum[5]} day={daylist[5]} date={addDays(now, 6)} />
-        </Grid>
-      )
-    },
-    {
-      title: `${weeklist[6]} / ${daylist[6]}일`,
-      content: (
-        <Grid item xs={12} md={6} lg={8}>
-          <Week7 week={weeknum[6]} day={daylist[6]} date={addDays(now, 7)} />
-        </Grid>
-      )
-    }
-  ];
-
-  const useTab = (idx, Tabs) => {
-    if (!Tabs || !Array.isArray(Tabs)) {
-      return null;
-    }
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [currentIdx, setCurrentIdx] = useState(idx);
-    return {
-      currentItem: Tabs[currentIdx],
-      changeItem: setCurrentIdx
-    };
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
   };
-  const { currentItem, changeItem } = useTab(0, Tab);
 
   useEffect(() => {
     getAllweak(todayWeak);
@@ -158,14 +92,67 @@ function MentoringReservation() {
   return (
     <Page title="profile">
       <Container>
-        <div>
-          {Tab.map((e, index) => (
-            <button key={index} onClick={(e) => changeItem(index)}>
-              {e.title}
-            </button>
-          ))}
-        </div>
-        <div>{currentItem.content}</div>
+        <Box sx={{ width: '100%', typography: 'body1' }}>
+          <TabContext value={value}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+              <TabList onChange={handleChange} aria-label="lab API tabs example">
+                <Tab label={`${weeklist[0]} / ${daylist[0]}일`} value="1" />
+                <Tab label={`${weeklist[1]} / ${daylist[1]}일`} value="2" />
+                <Tab label={`${weeklist[2]} / ${daylist[2]}일`} value="3" />
+                <Tab label={`${weeklist[3]} / ${daylist[3]}일`} value="4" />
+                <Tab label={`${weeklist[4]} / ${daylist[4]}일`} value="5" />
+                <Tab label={`${weeklist[5]} / ${daylist[5]}일`} value="6" />
+                <Tab label={`${weeklist[6]} / ${daylist[6]}일`} value="7" />
+              </TabList>
+            </Box>
+            <TabPanel value="1">
+              {' '}
+              <Grid container spacing={1}>
+                <Grid item xs={12} md={6} lg={8}>
+                  <Week1 week={weeknum[0]} day={daylist[0]} date={addDays(now, 1)} />
+                </Grid>
+              </Grid>{' '}
+            </TabPanel>
+            <TabPanel value="2">
+              {' '}
+              <Grid container spacing={1}>
+                <Grid item xs={12} md={6} lg={8}>
+                  <Week2 week={weeknum[1]} day={daylist[1]} date={addDays(now, 2)} />
+                </Grid>
+              </Grid>
+            </TabPanel>
+            <TabPanel value="3">
+              {' '}
+              <Grid item xs={12} md={6} lg={8}>
+                <Week3 week={weeknum[2]} day={daylist[2]} date={addDays(now, 3)} />
+              </Grid>
+            </TabPanel>
+            <TabPanel value="4">
+              {' '}
+              <Grid item xs={12} md={6} lg={8}>
+                <Week4 week={weeknum[3]} day={daylist[3]} date={addDays(now, 4)} />
+              </Grid>
+            </TabPanel>
+            <TabPanel value="5">
+              {' '}
+              <Grid item xs={12} md={6} lg={8}>
+                <Week5 week={weeknum[4]} day={daylist[4]} date={addDays(now, 5)} />
+              </Grid>
+            </TabPanel>
+            <TabPanel value="6">
+              {' '}
+              <Grid item xs={12} md={6} lg={8}>
+                <Week6 week={weeknum[5]} day={daylist[5]} date={addDays(now, 6)} />
+              </Grid>
+            </TabPanel>
+            <TabPanel value="7">
+              {' '}
+              <Grid item xs={12} md={6} lg={8}>
+                <Week7 week={weeknum[6]} day={daylist[6]} date={addDays(now, 7)} />
+              </Grid>
+            </TabPanel>
+          </TabContext>
+        </Box>{' '}
       </Container>
     </Page>
   );

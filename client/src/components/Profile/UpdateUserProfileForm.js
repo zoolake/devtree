@@ -19,6 +19,7 @@ import {
 import { LoadingButton } from '@mui/lab';
 //
 import { detailUser, updateUser, getTech } from '../../_actions/user_actions';
+import MyProgress from '../_dashboard/MyProgress';
 import { MyProfile } from '.';
 
 const animatedComponents = makeAnimated();
@@ -180,7 +181,7 @@ export default function UpdateUserProfileForm({ setIsUpdate, isUpdate }) {
   );
 
   // CONDITIONAL
-  if (loading) return <div>로딩중..</div>;
+  if (loading) return <MyProgress />;
   if (!users) {
     return <MyProfile />;
   }

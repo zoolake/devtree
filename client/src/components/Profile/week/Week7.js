@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import jwtdecode from 'jwt-decode';
+import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
 // material
 import { styled } from '@mui/material/styles';
 import {
@@ -15,7 +16,8 @@ import {
   Card,
   Grid,
   CardContent,
-  Button
+  Button,
+  Stack
 } from '@mui/material';
 import {
   getReservedList,
@@ -206,26 +208,33 @@ export default function Week7({ week, day, date }) {
 
   return (
     <Grid item xs={0} sm={0} md={0}>
-      <Card sx={{ minWidth: 300 }}>
-        <CardContent>{day}일 예약 일정 설정</CardContent>
-        <CardContent>
-          <FormControl>
-            <FormLabel>시간 선택</FormLabel>
-            {times.map((post, index) => (
-              // eslint-disable-next-line react/jsx-key
-              <FormControlLabel
-                disabled={post.reserved}
-                control={<Checkbox defaultChecked={post.checked} />}
-                onChange={(e) => {
-                  changeHandler(e.currentTarget.checked, post.time);
-                }}
-                value={post.time}
-                label={post.time}
-              />
-            ))}
-          </FormControl>
-        </CardContent>
-      </Card>
+      <CardContent sx={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '-20px' }}>
+        {day}일 예약 일정 설정
+      </CardContent>
+      <CardContent>
+        {' '}
+        <ScrollMenu>
+          <FormControl sx={{ padding: '20px' }}>
+            <FormLabel sx={{ fontWeight: 'bold' }}>시간 선택</FormLabel>
+
+            <Stack direction="row">
+              {times.map((post, index) => (
+                // eslint-disable-next-line react/jsx-key
+                <FormControlLabel
+                  disabled={post.reserved}
+                  control={<Checkbox defaultChecked={post.checked} />}
+                  onChange={(e) => {
+                    changeHandler(e.currentTarget.checked, post.time);
+                  }}
+                  value={post.time}
+                  label={post.time}
+                />
+              ))}
+            </Stack>
+          </FormControl>{' '}
+        </ScrollMenu>
+      </CardContent>
+
       <Button onClick={submit}>저장하기</Button>
     </Grid>
   );

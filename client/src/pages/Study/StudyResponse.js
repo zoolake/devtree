@@ -103,17 +103,21 @@ export default function StudyResponse() {
     <Container sx={{ mt: 10 }}>
       <h1>스터디 신청 목록</h1>
       <Divider sx={{ mt: 2, mb: 5 }} />
-      {studyRequest.map((request) => (
-        <div key={request.userSeq}>
-          {request.userId}의 신청
-          <Button value={request.userSeq} onClick={sendGoodResponse}>
-            수락
-          </Button>
-          <Button value={request.userSeq} onClick={sendBadResponse}>
-            거절
-          </Button>
-        </div>
-      ))}
+      <Stack direction="column" spacing={3}>
+        {studyRequest.map((request) => (
+          <Stack direction="row" key={request.userSeq} spacing={3} justifyContent="space-between">
+            <Typography variant="h4">{request.userId}</Typography>
+            <div>
+              <Button value={request.userSeq} onClick={sendGoodResponse}>
+                수락
+              </Button>
+              <Button value={request.userSeq} onClick={sendBadResponse}>
+                거절
+              </Button>
+            </div>
+          </Stack>
+        ))}
+      </Stack>
     </Container>
   );
 }

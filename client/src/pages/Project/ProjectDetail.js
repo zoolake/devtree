@@ -268,7 +268,10 @@ export default function ProjectDetail() {
                 >
                   {projectDetail.teamPosition.map((pos, idx) => (
                     <div key={idx}>
-                      {pos.detailPositionName} {pos.positionMemberCnt}/{pos.positionRecruitCnt}
+                      {pos.detailPositionName}{' '}
+                      <span style={{ color: '#00AB55' }}>
+                        {pos.positionMemberCnt}/{pos.positionRecruitCnt}
+                      </span>
                     </div>
                   ))}
                 </Stack>
@@ -362,9 +365,12 @@ export default function ProjectDetail() {
               <div style={{ fontWeight: 'bold' }}>인원 </div>
               <div>
                 {projectDetail.teamPosition.map((pos, idx) => (
-                  <Stack key={idx} direction="column">
-                    {pos.detailPositionName} {pos.positionMemberCnt}/{pos.positionRecuirtcnt}
-                  </Stack>
+                  <div key={idx}>
+                    {pos.detailPositionName}{' '}
+                    <span style={{ color: '#00AB55' }}>
+                      {pos.positionMemberCnt}/{pos.positionRecruitCnt}
+                    </span>
+                  </div>
                 ))}
               </div>
             </Stack>

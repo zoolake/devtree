@@ -5,13 +5,11 @@ import makeAnimated from 'react-select/animated';
 import { Divider, Grid, Box, CardContent, Typography, Stack } from '@mui/material';
 //
 import { detailUser, getTech } from '../../_actions/user_actions';
+import MyProgress from '../_dashboard/MyProgress';
 import { MyProfile } from '.';
-
-const animatedComponents = makeAnimated();
 
 export default function GetUserProfile() {
   // STATE
-  const [visible, setVisible] = useState(false);
   const [users, setUsers] = useState(null);
   const [loading, setLoading] = useState(false);
   const [opti, setOptions] = useState([]);
@@ -77,7 +75,7 @@ export default function GetUserProfile() {
   };
 
   // CONDITIONAL
-  if (loading) return <div>로딩중..</div>;
+  if (loading) return <MyProgress />;
   if (!users) {
     return <MyProfile />;
   }

@@ -25,7 +25,7 @@ export function authCode(dataToSubmit) {
     .post(`/user/mentor/verification/confirm`, dataToSubmit)
     .then((response) => response.data.data);
   return {
-    type: GET_TECH,
+    type: AUTH_CODE,
     payload: request
   };
 }
@@ -36,7 +36,7 @@ export function emailAuth(dataToSubmit) {
     .post(`/user/mentor/verification`, dataToSubmit)
     .then((response) => response.data.data);
   return {
-    type: GET_TECH,
+    type: EMAIL_AUTH,
     payload: request
   };
 }
@@ -47,7 +47,7 @@ export function getAlarmdata(notificationSeq) {
     .get(`/user/notification/${notificationSeq}`)
     .then((response) => response.data);
 
-  return { type: GET_ALARMLIST, payload: request };
+  return { type: GET_ALARMDATA, payload: request };
 }
 
 // 알림 페이지 데이터 불러오기
@@ -67,13 +67,13 @@ export function getRank() {
 export function getStudy() {
   const request = axios.get(`/user/study`).then((response) => response.data);
 
-  return { type: UPDATE_USER, payload: request };
+  return { type: GET_STUDY, payload: request };
 }
 
 // 나의 프로젝트 정보 모아보기
 export function getProject() {
   const request = axios.get(`/user/project`).then((response) => response.data);
-  return { type: UPDATE_USER, payload: request };
+  return { type: GET_PROJECT, payload: request };
 }
 
 // 기술스택 가져오기
@@ -172,7 +172,7 @@ export function auth() {
   const request = axios.get(`${USER_SERVER}/login`).then((response) => response.data);
 
   return {
-    type: AUTH_USER,
+    type: AUTH,
     payload: request
   };
 }

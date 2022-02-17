@@ -33,13 +33,6 @@ export function getTechList() {
   return { type: GET_TECH_LIST, payload: request };
 }
 
-export function getPositionList() {
-  const request = axios
-    .get('/position') // https://127.26.1.146:8080/v1/position
-    .then((response) => response);
-  return { type: GET_POSITION_LIST, payload: request };
-}
-
 export function getStudyDetail(teamSeq) {
   const request = axios
     .get(`/study/${teamSeq}`) // https://127.26.1.146:8080/v1/study/${teamSeq.id}
@@ -72,7 +65,7 @@ export function getStudyResponse(teamSeq) {
   const request = axios
     .get(`/study/join/${teamSeq}`) // https://127.26.1.146:8080/v1/study/join/${teamSeq.id}
     .then((response) => response);
-  return { type: GET_RESPONSE_STUDY, payload: request };
+  return { type: GET_STUDY_RESPONSE, payload: request };
 }
 
 export function answerStudyResponse(data) {

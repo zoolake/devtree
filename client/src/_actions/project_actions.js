@@ -58,7 +58,7 @@ export function getProjectResponse(teamSeq) {
   const request = axios
     .get(`/project/join/${teamSeq}`) // https://127.26.1.146:8080/v1/project/join/${teamSeq.id}
     .then((response) => response);
-  return { type: GET_RESPONSE_PROJECT, payload: request };
+  return { type: GET_PROJECT_RESPONSE, payload: request };
 }
 
 export function answerProjectResponse(data) {

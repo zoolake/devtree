@@ -24,6 +24,12 @@ export const GET_RANK = 'get_rank';
 export const CHECK_TEAM_MEMBER = 'check_team_member';
 export const GET_MY_STUDY_CNT = 'get_my_study_cnt';
 export const GET_MY_PROJECT_CNT = 'get_my_project_cnt';
+export const AUTH_CODE = 'auth_code';
+export const EMAIL_AUTH = 'email_auth';
+export const GET_ALARMDATA = 'get_alarmdata';
+export const GET_STUDY = 'get_study';
+export const GET_PROJECT = 'get_project';
+export const AUTH = 'auth';
 
 // project
 export const GET_PROJECT_LIST = 'get_proejct_list';
@@ -32,7 +38,7 @@ export const DELETE_PROJECT = 'delete_project';
 export const GET_PROJECT_DETAIL = 'get_project_detail';
 export const UPDATE_PROJECT = 'update_project';
 export const JOIN_PROJECT = 'join_project';
-export const GET_RESPONSE_PROJECT = 'get_response_project';
+export const GET_PROJECT_RESPONSE = 'get_project_response';
 export const ANSWER_PROJECT_RESPONSE = 'answer_project_response';
 
 // study
@@ -42,13 +48,13 @@ export const DELETE_STUDY = 'delete_study';
 export const GET_STUDY_DETAIL = 'get_study_detail';
 export const UPDATE_STUDY = 'update_study';
 export const JOIN_STUDY = 'join_study';
-export const GET_RESPONSE_STUDY = 'get_response_study';
+export const GET_STUDY_RESPONSE = 'get_study_response';
 export const ANSWER_STUDY_RESPONSE = 'answer_study_response';
+export const GET_POSITION_LIST = 'get_position_list';
 
 // team
 export const GET_TECH_LIST = 'get_tech_list';
-export const GET_POSITION_LIST = 'get_position_list';
-export const CHANGE_TEAM_STATE = 'change_project_state';
+export const CHANGE_TEAM_STATE = 'change_team_state';
 
 //
 export const GET_ALARMLIST = 'get_alarm_list';

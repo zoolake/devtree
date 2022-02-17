@@ -58,7 +58,7 @@ export default function LoginForm() {
           .then((response) => {
             if (response) {
               window.location.reload();
-              document.location.assign('/');
+              document.location.assign('/Mainpage/app');
             } else {
               setFormErrorMessage('아이디 또는 비밀번호를 확인해주세요.');
               Swal.fire('실패', '아이디 또는 비밀번호를 확인해주세요.', 'error');

@@ -13,6 +13,12 @@ import {
   UPDATE_MENTOR
 } from './types';
 
+// 멘토 기술별 조회
+export function mentorTechGet(dataToSubmit) {
+  const request = axios.post(`/mentor/tech`, dataToSubmit).then((response) => response.data);
+  return { type: GET_MENTORS, payload: request };
+}
+
 // 멘티 - 팀별 멘토링 신청 내역 조회
 export function mymentorProfile() {
   const request = axios.get(`/user/mentor`).then((response) => response.data);

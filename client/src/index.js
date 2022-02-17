@@ -14,6 +14,8 @@ import App from './App';
 // ----------------------------------------------------------------------
 const createStoreWithMiddleware = applyMiddleware(promiseMiddleware, ReduxThunk)(createStore);
 setAuthorizationToken(localStorage.user);
+window.onerror = () => false;
+window.onunhandledrejection = () => false;
 ReactDOM.render(
   <HelmetProvider>
     <Provider

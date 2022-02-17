@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 //
-import { Card, CardContent, Typography, Stack, Avatar } from '@mui/material';
+import { Card, CardContent, Typography, Stack, Avatar, Chip } from '@mui/material';
 //
 import MyProgress from '../MyProgress';
 import { TechImgAvatar } from '../../../utils/mockImages';
@@ -24,6 +24,7 @@ export default function StudyListCard({ study }) {
     if (study.teamTech.length < 6) {
       return study.teamTech.map((tech) => (
         <Avatar
+          key={tech.techSeq}
           variant="caption"
           sx={{ border: '1px solid #efefef', width: '50px', height: '50px' }}
           src={TechImgAvatar(tech.techSeq)}
@@ -34,6 +35,7 @@ export default function StudyListCard({ study }) {
       .slice(6)
       .map((tech) => (
         <Avatar
+          key={tech.techSeq}
           variant="caption"
           sx={{ border: '1px solid #efefef', width: '50px', height: '50px' }}
           src={TechImgAvatar(tech.techSeq)}
@@ -50,24 +52,12 @@ export default function StudyListCard({ study }) {
   };
   const showState = () => {
     if (study.teamState === 'RECRUIT') {
-      return (
-        <Typography sx={{ fontWeight: 'bold' }} color="blue">
-          {getStateName()}
-        </Typography>
-      );
+      return <Chip color="info" label={getStateName()} />;
     }
     if (study.teamState === 'COMPLETED') {
-      return (
-        <Typography sx={{ fontWeight: 'bold' }} color="primary">
-          {getStateName()}
-        </Typography>
-      );
+      return <Chip color="primary" label={getStateName()} />;
     }
-    return (
-      <Typography sx={{ fontWeight: 'bold' }} color="red">
-        {getStateName()}
-      </Typography>
-    );
+    return <Chip color="error" label={getStateName()} />;
   };
   const showMember = () => {
     if (Object.keys(study).includes('teamRecruitCnt')) {
@@ -80,7 +70,7 @@ export default function StudyListCard({ study }) {
     return null;
   };
   // PAGE
-  // if (!study.teamTech) return <MyProgress />;
+  if (!study.teamTech) return <MyProgress />;
   return (
     <ul>
       <Card

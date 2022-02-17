@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 //
-import { Avatar, Card, CardContent, Typography, Stack } from '@mui/material';
+import { Avatar, Card, CardContent, Typography, Stack, Chip } from '@mui/material';
 import { TechImgAvatar } from '../../../utils/mockImages';
 import MyProgress from '../MyProgress';
 
@@ -23,6 +23,7 @@ export default function ProjectListCard({ project }) {
     if (project.teamTech.length < 6) {
       return project.teamTech.map((tech) => (
         <Avatar
+          key={tech.techSeq}
           variant="caption"
           sx={{ border: '1px solid #efefef', width: '50px', height: '50px' }}
           src={TechImgAvatar(tech.techSeq)}
@@ -33,6 +34,7 @@ export default function ProjectListCard({ project }) {
       .slice(6)
       .map((tech) => (
         <Avatar
+          key={tech.techSeq}
           variant="caption"
           sx={{ border: '1px solid #efefef', width: '50px', height: '50px' }}
           src={TechImgAvatar(tech.techSeq)}
@@ -49,12 +51,12 @@ export default function ProjectListCard({ project }) {
   };
   const showState = () => {
     if (project.teamState === 'RECRUIT') {
-      return <Typography color="blue">{getStateName()}</Typography>;
+      return <Chip color="info" label={getStateName()} />;
     }
     if (project.teamState === 'COMPLETED') {
-      return <Typography color="primary">{getStateName()}</Typography>;
+      return <Chip color="primary" label={getStateName()} />;
     }
-    return <Typography color="red">{getStateName()}</Typography>;
+    return <Chip color="error" label={getStateName()} />;
   };
 
   // PAGE

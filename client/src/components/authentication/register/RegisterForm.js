@@ -46,7 +46,9 @@ export default function RegisterForm(props) {
           }
         })
       }),
-    userName: Yup.string(),
+    userName: Yup.string()
+      .min(2, '이름은 2자 이상이여야 합니다.')
+      .max(10, '이름은 10자 이하이여야 합니다.'),
     userEmail: Yup.string()
       .email('올바르지 않은 이메일입니다.')
       .required('이메일은 필수 값 입니다.'),

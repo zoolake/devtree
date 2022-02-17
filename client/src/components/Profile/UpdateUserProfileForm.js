@@ -1,11 +1,11 @@
-import * as Yup from 'yup';
+import PropTypes from 'prop-types';
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import makeAnimated from 'react-select/animated';
-import { useFormik, Form, FormikProvider } from 'formik';
 import Select from 'react-select';
-import PropTypes from 'prop-types';
 //
+import * as Yup from 'yup';
+import { useFormik, Form, FormikProvider } from 'formik';
 import {
   TextField,
   Divider,
@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 //
-import { detailUser, updateUser, getTech } from '../../_actions/user_actions';
+import { updateUser, getTech } from '../../_actions/user_actions';
 import MyProgress from '../_dashboard/MyProgress';
 import { MyProfile } from '.';
 
@@ -26,52 +26,40 @@ const animatedComponents = makeAnimated();
 
 UpdateUserProfileForm.propTypes = {
   setIsUpdate: PropTypes.func.isRequired,
-  isUpdate: PropTypes.bool
+  isUpdate: PropTypes.bool,
+  userDetail: PropTypes.object.isRequired,
+  myTechs: PropTypes.array.isRequired,
+  getUserDetail: PropTypes.func
 };
 
-export default function UpdateUserProfileForm({ setIsUpdate, isUpdate }) {
-  const [visible, setVisible] = useState(false);
-  const [users, setUsers] = useState(null);
+export default function UpdateUserProfileForm({
+  setIsUpdate,
+  isUpdate,
+  userDetail,
+  myTechs,
+  getUserDetail
+}) {
+  console.log(myTechs);
   const [loading, setLoading] = useState(false);
-  const [opti, setOptions] = useState([]);
+  const [techOption, setTechOption] = useState([]);
   const dispatch = useDispatch();
 
   // INIT
-  const userDetail = async () => {
-    setUsers(null);
-    // loading 상태를 true 로 바꿉니다.
+  const getAllTech = () => {
     setLoading(true);
-    await dispatch(detailUser())
-      .then((response) => {
-        if (response) {
-          console.log(response.payload.data.user);
-          setUsers(response.payload.data.user);
-          const data = response.payload.data.tech;
-          const all = data.reduce((total, data) => {
-            total = [...total, { value: data.techSeq, label: data.techName }];
-            return total;
-          }, []);
-          setValue(all);
-        }
-      })
-      .catch(() => {
-        setTimeout(() => {}, 3000);
-      });
-    setLoading(false);
-  };
-  const techGet = () => {
     dispatch(getTech())
       .then((response) => {
-        const data = response.payload;
-        const all = data.reduce((total, data) => {
-          total = [...total, { value: data.techSeq, label: data.techName }];
+        const techData = response.payload;
+        const allTechs = techData.reduce((total, tech) => {
+          total = [...total, { value: tech.techSeq, label: tech.techName }];
           return total;
         }, []);
-        setOptions(all);
+        setTechOption(allTechs);
       })
       .catch((err) => {
-        console.log(err, '에러');
+        console.log(err);
       });
+    setLoading(false);
   };
 
   // FORM
@@ -90,26 +78,28 @@ export default function UpdateUserProfileForm({ setIsUpdate, isUpdate }) {
         .concat(values.filter((v) => !v.isFixed).sort(orderByLabel)),
     [orderByLabel]
   );
-  const [value, setValue] = useState(orderOptions(opti));
+  const [myTech, setMyTech] = useState(myTechs); // myTechs
+  // setMyTech(myTechs);
   const ProfileSchema = Yup.object().shape({
     userName: Yup.string()
       .min(2, '이름은 2자 이상이여야 합니다.')
       .max(10, '이름은 10자 이하이여야 합니다.'),
     userEmail: Yup.string().email('올바르지 않은 이메일입니다.'),
     userNickname: Yup.string(),
-    userDesc: Yup.string()
+    userDesc: Yup.string().nullable()
   });
   const formik = useFormik({
     initialValues: {
-      userName: '',
-      userEmail: '',
-      userNickname: '',
-      userDesc: ''
+      userName: userDetail.userName,
+      userEmail: userDetail.userEmail,
+      userNickname: userDetail.userNickname,
+      userDesc: userDetail.userDesc
     },
     validationSchema: ProfileSchema,
     onSubmit: (values, { setSubmitting }) => {
+      setLoading(true);
       const resulttech = [];
-      value.forEach((item) => {
+      myTech.forEach((item) => {
         resulttech.push(item.value);
       });
       setTimeout(() => {
@@ -129,23 +119,24 @@ export default function UpdateUserProfileForm({ setIsUpdate, isUpdate }) {
           })
           .then(() => {
             setSubmitting(false);
+            getUserDetail();
             setIsUpdate(!isUpdate);
           });
-      }, 500);
+      }, 1000);
+      setLoading(false);
     }
   });
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
   // RENDER
   useEffect(() => {
-    userDetail();
-    techGet();
+    getAllTech();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // HANDLE
   const isMentor = () => {
-    if (users.userRole === 'USER') {
+    if (userDetail.userRole === 'USER') {
       return (
         <Typography variant="h5" component="div">
           일반
@@ -167,23 +158,23 @@ export default function UpdateUserProfileForm({ setIsUpdate, isUpdate }) {
         case 'remove-value': // delete with 'x'
         case 'pop-value': // delete with backspace
           if (removedValue.isFixed) {
-            setValue(orderOptions([...inputValue, removedValue]));
+            setMyTech(orderOptions([...inputValue, removedValue]));
             return;
           }
           break;
         case 'clear': // clear button is clicked
-          setValue(opti.filter((v) => v.isFixed));
+          setMyTech(techOption.filter((v) => v.isFixed));
           return;
         default:
       }
-      setValue(inputValue);
+      setMyTech(inputValue);
     },
-    [opti, orderOptions]
+    [techOption, orderOptions]
   );
 
   // CONDITIONAL
   if (loading) return <MyProgress />;
-  if (!users) {
+  if (!userDetail) {
     return <MyProfile />;
   }
 
@@ -208,7 +199,7 @@ export default function UpdateUserProfileForm({ setIsUpdate, isUpdate }) {
                     아이디
                   </Typography>
                   <Typography variant="h5" color="primary">
-                    {users.userId}
+                    {userDetail.userId}
                   </Typography>
                 </Stack>
                 <Stack
@@ -223,7 +214,7 @@ export default function UpdateUserProfileForm({ setIsUpdate, isUpdate }) {
                   <TextField
                     {...getFieldProps('userName')}
                     variant="standard"
-                    defaultValue={users.userName}
+                    defaultValue={userDetail.userName}
                     type="text"
                     value={formik.values.userName}
                     error={Boolean(touched.userName && errors.userName)}
@@ -265,7 +256,7 @@ export default function UpdateUserProfileForm({ setIsUpdate, isUpdate }) {
                     {...getFieldProps('userEmail')}
                     variant="standard"
                     type="email"
-                    defaultValue={users.userEmail}
+                    defaultValue={userDetail.userEmail}
                     error={Boolean(touched.userEmail && errors.userEmail)}
                     helperText={touched.userEmail && errors.userEmail}
                   />
@@ -301,7 +292,7 @@ export default function UpdateUserProfileForm({ setIsUpdate, isUpdate }) {
                   multiline
                   fullWidth
                   rows={3}
-                  defaultValue={users.userDesc}
+                  defaultValue={userDetail.userDesc}
                   error={Boolean(touched.userDesc && errors.userDesc)}
                   helperText={touched.userDesc && errors.userDesc}
                 />
@@ -315,14 +306,14 @@ export default function UpdateUserProfileForm({ setIsUpdate, isUpdate }) {
           <Select
             isMulti // show multiple options
             components={animatedComponents} // animate builtin components
-            isClearable={value.some((v) => !v.isFixed)} // clear button shows conditionally
+            isClearable={myTech.some((v) => !v.isFixed)} // clear button shows conditionally
             styles={styles} // styles that do not show 'x' for fixed options
-            options={opti} // all options
-            value={value} // selected values
+            options={techOption} // all options
+            value={myTech} // selected values
             onChange={handleChange} // handler for changes
           />
           <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-            {value.map((tech) => (
+            {myTech.map((tech) => (
               <Typography key={tech.value}>
                 # <span style={{ color: '#00AB55' }}>{tech.label}</span>
               </Typography>

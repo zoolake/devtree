@@ -12,7 +12,8 @@ import {
   Stack,
   Divider,
   Grid,
-  Box
+  Box,
+  Chip
 } from '@mui/material';
 //
 import { getProjectDetail } from '../../_actions/project_actions';
@@ -149,24 +150,12 @@ export default function ProjectDetail() {
   };
   const showState = () => {
     if (projectDetail.teamState === 'RECRUIT') {
-      return (
-        <Typography color="blue" variant="h6">
-          {getStateName()}
-        </Typography>
-      );
+      return <Chip color="info" label={getStateName()} />;
     }
     if (projectDetail.teamState === 'COMPLETED') {
-      return (
-        <Typography color="primary" variant="h6">
-          {getStateName()}
-        </Typography>
-      );
+      return <Chip color="primary" label={getStateName()} />;
     }
-    return (
-      <Typography color="red" variant="h6">
-        {getStateName()}
-      </Typography>
-    );
+    return <Chip color="error" label={getStateName()} />;
   };
   const showDate = (dateData) => {
     if (dateData) {

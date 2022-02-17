@@ -26,7 +26,6 @@ ProjectUpdateForm.propTypes = {
 };
 
 export default function ProjectUpdateForm({ projectDetail }) {
-  console.log(projectDetail);
   // STATE
   const teamSeq = useParams().id;
   const navigate = useNavigate();

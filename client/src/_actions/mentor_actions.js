@@ -15,7 +15,7 @@ import {
 
 // 멘토 기술별 조회
 export function mentorTechGet(dataToSubmit) {
-  const request = axios.post(`/mentor/tech`, dataToSubmit).then((response) => response.data);
+  const request = axios.post(`/v1/mentor/tech`, dataToSubmit).then((response) => response.data);
   return { type: GET_MENTORS, payload: request };
 }
 

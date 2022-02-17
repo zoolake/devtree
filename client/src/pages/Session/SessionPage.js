@@ -105,16 +105,16 @@ class SessionPage extends Component {
         this.changeSessionState();
         this.quitSession(); // 백엔드의 세션 관련 데이터들을 먼저 정리해준다.
         this.handlerLeaveSessionEvent();
-        axios
-          .post(`/mentoring/state/${this.state.mentoringSeq}`)
-          .then((response) => {
-            if (response) {
-              console.log('멘토링 상태 전환 -> 종료');
-            }
-          })
-          .catch((err) => {
-            setTimeout(() => {}, 3000);
-          });
+        // axios
+        //   .post(`/v1/mentoring/state/${this.state.mentoringSeq}`)
+        //   .then((response) => {
+        //     if (response) {
+        //       console.log('멘토링 상태 전환 -> 종료');
+        //     }
+        //   })
+        //   .catch((err) => {
+        //     setTimeout(() => {}, 3000);
+        //   });
 
         document.location.assign('/');
       }

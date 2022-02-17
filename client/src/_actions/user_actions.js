@@ -20,7 +20,7 @@ import setAuthorizationToken from '../utils/setAuthorizationToken';
 // 멘토 이메일인증하기
 export function authCode(dataToSubmit) {
   const request = axios
-    .post(`/user/mentor/verification/confirm`, dataToSubmit)
+    .post(`/v1/user/mentor/verification/confirm`, dataToSubmit)
     .then((response) => response.data.data);
   return {
     type: GET_TECH,
@@ -31,7 +31,7 @@ export function authCode(dataToSubmit) {
 // 멘토 이메일인증하기
 export function emailAuth(dataToSubmit) {
   const request = axios
-    .post(`/user/mentor/verification`, dataToSubmit)
+    .post(`/v1/user/mentor/verification`, dataToSubmit)
     .then((response) => response.data.data);
   return {
     type: GET_TECH,

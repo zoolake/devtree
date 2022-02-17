@@ -30,7 +30,6 @@ let token = localStorage.getItem('user') || '로그인 하기';
 let a;
 if (localStorage.getItem('user')) {
   token = `${jwtdecode(localStorage.getItem('user')).sub}님`;
-  console.log();
   a = '/profile/menu';
 } else {
   a = '/login';
@@ -94,10 +93,14 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         <Link underline="none" component={RouterLink} to={a}>
           <AccountStyle>
             <Avatar src={RoleImgAvatar(avatarname)} />
-            <Box sx={{ ml: 2 }}>
+            <Box sx={{ ml: 2, width: '75%' }}>
               {avatarname === 'MENTOR' && <div>멘토</div>}
-              {avatarname === 'USER' && <div>일반유저</div>}
-              <Typography variant="subtitle2" sx={{ color: 'text.primary', fontSize: '20px' }}>
+              {avatarname === 'USER' && <div>일반</div>}
+              <Typography
+                variant="subtitle2"
+                sx={{ color: 'text.primary', fontSize: '20px' }}
+                noWrap
+              >
                 {token}
               </Typography>
               <Typography variant="body2" sx={{ color: 'white' }}>

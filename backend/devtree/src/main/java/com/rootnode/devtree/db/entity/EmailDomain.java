@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum EmailDomain {
     naver("naver.com"),
-    google("google.com");
+    google("gmail.com");
 
     private String address;
 

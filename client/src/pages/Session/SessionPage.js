@@ -48,6 +48,7 @@ class SessionPage extends Component {
           userId: data.userId,
           userRole: data.userRole,
           teamName: data.teamName,
+          userSeq: data.userSeq,
           session: true
         });
       });

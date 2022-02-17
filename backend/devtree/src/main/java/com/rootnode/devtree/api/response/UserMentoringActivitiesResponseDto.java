@@ -13,6 +13,7 @@ import java.time.LocalTime;
 @Getter
 @NoArgsConstructor
 public class UserMentoringActivitiesResponseDto {
+    private Long mentoringSeq;
     private Long mentorSeq;
     private String mentorNickName;
     private Long teamSeq;
@@ -25,6 +26,7 @@ public class UserMentoringActivitiesResponseDto {
     private String mentoringApplicationComment;
 
     public UserMentoringActivitiesResponseDto(Mentoring mentoring, TeamType teamType, String teamName) {
+        this.mentoringSeq = mentoring.getMentoringSeq();
         this.mentorSeq = mentoring.getMentor().getMentorSeq();
         this.mentorNickName = mentoring.getMentor().getUser().getUserNickname();
         this.teamSeq = mentoring.getTeam().getTeamSeq();

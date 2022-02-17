@@ -197,7 +197,7 @@ export function checkTeamMember(teamSeq) {
 }
 
 export function getMyStudyCnt() {
-  const request = axios.get('/user/study/count').then((response) => response);
+  const request = axios.get('/v1/user/study/count').then((response) => response);
   return {
     type: GET_MY_STUDY_CNT,
     payload: request
@@ -205,7 +205,7 @@ export function getMyStudyCnt() {
 }
 
 export function getMyProjectCnt() {
-  const request = axios.get('/user/project/count').then((response) => response);
+  const request = axios.get('/v1/user/project/count').then((response) => response);
   return {
     type: GET_MY_PROJECT_CNT,
     payload: request

@@ -229,16 +229,5 @@ public class MentorApiController {
     public CommonResponseDto mentoringApplyResponse(@PathVariable Long mentoringSeq) {
         return mentorService.changeMentoringState(mentoringSeq);
     }
-
-
-
-    @Data
-    @AllArgsConstructor
-    @Builder
-    static class Result<T> {
-        private T data;
-        private int status;
-        private String message;
-    }
 }
 

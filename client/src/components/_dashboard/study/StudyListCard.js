@@ -3,6 +3,8 @@ import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 //
 import { Card, CardContent, Typography, Stack } from '@mui/material';
+//
+import MyProgress from '../MyProgress';
 
 StudyListCard.propTypes = {
   study: PropTypes.object.isRequired
@@ -52,9 +54,18 @@ export default function StudyListCard({ study }) {
       </Typography>
     );
   };
-
+  const showMember = () => {
+    if (Object.keys(study).includes('teamRecruitCnt')) {
+      return (
+        <Typography color="text.secondary">
+          {study.teamMemberCnt}/{study.teamRecruitCnt}
+        </Typography>
+      );
+    }
+    return null;
+  };
   // PAGE
-  if (!study.teamTech) return <div>'로딩 중'</div>;
+  if (!study.teamTech) return <MyProgress />;
   return (
     <ul>
       <Card
@@ -81,7 +92,7 @@ export default function StudyListCard({ study }) {
                 variant="h4"
                 color="primary"
                 noWrap
-                to={`${study.teamSeq}`}
+                to={`/study/${study.teamSeq}`}
                 component={RouterLink}
                 style={{ textDecoration: 'none' }}
                 sx={{ width: '40%', textOverflow: 'ellipsis' }}
@@ -107,9 +118,7 @@ export default function StudyListCard({ study }) {
               <Typography color="text.secondary" variant="subtitle1">
                 {study.teamManagerName}
               </Typography>
-              <Typography color="text.secondary">
-                {study.teamMemberCnt}/{study.teamRecruitCnt}
-              </Typography>
+              {showMember()}
               {showState()}
             </Stack>
           </Stack>

@@ -1,3 +1,4 @@
+// user
 export const LOGIN_USER = 'login_user';
 export const REGISTER_USER = 'register_user';
 export const AUTH_USER = 'auth_user';
@@ -21,6 +22,8 @@ export const GET_RESERVEDLIST = 'get_reservedlist';
 export const GET_MENTORINGLIST = 'get_mentoringlist';
 export const GET_RANK = 'get_rank';
 export const CHECK_TEAM_MEMBER = 'check_team_member';
+export const GET_MY_STUDY_CNT = 'get_my_study_cnt';
+export const GET_MY_PROJECT_CNT = 'get_my_project_cnt';
 
 // project
 export const GET_PROJECT_LIST = 'get_proejct_list';

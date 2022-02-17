@@ -9,11 +9,13 @@ StudyList.propTypes = {
 
 export default function StudyList({ studyList }) {
   // CONDITIONAL
-  if (studyList.length === 0)
+  if (!studyList)
     return (
-      <Typography variant="h3" color="primary" sx={{ mt: 30, ml: 40 }}>
-        생성된 스터디가 없습니다.
-      </Typography>
+      <Container>
+        <Typography variant="h3" color="primary" sx={{ mt: '10%', ml: '20%' }}>
+          참가한 스터디가 없습니다.
+        </Typography>
+      </Container>
     );
 
   // PAGE

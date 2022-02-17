@@ -8,11 +8,8 @@ import { detailUser, getTech } from '../../_actions/user_actions';
 import MyProgress from '../_dashboard/MyProgress';
 import { MyProfile } from '.';
 
-const animatedComponents = makeAnimated();
-
 export default function GetUserProfile() {
   // STATE
-  const [visible, setVisible] = useState(false);
   const [users, setUsers] = useState(null);
   const [loading, setLoading] = useState(false);
   const [opti, setOptions] = useState([]);

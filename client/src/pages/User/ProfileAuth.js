@@ -12,13 +12,9 @@ import {
   MentoringStack,
   MentoringTime,
   ProjectChart,
-  ProjectList,
   StudyChart,
-  StudyList,
-  UserStack,
-  MentorProfile,
-  UserProfile,
-  PasswordUpdate,
+  UserStudyList,
+  UserProjectList,
   MentorAuth,
   AlarmList,
   MenteeMentoringList
@@ -37,13 +33,13 @@ const Tab = [
     content: (
       <Grid container spacing={1}>
         <Grid item xs={12} md={6} lg={12}>
-          <StudyList />
+          <UserStudyList />
         </Grid>
         <Grid item xs={12} md={6} lg={12}>
           <StudyChart />
         </Grid>
         <Grid item xs={12} md={6} lg={12}>
-          <ProjectList />
+          <UserProjectList />
         </Grid>
         <Grid item xs={12} md={6} lg={12}>
           <ProjectChart />

@@ -125,11 +125,11 @@ export default function Router() {
           path: 'menu',
           element: <Profile />
         },
-        { path: 'alarm', element: <ProfileAlarm /> },
         { path: 'study', element: <ProfileStudy /> },
         { path: 'project', element: <ProfileProject /> },
         { path: 'mentoring', element: <ProfileMentoring /> },
-        { path: 'auth', element: <ProfileAuth /> }
+        { path: 'auth', element: <ProfileAuth /> },
+        { path: 'alarm', element: <ProfileAlarm /> }
       ]
     },
     {

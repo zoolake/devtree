@@ -34,7 +34,7 @@ import {
   getMentoringlist,
   rejectMentoring,
   acceptMentoring,
-  createSession
+  changeState
 } from '../../_actions/mentor_actions';
 // ----------------------------------------------------------------------
 
@@ -169,7 +169,6 @@ export default function MentoringList() {
       mentoringSeq: event.target.id,
       responseType: 'ACCEPT'
     };
-    console.log('이얏호웅');
     console.log(dataToSubmit);
     Swal.fire({
       title: '멘토링 수락',
@@ -228,7 +227,7 @@ export default function MentoringList() {
     const dataToSubmit = {
       mentoringSeq: event.target.id
     };
-    dispatch(createSession(dataToSubmit))
+    dispatch(changeState(dataToSubmit))
       .then((response) => {
         if (response) {
           console.log(response);

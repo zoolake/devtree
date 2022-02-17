@@ -7,6 +7,7 @@ import eyeFill from '@iconify/icons-eva/eye-fill';
 import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import { Cookies } from 'react-cookie';
 // material
 import {
@@ -60,9 +61,11 @@ export default function LoginForm() {
               document.location.assign('/');
             } else {
               setFormErrorMessage('아이디 또는 비밀번호를 확인해주세요.');
+              Swal.fire('실패', '아이디 또는 비밀번호를 확인해주세요.', 'error');
             }
           })
           .catch((err) => {
+            Swal.fire('실패', '아이디 또는 비밀번호를 확인해주세요.', 'error');
             setFormErrorMessage('아이디 또는 비밀번호를 확인해주세요.');
             setTimeout(() => {
               setFormErrorMessage('');

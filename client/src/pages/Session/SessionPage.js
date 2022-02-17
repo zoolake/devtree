@@ -1,6 +1,7 @@
 import { Link as RouterLink } from 'react-router-dom';
 import ReactDOM from 'react-dom';
 import React, { Component } from 'react';
+import { useDispatch } from 'react-redux';
 // material
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
@@ -98,10 +99,23 @@ class SessionPage extends Component {
           .then(() => {
             this.quitSession(); // 백엔드의 세션 관련 데이터들을 먼저 정리해준다.
             this.handlerLeaveSessionEvent();
+            document.location.assign('/');
           });
       } else {
         this.quitSession(); // 백엔드의 세션 관련 데이터들을 먼저 정리해준다.
         this.handlerLeaveSessionEvent();
+        axios
+          .post(`/mentoring/state/${this.state.mentoringSeq}`)
+          .then((response) => {
+            if (response) {
+              console.log('멘토링 상태 전환 -> 종료');
+            }
+          })
+          .catch((err) => {
+            setTimeout(() => {}, 3000);
+          });
+
+        document.location.assign('/');
       }
     }
   }

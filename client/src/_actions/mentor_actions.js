@@ -25,8 +25,8 @@ export function menteementoring() {
   return { type: GET_MENTORINGLIST, payload: request };
 }
 
-// 멘토 - 멘토링 세션 생성
-export function createSession(dataToSubmit) {
+// 멘토 - 멘토링 세션 생성, 종료
+export function changeState(dataToSubmit) {
   const request = axios
     .get(`/mentoring/state/${dataToSubmit.mentoringSeq}`, dataToSubmit)
     .then((response) => response.data);

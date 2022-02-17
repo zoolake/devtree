@@ -31,7 +31,7 @@ let a;
 if (localStorage.getItem('user')) {
   token = `${jwtdecode(localStorage.getItem('user')).sub}님`;
   console.log();
-  a = '/MainPage/profile';
+  a = '/profile/menu';
 } else {
   a = '/login';
 }

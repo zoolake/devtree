@@ -28,8 +28,6 @@ export default function AccountPopover() {
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
   let btn;
-  console.log(jwtdecode(localStorage.getItem('user')));
-  const token = jwtdecode(localStorage.getItem('user')).userRole;
   const MENU_OPTIONS_SIGNED = [
     {
       label: 'Home',
@@ -39,7 +37,7 @@ export default function AccountPopover() {
     {
       label: 'Profile',
       icon: personFill,
-      linkTo: '/MainPage/profile/MainPage/profile'
+      linkTo: '/profile/menu'
     }
   ];
 
@@ -53,24 +51,6 @@ export default function AccountPopover() {
       label: 'SignUp',
       icon: personFill,
       linkTo: '/Register'
-    }
-  ];
-
-  const MENU_OPTIONS_MENTOR = [
-    {
-      label: 'Home',
-      icon: homeFill,
-      linkTo: '/'
-    },
-    {
-      label: 'Profile',
-      icon: personFill,
-      linkTo: '/profile/menu'
-    },
-    {
-      label: 'Mentor',
-      icon: settings2Fill,
-      linkTo: `/mentorprofile/${jwtdecode(localStorage.getItem('user')).userSeq}`
     }
   ];
 
@@ -103,7 +83,23 @@ export default function AccountPopover() {
   let MENU_OPTIONS;
   if (localStorage.getItem('user')) {
     if (jwtdecode(localStorage.getItem('user')).userRole === 'MENTOR') {
-      MENU_OPTIONS = MENU_OPTIONS_MENTOR;
+      MENU_OPTIONS = [
+        {
+          label: 'Home',
+          icon: homeFill,
+          linkTo: '/'
+        },
+        {
+          label: 'Profile',
+          icon: personFill,
+          linkTo: '/profile/menu'
+        },
+        {
+          label: 'Mentor',
+          icon: settings2Fill,
+          linkTo: `/mentorprofile/${jwtdecode(localStorage.getItem('user')).userSeq}`
+        }
+      ];
     } else {
       MENU_OPTIONS = MENU_OPTIONS_SIGNED;
     }

@@ -230,15 +230,5 @@ public class MentorApiController {
         return mentorService.changeMentoringState(mentoringSeq);
     }
 
-    /**
-     * 기능: 기술 스택 별 멘토 조회
-     */
-    @PostMapping("/v1/mentor/tech")
-    public ResponseEntity<Result> mentorTechList(@RequestBody MentorTechRequestDto requestDto) {
-        List<MentorListResponseDto> responseDto = mentorService.findTechMentors(requestDto);
-        return ResponseEntity
-                .status(200)
-                .body(new Result(responseDto, 200, "기술 스택 별 멘토 목록 조회에 성공하였습니다."));
-    }
 }
 

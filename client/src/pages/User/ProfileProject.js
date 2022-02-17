@@ -51,8 +51,8 @@ export default function ProfileProject() {
         </Box>
         <Box sx={{ width: '80%' }}>
           <Stack direction="column" spacing={4}>
-            <UserProjectList />
             <ProjectChart />
+            <UserProjectList />
           </Stack>
         </Box>
       </Stack>

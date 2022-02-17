@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { Card, Container, Typography, CardContent } from '@mui/material';
 //
 import { getProject } from '../../_actions/user_actions';
-import { ProjectList } from '../_dashboard/projects';
+import { ProjectListCard } from '../_dashboard/projects';
 import MyProgress from '../_dashboard/MyProgress';
 
 export default function UserProjectList() {
@@ -14,40 +14,51 @@ export default function UserProjectList() {
 
   // INIT
   const dispatch = useDispatch();
-  const getProjectList = async () => {
+  const getMyPjtList = async () => {
     setLoading(true);
     dispatch(getProject())
       .then((response) => {
-        if (response) {
+        if (response.payload.data > 0) {
           setMyProjectList(response.payload.data);
+        } else {
+          setMyProjectList(false);
         }
       })
-      .then(() => {
-        setLoading(false);
-      })
-      .catch(() => {
+      .catch((err) => {
         setTimeout(() => {}, 3000);
+        console.log(err, '나의 프로젝트 받아오기 실패');
       });
+    setLoading(false);
   };
 
   // RENDER
   useEffect(() => {
-    getProjectList();
+    getMyPjtList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // CONDITIONAL
-  if (loading) return <MyProgress />;
-
-  // PAGE
+  // CONDITIONAL PAGE
+  const showEachPjt = () => {
+    if (loading) {
+      return <MyProgress />;
+    }
+    if (!myProjectList) {
+      return (
+        <Typography variant="h3" color="primary" sx={{ mt: '10%', ml: '30%' }}>
+          프로젝트가 없습니다.
+        </Typography>
+      );
+    }
+    return myProjectList.map((pjt) => <ProjectListCard key={pjt.teamSeq} project={pjt} />);
+  };
   return (
-    <Container>
+    <Container fixed>
       <Card sx={{ minWidth: 275, minHeight: 250 }}>
         <CardContent>
           <Typography sx={{ fontSize: 14, mb: 5 }} color="primary" gutterBottom>
             프로젝트 내역
           </Typography>
-          <ProjectList projectList={myProjectList} />
+          {showEachPjt()}
         </CardContent>
       </Card>
     </Container>

@@ -49,8 +49,8 @@ export default function ProfileStudy() {
         </Box>
         <Box sx={{ width: '80%' }}>
           <Stack direction="column" spacing={4}>
-            <UserStudyList />
             <StudyChart />
+            <UserStudyList />
           </Stack>
         </Box>
       </Stack>

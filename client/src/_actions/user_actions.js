@@ -1,5 +1,15 @@
 import axios from 'axios';
 import {
+  AUTH_CODE,
+  EMAIL_AUTH,
+  GET_ALARMDATA,
+  GET_ALARMLIST,
+  GET_RANK,
+  GET_STUDY,
+  GET_PROJECT,
+  GET_TECH,
+  UPDATE_USER,
+  DELETE_USER,
   LOGIN_USER,
   REGISTER_USER,
   AUTH_USER,
@@ -7,12 +17,7 @@ import {
   IDCHECK_USER,
   DETAIL_USER,
   PASSWORD_UPDATE,
-  DELETE_USER,
-  UPDATE_USER,
-  GET_RANK,
-  GET_ALARMLIST,
   CHECK_TEAM_MEMBER,
-  GET_TECH,
   GET_MY_STUDY_CNT,
   GET_MY_PROJECT_CNT
 } from './types';
@@ -25,7 +30,7 @@ export function authCode(dataToSubmit) {
     .post(`/user/mentor/verification/confirm`, dataToSubmit)
     .then((response) => response.data.data);
   return {
-    type: GET_TECH,
+    type: AUTH_CODE,
     payload: request
   };
 }
@@ -36,7 +41,7 @@ export function emailAuth(dataToSubmit) {
     .post(`/user/mentor/verification`, dataToSubmit)
     .then((response) => response.data.data);
   return {
-    type: GET_TECH,
+    type: EMAIL_AUTH,
     payload: request
   };
 }
@@ -47,7 +52,7 @@ export function getAlarmdata(notificationSeq) {
     .get(`/user/notification/${notificationSeq}`)
     .then((response) => response.data);
 
-  return { type: GET_ALARMLIST, payload: request };
+  return { type: GET_ALARMDATA, payload: request };
 }
 
 // 알림 페이지 데이터 불러오기
@@ -67,13 +72,13 @@ export function getRank() {
 export function getStudy() {
   const request = axios.get(`/user/study`).then((response) => response.data);
 
-  return { type: UPDATE_USER, payload: request };
+  return { type: GET_STUDY, payload: request };
 }
 
 // 나의 프로젝트 정보 모아보기
 export function getProject() {
   const request = axios.get(`/user/project`).then((response) => response.data);
-  return { type: UPDATE_USER, payload: request };
+  return { type: GET_PROJECT, payload: request };
 }
 
 // 기술스택 가져오기
@@ -121,7 +126,6 @@ export function passwordUpdate(dataToSubmit) {
 // 회원가입하기
 // 연결완료, 매칭확인
 export function registerUser(dataToSubmit) {
-  console.log(dataToSubmit);
   const request = axios.post(`/user/signup`, dataToSubmit).then((response) => response.data);
 
   return {
@@ -134,7 +138,6 @@ export function registerUser(dataToSubmit) {
 // 연결완료, 매칭 더 필요
 export function detailUser() {
   const request = axios.get(`/user`).then((response) => response.data);
-  console.log(request);
   return {
     type: DETAIL_USER,
     payload: request

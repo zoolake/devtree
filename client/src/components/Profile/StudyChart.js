@@ -58,35 +58,52 @@ export default function StudyChart() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // OPTIONS
-  const CHART_DATA = myStudyCnt.map((tech) => tech.techCount);
-  const chartOptions = merge(BaseOptionChart(), {
-    colors: [
-      theme.palette.primary.main,
-      theme.palette.info.main,
-      theme.palette.warning.main,
-      theme.palette.error.main
-    ],
-    labels: myStudyCnt.map((tech) => tech.techName),
-    stroke: { colors: [theme.palette.background.paper] },
-    legend: { floating: true, horizontalAlign: 'center' },
-    dataLabels: { enabled: true, dropShadow: { enabled: false } },
-    tooltip: {
-      fillSeriesColor: false,
-      y: {
-        formatter: (seriesName) => fNumber(seriesName),
-        title: {
-          formatter: (seriesName) => `#${seriesName}`
-        }
-      }
-    },
-    plotOptions: {
-      pie: { donut: { labels: { show: false } } }
-    }
-  });
-
+  // CONDITIONAL
   if (loading) {
     return <MyProgress />;
+  }
+
+  // OPTIONS
+  if (myStudyCnt.length !== 0) {
+    const CHART_DATA = myStudyCnt.map((tech) => tech.techCount);
+    const chartOptions = merge(BaseOptionChart(), {
+      colors: [
+        theme.palette.primary.main,
+        theme.palette.info.main,
+        theme.palette.warning.main,
+        theme.palette.error.main
+      ],
+      labels: myStudyCnt.map((tech) => tech.techName),
+      stroke: { colors: [theme.palette.background.paper] },
+      legend: { floating: true, horizontalAlign: 'center' },
+      dataLabels: { enabled: true, dropShadow: { enabled: false } },
+      tooltip: {
+        fillSeriesColor: false,
+        y: {
+          formatter: (seriesName) => fNumber(seriesName),
+          title: {
+            formatter: (seriesName) => `#${seriesName}`
+          }
+        }
+      },
+      plotOptions: {
+        pie: { donut: { labels: { show: false } } }
+      }
+    });
+    return (
+      <Container>
+        <Card sx={{ minWidth: 275 }}>
+          <CardContent>
+            <Typography sx={{ fontSize: 14, mb: 5 }} color="primary" gutterBottom>
+              프로젝트 기록
+            </Typography>
+            <ChartWrapperStyle dir="ltr">
+              <ReactApexChart type="pie" series={CHART_DATA} options={chartOptions} height={280} />
+            </ChartWrapperStyle>
+          </CardContent>
+        </Card>
+      </Container>
+    );
   }
 
   return (
@@ -96,9 +113,9 @@ export default function StudyChart() {
           <Typography sx={{ fontSize: 14, mb: 5 }} color="primary" gutterBottom>
             스터디 기록
           </Typography>
-          <ChartWrapperStyle dir="ltr">
-            <ReactApexChart type="pie" series={CHART_DATA} options={chartOptions} height={280} />
-          </ChartWrapperStyle>
+          <Typography variant="h3" color="primary" sx={{ mt: '10%', ml: '30%' }}>
+            스터디가 없습니다.
+          </Typography>
         </CardContent>
       </Card>
     </Container>

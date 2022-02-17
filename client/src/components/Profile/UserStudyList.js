@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { Card, Container, Typography, CardContent } from '@mui/material';
 //
 import { getStudy } from '../../_actions/user_actions';
-import { StudyList } from '../_dashboard/study';
+import { StudyListCard } from '../_dashboard/study';
 import MyProgress from '../_dashboard/MyProgress';
 
 export default function UserStudyList() {
@@ -18,16 +18,17 @@ export default function UserStudyList() {
     setLoading(true);
     dispatch(getStudy())
       .then((response) => {
-        if (response) {
+        if (response.payload.data > 0) {
           setMyStudyList(response.payload.data);
+        } else {
+          setMyStudyList(false);
         }
       })
-      .then(() => {
-        setLoading(false);
-      })
-      .catch(() => {
+      .catch((err) => {
         setTimeout(() => {}, 3000);
+        console.log(err, '나의 스터디 받아오기 실패');
       });
+    setLoading(false);
   };
 
   // RENDER
@@ -36,18 +37,28 @@ export default function UserStudyList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // CONDITIONAL
-  if (loading) return <MyProgress />;
-
-  // PAGE
+  // CONDITIONAL PAGE
+  const showEachStudy = () => {
+    if (loading) {
+      return <MyProgress />;
+    }
+    if (!myStudyList) {
+      return (
+        <Typography variant="h3" color="primary" sx={{ mt: '10%', ml: '30%' }}>
+          스터디가 없습니다.
+        </Typography>
+      );
+    }
+    return myStudyList.map((pjt) => <StudyListCard key={pjt.teamSeq} project={pjt} />);
+  };
   return (
-    <Container>
+    <Container fixed>
       <Card sx={{ minWidth: 275, minHeight: 250 }}>
         <CardContent>
           <Typography sx={{ fontSize: 14, mb: 5 }} color="primary" gutterBottom>
             스터디 내역
           </Typography>
-          <StudyList studyList={myStudyList} />
+          {showEachStudy()}
         </CardContent>
       </Card>
     </Container>

@@ -3,6 +3,8 @@ import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 //
 import { Card, CardContent, Typography, Stack } from '@mui/material';
+//
+import MyProgress from '../MyProgress';
 
 ProjectListCard.propTypes = {
   project: PropTypes.object.isRequired
@@ -42,7 +44,7 @@ export default function ProjectListCard({ project }) {
   };
 
   // PAGE
-  if (!project.teamTech) return <div>'로딩 중'</div>;
+  if (!project.teamTech) return <MyProgress />;
   return (
     <ul>
       <Card

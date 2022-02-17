@@ -1,24 +1,55 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+//
 import { Container, Typography } from '@mui/material';
+//
+import { getProjectList } from '../../../_actions/project_actions';
 import { ProjectListCard } from '.';
+import MyProgress from '../MyProgress';
 
-ProjectList.propTypes = {
-  pjtList: PropTypes.array.isRequired
-};
+export default function ProjectList() {
+  // STATE
+  const [pjtList, setPjtList] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-export default function ProjectList({ pjtList }) {
-  // CONDITIONAL
-  if (!pjtList)
-    return (
-      <Container>
-        <Typography variant="h3" color="primary" sx={{ mt: '10%', ml: '20%' }}>
-          참가한 프로젝트가 없습니다.
+  // INIT
+  const dispatch = useDispatch();
+  const getPjtList = async () => {
+    setLoading(true);
+    dispatch(getProjectList())
+      .then((response) => {
+        if (response.payload.data.data.length > 0) {
+          setPjtList(response.payload.data.data);
+        } else {
+          setPjtList(false);
+        }
+      })
+      .catch((err) => {
+        setTimeout(() => {}, 3000);
+        console.log(err, '프로젝트 리스트 받아오기 실패');
+      });
+    setLoading(false);
+  };
+
+  // RENDER
+  useEffect(() => {
+    getPjtList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // CONDITIONAL PAGE
+  const showEachPjt = () => {
+    if (loading) {
+      return <MyProgress />;
+    }
+    if (!pjtList) {
+      return (
+        <Typography variant="h3" color="primary" sx={{ mt: '10%', ml: '30%' }}>
+          프로젝트가 없습니다.
         </Typography>
-      </Container>
-    );
-
-  // PAGE
-  const showEachPjt = pjtList.map((pjt) => <ProjectListCard key={pjt.teamSeq} project={pjt} />);
-  return <Container fixed>{showEachPjt}</Container>;
+      );
+    }
+    return pjtList.map((pjt) => <ProjectListCard key={pjt.teamSeq} project={pjt} />);
+  };
+  return <Container fixed>{showEachPjt()}</Container>;
 }

@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import makeAnimated from 'react-select/animated';
 import Select from 'react-select';
 import { useDispatch } from 'react-redux';
-// material
+//
 import { Box, Button, TextField, Divider, CardHeader } from '@mui/material';
-// utils
+//
 import { detailUser, getTech } from '../../_actions/user_actions';
-// ----------------------------------------------------------------------
+import MyProgress from '../_dashboard/MyProgress';
 
 const animatedComponents = makeAnimated();
 
@@ -21,16 +21,13 @@ export default function MyProfile() {
     dispatch(getTech())
       .then((response) => {
         const data = response.payload;
-        console.log(data);
         const all = data.reduce((total, data) => {
           total = [...total, { value: data.techSeq, label: data.techName }];
           return total;
         }, []);
-        console.log(all);
         setOptions(all);
       })
       .catch((err) => {
-        console.log('에러');
         console.log(err);
       });
   };
@@ -62,11 +59,10 @@ export default function MyProfile() {
     userDetail();
     techGet();
     // setValue([{ value: 1, label: 'Java' }]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    console.log(value);
-  }, [value]);
+  useEffect(() => {}, [value]);
 
   const handleChange = useCallback(
     (inputValue, { action, removedValue }) => {
@@ -95,9 +91,6 @@ export default function MyProfile() {
     await dispatch(detailUser())
       .then((response) => {
         if (response) {
-          console.log('test');
-          console.log(response);
-          console.log(response.payload.data.tech);
           const data = response.payload.data.tech;
           const all = data.reduce((total, data) => {
             total = [...total, { value: data.techSeq, label: data.techName }];
@@ -107,7 +100,7 @@ export default function MyProfile() {
           setUsers(response.payload.data.user);
         }
       })
-      .catch((err) => {
+      .catch(() => {
         setTimeout(() => {}, 3000);
       });
     setLoading(false);
@@ -116,7 +109,7 @@ export default function MyProfile() {
   const flag = () => {
     setVisible((e) => !e);
   };
-  if (loading) return <div>로딩중..</div>;
+  if (loading) return <MyProgress />;
   if (!users) {
     return null;
   }

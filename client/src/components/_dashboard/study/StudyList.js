@@ -44,8 +44,8 @@ export default function StudyList() {
     }
     if (!studyList) {
       return (
-        <Typography variant="h3" color="primary" sx={{ mt: '10%', ml: '30%' }}>
-          스터디가 없습니다.
+        <Typography variant="h3" sx={{ mt: '10%', ml: '30%' }}>
+          <span style={{ color: '#00AB55' }}>스터디</span>가 없습니다.
         </Typography>
       );
     }

@@ -69,7 +69,13 @@ export default function MentorCard({ post, index }) {
     <Grid item xs={12} sm={6} md={3}>
       <Card sx={{ position: 'relative', backgourdcolor: 'red' }}>
         <CardMediaStyle>
-          <AvatarStyle alt={mentorNickname} src="/imsi" sx={{ bgcolor: getColour() }} />
+          <AvatarStyle
+            to={`${mentorSeq}`}
+            component={RouterLink}
+            alt={mentorNickname}
+            src="/imsi"
+            sx={{ bgcolor: getColour() }}
+          />
         </CardMediaStyle>
         <CardContent>
           <Typography
@@ -82,10 +88,10 @@ export default function MentorCard({ post, index }) {
           <TitleStyle
             align="center"
             to={`${mentorSeq}`}
+            component={RouterLink}
             color="inherit"
             variant="subtitle2"
             underline="hover"
-            component={RouterLink}
             sx={{ fontSize: '18px' }}
           >
             {mentorNickname}

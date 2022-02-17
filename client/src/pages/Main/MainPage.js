@@ -11,6 +11,7 @@ import {
   AppRankMain,
   AppMentorMain,
   AppNewsUpdate,
+  AppNewsUpdate2,
   AppProjectMain,
   AppOrderTimeline,
   AppCurrentVisits,
@@ -25,7 +26,6 @@ export default function MainPage() {
       <Container maxWidth="xl">
         <Grid container spacing={4}>
           <SliderBanner />
-
           <Grid item xs={12} sm={6} md={3}>
             <Link underline="none" component={RouterLink} to="/project/">
               <AppProjectMain />
@@ -46,11 +46,14 @@ export default function MainPage() {
               <AppRankMain />
             </Link>
           </Grid>
-          <Grid item xs={12} md={6} lg={8}>
+          <Grid item xs={12} md={6} lg={4}>
             <AppNewsUpdate />
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
             <AppOrderTimeline />
+          </Grid>{' '}
+          <Grid item xs={12} md={6} lg={4}>
+            <AppNewsUpdate />
           </Grid>
         </Grid>
       </Container>

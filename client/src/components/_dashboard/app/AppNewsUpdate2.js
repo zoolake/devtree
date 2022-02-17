@@ -1,6 +1,8 @@
 import faker from 'faker';
 import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
 import { Icon } from '@iconify/react';
+import { useDispatch } from 'react-redux';
 import { formatDistance } from 'date-fns';
 import { Link as RouterLink } from 'react-router-dom';
 import arrowIosForwardFill from '@iconify/icons-eva/arrow-ios-forward-fill';
@@ -8,64 +10,68 @@ import arrowIosForwardFill from '@iconify/icons-eva/arrow-ios-forward-fill';
 import { Box, Stack, Link, Card, Button, Divider, Typography, CardHeader } from '@mui/material';
 // utils
 import { mockImgCover } from '../../../utils/mockImages';
+import { getMentors, mentorTechGet } from '../../../_actions/mentor_actions';
 //
 import Scrollbar from '../../Scrollbar';
 
 // ----------------------------------------------------------------------
 
-const NEWS = [...Array(5)].map((_, index) => {
-  const setIndex = index + 1;
-  return {
-    title: faker.name.title(),
-    description: faker.lorem.paragraphs(),
-    image: mockImgCover(setIndex),
-    postedAt: faker.date.soon()
-  };
-});
-
 // ----------------------------------------------------------------------
 
-NewsItem.propTypes = {
-  news: PropTypes.object.isRequired
-};
-
 function NewsItem({ news }) {
-  const { image, title, description, postedAt } = news;
+  const { mentorCareer, mentorNickname } = news;
 
   return (
     <Stack direction="row" alignItems="center" spacing={2}>
       <Box
         component="img"
-        alt={title}
-        src={image}
+        alt={mentorNickname}
+        src={mentorNickname}
         sx={{ width: 48, height: 48, borderRadius: 1.5 }}
       />
       <Box sx={{ minWidth: 240 }}>
         <Link to="#" color="inherit" underline="hover" component={RouterLink}>
           <Typography variant="subtitle2" noWrap>
-            {title}
+            {mentorCareer}
           </Typography>
         </Link>
         <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-          {description}
+          {mentorNickname}
         </Typography>
       </Box>
-      <Typography variant="caption" sx={{ pr: 3, flexShrink: 0, color: 'text.secondary' }}>
-        {formatDistance(postedAt, new Date())}
-      </Typography>
     </Stack>
   );
 }
 
 export default function AppNewsUpdate() {
+  const dispatch = useDispatch();
+  const [mentorlist, setMentorList] = useState([]);
+
+  const getMentorlist = async () => {
+    dispatch(getMentors())
+      .then((response) => {
+        if (response) {
+          console.log(response.payload.data);
+          setMentorList(response.payload.data);
+        }
+      })
+      .catch((err) => {
+        setTimeout(() => {}, 3000);
+      });
+  };
+
+  useEffect(() => {
+    getMentorlist();
+  }, []);
+
   return (
     <Card>
-      <CardHeader title="새로운 프로젝트" />
+      <CardHeader title="새로운 멘토" />
 
       <Scrollbar>
         <Stack spacing={3} sx={{ p: 3, pr: 0 }}>
-          {NEWS.map((news) => (
-            <NewsItem key={news.title} news={news} />
+          {mentorlist.map((post, index) => (
+            <NewsItem key={post.mentorSeq} post={post} index={index} />
           ))}
         </Stack>
       </Scrollbar>
@@ -74,7 +80,7 @@ export default function AppNewsUpdate() {
 
       <Box sx={{ p: 2, textAlign: 'right' }}>
         <Button
-          to="#"
+          to="/mentor"
           size="small"
           color="inherit"
           component={RouterLink}

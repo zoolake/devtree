@@ -18,27 +18,27 @@ import { fDateTime } from '../../../utils/formatTime';
 const TIMELINES = [
   {
     title: '데브트리 서비스 완료',
-    time: faker.date.past(),
+    time: '18 Feb 2022 12:00',
     type: 'order1'
   },
   {
-    title: '테스트',
-    time: faker.date.past(),
+    title: '테스트 작업',
+    time: '16 Feb 2022 12:00',
     type: 'order2'
   },
   {
     title: '개발',
-    time: faker.date.past(),
+    time: '20 Jan 2022 10:00',
     type: 'order3'
   },
   {
     title: '주제 및 방향성 확정',
-    time: faker.date.past(),
+    time: '14 Jan 2022 12:00',
     type: 'order4'
   },
   {
     title: '루트노드팀 팀 설립',
-    time: faker.date.past(),
+    time: '04 Jan 2022 18:53',
     type: 'order5'
   }
 ];

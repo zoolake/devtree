@@ -22,14 +22,15 @@ export default function AppRankMain() {
       <div
         style={{
           backgroundRepeat: 'no-repeat',
-
-          height: '400px',
+          height: '500px',
           background: `url(${item.img})`,
           width: '100%',
-          borderRadius: '40px'
+          borderRadius: '40px',
+          boxShadow: 30
         }}
       >
         {' '}
+        {}
       </div>
     );
   }

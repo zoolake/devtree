@@ -1,66 +1,18 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import makeAnimated from 'react-select/animated';
+import PropTypes from 'prop-types';
 //
 import { Divider, Grid, Box, CardContent, Typography, Stack } from '@mui/material';
 //
-import { detailUser, getTech } from '../../_actions/user_actions';
-import MyProgress from '../_dashboard/MyProgress';
 import { MyProfile } from '.';
 
-export default function GetUserProfile() {
-  // STATE
-  const [users, setUsers] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [opti, setOptions] = useState([]);
-  const [value, setValue] = useState([]);
-  const dispatch = useDispatch();
+GetUserProfile.propTypes = {
+  userDetail: PropTypes.object.isRequired,
+  myTechs: PropTypes.array.isRequired
+};
 
-  // INIT
-  const userDetail = async () => {
-    setLoading(true);
-    await dispatch(detailUser())
-      .then((response) => {
-        if (response) {
-          setUsers(response.payload.data.user);
-          const data = response.payload.data.tech;
-          const all = data.reduce((total, data) => {
-            total = [...total, { value: data.techSeq, label: data.techName }];
-            return total;
-          }, []);
-          setValue(all);
-        }
-      })
-      .catch(() => {
-        setTimeout(() => {}, 3000);
-      });
-    setLoading(false);
-  };
-  const techGet = () => {
-    dispatch(getTech())
-      .then((response) => {
-        const data = response.payload;
-        const all = data.reduce((total, data) => {
-          total = [...total, { value: data.techSeq, label: data.techName }];
-          return total;
-        }, []);
-        setOptions(all);
-      })
-      .catch((err) => {
-        console.log(err, '에러');
-      });
-  };
-
-  // RENDER
-  useEffect(() => {
-    userDetail();
-    techGet();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+export default function GetUserProfile({ userDetail, myTechs }) {
   // HANDLE
   const isMentor = () => {
-    if (users.userRole === 'USER') {
+    if (userDetail.userRole === 'USER') {
       return (
         <Typography variant="h5" component="div">
           일반
@@ -75,10 +27,26 @@ export default function GetUserProfile() {
   };
 
   // CONDITIONAL
-  if (loading) return <MyProgress />;
-  if (!users) {
+  if (!userDetail) {
     return <MyProfile />;
   }
+  const showMyTechs = () => {
+    if (myTechs.length > 0)
+      return (
+        <Stack direction="row" spacing={2}>
+          {myTechs.map((tech) => (
+            <Typography key={tech.value}>
+              # <span style={{ color: '#00AB55' }}>{tech.label}</span>
+            </Typography>
+          ))}
+        </Stack>
+      );
+    return (
+      <Typography variant="subtitle1" color="primary">
+        등록된 관심 기술 스택 없음
+      </Typography>
+    );
+  };
 
   return (
     <CardContent>
@@ -93,7 +61,7 @@ export default function GetUserProfile() {
                 아이디
               </Typography>
               <Typography variant="h5" color="primary">
-                {users.userId}
+                {userDetail.userId}
               </Typography>
             </Stack>
             <Stack direction="row" sx={{ width: '90%' }} justifyContent="flex-start" spacing={3}>
@@ -101,7 +69,7 @@ export default function GetUserProfile() {
                 이름
               </Typography>
               <Typography variant="h5" color="primary">
-                {users.userName}
+                {userDetail.userName}
               </Typography>
             </Stack>
             <Stack direction="row" sx={{ width: '90%' }} justifyContent="flex-start" spacing={3}>
@@ -109,7 +77,7 @@ export default function GetUserProfile() {
                 닉네임
               </Typography>
               <Typography variant="h5" color="primary">
-                {users.userNickname}
+                {userDetail.userNickname}
               </Typography>
             </Stack>
           </Stack>
@@ -121,7 +89,7 @@ export default function GetUserProfile() {
                 이메일
               </Typography>
               <Typography variant="h6" color="primary">
-                {users.userEmail}
+                {userDetail.userEmail}
               </Typography>
             </Stack>
             <Stack direction="row" sx={{ width: '90%' }} justifyContent="flex-start" spacing={3}>
@@ -144,7 +112,7 @@ export default function GetUserProfile() {
         </Grid>
         <Grid item xs={9}>
           <Box sx={{ p: 2, border: '1px solid #00AB55', borderRadius: 2, height: 100 }}>
-            <Typography variant="subtitle2">{users.userDesc}</Typography>
+            <Typography variant="subtitle2">{userDetail.userDesc}</Typography>
           </Box>
         </Grid>
       </Grid>
@@ -152,13 +120,7 @@ export default function GetUserProfile() {
       <Typography variant="h5" sx={{ mb: 3 }}>
         관심 기술 스택
       </Typography>
-      <Stack direction="row" spacing={2}>
-        {value.map((tech) => (
-          <Typography key={tech.value}>
-            # <span style={{ color: '#00AB55' }}>{tech.label}</span>
-          </Typography>
-        ))}
-      </Stack>
+      {showMyTechs()}
     </CardContent>
   );
 }

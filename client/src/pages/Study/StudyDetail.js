@@ -13,7 +13,8 @@ import {
   Button,
   Divider,
   Box,
-  Grid
+  Grid,
+  Chip
 } from '@mui/material';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -184,24 +185,12 @@ export default function StudyDetail() {
   };
   const showState = () => {
     if (studyDetail.teamState === 'RECRUIT') {
-      return (
-        <Typography color="blue" variant="h6">
-          {getStateName()}
-        </Typography>
-      );
+      return <Chip color="info" label={getStateName()} />;
     }
     if (studyDetail.teamState === 'COMPLETED') {
-      return (
-        <Typography color="primary" variant="h6">
-          {getStateName()}
-        </Typography>
-      );
+      return <Chip color="primary" label={getStateName()} />;
     }
-    return (
-      <Typography color="red" variant="h6">
-        {getStateName()}
-      </Typography>
-    );
+    return <Chip color="error" label={getStateName()} />;
   };
   const showDate = (dateData) => {
     if (dateData) {

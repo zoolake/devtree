@@ -15,7 +15,7 @@ import {
   UserStudyList,
   UserProjectList,
   MentorProfile,
-  MentorAuth,
+  UserAuthMentor,
   AlarmList,
   MenteeMentoringList
 } from '../../components/Profile';
@@ -67,7 +67,7 @@ const Tab = [
         </Grid>
       ) : (
         <Grid item xs={12} md={6} lg={8}>
-          <MentorAuth />
+          <UserAuthMentor />
         </Grid>
       )
   },

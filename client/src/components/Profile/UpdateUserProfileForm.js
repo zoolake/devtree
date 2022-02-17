@@ -35,20 +35,6 @@ export default function UpdateUserProfileForm({ setIsUpdate, isUpdate }) {
   const [loading, setLoading] = useState(false);
   const [opti, setOptions] = useState([]);
   const dispatch = useDispatch();
-  const techGet = () => {
-    dispatch(getTech())
-      .then((response) => {
-        const data = response.payload;
-        const all = data.reduce((total, data) => {
-          total = [...total, { value: data.techSeq, label: data.techName }];
-          return total;
-        }, []);
-        setOptions(all);
-      })
-      .catch((err) => {
-        console.log(err, '에러');
-      });
-  };
 
   // INIT
   const userDetail = async () => {
@@ -58,6 +44,7 @@ export default function UpdateUserProfileForm({ setIsUpdate, isUpdate }) {
     await dispatch(detailUser())
       .then((response) => {
         if (response) {
+          console.log(response.payload.data.user);
           setUsers(response.payload.data.user);
           const data = response.payload.data.tech;
           const all = data.reduce((total, data) => {
@@ -71,6 +58,20 @@ export default function UpdateUserProfileForm({ setIsUpdate, isUpdate }) {
         setTimeout(() => {}, 3000);
       });
     setLoading(false);
+  };
+  const techGet = () => {
+    dispatch(getTech())
+      .then((response) => {
+        const data = response.payload;
+        const all = data.reduce((total, data) => {
+          total = [...total, { value: data.techSeq, label: data.techName }];
+          return total;
+        }, []);
+        setOptions(all);
+      })
+      .catch((err) => {
+        console.log(err, '에러');
+      });
   };
 
   // FORM
@@ -242,7 +243,7 @@ export default function UpdateUserProfileForm({ setIsUpdate, isUpdate }) {
                     {...getFieldProps('userNickname')}
                     type="text"
                     variant="standard"
-                    defaultValue={users.userNickname}
+                    value={formik.values.userNickname}
                     error={Boolean(touched.userNickname && errors.userNickname)}
                     helperText={touched.userNickname && errors.userNickname}
                   />

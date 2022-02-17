@@ -26,6 +26,7 @@ ProjectUpdateForm.propTypes = {
 };
 
 export default function ProjectUpdateForm({ projectDetail }) {
+  console.log(projectDetail);
   // STATE
   const teamSeq = useParams().id;
   const navigate = useNavigate();
@@ -125,6 +126,7 @@ export default function ProjectUpdateForm({ projectDetail }) {
 
   // HANDLE
   const handleChange = (event, type) => {
+    console.log(myPositionList);
     if (type === 'tech') {
       setSelectedTech(event.target.value);
       if (myTechList.map((tech) => tech.techName).includes(event.target.value)) {
@@ -270,7 +272,26 @@ export default function ProjectUpdateForm({ projectDetail }) {
                 </MenuItem>
               ))}
             </Select>
-            <div>
+            <Grid container sx={{ mt: 3 }}>
+              {myPositionList.map((pos) => (
+                <Grid item xs={2.2} key={pos.detailPositionName}>
+                  <Stack
+                    direction="column"
+                    sx={{ minWidth: '30%' }}
+                    alignItems="center"
+                    spacing={2}
+                  >
+                    {pos.detailPositionName}
+                    <SelectPositionCnt
+                      onSetCnt={handlePositionCntChange}
+                      pos={pos.detailPositionName}
+                      defaultValue={pos.positionRecruitCnt}
+                    />
+                  </Stack>
+                </Grid>
+              ))}
+            </Grid>
+            {/* <div>
               {myPositionList.map((pos) => (
                 <div key={pos.detailPositionName}>
                   {pos.detailPositionName}
@@ -281,7 +302,7 @@ export default function ProjectUpdateForm({ projectDetail }) {
                   />
                 </div>
               ))}
-            </div>
+            </div> */}
           </FormControl>
           {/* Submit Btn */}
           <Grid container justifyContent="flex-end">

@@ -7,6 +7,7 @@ import plusFill from '@iconify/icons-eva/plus-fill';
 import { Button, Container, Stack, Typography, Divider } from '@mui/material';
 //
 import { StudyList } from '../../components/_dashboard/study';
+import MyProgress from '../../components/_dashboard/MyProgress';
 import { getStudyList } from '../../_actions/study_actions';
 
 export default function StudyMain() {
@@ -42,7 +43,7 @@ export default function StudyMain() {
 
   // condition
   if (loading) {
-    return <div>'로딩 중'</div>;
+    return <MyProgress />;
   }
 
   // page

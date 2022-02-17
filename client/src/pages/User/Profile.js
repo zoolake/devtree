@@ -1,7 +1,16 @@
 import { Link as RouterLink } from 'react-router-dom';
 import jwtdecode from 'jwt-decode';
 //
-import { Grid, Button, Container, Stack, Typography, ButtonGroup, Box } from '@mui/material';
+import {
+  Grid,
+  Button,
+  Container,
+  Stack,
+  Typography,
+  ButtonGroup,
+  Box,
+  Divider
+} from '@mui/material';
 import { MentorReviewList } from '../../components/_dashboard/mentor';
 //
 import {
@@ -80,9 +89,10 @@ export default function Profile() {
 
   return (
     <Container sx={{ mt: 8 }}>
-      <Typography variant="h4" sx={{ mb: 5 }}>
+      <Typography variant="h3" sx={{ mb: 5 }} gutterBottom>
         내 프로필
       </Typography>
+      <Divider sx={{ mt: 2, mb: 5 }} />
       <Stack direction="column" spacing={5} alignItems="center">
         <Box>
           <ButtonGroup

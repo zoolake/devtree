@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 //
+import { Container } from '@mui/material';
+//
+import MyProgress from '../../components/_dashboard/MyProgress';
 import { ProjectJoinForm } from '../../components/_dashboard/projects';
 import { getProjectDetail } from '../../_actions/project_actions';
 
@@ -34,11 +37,11 @@ export default function ProjectJoin() {
   }, []);
 
   // PAGE
-  if (loading || projectDetail.length === 0) return <div>로딩 중</div>;
+  if (loading || projectDetail.length === 0) return <MyProgress />;
   return (
-    <div>
+    <Container sx={{ mt: 10 }}>
       <h1>프로젝트 신청</h1>
       <ProjectJoinForm projectPosition={projectDetail.teamPosition} />
-    </div>
+    </Container>
   );
 }

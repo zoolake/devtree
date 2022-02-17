@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useState, useEffect } from 'react';
 //
 import { useTheme, styled } from '@mui/material/styles';
-import { Card, CardHeader, Typography, Container, CardContent } from '@mui/material';
+import { Card, Typography, Container, CardContent } from '@mui/material';
 //
 import { fNumber } from '../../utils/formatNumber';
 import { BaseOptionChart } from '../charts';
@@ -113,8 +113,8 @@ export default function StudyChart() {
           <Typography sx={{ fontSize: 14, mb: 5 }} color="primary" gutterBottom>
             스터디 기록
           </Typography>
-          <Typography variant="h3" color="primary" sx={{ mt: '10%', ml: '30%' }}>
-            스터디가 없습니다.
+          <Typography variant="h3" sx={{ mt: '10%', ml: '30%' }}>
+            <span style={{ color: '#00AB55' }}>스터디</span>가 없습니다.
           </Typography>
         </CardContent>
       </Card>

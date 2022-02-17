@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 //
-import { TechImgAvatar } from '../../../utils/mockImages';
 import { Avatar, Card, CardContent, Typography, Stack } from '@mui/material';
+import { TechImgAvatar } from '../../../utils/mockImages';
 import MyProgress from '../MyProgress';
 
 ProjectListCard.propTypes = {

@@ -1,14 +1,15 @@
 import { merge } from 'lodash';
 import ReactApexChart from 'react-apexcharts';
-// material
-import { useTheme, styled } from '@mui/material/styles';
-import { Card, CardHeader } from '@mui/material';
-// utils
-import { fNumber } from '../../utils/formatNumber';
+import { useDispatch } from 'react-redux';
+import { useState, useEffect } from 'react';
 //
+import { useTheme, styled } from '@mui/material/styles';
+import { Card, CardHeader, Typography, Container, CardContent } from '@mui/material';
+//
+import { fNumber } from '../../utils/formatNumber';
 import { BaseOptionChart } from '../charts';
-
-// ----------------------------------------------------------------------
+import { getMyStudyCnt } from '../../_actions/user_actions';
+import MyProgress from '../_dashboard/MyProgress';
 
 const CHART_HEIGHT = 372;
 const LEGEND_HEIGHT = 72;
@@ -29,13 +30,36 @@ const ChartWrapperStyle = styled('div')(({ theme }) => ({
   }
 }));
 
-// ----------------------------------------------------------------------
-
-const CHART_DATA = [4344, 5435, 1443, 4443];
-
 export default function StudyChart() {
+  // STATE
   const theme = useTheme();
+  const [myStudyCnt, setMyStudyCnt] = useState([]);
+  const [loading, setLoading] = useState(false);
 
+  // INIT
+  const dispatch = useDispatch();
+  const getUserTechCnt = async () => {
+    setLoading(true);
+    await dispatch(getMyStudyCnt())
+      .then((response) => {
+        if (response) {
+          setMyStudyCnt(response.payload.data.data);
+        }
+      })
+      .catch(() => {
+        console.log('나의 스터디 개수 받아오기 실패');
+      });
+    setLoading(false);
+  };
+
+  // RENDER
+  useEffect(() => {
+    getUserTechCnt();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // OPTIONS
+  const CHART_DATA = myStudyCnt.map((tech) => tech.techCount);
   const chartOptions = merge(BaseOptionChart(), {
     colors: [
       theme.palette.primary.main,
@@ -43,7 +67,7 @@ export default function StudyChart() {
       theme.palette.warning.main,
       theme.palette.error.main
     ],
-    labels: ['America', 'Asia', 'Europe', 'Africa'],
+    labels: myStudyCnt.map((tech) => tech.techName),
     stroke: { colors: [theme.palette.background.paper] },
     legend: { floating: true, horizontalAlign: 'center' },
     dataLabels: { enabled: true, dropShadow: { enabled: false } },
@@ -61,12 +85,22 @@ export default function StudyChart() {
     }
   });
 
+  if (loading) {
+    return <MyProgress />;
+  }
+
   return (
-    <Card>
-      <CardHeader title="스터디 기록" />
-      <ChartWrapperStyle dir="ltr">
-        <ReactApexChart type="pie" series={CHART_DATA} options={chartOptions} height={280} />
-      </ChartWrapperStyle>
-    </Card>
+    <Container>
+      <Card sx={{ minWidth: 275, minHeight: 250 }}>
+        <CardContent>
+          <Typography sx={{ fontSize: 14, mb: 5 }} color="primary" gutterBottom>
+            스터디 기록
+          </Typography>
+          <ChartWrapperStyle dir="ltr">
+            <ReactApexChart type="pie" series={CHART_DATA} options={chartOptions} height={280} />
+          </ChartWrapperStyle>
+        </CardContent>
+      </Card>
+    </Container>
   );
 }

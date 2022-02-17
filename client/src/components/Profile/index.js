@@ -12,7 +12,7 @@ export { default as ProjectChart } from './ProjectChart';
 export { default as MentoringTime } from './MentoringTime';
 export { default as MentoringStack } from './MentoringStack';
 export { default as Mentoring } from './Mentoring';
-export { default as MentorAuth } from './MentorAuth';
+export { default as UserAuthMentor } from './UserAuthMentor';
 export { default as MentorProfileUpdate } from './MentorProfileUpdate';
 export { default as MentoringDaySelect } from './MentoringDaySelect';
 export { default as MentorWeeklySetting } from './MentorWeeklySetting';

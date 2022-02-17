@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import jwtdecode from 'jwt-decode';
 //
 import {
+  Avatar,
   Container,
   Typography,
   Stack,
@@ -20,6 +21,7 @@ import withReactContent from 'sweetalert2-react-content';
 import { getStudyDetail, joinStudy } from '../../_actions/study_actions';
 import { changeTeamState } from '../../_actions/team_actions';
 import { checkTeamMember } from '../../_actions/user_actions';
+import { TechImgAvatar } from '../../utils/mockImages';
 
 export default function StudyDetail() {
   // STATE
@@ -165,7 +167,11 @@ export default function StudyDetail() {
   // SHOW
   const showTechs = studyDetail.teamTech.map((tech) => (
     <Grid item xs={3} key={tech.techSeq}>
-      <Typography align="center">{tech.techName}</Typography>
+      <Avatar
+        variant="caption"
+        sx={{ border: '1px solid #efefef', width: '50px', height: '50px' }}
+        src={TechImgAvatar(tech.techSeq)}
+      />
     </Grid>
   ));
   // eslint-disable-next-line consistent-return

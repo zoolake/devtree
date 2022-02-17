@@ -13,7 +13,14 @@ function MentorDetail() {
   }, []);
 
   return (
-    <Card sx={{ paddingRight: '20%', paddingBottom: '80px', boxShadow: 15 }}>
+    <Card
+      sx={{
+        marginLeft: '10%',
+        paddingRight: '20%',
+        paddingBottom: '80px',
+        boxShadow: 15
+      }}
+    >
       <Grid container spacing={1}>
         <Grid sx={{ marginLeft: '30px', marginTop: '20px' }} item xs={12} md={6} lg={10}>
           <MentorProfile index={id} />

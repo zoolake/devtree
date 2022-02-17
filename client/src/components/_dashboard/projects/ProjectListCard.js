@@ -2,7 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 //
-import { Card, CardContent, Typography, Stack } from '@mui/material';
+import { Avatar, Card, CardContent, Typography, Stack } from '@mui/material';
+import { TechImgAvatar } from '../../../utils/mockImages';
+import MyProgress from '../MyProgress';
 
 ProjectListCard.propTypes = {
   project: PropTypes.object.isRequired
@@ -19,9 +21,23 @@ export default function ProjectListCard({ project }) {
   // FUNC
   const showTechs = () => {
     if (project.teamTech.length < 6) {
-      return project.teamTech.map((tech) => <div key={tech.techSeq}>{tech.techName}</div>);
+      return project.teamTech.map((tech) => (
+        <Avatar
+          variant="caption"
+          sx={{ border: '1px solid #efefef', width: '50px', height: '50px' }}
+          src={TechImgAvatar(tech.techSeq)}
+        />
+      ));
     }
-    return project.teamTech.slice(6).map((tech) => <div key={tech.techSeq}>{tech.techName}</div>);
+    return project.teamTech
+      .slice(6)
+      .map((tech) => (
+        <Avatar
+          variant="caption"
+          sx={{ border: '1px solid #efefef', width: '50px', height: '50px' }}
+          src={TechImgAvatar(tech.techSeq)}
+        />
+      ));
   };
   // eslint-disable-next-line consistent-return
   const getStateName = () => {
@@ -42,7 +58,7 @@ export default function ProjectListCard({ project }) {
   };
 
   // PAGE
-  if (!project.teamTech) return <div>'로딩 중'</div>;
+  if (!project.teamTech) return <MyProgress />;
   return (
     <ul>
       <Card

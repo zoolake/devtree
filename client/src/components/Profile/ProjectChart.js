@@ -62,6 +62,7 @@ export default function ProjectChart() {
   if (loading) {
     return <MyProgress />;
   }
+
   // OPTIONS
   if (myProjectCnt.length !== 0) {
     const CHART_DATA = myProjectCnt.map((tech) => tech.techCount);
@@ -104,6 +105,7 @@ export default function ProjectChart() {
       </Container>
     );
   }
+
   return (
     <Container>
       <Card sx={{ minWidth: 275, minHeight: 250 }}>
@@ -111,8 +113,8 @@ export default function ProjectChart() {
           <Typography sx={{ fontSize: 14, mb: 5 }} color="primary" gutterBottom>
             프로젝트 기록
           </Typography>
-          <Typography variant="h3" color="primary" sx={{ mt: '10%', ml: '20%' }}>
-            참가한 프로젝트가 없습니다.
+          <Typography variant="h3" color="primary" sx={{ mt: '10%', ml: '30%' }}>
+            프로젝트가 없습니다.
           </Typography>
         </CardContent>
       </Card>

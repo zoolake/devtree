@@ -9,15 +9,14 @@ import Register from './pages/User/Register';
 import MainPage from './pages/Main/MainPage';
 import Products from './pages/Products';
 
+// USER PROFILE
 import Profile from './pages/User/Profile';
 import ProfileAlarm from './pages/User/ProfileAlarm';
 import ProfileAuth from './pages/User/ProfileAuth';
 import ProfileProject from './pages/User/ProfileProject';
 import ProfileStudy from './pages/User/ProfileStudy';
 import ProfileMentoring from './pages/User/ProfileMentoring';
-
-// import Profile from './pages/User/Profile';
-// project
+// PROJECT
 import ProjectMain from './pages/Project/ProjectMain';
 import ProjectDetail from './pages/Project/ProjectDetail';
 import ProjectCreate from './pages/Project/ProjectCreate';
@@ -25,7 +24,7 @@ import ProjectUpdate from './pages/Project/ProjectUpdate';
 import ProjectDelete from './pages/Project/ProjectDelete';
 import ProjectJoin from './pages/Project/ProjectJoin';
 import ProjectResponse from './pages/Project/ProjectResponse';
-// study
+// STUDY
 import Study from './pages/Study/StudyMain';
 import StudyDetail from './pages/Study/StudyDetail';
 import StudyCreate from './pages/Study/StudyCreate';

@@ -45,14 +45,14 @@ export default function ProfileProject() {
               멘토인증
             </Button>
             <Button component={RouterLink} to="/profile/alarm" sx={{ width: 190, fontSize: 20 }}>
-              알람
+              알림
             </Button>
           </ButtonGroup>
         </Box>
         <Box sx={{ width: '80%' }}>
           <Stack direction="column" spacing={4}>
-            <UserProjectList />
             <ProjectChart />
+            <UserProjectList />
           </Stack>
         </Box>
       </Stack>

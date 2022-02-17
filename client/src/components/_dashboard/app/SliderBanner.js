@@ -1,7 +1,7 @@
 // material
 import { styled } from '@mui/material/styles';
 import { Card } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Carousel from 'react-material-ui-carousel';
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -21,57 +21,37 @@ export default function AppRankMain() {
     return (
       <div
         style={{
-          textAlign: 'center',
-          background: 'url(https://picsum.photos/2000/400)',
           backgroundRepeat: 'no-repeat',
-          backgroundSize: 'contain',
+
           height: '400px',
+          background: `url(${item.img})`,
           width: '100%',
           borderRadius: '40px'
         }}
       >
-        <h2>{item.name}</h2>
-        <p className="CheckButton">{item.description}</p>
+        {' '}
       </div>
     );
   }
   const items = [
     {
-      name: 'Random Name #0',
-      description: '0 - Probably the most random thing you have ever seen!',
-      img: 'https://picsum.photos/2000/400'
-    },
-    {
-      name: 'Random Name #1',
-      description: '1 - Probably the most random thing you have ever seen!',
-      img: 'https://picsum.photos/2000/400'
-    },
-    {
-      name: 'Random Name #2',
-      description: '2- Hello World!',
-      img: 'https://picsum.photos/2000/400'
-    },
-    {
-      name: 'Random Name #3',
-      description: '3 - Hello World!',
-      img: 'https://picsum.photos/2000/400'
+      img: '/static/images/banner/devtree.gif'
     }
   ];
   const handleChange = (cur, prev) => {
-    setIndex(cur);
+    setIndex(items);
   };
+
+  useEffect(() => {
+    setIndex(items);
+    setIndex(0);
+    setIndex(1);
+    setIndex(2);
+    setIndex(3);
+  }, []);
   return (
     <RootStyle>
-      <Carousel
-        index={index}
-        onChange={handleChange}
-        interval={5000}
-        animation="slide"
-        indicators
-        stopAutoPlayOnHover
-        swipe
-        className="my-carousel"
-      >
+      <Carousel animation="slide" onChange={handleChange}>
         {items.map((item, i) => (
           <Item key={i} item={item} />
         ))}

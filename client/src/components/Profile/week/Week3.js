@@ -129,11 +129,11 @@ export default function Week3({ week, day, date }) {
           // eslint-disable-next-line guard-for-in
           for (const i in filter1) {
             const hours = filter1[i].substring(0, 4);
-            setCheckedInputs(hours);
+            //  setCheckedInputs(hours);
           }
 
           console.log(filter1);
-          // setCheckedInputs(filter1);
+          setCheckedInputs(filter1);
           // eslint-disable-next-line guard-for-in
           for (const i in filter1) {
             const hour = filter1[i].substring(0, 2);

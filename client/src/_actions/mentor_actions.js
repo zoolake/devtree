@@ -2,15 +2,24 @@ import axios from 'axios';
 import {
   GET_MYMENTORPROFILE,
   GET_MENTORS,
-  MENTOR_DETAIL,
+  DETAIL_MENTOR,
   SET_MENTOR,
   GET_REVIEWS,
   GET_TEAM,
-  Update_MentorProfile,
+  UPDATE_MENTOR_PROFILE,
   GET_TIMELIST,
   GET_RESERVEDLIST,
   GET_MENTORINGLIST,
-  UPDATE_MENTOR
+  UPDATE_MENTOR,
+  GET_MENTOR_TECH_GET,
+  MYMENTOR_PROFILE,
+  MENTEE_MENTORING,
+  CHANGE_STATE,
+  ACCEPT_MENTORING,
+  GET_CHECKEDTIME_LIST,
+  REJECT_MENTORING,
+  SUBMIT_MENTORING,
+  GET_SCHEDULE
 } from './types';
 
 // 멘토 기술별 조회
@@ -112,7 +121,7 @@ export function detailMentor(id) {
 // 멘토 프로필 업데이트
 export function updateMentorProfile() {
   const request = axios.put(`/v1/mentor`).then((response) => response.data);
-  return { type: Update_MentorProfile, payload: request };
+  return { type: UPDATE_MENTOR_PROFILE, payload: request };
 }
 
 // 멘티 - 멘토링 신청할 때 시간 조회

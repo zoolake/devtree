@@ -2,7 +2,6 @@ import axios from 'axios';
 import {
   LOGIN_USER,
   REGISTER_USER,
-  AUTH_USER,
   LOGOUT_USER,
   IDCHECK_USER,
   DETAIL_USER,
@@ -14,7 +13,13 @@ import {
   CHECK_TEAM_MEMBER,
   GET_TECH,
   GET_MY_STUDY_CNT,
-  GET_MY_PROJECT_CNT
+  GET_MY_PROJECT_CNT,
+  AUTH_CODE,
+  EMAIL_AUTH,
+  GET_ALARMDATA,
+  GET_STUDY,
+  GET_PROJECT,
+  AUTH
 } from './types';
 import { USER_SERVER } from '../components/config';
 import setAuthorizationToken from '../utils/setAuthorizationToken';

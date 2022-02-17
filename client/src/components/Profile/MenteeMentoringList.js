@@ -76,7 +76,7 @@ export default function MenteeMentoringList() {
   const [seconds, setSeconds] = useState(Date.now());
   const [mentoring, setMentoring] = useState([]);
   const getMentoringLists = async () => {
-    dispatch(menteementoring())
+    dispatch(menteeMentoring())
       .then((response) => {
         if (response) {
           console.log(response.payload.data);

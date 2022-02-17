@@ -2,6 +2,7 @@ export { default as AppRankMain } from './AppRankMain';
 export { default as AppCurrentVisits } from './AppCurrentVisits';
 export { default as AppMentorMain } from './AppMentorMain';
 export { default as AppNewsUpdate } from './AppNewsUpdate';
+export { default as AppNewsUpdate2 } from './AppNewsUpdate2';
 export { default as AppStudyMain } from './AppStudyMain';
 export { default as AppOrderTimeline } from './AppOrderTimeline';
 export { default as AppTasks } from './AppTasks';

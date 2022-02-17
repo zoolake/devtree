@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
 // material
-import { Avatar, Box, Grid, Button, Container, Stack, Typography } from '@mui/material';
+import { Avatar, Card, Box, Grid, Button, Container, Stack, Typography } from '@mui/material';
 // components
 import Page from '../../components/Page';
 
@@ -112,21 +112,23 @@ export default function Mentor() {
         >
           ALL
         </Button>
-        <ScrollMenu>
-          <Stack direction="row">
-            {techlist.map((info, index) => (
-              <Avatar
-                onClick={() => {
-                  techSearch(info.techSeq);
-                }}
-                id={info.techSeq}
-                src={TechImgAvatar(info.techSeq)}
-                sx={{ width: 80, height: 80 }}
-                alt={info.techName}
-              />
-            ))}{' '}
-          </Stack>
-        </ScrollMenu>
+        <Card>
+          <ScrollMenu>
+            <Stack direction="row">
+              {techlist.map((info, index) => (
+                <Avatar
+                  onClick={() => {
+                    techSearch(info.techSeq);
+                  }}
+                  id={info.techSeq}
+                  src={TechImgAvatar(info.techSeq)}
+                  sx={{ width: 80, height: 80 }}
+                  alt={info.techName}
+                />
+              ))}{' '}
+            </Stack>
+          </ScrollMenu>
+        </Card>
         <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
           {' '}
         </Stack>

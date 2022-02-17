@@ -30,6 +30,7 @@ import {
 } from '../components/_dashboard/profileHistory';
 
 import { getStudy, getRank } from '../_actions/user_actions';
+import { TierImgAvatar } from '../utils/mockImages';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -160,8 +161,19 @@ export default function StudyList() {
                               <TableCell align="left">{mentorRank + 1}</TableCell>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{mentorNickname}</TableCell>
-                          <TableCell align="left">{tier.tierName}</TableCell>
+                          <TableCell
+                            align="left"
+                            variant="contained"
+                            component={RouterLink}
+                            to={`/mentor/${mentorSeq}`}
+                            sx={{ textDecorationLine: 'none', color: 'black', fontWeight: 'bold' }}
+                          >
+                            {mentorNickname}
+                          </TableCell>
+                          <TableCell align="left">
+                            {' '}
+                            <Avatar src={TierImgAvatar(tier.tierSeq)} />
+                          </TableCell>
                           <TableCell align="left">{mentorExp}</TableCell>
                         </TableRow>
                       );

@@ -191,6 +191,7 @@ export default function MentoringList() {
             setTimeout(() => {}, 3000);
           });
         Swal.fire('수락', '수락이 완료되었습니다.', 'success');
+        getMentoringLists();
       }
     });
   };
@@ -220,6 +221,7 @@ export default function MentoringList() {
             setTimeout(() => {}, 3000);
           });
         Swal.fire('거절', '거절이 완료되었습니다.', 'success');
+        getMentoringLists();
       }
     });
   };
@@ -287,7 +289,9 @@ export default function MentoringList() {
 
                       return (
                         <TableRow hover key={mentoringSeq} tabIndex={-1}>
-                          <TableCell align="left">{mentoringCreateTime}</TableCell>
+                          <TableCell align="left">
+                            {`${mentoringCreateTime}`.substr(0, 19)}
+                          </TableCell>
                           <TableCell component="th" scope="row" padding="3px">
                             <Stack direction="row" alignItems="center" spacing={2}>
                               <Typography variant="subtitle2">{teamName}</Typography>
@@ -306,7 +310,7 @@ export default function MentoringList() {
                             </Label>
                           </TableCell>
                           <TableCell align="left">
-                            {mentoringStartDate} {mentoringStartTime}
+                            {mentoringStartDate} {`${mentoringStartTime}`.substr(0, 5)}
                           </TableCell>
                           <TableCell align="left">{mentoringApplyComment}</TableCell>
                           <TableCell align="left">

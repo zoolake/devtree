@@ -3,6 +3,7 @@ import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import makeAnimated from 'react-select/animated';
 import Select from 'react-select';
+import Swal from 'sweetalert2';
 import { useFormik, Form, FormikProvider } from 'formik';
 // material
 import { TextField, Box, Card, CardHeader } from '@mui/material';
@@ -12,6 +13,7 @@ import { detailUser, updateUser, getTech } from '../../_actions/user_actions';
 import { mymentorProfile, updateMentor } from '../../_actions/mentor_actions';
 
 import { MentorProfileUpdate } from '.';
+
 // ---------------------------------------------------------------------
 
 const animatedComponents = makeAnimated();
@@ -147,10 +149,7 @@ export default function MentorProfile() {
         };
         console.log(dataToSubmit);
         dispatch(updateMentor(dataToSubmit)).then((response) => {
-          if (response.payload.success) {
-            window.location.reload();
-            document.location.assign('/');
-          }
+          Swal.fire('완료', '변경 이 완료되었습니다.', 'success').then(window.location.reload());
         });
         setSubmitting(false);
       }, 500);

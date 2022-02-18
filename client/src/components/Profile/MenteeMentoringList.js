@@ -243,7 +243,9 @@ export default function MenteeMentoringList() {
                               </div>
                             ) : null}
                             {mentoringState === 'ACTIVATE' ? (
-                              <Button onClick={joinSession}>세션입장</Button>
+                              <Button id={mentoringSeq} onClick={joinSession}>
+                                세션입장
+                              </Button>
                             ) : null}
                             {mentoringState === 'FINISH' ? <Button>완료</Button> : null}
                           </TableCell>

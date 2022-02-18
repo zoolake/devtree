@@ -8,7 +8,7 @@ const RootStyle = styled(Card)(({ theme }) => ({
   background: 'url(/static/images/main_project.gif)',
   backgroundRepeat: 'no-repeat',
   backgroundSize: 'contain',
-  width: '100%',
+  width: '90%',
   height: '100%'
 }));
 
@@ -23,10 +23,10 @@ export default function AppProjectMain() {
           bottom: '0',
           right: '2em',
           width: '120px',
-          padding: '4px',
+          padding: '1px',
           color: 'black',
           fontWeight: 'bold',
-          fontSize: '40px'
+          fontSize: '30px'
         }}
       >
         PROJECT

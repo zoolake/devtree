@@ -18,7 +18,8 @@ export default function UserStudyList() {
     setLoading(true);
     dispatch(getStudy())
       .then((response) => {
-        if (response.payload.data > 0) {
+        console.log(response.payload.data);
+        if (response.payload.data.length > 0) {
           setMyStudyList(response.payload.data);
         } else {
           setMyStudyList(false);
@@ -49,7 +50,7 @@ export default function UserStudyList() {
         </Typography>
       );
     }
-    return myStudyList.map((pjt) => <StudyListCard key={pjt.teamSeq} project={pjt} />);
+    return myStudyList.map((sty) => <StudyListCard key={sty.teamSeq} study={sty} />);
   };
   return (
     <Container fixed>

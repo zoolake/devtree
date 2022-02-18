@@ -229,6 +229,5 @@ public class MentorApiController {
     public CommonResponseDto mentoringApplyResponse(@PathVariable Long mentoringSeq) {
         return mentorService.changeMentoringState(mentoringSeq);
     }
-
 }
 

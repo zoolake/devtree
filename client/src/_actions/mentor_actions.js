@@ -15,26 +15,26 @@ import {
 
 // 멘토 기술별 조회
 export function mentorTechGet(dataToSubmit) {
-  const request = axios.post(`/mentor/tech`, dataToSubmit).then((response) => response.data);
+  const request = axios.post(`/v1/mentor/tech`, dataToSubmit).then((response) => response.data);
   return { type: GET_MENTORS, payload: request };
 }
 
 // 멘티 - 팀별 멘토링 신청 내역 조회
 export function mymentorProfile() {
-  const request = axios.get(`/user/mentor`).then((response) => response.data);
+  const request = axios.get(`/v1/user/mentor`).then((response) => response.data);
   return { type: GET_MENTORS, payload: request };
 }
 
 // 멘티 - 팀별 멘토링 신청 내역 조회
 export function menteementoring() {
-  const request = axios.get(`/user/mentoring`).then((response) => response.data);
+  const request = axios.get(`/v1/user/mentoring`).then((response) => response.data);
   return { type: GET_MENTORINGLIST, payload: request };
 }
 
 // 멘토 - 멘토링 세션 생성, 종료
 export function changeState(dataToSubmit) {
   const request = axios
-    .get(`/mentoring/state/${dataToSubmit.mentoringSeq}`, dataToSubmit)
+    .get(`/v1/mentoring/state/${dataToSubmit.mentoringSeq}`, dataToSubmit)
     .then((response) => response.data);
   return { type: GET_MENTORINGLIST, payload: request };
 }
@@ -42,7 +42,7 @@ export function changeState(dataToSubmit) {
 // 멘토 - 멘토링 거절
 export function rejectMentoring(dataToSubmit) {
   const request = axios
-    .post(`/mentoring/apply/${dataToSubmit.mentoringSeq}`, dataToSubmit)
+    .post(`/v1/mentoring/apply/${dataToSubmit.mentoringSeq}`, dataToSubmit)
     .then((response) => response.data);
   return { type: GET_MENTORINGLIST, payload: request };
 }
@@ -50,14 +50,14 @@ export function rejectMentoring(dataToSubmit) {
 // 멘토 - 멘토링 수락
 export function acceptMentoring(dataToSubmit) {
   const request = axios
-    .post(`/mentoring/apply/${dataToSubmit.mentoringSeq}`, dataToSubmit)
+    .post(`/v1/mentoring/apply/${dataToSubmit.mentoringSeq}`, dataToSubmit)
     .then((response) => response.data);
   return { type: GET_MENTORINGLIST, payload: request };
 }
 
 // 멘토 - 멘토링 리스트 조회
 export function getMentoringlist() {
-  const request = axios.get(`/mentoring/apply`).then((response) => response.data);
+  const request = axios.get(`/v1/mentoring/apply`).then((response) => response.data);
   return { type: GET_MENTORINGLIST, payload: request };
 }
 
@@ -72,7 +72,7 @@ export function setMentor() {
 // 멘토 - 멘토링 가능시간 저장
 export function saveMentoringTime(dataToSubmit) {
   const request = axios
-    .put(`/mentor/schedule/available`, dataToSubmit)
+    .put(`/v1/mentor/schedule/available`, dataToSubmit)
     .then((response) => response.data);
   return { type: GET_TIMELIST, payload: request };
 }
@@ -82,7 +82,7 @@ export function getCheckedtimeList(dataToSubmit) {
   console.log('여기는바로!');
   console.log(dataToSubmit);
   const request = axios
-    .post(`/mentoring/schedule/${dataToSubmit.mentorSeq}`, dataToSubmit)
+    .post(`/v1/mentoring/schedule/${dataToSubmit.mentorSeq}`, dataToSubmit)
     .then((response) => response.data);
   return { type: GET_TIMELIST, payload: request };
 }
@@ -90,7 +90,7 @@ export function getCheckedtimeList(dataToSubmit) {
 // 멘토의 예약시간들을 불러오기
 export function getReservedList(dataToSubmit) {
   const request = axios
-    .post(`/mentoring/schedule/unavailable/${dataToSubmit.mentorSeq}`, dataToSubmit)
+    .post(`/v1/mentoring/schedule/unavailable/${dataToSubmit.mentorSeq}`, dataToSubmit)
     .then((response) => response.data);
   return { type: GET_RESERVEDLIST, payload: request };
 }
@@ -98,14 +98,14 @@ export function getReservedList(dataToSubmit) {
 // 멘토 목록 조회
 // 연결 완료, 매칭 필요
 export function getMentors() {
-  const request = axios.get(`/mentor`).then((response) => response.data);
+  const request = axios.get(`/v1/mentor`).then((response) => response.data);
   return { type: GET_MENTORS, payload: request };
 }
 
 // 멘토 상세보기
 // 연결 완료, 매칭 필요
 export function detailMentor(id) {
-  const request = axios.get(`/mentor/${id}`).then((response) => response.data);
+  const request = axios.get(`/v1/mentor/${id}`).then((response) => response.data);
   return { type: MENTOR_DETAIL, payload: request };
 }
 
@@ -118,7 +118,7 @@ export function updateMentorProfile() {
 // 멘티 - 멘토링 신청할 때 시간 조회
 export function getSchedule(dataToSubmit) {
   const request = axios
-    .post(`/mentoring/schedule/${dataToSubmit.mentorSeq}`, dataToSubmit)
+    .post(`/v1/mentoring/schedule/${dataToSubmit.mentorSeq}`, dataToSubmit)
     .then((response) => response.data);
   return { type: MENTOR_DETAIL, payload: request };
 }
@@ -126,25 +126,27 @@ export function getSchedule(dataToSubmit) {
 // 멘티 - 멘토링 신청할 자신의 팀 조회
 // 연결완료, 매칭 완료
 export function getTeams() {
-  const request = axios.get(`/common/team/manager`).then((response) => response.data);
+  const request = axios.get(`/v1/common/team/manager`).then((response) => response.data);
   return { type: GET_TEAM, payload: request };
 }
 
 // 멘로의 리뷰를 가져옴
 // 연결 실패
 export function getReview(dataToSubmit) {
-  const request = axios.get(`/mentor/${dataToSubmit.mentorSeq}`).then((response) => response.data);
+  const request = axios
+    .get(`/v1/mentor/${dataToSubmit.mentorSeq}`)
+    .then((response) => response.data);
   return { type: GET_REVIEWS, payload: request };
 }
 
 // 멘토링 신청
 export function submitMentoring(dataToSubmit) {
-  const request = axios.post(`/mentoring/apply`, dataToSubmit).then((response) => response.data);
+  const request = axios.post(`/v1/mentoring/apply`, dataToSubmit).then((response) => response.data);
   return { type: GET_REVIEWS, payload: request };
 }
 
 // 멘토 프로필 수정
 export function updateMentor(dataToSubmit) {
-  const request = axios.put(`/mentor`, dataToSubmit).then((response) => response.data);
+  const request = axios.put(`/v1/mentor`, dataToSubmit).then((response) => response.data);
   return { type: UPDATE_MENTOR, payload: request };
 }

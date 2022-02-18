@@ -14,6 +14,7 @@ ProjectJoinForm.propTypes = {
 };
 
 export default function ProjectJoinForm({ projectPosition }) {
+  console.log(projectPosition);
   // STATE
   const teamSeq = useParams().id;
   const navigate = useNavigate();

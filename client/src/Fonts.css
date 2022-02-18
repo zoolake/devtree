@@ -1,9 +1,0 @@
-@font-face {
-  font-family: 'DoHyeon-Regular';
-  src: url('../public/static/fonts/DoHyeon-Regular.ttf');
-}
-.App {
-  text-align: center;
-  font-size: 50px;
-  font-family: 'DoHyeon-Regular';
-}

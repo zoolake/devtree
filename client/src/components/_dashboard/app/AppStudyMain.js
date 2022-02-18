@@ -8,7 +8,7 @@ const RootStyle = styled(Card)(({ theme }) => ({
   background: 'url(/static/images/main_study.gif)',
   backgroundRepeat: 'no-repeat',
   backgroundSize: 'contain',
-  width: '100%',
+  width: '90%',
   height: '100%'
 }));
 
@@ -19,12 +19,12 @@ export default function AppStudyMain() {
         style={{
           position: 'absolute',
           bottom: '0',
-          right: '1em',
+          right: '0em',
           width: '120px',
-          padding: '4px',
+          padding: '1px',
           color: 'black',
           fontWeight: 'bold',
-          fontSize: '40px'
+          fontSize: '30px'
         }}
       >
         STUDY

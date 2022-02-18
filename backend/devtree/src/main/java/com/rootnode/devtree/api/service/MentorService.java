@@ -58,7 +58,7 @@ public class MentorService {
 //    }
 
     /**
-     *  mentorlist non pagination
+     * mentorlist non pagination
      */
     public List<MentorListResponseDto> findMentors() {
         List<Mentor> mentors = mentorRepository.findAll();
@@ -68,8 +68,8 @@ public class MentorService {
                             mentorTechRepository.findByMentorTechIdMentorSeq(mentor.getMentorSeq()).stream()
                                     .map(mentorTech -> new MentorTechInfoDto(mentorTech))
                                     .collect(Collectors.toList());
-                    Tier tier =tierRepository.findByTierMaxExpGreaterThanEqualAndTierMinExpLessThanEqual(mentor.getMentorExp(),mentor.getMentorExp());
-                    return new MentorListResponseDto(mentor,tier, mentorTechInfoDtoList);
+                    Tier tier = tierRepository.findByTierMaxExpGreaterThanEqualAndTierMinExpLessThanEqual(mentor.getMentorExp(), mentor.getMentorExp());
+                    return new MentorListResponseDto(mentor, tier, mentorTechInfoDtoList);
                 })
                 .collect(Collectors.toList());
 
@@ -80,15 +80,15 @@ public class MentorService {
      */
     public List<MentorSortedListResponseDto> findSortedMentors() {
         AtomicLong index = new AtomicLong();
-        List<Mentor> mentors = mentorRepository.findAll(Sort.by(Sort.Direction.DESC,"mentorExp"));
+        List<Mentor> mentors = mentorRepository.findAll(Sort.by(Sort.Direction.DESC, "mentorExp"));
         return mentors.stream()
                 .map(mentor -> {
                     List<MentorTechInfoDto> mentorTechInfoDtoList =
                             mentorTechRepository.findByMentorTechIdMentorSeq(mentor.getMentorSeq()).stream()
                                     .map(mentorTech -> new MentorTechInfoDto(mentorTech))
                                     .collect(Collectors.toList());
-                    Tier tier =tierRepository.findByTierMaxExpGreaterThanEqualAndTierMinExpLessThanEqual(mentor.getMentorExp(),mentor.getMentorExp());
-                    return new MentorSortedListResponseDto(mentor,index.getAndIncrement(),tier, mentorTechInfoDtoList);
+                    Tier tier = tierRepository.findByTierMaxExpGreaterThanEqualAndTierMinExpLessThanEqual(mentor.getMentorExp(), mentor.getMentorExp());
+                    return new MentorSortedListResponseDto(mentor, index.getAndIncrement(), tier, mentorTechInfoDtoList);
                 })
                 .collect(Collectors.toList());
     }
@@ -105,7 +105,7 @@ public class MentorService {
                 Tier tier = tierRepository.findByTierMaxExpGreaterThanEqualAndTierMinExpLessThanEqual(mentorExp, mentorExp);
                 List<MentorTechInfoDto> mentorTechList = mentorTechRepository.findByMentorTechIdMentorSeq(mentorSeq).stream()
                         .map(mentorTech -> new MentorTechInfoDto(mentorTech)).collect(Collectors.toList());
-                if(mentorListMap.get(mentorSeq) == null) {
+                if (mentorListMap.get(mentorSeq) == null) {
                     mentorListMap.put(mentorSeq, new MentorListResponseDto(mentor, tier, mentorTechList));
                 }
             });
@@ -159,7 +159,7 @@ public class MentorService {
 
         });
         // 6. 멘토 티어
-        Tier tier =tierRepository.findByTierMaxExpGreaterThanEqualAndTierMinExpLessThanEqual(mentor.getMentorExp(),mentor.getMentorExp());
+        Tier tier = tierRepository.findByTierMaxExpGreaterThanEqualAndTierMinExpLessThanEqual(mentor.getMentorExp(), mentor.getMentorExp());
 
         return MentorDetailResponseDto.builder()
                 .mentorCareer(mentor.getMentorCareer())
@@ -262,7 +262,7 @@ public class MentorService {
                 .mentoringInfoList(mentoringInfoList)
                 .mentoringReviewList(reviewDtoList)
                 .mentorExp(mentor.getMentorExp())
-                .tier(tierRepository.findByTierMaxExpGreaterThanEqualAndTierMinExpLessThanEqual(mentor.getMentorSeq(),mentor.getMentorExp()))
+                .tier(tierRepository.findByTierMaxExpGreaterThanEqualAndTierMinExpLessThanEqual(mentor.getMentorSeq(), mentor.getMentorExp()))
                 .build();
     }
 
@@ -275,27 +275,27 @@ public class MentorService {
         User user = userRepository.findById(mentorSeq).get();
 
         // 멘토 닉네임 == 유저 닉네임 변경
-        if(StringUtils.hasText(requestDto.getMentorNickName())) {
+        if (StringUtils.hasText(requestDto.getMentorNickName())) {
             user.changeUserNickName(requestDto.getMentorNickName());
         }
 
         // 멘토 커리어 변경
-        if(StringUtils.hasText(requestDto.getMentorCareer())) {
+        if (StringUtils.hasText(requestDto.getMentorCareer())) {
             mentor.changeMentorCareer(requestDto.getMentorCareer());
         }
 
         // 멘토 설명 변경
-        if(StringUtils.hasText(requestDto.getMentorDesc())) {
+        if (StringUtils.hasText(requestDto.getMentorDesc())) {
             mentor.changeMentorDesc(requestDto.getMentorDesc());
         }
 
         // 멘토 이메일 == 유저 이메일 변경
-        if(StringUtils.hasText(requestDto.getMentorEmail())) {
+        if (StringUtils.hasText(requestDto.getMentorEmail())) {
             user.changeUserEmail(requestDto.getMentorEmail());
         }
 
         // 멘토 기술 스택 변경
-        if(!Objects.isNull(requestDto.getMentorTech())) {
+        if (!Objects.isNull(requestDto.getMentorTech())) {
             // 삭제
             mentorTechRepository.deleteByMentorSeq(mentorSeq);
 
@@ -354,10 +354,10 @@ public class MentorService {
 
         // 멘토링 신청 알림 보내기
         // 알림 내용
-        String content = team.getTeamName() + "팀("+ team.getTeamType() +")이 멘토링 신청 요청을 보냈습니다";
+        String content = team.getTeamName() + "팀(" + team.getTeamType() + ")이 멘토링 신청 요청을 보냈습니다";
         //sendUserSeq, receiveUserSeq, teamSeq, sendTime, content, notificationType
         Notification notification = new Notification(team.getTeamManagerSeq(), mentor.getMentorSeq(), team.getTeamSeq(),
-                LocalDateTime.now(), content,NotificationType.MENTORING);
+                LocalDateTime.now(), content, NotificationType.MENTORING);
         // 5. 알림 테이블에 저장
         notificationRepository.save(notification);
 
@@ -399,7 +399,7 @@ public class MentorService {
 
 
         // 수락하는 경우
-        if(ResponseType.ACCEPT.equals(responseType)) {
+        if (ResponseType.ACCEPT.equals(responseType)) {
             // 상태를 ACCEPT으로 바꿔줌
             mentoringRepository.acceptMentoring(mentoringSeq);
             // 멘토 스케줄 테이블에서 삭제
@@ -411,46 +411,53 @@ public class MentorService {
             //현재 팀
             Team CurTeam = mentoringRepository.findById(mentoringSeq).get().getTeam();
             //현재팀과
-            int Count = mentoringRepository.countByTeamTeamSeqAndMentorMentorSeq(CurTeam.getTeamSeq(),mentorSeq);
+            int Count = mentoringRepository.countByTeamTeamSeqAndMentorMentorSeq(CurTeam.getTeamSeq(), mentorSeq);
             //맨토링을 할때마다 기본으로 100, 같은 팀이라면 +20 ~ +30 ~ +40  +50
-            mentor.changeMentorExp(mCount*100L+10+10*Count);
+            mentor.changeMentorExp(mCount * 100L + 10 + 10 * Count);
 
             // 멘토링 신청 알림 보내기
             // 알림 내용
-            String content = userRepository.findByUserSeq(mentorSeq).get().getUserNickname() + "멘토님이"+ team.getTeamName() +"팀이 멘토링 요청을 수락하였습니다!";
+            String content = userRepository.findByUserSeq(mentorSeq).get().getUserNickname() + "멘토님이" + team.getTeamName() + "팀이 멘토링 요청을 수락하였습니다!";
             //sendUserSeq, receiveUserSeq, teamSeq, sendTime, content, notificationType
             Notification notification = new Notification(mentorSeq, team.getTeamManagerSeq(), team.getTeamSeq(),
-                    LocalDateTime.now(), content,NotificationType.MENTORING);
+                    LocalDateTime.now(), content, NotificationType.MENTORING);
             // 5. 알림 테이블에 저장
             notificationRepository.save(notification);
         }
 
         // 거절하는 경우
-        if(ResponseType.REJECT.equals(responseType)) {
+        if (ResponseType.REJECT.equals(responseType)) {
             // 디비에서 삭제
             mentoringRepository.deleteByMentoringSeq(mentoringSeq);
 
             // 멘토링 신청 알림 보내기
             // 알림 내용
-            String content = userRepository.findByUserSeq(mentorSeq).get().getUserNickname() + " 멘토님이 "+ team.getTeamName() +" 팀 멘토링 요청을 거절하였습니다.";
+            String content = userRepository.findByUserSeq(mentorSeq).get().getUserNickname() + " 멘토님이 " + team.getTeamName() + " 팀 멘토링 요청을 거절하였습니다.";
             //sendUserSeq, receiveUserSeq, teamSeq, sendTime, content, notificationType
             Notification notification = new Notification(mentorSeq, team.getTeamManagerSeq(), team.getTeamSeq(),
-                    LocalDateTime.now(), content,NotificationType.MENTORING);
+                    LocalDateTime.now(), content, NotificationType.MENTORING);
             // 5. 알림 테이블에 저장
             notificationRepository.save(notification);
         }
         return new CommonResponseDto(201, "멘토링 요청 응답에 성공하였습니다.");
     }
+
     @Transactional
     public CommonResponseDto changeMentoringState(Long mentoringSeq) {
         Mentoring mentoring = mentoringRepository.findById(mentoringSeq).get();
 
-        if(mentoring.getMentoringState().equals(MentoringState.ACCEPT)) {
-            mentoring.changeMentoringState(MentoringState.ACTIVATE);
+        MentoringState[] mentoringStates = MentoringState.values();
+        MentoringState currentState = mentoring.getMentoringState();
+
+        // 현재 mentoringState 다음 상태를 구해서 변경해준다.
+        int ordinal = currentState.ordinal();
+        if (ordinal < mentoringStates.length - 1) {
+            MentoringState nextState = mentoringStates[ordinal + 1];
+            mentoring.changeMentoringState(nextState);
             return new CommonResponseDto(201, "멘토링 상태 변경에 성공하였습니다.");
-        } else {
-            return new CommonResponseDto(400, "멘토링 상태 변경에 실패하였습니다.");
         }
+
+        return new CommonResponseDto(400, "멘토링 상태 변경에 실패하였습니다.");
     }
 
 }

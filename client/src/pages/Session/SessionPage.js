@@ -48,6 +48,7 @@ class SessionPage extends Component {
           userId: data.userId,
           userRole: data.userRole,
           teamName: data.teamName,
+          userSeq: data.userSeq,
           session: true
         });
       });
@@ -102,18 +103,19 @@ class SessionPage extends Component {
             document.location.assign('/');
           });
       } else {
+        this.changeSessionState();
         this.quitSession(); // 백엔드의 세션 관련 데이터들을 먼저 정리해준다.
         this.handlerLeaveSessionEvent();
-        axios
-          .post(`/mentoring/state/${this.state.mentoringSeq}`)
-          .then((response) => {
-            if (response) {
-              console.log('멘토링 상태 전환 -> 종료');
-            }
-          })
-          .catch((err) => {
-            setTimeout(() => {}, 3000);
-          });
+        // axios
+        //   .post(`/v1/mentoring/state/${this.state.mentoringSeq}`)
+        //   .then((response) => {
+        //     if (response) {
+        //       console.log('멘토링 상태 전환 -> 종료');
+        //     }
+        //   })
+        //   .catch((err) => {
+        //     setTimeout(() => {}, 3000);
+        //   });
 
         document.location.assign('/');
       }
@@ -132,7 +134,12 @@ class SessionPage extends Component {
     console.log('Leave session');
   }
 
-  // 세션을 나가게되면 백엔드의 세션을 관리하기 위한 메소드
+  // 세션을 나가는 경우 세션의 상태를 변경하는 함수
+  changeSessionState() {
+    axios.get(`/v1/mentoring/state/${this.state.mentoringSeq}`);
+  }
+
+  // 세션을 나가게되면 백엔드의 세션을 관리하기 위한 함수
   quitSession() {
     const request = {
       mentoringSeq: this.state.mentoringSeq,

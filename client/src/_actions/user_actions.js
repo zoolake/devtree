@@ -27,7 +27,7 @@ import setAuthorizationToken from '../utils/setAuthorizationToken';
 // 멘토 이메일인증하기
 export function authCode(dataToSubmit) {
   const request = axios
-    .post(`/user/mentor/verification/confirm`, dataToSubmit)
+    .post(`/v1/user/mentor/verification/confirm`, dataToSubmit)
     .then((response) => response.data.data);
   return {
     type: AUTH_CODE,
@@ -38,7 +38,7 @@ export function authCode(dataToSubmit) {
 // 멘토 이메일인증하기
 export function emailAuth(dataToSubmit) {
   const request = axios
-    .post(`/user/mentor/verification`, dataToSubmit)
+    .post(`/v1/user/mentor/verification`, dataToSubmit)
     .then((response) => response.data.data);
   return {
     type: EMAIL_AUTH,
@@ -49,7 +49,7 @@ export function emailAuth(dataToSubmit) {
 // 알림 페이지 데이터 불러오기
 export function getAlarmdata(notificationSeq) {
   const request = axios
-    .get(`/user/notification/${notificationSeq}`)
+    .get(`/v1/user/notification/${notificationSeq}`)
     .then((response) => response.data);
 
   return { type: GET_ALARMDATA, payload: request };
@@ -57,33 +57,32 @@ export function getAlarmdata(notificationSeq) {
 
 // 알림 페이지 데이터 불러오기
 export function getAlarmList() {
-  const request = axios.get(`/user/notification`).then((response) => response.data);
+  const request = axios.get(`/v1/user/notification`).then((response) => response.data);
 
   return { type: GET_ALARMLIST, payload: request };
 }
 
 // 랭킹 페이지 데이터 불러오기
 export function getRank() {
-  const request = axios.get(`/mentor/sort`).then((response) => response.data);
+  const request = axios.get(`/v1/mentor/sort`).then((response) => response.data);
   return { type: GET_RANK, payload: request };
 }
 
 // 나의 스터디 리스트 모아보기
 export function getStudy() {
-  const request = axios.get(`/user/study`).then((response) => response.data);
-
+  const request = axios.get('/v1/user/study').then((response) => response.data);
   return { type: GET_STUDY, payload: request };
 }
 
 // 나의 프로젝트 정보 모아보기
 export function getProject() {
-  const request = axios.get(`/user/project`).then((response) => response.data);
+  const request = axios.get('/v1/user/project').then((response) => response.data);
   return { type: GET_PROJECT, payload: request };
 }
 
 // 기술스택 가져오기
 export function getTech() {
-  const request = axios.get(`/tech`).then((response) => response.data.data);
+  const request = axios.get('/v1/tech').then((response) => response.data.data);
   return {
     type: GET_TECH,
     payload: request
@@ -92,7 +91,7 @@ export function getTech() {
 
 // 유저 프로필 바꾸기
 export function updateUser(dataToSubmit) {
-  const request = axios.put(`/user`, dataToSubmit).then((response) => response.data);
+  const request = axios.put(`/v1/user`, dataToSubmit).then((response) => response.data);
 
   return {
     type: UPDATE_USER,
@@ -114,7 +113,7 @@ export function deleteUser(dataToSubmit) {
 // 비밀번호 업데이트
 export function passwordUpdate(dataToSubmit) {
   const request = axios
-    .put(`${USER_SERVER}/password/1`, dataToSubmit)
+    .put(`/v1/${USER_SERVER}/password/1`, dataToSubmit)
     .then((response) => response.data);
 
   return {
@@ -126,7 +125,7 @@ export function passwordUpdate(dataToSubmit) {
 // 회원가입하기
 // 연결완료, 매칭확인
 export function registerUser(dataToSubmit) {
-  const request = axios.post(`/user/signup`, dataToSubmit).then((response) => response.data);
+  const request = axios.post('/v1/user/signup', dataToSubmit).then((response) => response.data);
 
   return {
     type: REGISTER_USER,
@@ -137,7 +136,7 @@ export function registerUser(dataToSubmit) {
 // 유저 프로필 보기
 // 연결완료, 매칭 더 필요
 export function detailUser() {
-  const request = axios.get(`/user`).then((response) => response.data);
+  const request = axios.get('/v1/user').then((response) => response.data);
   return {
     type: DETAIL_USER,
     payload: request
@@ -147,7 +146,7 @@ export function detailUser() {
 // id중복확인
 // 연결완료, 매칭확인
 export function idcheckUser(dataToSubmit) {
-  const request = axios.post(`/user/idcheck`, dataToSubmit).then((response) => response.data);
+  const request = axios.post(`/v1/user/idcheck`, dataToSubmit).then((response) => response.data);
 
   return {
     type: IDCHECK_USER,
@@ -157,7 +156,7 @@ export function idcheckUser(dataToSubmit) {
 
 // 로그인 하기
 export function loginUser(dataToSubmit) {
-  const request = axios.post(`/user/login`, dataToSubmit).then((response) => {
+  const request = axios.post(`/v1/user/login`, dataToSubmit).then((response) => {
     if (response.data.accessToken) {
       const token = response.data.accessToken;
       localStorage.setItem('user', token);
@@ -192,7 +191,7 @@ export function logoutUser() {
 
 // 내가 속해있는지 확인
 export function checkTeamMember(teamSeq) {
-  const request = axios.get(`/member/check/${teamSeq}`).then((response) => response);
+  const request = axios.get(`/v1/member/check/${teamSeq}`).then((response) => response);
   return {
     type: CHECK_TEAM_MEMBER,
     payload: request
@@ -200,7 +199,7 @@ export function checkTeamMember(teamSeq) {
 }
 
 export function getMyStudyCnt() {
-  const request = axios.get('/user/study/count').then((response) => response);
+  const request = axios.get('/v1/user/study/count').then((response) => response);
   return {
     type: GET_MY_STUDY_CNT,
     payload: request
@@ -208,7 +207,7 @@ export function getMyStudyCnt() {
 }
 
 export function getMyProjectCnt() {
-  const request = axios.get('/user/project/count').then((response) => response);
+  const request = axios.get('/v1/user/project/count').then((response) => response);
   return {
     type: GET_MY_PROJECT_CNT,
     payload: request

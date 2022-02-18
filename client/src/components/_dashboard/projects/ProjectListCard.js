@@ -31,7 +31,7 @@ export default function ProjectListCard({ project }) {
       ));
     }
     return project.teamTech
-      .slice(6)
+      .slice(0, 5)
       .map((tech) => (
         <Avatar
           key={tech.techSeq}
@@ -62,66 +62,68 @@ export default function ProjectListCard({ project }) {
   // PAGE
   if (!project.teamTech) return <MyProgress />;
   return (
-    <ul>
-      <Card
-        sx={{
-          boxShadow: 5,
-          borderRadius: 1,
-          p: 2
-        }}
-        key={project.teamSeq}
-      >
-        <CardContent>
+    <Card
+      sx={{
+        boxShadow: 5,
+        borderRadius: 1,
+        p: 2
+      }}
+      key={project.teamSeq}
+    >
+      <CardContent>
+        <Stack
+          direction={{ xs: 'column', md: 'row' }}
+          spacing={2}
+          justifyContent="space-between"
+          sx={{ alignItems: 'center' }}
+        >
           <Stack
             direction={{ xs: 'column', md: 'row' }}
+            spacing={1.5}
+            sx={{ alignItems: 'center', width: '80%' }}
+          >
+            <Typography
+              variant="h4"
+              color="primary"
+              noWrap
+              to={`${project.teamSeq}`}
+              component={RouterLink}
+              style={{ textDecoration: 'none' }}
+              sx={{ width: '35%', textOverflow: 'ellipsis' }}
+            >
+              {project.teamName}
+            </Typography>
+            <Typography variant="subtitle1">
+              <Stack
+                direction="row"
+                spacing={2}
+                sx={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
+              >
+                {showTechs()}
+              </Stack>
+            </Typography>
+          </Stack>
+          <Stack
+            direction="row"
             spacing={2}
             justifyContent="space-between"
             sx={{ alignItems: 'center' }}
           >
-            <Stack
-              direction={{ xs: 'column', md: 'row' }}
-              spacing={3}
-              sx={{ alignItems: 'center', width: '80%' }}
+            <Typography
+              color="text.secondary"
+              variant="subtitle1"
+              noWrap
+              sx={{ width: '40%', textOverflow: 'ellipsis' }}
             >
-              <Typography
-                variant="h4"
-                color="primary"
-                noWrap
-                to={`${project.teamSeq}`}
-                component={RouterLink}
-                style={{ textDecoration: 'none' }}
-                sx={{ width: '40%', textOverflow: 'ellipsis' }}
-              >
-                {project.teamName}
-              </Typography>
-              <Typography variant="subtitle1">
-                <Stack
-                  direction="row"
-                  spacing={2}
-                  sx={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
-                >
-                  {showTechs()}
-                </Stack>
-              </Typography>
-            </Stack>
-            <Stack
-              direction="row"
-              spacing={2}
-              justifyContent="space-between"
-              sx={{ alignItems: 'center' }}
-            >
-              <Typography color="text.secondary" variant="subtitle1">
-                {project.teamManagerName}
-              </Typography>
-              <Typography color="text.secondary">
-                {project.teamMemberCnt}/{project.teamRecruitCnt}
-              </Typography>
-              {showState()}
-            </Stack>
+              {project.teamManagerName}
+            </Typography>
+            <Typography color="text.secondary">
+              {project.teamMemberCnt}/{project.teamRecruitCnt}
+            </Typography>
+            {showState()}
           </Stack>
-        </CardContent>
-      </Card>
-      <br />
-    </ul>
+        </Stack>
+      </CardContent>
+    </Card>
   );
 }

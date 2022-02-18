@@ -4,7 +4,9 @@ import com.rootnode.devtree.db.entity.Team;
 import com.rootnode.devtree.db.entity.TeamState;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.tomcat.jni.Local;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -21,22 +23,34 @@ import java.util.List;
 @NoArgsConstructor
 public class StudyDetailResponseDto {
     private Long teamSeq;
-    private Long teamManagerSeq;
     private String teamName;
-    private TeamState teamState;
+    private Long teamManagerSeq;
     private String teamManagerName;
+    private String teamType;
+    private String teamDesc;
+    private TeamState teamState;
     private int teamRecruitCnt;
     private int teamMemberCnt;
+    private LocalDateTime teamCreateTime;
+    private LocalDateTime teamUpdateTime;
+    private LocalDateTime teamStartTime;
+    private LocalDateTime teamEndTime;
     private List<TechInfoDto> teamTech;
 
     public StudyDetailResponseDto(Team team, String teamManagerName) {
         this.teamSeq = team.getTeamSeq();
-        this.teamManagerSeq = team.getTeamManagerSeq();
         this.teamName = team.getTeamName();
-        this.teamState = team.getTeamState();
+        this.teamManagerSeq = team.getTeamManagerSeq();
         this.teamManagerName = teamManagerName;
+        this.teamType = team.getTeamType().name();
+        this.teamDesc = team.getTeamDesc();
+        this.teamState = team.getTeamState();
         this.teamRecruitCnt = team.getTeamRecruitCnt();
         this.teamMemberCnt = team.getTeamMemberCnt();
+        this.teamCreateTime = team.getTeamCreateTime();
+        this.teamUpdateTime = team.getTeamUpdateTime();
+        this.teamStartTime = team.getTeamStartTime();
+        this.teamEndTime = team.getTeamEndTime();
         this.teamTech = team.toTechInfoDto();
     }
 }

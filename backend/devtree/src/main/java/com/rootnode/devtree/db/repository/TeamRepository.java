@@ -1,5 +1,6 @@
 package com.rootnode.devtree.db.repository;
 
+import com.rootnode.devtree.db.entity.ProjectPositionReservation;
 import com.rootnode.devtree.db.entity.Team;
 import com.rootnode.devtree.db.entity.TeamType;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -18,4 +19,7 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     @EntityGraph(attributePaths = {"teamTechList","teamTechList.tech"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query(value = "select t from Team t where t.teamSeq = :teamSeq")
     Team findTeamByTeamSeq(Long teamSeq);
+
+    @Query(value = "select t from Team t where t.teamManagerSeq = :managerSeq")
+    List<Team> findTeamByManagerSeq(Long managerSeq);
 }

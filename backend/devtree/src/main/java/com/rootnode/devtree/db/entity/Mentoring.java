@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Table(name = "tb_mentoring_reservation")
 @Entity
@@ -14,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Mentoring extends BaseTimeEntity{
+public class Mentoring {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "mentoring_seq")
@@ -28,10 +30,23 @@ public class Mentoring extends BaseTimeEntity{
     @JoinColumn(name = "mentor_seq")
     private Mentor mentor;
 
+    @Column(name = "mentoring_application_comment")
+    private String mentoringApplicationComment;
+
+    // 2022-02-10
+    @Column(name = "mentoring_start_date")
+    private LocalDate mentoringStartDate;   // 원래는 int로 되어있었음
+    // 14:00:00
     @Column(name = "mentoring_start_time")
-    private LocalDateTime mentoringStartTime;
+    private LocalTime mentoringStartTime;  // 원래는 LocalDateTime로 되어있었음
+    // 2022-02-10 14:00:00
     @Column(name = "mentoring_create_time")
     private LocalDateTime mentoringCreateTime;
     @Column(name = "mentoring_state")
+    @Enumerated(EnumType.STRING)
     private MentoringState mentoringState;
+
+    public void changeMentoringState(MentoringState mentoringState) {
+        this.mentoringState = mentoringState;
+    }
 }

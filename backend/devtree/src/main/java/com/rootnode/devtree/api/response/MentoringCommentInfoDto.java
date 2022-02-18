@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MentoringCommentInfoDto {
     private String userName;
-    private String mentorComment;
+    private String comment;
 
     public MentoringCommentInfoDto(User user, MentoringComment mentoringComment) {
-        this.userName = user.getUserNickname();
-        this.mentorComment = mentoringComment.getMentorComment();
+        this.userName = user.getUserName();
+        this.comment = mentoringComment.getMentorComment();
     }
 }

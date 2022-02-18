@@ -38,9 +38,21 @@ public class User{
     private String userDesc;
     @Column(name = "user_nickname")
     private String userNickname;
+    @Column(name = "verification_code")
+    private String verificationCode;
 
     @JsonIgnore
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    String user_password;
+    @Column(name = "user_password")
+    String userPassword;
+
+
+    public void changeUserNickName(String userNickname) { this.userNickname = userNickname; }
+    public void changeUserName(String userName) { this.userName = userName; }
+    public void changeUserDesc(String userDesc) { this.userDesc = userDesc; }
+    public void changeUserEmail(String userEmail) { this.userEmail = userEmail; }
+    public void changeUserRole(UserRole userRole) { this.userRole = userRole; }
+    public void changeVerificationCode(String verificationCode) {
+        System.out.println("this.verificationCode = " + this.verificationCode);
+    }
 
 }

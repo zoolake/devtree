@@ -4,10 +4,7 @@ import com.rootnode.devtree.api.request.StudyCreateRequestDto;
 import com.rootnode.devtree.api.request.StudyJoinRequestDto;
 import com.rootnode.devtree.api.request.StudyRespondRequestDto;
 import com.rootnode.devtree.api.request.StudyUpdateRequestDto;
-import com.rootnode.devtree.api.response.CommonResponseDto;
-import com.rootnode.devtree.api.response.StudyDetailResponseDto;
-import com.rootnode.devtree.api.response.StudyJoinListResponseDto;
-import com.rootnode.devtree.api.response.StudyListResponseDto;
+import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.db.entity.*;
 import com.rootnode.devtree.db.entity.compositeKey.StudyReservationId;
 import com.rootnode.devtree.db.entity.compositeKey.StudyUserId;
@@ -18,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -30,6 +28,7 @@ public class StudyService {
     private final TeamRepository teamRepository;
     private final TeamTechRepository teamTechRepository;
     private final TechRepository techRepository;
+    private final NotificationRepository notificationRepository;
 
     private final StudyReservationRepository studyReservationRepository;
     private final StudyUserRepository studyUserRepository;
@@ -86,10 +85,16 @@ public class StudyService {
         return new StudyDetailResponseDto(team, managerName);
     }
 
+    // 스터디 멤버 조회
+    public List<StudyMemberListResponseDto> findStudyMember(Long teamSeq) {
+        // 1. 팀 테이블 조회
+        List<User> userList = studyUserRepository.findUserByTeamSeq(teamSeq);
+        return userList.stream().map(user -> new StudyMemberListResponseDto(user)).collect(Collectors.toList());
+    }
+
+
     // 스터디 신청
-    public CommonResponseDto joinStudy(Long teamSeq, StudyJoinRequestDto requestDto) {
-        Long userSeq = requestDto.getUserSeq();
-        System.out.println("userSeq >>> " + userSeq);
+    public CommonResponseDto joinStudy(Long userSeq, Long teamSeq, StudyJoinRequestDto requestDto) {
         // 1. User 객체를 찾는다.
         User user = userRepository.findById(userSeq).get();
         System.out.println(user.getUserName());
@@ -98,13 +103,23 @@ public class StudyService {
         // 3. 저장
         studyReservationRepository.save(requestDto.toEntity(teamSeq, team, user));
 
+        // 4. 스터디 신청 알림 보내기
+        // 알림 내용
+        String content = user.getUserName() + "님이 " + team.getTeamName() + "팀 스터디에 신청 요청을 보냈습니다";
+        //sendUserSeq, receiveUserSeq, teamSeq, sendTime, content, notificationType
+        Notification notification = new Notification(userSeq, team.getTeamManagerSeq(), teamSeq,
+                LocalDateTime.now(), content,NotificationType.STUDY);
+        // 5. 알림 테이블에 저장
+        notificationRepository.save(notification);
+
         return new CommonResponseDto(201, "스터디 신청에 성공하였습니다.");
     }
 
     // 스터디 신청 응답
     @Transactional
-    public CommonResponseDto respondStudy(Long teamSeq, Long userSeq, StudyRespondRequestDto requestDto) {
+    public CommonResponseDto respondStudy(Long teamSeq, StudyRespondRequestDto requestDto) {
         // 응답 타입 (수락 / 거절)
+        Long userSeq = requestDto.getUserSeq();
         ResponseType responseType = requestDto.getResponseType();
         StudyUserId studyUserId = new StudyUserId(userSeq, teamSeq);
         User user = userRepository.findById(userSeq).get();
@@ -118,15 +133,35 @@ public class StudyService {
             teamRepository.findById(teamSeq).get().addTeamMember();
             // 3. Study_Reservation_Repository 에 있는 (userSeq, teamSeq) 데이터 삭제
             studyReservationRepository.deleteById(new StudyReservationId(userSeq, teamSeq));
+
+            // 4. 스터디 신청 수락 알림 보내기
+            // 알림 내용
+            Long teamManagerSeq = team.getTeamManagerSeq();
+            String content = team.getTeamName() + "팀 스터디 신청이 수락되었습니다!";
+            //sendUserSeq, receiveUserSeq, teamSeq, sendTime, content, notificationType
+            Notification notification = new Notification(teamManagerSeq, userSeq, teamSeq,
+                    LocalDateTime.now(), content,NotificationType.STUDY);
+            // 5. 알림 테이블에 저장
+            notificationRepository.save(notification);
         }
 
         // 2. 거절을 하는 경우
         if (ResponseType.REJECT.equals(responseType)) {
             // 1. 해당 신청 기록을 Study_Reservation_Repository 에서 삭제
             studyReservationRepository.deleteById(new StudyReservationId(userSeq, teamSeq));
-        }
 
-        return new CommonResponseDto(201, "스터디 요청 응답에 성공하였습니다.");
+            // 2. 스터디 신청 거절 알림 보내기
+            // 알림 내용
+            Long teamManagerSeq = team.getTeamManagerSeq();
+            String content = team.getTeamName() + "팀 스터디 신청이 거절되었습니다.";
+            //sendUserSeq, receiveUserSeq, teamSeq, sendTime, content, notificationType
+            Notification notification = new Notification(teamManagerSeq, userSeq, teamSeq,
+                    LocalDateTime.now(), content,NotificationType.STUDY);
+            // 5. 알림 테이블에 저장
+            notificationRepository.save(notification);
+            return new CommonResponseDto(201, "스터디 요청을 거절하였습니다.");
+        }
+        return new CommonResponseDto(201, "스터디 요청을 수락하였습니다.");
     }
 
     // 스터디 신청 조회

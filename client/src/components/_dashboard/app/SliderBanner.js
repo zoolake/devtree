@@ -36,7 +36,7 @@ export default function AppRankMain() {
   }
   const items = [
     {
-      img: '/static/images/banner/devtree.gif'
+      img: '/static/images/banner/devtree3.gif'
     }
   ];
   const handleChange = (cur, prev) => {

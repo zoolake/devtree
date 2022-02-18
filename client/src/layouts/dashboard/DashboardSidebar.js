@@ -23,6 +23,7 @@ import { MHidden } from '../../components/@material-extend';
 import sidebarConfig from './SidebarConfig';
 import account from '../../_mocks_/account';
 import { RoleImgAvatar } from '../../utils/mockImages';
+import './App.css';
 // ----------------------------------------------------------------------
 
 const DRAWER_WIDTH = 280;
@@ -95,8 +96,8 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           <AccountStyle>
             <Avatar src={RoleImgAvatar(avatarname)} />
             <Box sx={{ ml: 2 }}>
-              {avatarname === 'MENTOR' && <div>멘토</div>}
-              {avatarname === 'USER' && <div>일반유저</div>}
+              {avatarname === 'MENTOR' && <div className="SideName">멘토</div>}
+              {avatarname === 'USER' && <div className="SideName">일반유저</div>}
               <Typography variant="subtitle2" sx={{ color: 'text.primary', fontSize: '20px' }}>
                 {token}
               </Typography>

@@ -22,7 +22,7 @@ import {
 export default function MainPage() {
   return (
     <Page title="devtree">
-      <Container maxWidth="xl">
+      <Container maxWidth="lg">
         <Grid container spacing={4}>
           <SliderBanner />
 

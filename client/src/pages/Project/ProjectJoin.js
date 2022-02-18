@@ -21,7 +21,6 @@ export default function ProjectJoin() {
     setLoading(true);
     await dispatch(getProjectDetail(teamSeq))
       .then((response) => {
-        console.log(response.payload.data.data);
         setProjectDetail(response.payload.data.data);
       })
       .catch((error) => {

@@ -22,7 +22,6 @@ export default function ProjectResponse() {
     setLoading(true);
     await dispatch(getProjectResponse(teamSeq))
       .then((response) => {
-        console.log(response.payload.data.data, '프로젝트 요청 목록 불러오기 성공');
         setprojectRequest(response.payload.data.data);
       })
       .catch((error) => {
@@ -73,7 +72,7 @@ export default function ProjectResponse() {
       <Stack direction="column" spacing={3}>
         {projectRequest.map((request) => (
           <div key={request.userSeq}>
-            <ProjectResponseForm volunteer={request} />
+            <ProjectResponseForm volunteer={request} getPjtResponse={getPjtResponse} />
           </div>
         ))}
       </Stack>

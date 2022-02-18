@@ -47,7 +47,7 @@ export default function GetUserProfile() {
         setOptions(all);
       })
       .catch((err) => {
-        console.log(err, '에러');
+        console.log(err);
       });
   };
 

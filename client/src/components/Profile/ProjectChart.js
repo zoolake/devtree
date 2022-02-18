@@ -42,7 +42,8 @@ export default function ProjectChart() {
     setLoading(true);
     await dispatch(getMyProjectCnt())
       .then((response) => {
-        if (response) {
+        console.log(response.payload.data.data);
+        if (response.payload.data.data.length > 0) {
           setMyProjectCnt(response.payload.data.data);
         }
       })
@@ -64,58 +65,56 @@ export default function ProjectChart() {
   }
 
   // OPTIONS
-  if (myProjectCnt.length !== 0) {
-    const CHART_DATA = myProjectCnt.map((tech) => tech.techCount);
-    const chartOptions = merge(BaseOptionChart(), {
-      colors: [
-        theme.palette.primary.main,
-        theme.palette.info.main,
-        theme.palette.warning.main,
-        theme.palette.error.main
-      ],
-      labels: myProjectCnt.map((tech) => tech.techName),
-      stroke: { colors: [theme.palette.background.paper] },
-      legend: { floating: true, horizontalAlign: 'center' },
-      dataLabels: { enabled: true, dropShadow: { enabled: false } },
-      tooltip: {
-        fillSeriesColor: false,
-        y: {
-          formatter: (seriesName) => fNumber(seriesName),
-          title: {
-            formatter: (seriesName) => `#${seriesName}`
-          }
+  const chartOptions = merge(BaseOptionChart(), {
+    colors: [
+      theme.palette.primary.main,
+      theme.palette.info.main,
+      theme.palette.warning.main,
+      theme.palette.error.main
+    ],
+    labels: myProjectCnt.map((pos) => pos.positionName),
+    stroke: { colors: [theme.palette.background.paper] },
+    legend: { floating: true, horizontalAlign: 'center' },
+    dataLabels: { enabled: true, dropShadow: { enabled: false } },
+    tooltip: {
+      fillSeriesColor: false,
+      y: {
+        formatter: (seriesName) => fNumber(seriesName),
+        title: {
+          formatter: (seriesName) => `#${seriesName}`
         }
-      },
-      plotOptions: {
-        pie: { donut: { labels: { show: false } } }
       }
-    });
+    },
+    plotOptions: {
+      pie: { donut: { labels: { show: false } } }
+    }
+  });
+
+  // CONDITIONAL
+  const showResult = () => {
+    if (myProjectCnt.length !== 0) {
+      const CHART_DATA = myProjectCnt.map((pos) => pos.positionCount);
+      return (
+        <ChartWrapperStyle dir="ltr">
+          <ReactApexChart type="pie" series={CHART_DATA} options={chartOptions} height={280} />
+        </ChartWrapperStyle>
+      );
+    }
     return (
-      <Container>
-        <Card sx={{ minWidth: 275 }}>
-          <CardContent>
-            <Typography sx={{ fontSize: 14, mb: 5 }} color="primary" gutterBottom>
-              프로젝트 기록
-            </Typography>
-            <ChartWrapperStyle dir="ltr">
-              <ReactApexChart type="pie" series={CHART_DATA} options={chartOptions} height={280} />
-            </ChartWrapperStyle>
-          </CardContent>
-        </Card>
-      </Container>
+      <Typography variant="h3" color="primary" sx={{ mt: '10%', ml: '30%' }}>
+        프로젝트가 없습니다.
+      </Typography>
     );
-  }
+  };
 
   return (
     <Container>
-      <Card sx={{ minWidth: 275, minHeight: 250 }}>
+      <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography sx={{ fontSize: 14, mb: 5 }} color="primary" gutterBottom>
             프로젝트 기록
           </Typography>
-          <Typography variant="h3" color="primary" sx={{ mt: '10%', ml: '30%' }}>
-            프로젝트가 없습니다.
-          </Typography>
+          {showResult()}
         </CardContent>
       </Card>
     </Container>

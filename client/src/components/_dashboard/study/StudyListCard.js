@@ -24,6 +24,7 @@ export default function StudyListCard({ study }) {
     if (study.teamTech.length < 6) {
       return study.teamTech.map((tech) => (
         <Avatar
+          key={tech.techSeq}
           variant="caption"
           sx={{ border: '1px solid #efefef', width: '50px', height: '50px' }}
           src={TechImgAvatar(tech.techSeq)}
@@ -34,6 +35,7 @@ export default function StudyListCard({ study }) {
       .slice(6)
       .map((tech) => (
         <Avatar
+          key={tech.techSeq}
           variant="caption"
           sx={{ border: '1px solid #efefef', width: '50px', height: '50px' }}
           src={TechImgAvatar(tech.techSeq)}
@@ -82,64 +84,61 @@ export default function StudyListCard({ study }) {
   // PAGE
   // if (!study.teamTech) return <MyProgress />;
   return (
-    <ul>
-      <Card
-        sx={{
-          boxShadow: 5,
-          borderRadius: 1,
-          p: 2
-        }}
-        key={study.teamSeq}
-      >
-        <CardContent>
+    <Card
+      sx={{
+        boxShadow: 5,
+        borderRadius: 1,
+        p: 2
+      }}
+      key={study.teamSeq}
+    >
+      <CardContent>
+        <Stack
+          direction={{ xs: 'column', md: 'row' }}
+          spacing={2}
+          justifyContent="space-between"
+          sx={{ alignItems: 'center' }}
+        >
           <Stack
             direction={{ xs: 'column', md: 'row' }}
+            spacing={1.5}
+            sx={{ alignItems: 'center', width: '80%' }}
+          >
+            <Typography
+              variant="h4"
+              color="primary"
+              noWrap
+              to={`/study/${study.teamSeq}`}
+              component={RouterLink}
+              style={{ textDecoration: 'none' }}
+              sx={{ width: '35%', textOverflow: 'ellipsis' }}
+            >
+              {study.teamName}
+            </Typography>
+            <Typography variant="subtitle1">
+              <Stack
+                direction="row"
+                spacing={2}
+                sx={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
+              >
+                {showTechs()}
+              </Stack>
+            </Typography>
+          </Stack>
+          <Stack
+            direction="row"
             spacing={2}
             justifyContent="space-between"
             sx={{ alignItems: 'center' }}
           >
-            <Stack
-              direction={{ xs: 'column', md: 'row' }}
-              spacing={3}
-              sx={{ alignItems: 'center', width: '80%' }}
-            >
-              <Typography
-                variant="h4"
-                color="primary"
-                noWrap
-                to={`/study/${study.teamSeq}`}
-                component={RouterLink}
-                style={{ textDecoration: 'none' }}
-                sx={{ width: '40%', textOverflow: 'ellipsis' }}
-              >
-                {study.teamName}
-              </Typography>
-              <Typography variant="subtitle1">
-                <Stack
-                  direction="row"
-                  spacing={2}
-                  sx={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
-                >
-                  {showTechs()}
-                </Stack>
-              </Typography>
-            </Stack>
-            <Stack
-              direction="row"
-              spacing={2}
-              justifyContent="space-between"
-              sx={{ alignItems: 'center' }}
-            >
-              <Typography color="text.secondary" variant="subtitle1">
-                {study.teamManagerName}
-              </Typography>
-              {showMember()}
-              {showState()}
-            </Stack>
+            <Typography color="text.secondary" variant="subtitle1">
+              {study.teamManagerName}
+            </Typography>
+            {showMember()}
+            {showState()}
           </Stack>
-        </CardContent>
-      </Card>
-      <br />
-    </ul>
+        </Stack>
+      </CardContent>
+    </Card>
   );
 }

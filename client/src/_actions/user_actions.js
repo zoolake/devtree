@@ -70,20 +70,19 @@ export function getRank() {
 
 // 나의 스터디 리스트 모아보기
 export function getStudy() {
-  const request = axios.get(`/v1/user/study`).then((response) => response.data);
-
+  const request = axios.get('/v1/user/study').then((response) => response.data);
   return { type: GET_STUDY, payload: request };
 }
 
 // 나의 프로젝트 정보 모아보기
 export function getProject() {
-  const request = axios.get(`/user/project`).then((response) => response.data);
+  const request = axios.get('/v1/user/project').then((response) => response.data);
   return { type: GET_PROJECT, payload: request };
 }
 
 // 기술스택 가져오기
 export function getTech() {
-  const request = axios.get(`/v1/tech`).then((response) => response.data.data);
+  const request = axios.get('/v1/tech').then((response) => response.data.data);
   return {
     type: GET_TECH,
     payload: request
@@ -114,7 +113,7 @@ export function deleteUser(dataToSubmit) {
 // 비밀번호 업데이트
 export function passwordUpdate(dataToSubmit) {
   const request = axios
-    .put(`${USER_SERVER}/password/1`, dataToSubmit)
+    .put(`/v1/${USER_SERVER}/password/1`, dataToSubmit)
     .then((response) => response.data);
 
   return {
@@ -126,7 +125,7 @@ export function passwordUpdate(dataToSubmit) {
 // 회원가입하기
 // 연결완료, 매칭확인
 export function registerUser(dataToSubmit) {
-  const request = axios.post(`/user/signup`, dataToSubmit).then((response) => response.data);
+  const request = axios.post('/v1/user/signup', dataToSubmit).then((response) => response.data);
 
   return {
     type: REGISTER_USER,
@@ -137,7 +136,7 @@ export function registerUser(dataToSubmit) {
 // 유저 프로필 보기
 // 연결완료, 매칭 더 필요
 export function detailUser() {
-  const request = axios.get(`/user`).then((response) => response.data);
+  const request = axios.get('/v1/user').then((response) => response.data);
   return {
     type: DETAIL_USER,
     payload: request

@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
 //
 import { Divider, Grid, Box, CardContent, Typography, Stack } from '@mui/material';
-//
-import { MyProfile } from '.';
 
 GetUserProfile.propTypes = {
   userDetail: PropTypes.object.isRequired,
@@ -27,9 +25,9 @@ export default function GetUserProfile({ userDetail, myTechs }) {
   };
 
   // CONDITIONAL
-  if (!userDetail) {
-    return <MyProfile />;
-  }
+  // if (!userDetail) {
+  //   return <MyProfile />;
+  // }
   const showMyTechs = () => {
     if (myTechs.length > 0)
       return (

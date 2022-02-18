@@ -23,11 +23,13 @@ export default function UserProfile() {
         if (response) {
           setUserDetail(response.payload.data.user);
           const techData = response.payload.data.tech;
-          const myTech = techData.reduce((total, tech) => {
-            total = [...total, { value: tech.techSeq, label: tech.techName }];
-            return total;
-          }, []);
-          setMyTechs(myTech);
+          if (techData.length !== 0) {
+            const myTech = techData.reduce((total, tech) => {
+              total = [...total, { value: tech.techSeq, label: tech.techName }];
+              return total;
+            }, []);
+            setMyTechs(myTech);
+          }
         }
       })
       .catch(() => {

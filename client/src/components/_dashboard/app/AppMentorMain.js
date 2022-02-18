@@ -8,7 +8,7 @@ const RootStyle = styled(Card)(({ theme }) => ({
   background: 'url(/static/images/main_mentoring.gif)',
   backgroundRepeat: 'no-repeat',
   backgroundSize: 'contain',
-  width: '100%',
+  width: '90%',
   height: '100%'
 }));
 
@@ -26,7 +26,7 @@ export default function AppMentorMain() {
           padding: '4px',
           color: 'black',
           fontWeight: 'bold',
-          fontSize: '40px'
+          fontSize: '30px'
         }}
       >
         MENTORING

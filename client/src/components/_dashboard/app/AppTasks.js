@@ -14,11 +14,11 @@ import {
 // ----------------------------------------------------------------------
 
 const TASKS = [
-  'Create FireStone Logo',
-  'Add SCSS and JS files if required',
-  'Stakeholder Meeting',
-  'Scoping & Estimations',
-  'Sprint Showcase'
+  '데브트리 회원가입하기',
+  '멘토 인증하기',
+  '프로젝트하기',
+  '스터디 하기',
+  '멘토와 멘토링하기'
 ];
 
 // ----------------------------------------------------------------------
@@ -59,7 +59,7 @@ function TaskItem({ task, checked, formik, ...other }) {
 export default function AppTasks() {
   const formik = useFormik({
     initialValues: {
-      checked: [TASKS[2]]
+      checked: [TASKS[0]]
     },
     onSubmit: (values) => {
       console.log(values);
@@ -70,7 +70,7 @@ export default function AppTasks() {
 
   return (
     <Card>
-      <CardHeader title="Tasks" />
+      <CardHeader title="데브트리를 잘 이용하는 TIP!" />
       <Box sx={{ px: 3, py: 1 }}>
         <FormikProvider value={formik}>
           <Form autoComplete="off" noValidate onSubmit={handleSubmit}>

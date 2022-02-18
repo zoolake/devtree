@@ -2,8 +2,6 @@ import axios from 'axios';
 import {
   GET_PROJECT_LIST,
   CREATE_PROJECT,
-  GET_TECH_LIST,
-  GET_POSITION_LIST,
   DELETE_PROJECT,
   GET_PROJECT_DETAIL,
   UPDATE_PROJECT,
@@ -62,7 +60,6 @@ export function getProjectResponse(teamSeq) {
 }
 
 export function answerProjectResponse(data) {
-  console.log(data);
   const request = axios
     .post(`/v1/project/join/response/${data.teamSeq}`, data.dataToSubmit) // https://127.26.1.146:8080/v1/project/join/response/${teamSeq.id}
     .then((response) => response);

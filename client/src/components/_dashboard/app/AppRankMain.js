@@ -8,8 +8,8 @@ const RootStyle = styled(Card)(({ theme }) => ({
   background: 'url(/static/images/main_rank.gif)',
   backgroundRepeat: 'no-repeat',
   backgroundSize: 'contain',
-  width: '100%',
-  height: '100%'
+  width: '90%',
+  height: '10%'
 }));
 
 // ----------------------------------------------------------------------
@@ -23,7 +23,7 @@ export default function AppRankMain() {
           bottom: '0',
           right: '1em',
           width: '120px',
-          padding: '4px',
+          padding: '1px',
           color: 'black',
           fontWeight: 'bold',
           fontSize: '40px'

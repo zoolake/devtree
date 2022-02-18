@@ -39,7 +39,6 @@ export default function UpdateUserProfileForm({
   myTechs,
   getUserDetail
 }) {
-  console.log(myTechs);
   const [loading, setLoading] = useState(false);
   const [techOption, setTechOption] = useState([]);
   const dispatch = useDispatch();
@@ -78,8 +77,8 @@ export default function UpdateUserProfileForm({
         .concat(values.filter((v) => !v.isFixed).sort(orderByLabel)),
     [orderByLabel]
   );
-  const [myTech, setMyTech] = useState(myTechs); // myTechs
-  // setMyTech(myTechs);
+  const [myTech, setMyTech] = useState(orderOptions(techOption)); // myTechs
+  setMyTech(myTech);
   const ProfileSchema = Yup.object().shape({
     userName: Yup.string()
       .min(2, '이름은 2자 이상이여야 합니다.')

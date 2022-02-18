@@ -7,10 +7,11 @@ import { Button, Stack, Typography } from '@mui/material';
 import { answerProjectResponse } from '../../../_actions/project_actions';
 
 ProjectResponseForm.propTypes = {
-  volunteer: PropTypes.object.isRequired
+  volunteer: PropTypes.object.isRequired,
+  getPjtResponse: PropTypes.func
 };
 
-export default function ProjectResponseForm({ volunteer }) {
+export default function ProjectResponseForm({ volunteer, getPjtResponse }) {
   // STATE
   const teamSeq = useParams().id;
 
@@ -29,6 +30,7 @@ export default function ProjectResponseForm({ volunteer }) {
       await dispatch(answerProjectResponse({ teamSeq, dataToSubmit }))
         .then(() => {
           console.log('프로젝트 신청 응답 성공');
+          getPjtResponse();
         })
         .catch((error) => {
           console.log(error, '프로젝트 신청 응답 실패');

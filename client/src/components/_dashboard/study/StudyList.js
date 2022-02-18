@@ -19,7 +19,9 @@ export default function StudyList() {
     await dispatch(getStudyList())
       .then((response) => {
         if (response.payload.data.data.length > 0) {
-          setStudyList(response.payload.data.data);
+          const styData = response.payload.data.data;
+          styData.sort((a, b) => parseFloat(b.teamSeq) - parseFloat(a.teamSeq));
+          setStudyList(styData);
         } else {
           setStudyList(false);
         }

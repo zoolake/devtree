@@ -19,7 +19,9 @@ export default function ProjectList() {
     dispatch(getProjectList())
       .then((response) => {
         if (response.payload.data.data.length > 0) {
-          setPjtList(response.payload.data.data);
+          const pjtData = response.payload.data.data;
+          pjtData.sort((a, b) => parseFloat(b.teamSeq) - parseFloat(a.teamSeq));
+          setPjtList(pjtData);
         } else {
           setPjtList(false);
         }

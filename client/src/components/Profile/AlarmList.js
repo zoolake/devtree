@@ -97,22 +97,13 @@ export default function AlarmList() {
           });
         }
       })
-      .then(
-        dispatch(getAlarmList())
-          .then((response) => {
-            if (response) {
-              const alarmData = response.payload.data;
-              alarmData.sort(
-                (a, b) => parseFloat(b.notificationSeq) - parseFloat(a.notificationSeq)
-              );
-              getAlarms(alarmData);
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-            setTimeout(() => {}, 3000);
-          })
-      );
+      .then(() => {
+        makeAlarmList();
+      })
+      .catch((err) => {
+        console.log(err);
+        setTimeout(() => {}, 3000);
+      });
   };
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));

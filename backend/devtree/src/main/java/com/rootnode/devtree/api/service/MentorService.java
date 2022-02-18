@@ -388,6 +388,7 @@ public class MentorService {
     }
 
     // 멘토링 응답
+    @Transactional
     public CommonResponseDto respondMentoring(Long mentorSeq, Long mentoringSeq, MentoringApplyRespondRequestDto requestDto) {
         ResponseType responseType = requestDto.getResponseType();
         LocalDate mentoringDate = mentoringRepository.findById(mentoringSeq).get().getMentoringStartDate();

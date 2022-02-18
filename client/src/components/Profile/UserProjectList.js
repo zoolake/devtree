@@ -18,7 +18,7 @@ export default function UserProjectList() {
     setLoading(true);
     dispatch(getProject())
       .then((response) => {
-        if (response.payload.data > 0) {
+        if (response.payload.data.length > 0) {
           setMyProjectList(response.payload.data);
         } else {
           setMyProjectList(false);

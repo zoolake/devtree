@@ -78,7 +78,7 @@ export default function UpdateUserProfileForm({
     [orderByLabel]
   );
   const [myTech, setMyTech] = useState(orderOptions(techOption)); // myTechs
-  setMyTech(myTech);
+
   const ProfileSchema = Yup.object().shape({
     userName: Yup.string()
       .min(2, '이름은 2자 이상이여야 합니다.')
@@ -130,6 +130,7 @@ export default function UpdateUserProfileForm({
   // RENDER
   useEffect(() => {
     getAllTech();
+    setMyTech(myTechs);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

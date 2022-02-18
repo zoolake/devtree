@@ -101,8 +101,8 @@ export default function ProjectChart() {
       );
     }
     return (
-      <Typography variant="h3" color="primary" sx={{ mt: '10%', ml: '30%' }}>
-        프로젝트가 없습니다.
+      <Typography variant="h3" sx={{ mt: '10%', ml: '30%' }}>
+        <span style={{ color: '#00AB55' }}>프로젝트</span>가 없습니다.
       </Typography>
     );
   };
@@ -115,9 +115,6 @@ export default function ProjectChart() {
             프로젝트 기록
           </Typography>
           {showResult()}
-          <Typography variant="h3" sx={{ mt: '10%', ml: '30%' }}>
-            <span style={{ color: '#00AB55' }}>프로젝트</span>가 없습니다.
-          </Typography>
         </CardContent>
       </Card>
     </Container>

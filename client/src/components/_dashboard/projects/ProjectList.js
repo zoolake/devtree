@@ -53,5 +53,11 @@ export default function ProjectList() {
     }
     return pjtList.map((pjt) => <ProjectListCard key={pjt.teamSeq} project={pjt} />);
   };
-  return <Container fixed>{showEachPjt()}</Container>;
+  return (
+    <Container fixed>
+      <Stack direction="column" spacing={2}>
+        {showEachPjt()}
+      </Stack>
+    </Container>
+  );
 }

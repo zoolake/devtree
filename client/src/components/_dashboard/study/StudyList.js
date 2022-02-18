@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 //
-import { Container, Typography } from '@mui/material';
+import { Container, Typography, Stack } from '@mui/material';
 //
 import { StudyListCard } from '.';
 import { getStudyList } from '../../../_actions/study_actions';
@@ -53,5 +53,11 @@ export default function StudyList() {
     }
     return studyList.map((sty) => <StudyListCard key={sty.teamSeq} study={sty} />);
   };
-  return <Container fixed>{showEachStudy()}</Container>;
+  return (
+    <Container fixed>
+      <Stack direction="column" spacing={2}>
+        {showEachStudy()}
+      </Stack>
+    </Container>
+  );
 }

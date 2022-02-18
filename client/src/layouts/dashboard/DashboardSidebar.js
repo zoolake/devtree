@@ -97,8 +97,11 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
             <Box sx={{ ml: 2, width: '75%' }}>
               {avatarname === 'MENTOR' && <div className="SideName">멘토</div>}
               {avatarname === 'USER' && <div className="SideName">일반유저</div>}
-              <Typography variant="subtitle2" sx={{ color: 'text.primary', fontSize: '20px' }} noWrap>
-              
+              <Typography
+                variant="subtitle2"
+                sx={{ color: 'text.primary', fontSize: '20px' }}
+                noWrap
+              >
                 {token}
               </Typography>
               <Typography variant="body2" sx={{ color: 'white' }}>

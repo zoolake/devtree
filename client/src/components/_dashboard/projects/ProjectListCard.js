@@ -86,7 +86,7 @@ export default function ProjectListCard({ project }) {
               variant="h4"
               color="primary"
               noWrap
-              to={`${project.teamSeq}`}
+              to={`/project/${project.teamSeq}`}
               component={RouterLink}
               style={{ textDecoration: 'none' }}
               sx={{ width: '35%', textOverflow: 'ellipsis' }}

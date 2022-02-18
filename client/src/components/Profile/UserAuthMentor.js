@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import jwtdecode from 'jwt-decode';
@@ -13,8 +14,11 @@ import {
   MenuItem,
   FormControl,
   Select,
-  TextField
+  TextField,
+  Snackbar,
+  IconButton
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
 import Swal from 'sweetalert2';
 //
@@ -26,6 +30,7 @@ export default function UserAuthMentor() {
   const [domain, setDomain] = useState(false);
   const [code, setCode] = useState(null);
   const [email, setEmail] = useState('');
+  const [open, setOpen] = useState(false);
 
   // INIT
   const dispatch = useDispatch();
@@ -52,7 +57,7 @@ export default function UserAuthMentor() {
     };
     dispatch(emailAuth(dataToSubmit))
       .then((response) => {
-        console.log(response);
+        setOpen(true);
       })
       .catch((err) => {
         setTimeout(() => {}, 3000);
@@ -94,6 +99,12 @@ export default function UserAuthMentor() {
   };
   const codehandleChange = (event) => {
     setCode(event.target.value);
+  };
+  const handleClose = (reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
   };
 
   // CONDITIONAL
@@ -155,6 +166,13 @@ export default function UserAuthMentor() {
   };
 
   // PAGE
+  const action = (
+    <>
+      <IconButton size="small" aria-label="close" color="primary" onClick={handleClose}>
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
   return (
     <Container fixed>
       <Card sx={{ minWidth: 275, minHeight: 350 }}>
@@ -165,6 +183,13 @@ export default function UserAuthMentor() {
           {showContent()}
         </CardContent>
       </Card>
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message="인증 메일 전송"
+        action={action}
+      />
     </Container>
   );
 }

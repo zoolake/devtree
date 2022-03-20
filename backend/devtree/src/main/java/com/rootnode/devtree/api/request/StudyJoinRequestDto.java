@@ -23,7 +23,7 @@ public class StudyJoinRequestDto {
                 .studyReservationID(new StudyReservationId(this.userSeq, teamSeq))
                 .team(team)
                 .user(user)
-                .study_reservation_create_time(LocalDateTime.now())
+                .studyReservationCreateTime(LocalDateTime.now())
                 .build();
     }
 }

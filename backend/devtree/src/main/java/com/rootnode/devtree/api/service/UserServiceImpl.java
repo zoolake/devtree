@@ -1,9 +1,11 @@
 package com.rootnode.devtree.api.service;
 
+import com.rootnode.devtree.api.request.EmailConfirmRequestDto;
 import com.rootnode.devtree.api.request.MentorCertificationRequestDto;
 import com.rootnode.devtree.api.request.UserRegisterPostReq;
 import com.rootnode.devtree.api.request.UserUpdateRequestDto;
 import com.rootnode.devtree.api.response.*;
+import com.rootnode.devtree.common.util.JwtTokenUtil;
 import com.rootnode.devtree.db.entity.*;
 import com.rootnode.devtree.db.entity.compositeKey.UserTechId;
 import com.rootnode.devtree.db.repository.*;
@@ -11,7 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,12 +48,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(UserRegisterPostReq userRegisterInfo) {
+        System.out.println("userRegisterInfo = " + userRegisterInfo.toString());
         User user = User.builder()
-                .userId(userRegisterInfo.getUser_id())
+                .userId(userRegisterInfo.getUserId())
                 // 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
-                .user_password(passwordEncoder.encode(userRegisterInfo.getUser_password()))
-                .userName(userRegisterInfo.getUser_name())
-                .userEmail(userRegisterInfo.getUser_email())
+                .userPassword(passwordEncoder.encode(userRegisterInfo.getUserPassword()))
+                .userName(userRegisterInfo.getUserName())
+                .userEmail(userRegisterInfo.getUserEmail())
+                .userNickname(userRegisterInfo.getUserId())
                 .userRole(UserRole.USER)
                 .build();
         return userRepository.save(user);
@@ -76,30 +82,27 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updateUser(Long userSeq, UserUpdateRequestDto userUpdateRequestDto) {
 
-        Optional<User>Ouser = userRepository.findByUserSeq(userSeq);
-//      이름 닉네임 설명 테크
-        if(Ouser.isPresent()){
-            Tech tech;
-            User user= Ouser.get();
-            user = User.builder()
-                    .userSeq(user.getUserSeq())
-                    .userId(user.getUserId())
-                    .user_password(user.getUser_password())
-                    .userEmail(user.getUserEmail())
-                    .userRole(user.getUserRole())
-                    .userDesc(userUpdateRequestDto.getUser_desc())
-                    .userName(userUpdateRequestDto.getUser_name())
-                    .userNickname(userUpdateRequestDto.getUser_nickname())
-                    .build();
-            userRepository.save(user);
-            userTechRepository.deleteByUserTechIdUserSeq(user.getUserSeq());
-            //기술 스택 관련 정보(사용자 기술스택)먼저  save 해야한다.
-            for (Long t : userUpdateRequestDto.getUser_tech()){
-                System.out.println(t);
-                userTechRepository.save(new UserTech(new UserTechId(user.getUserSeq(),t),user,techRepository.findByTechSeq(t)));
-            }
+        User user = userRepository.findByUserSeq(userSeq).get();
 
+        if(StringUtils.hasText(userUpdateRequestDto.getUserName())){
+            user.changeUserName(userUpdateRequestDto.getUserName());
         }
+        if(StringUtils.hasText(userUpdateRequestDto.getUserEmail())){
+            user.changeUserEmail(userUpdateRequestDto.getUserEmail());
+        }
+        if(StringUtils.hasText(userUpdateRequestDto.getUserDesc())){
+            user.changeUserDesc(userUpdateRequestDto.getUserDesc());
+        }
+        if(StringUtils.hasText(userUpdateRequestDto.getUserNickname())){
+            user.changeUserNickName(userUpdateRequestDto.getUserNickname());
+        }
+
+        userTechRepository.deleteByUserTechIdUserSeq(user.getUserSeq());
+        //기술 스택 관련 정보(사용자 기술스택)먼저  save 해야한다.
+        for (Long t : userUpdateRequestDto.getUserTech()){
+            userTechRepository.save(new UserTech(new UserTechId(user.getUserSeq(),t),user,techRepository.findByTechSeq(t)));
+        }
+
     }
 
     /**
@@ -257,7 +260,7 @@ public class UserServiceImpl implements UserService {
         teamList.forEach(team -> {
             List<Mentoring> mentoringList = mentoringRepository.findMentoringByTeamSeq(team.getTeamSeq());
             mentoringList.forEach(mentoring -> {
-                mentoringActivitiesList.add(new UserMentoringActivitiesResponseDto(mentoring, team.getTeamType()));
+                mentoringActivitiesList.add(new UserMentoringActivitiesResponseDto(mentoring, team.getTeamType(), team.getTeamName()));
             });
         });
 
@@ -270,6 +273,22 @@ public class UserServiceImpl implements UserService {
         return findMentoringListAll(userSeq).stream()
                 .filter(m -> m.getMentoringState().equals(mentoringState.name()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean checkTeamMember(Long userSeq, Long teamSeq) {
+        boolean isCheck = false;
+        Team team = teamRepository.findTeamByTeamSeq(teamSeq);
+        List<Long> teamMemberSeq;
+
+        if(team.getTeamType().equals(TeamType.STUDY)) {
+            teamMemberSeq = studyUserRepository.findUserSeqByTeamSeq(teamSeq);
+            isCheck = teamMemberSeq.stream().anyMatch(memberSeq -> memberSeq.equals(userSeq));
+        } else {
+            teamMemberSeq = projectPositionUserRepository.findUserSeqByTeamSeq(teamSeq);
+            isCheck = teamMemberSeq.stream().anyMatch(memberSeq -> memberSeq.equals(userSeq));
+        }
+        return isCheck;
     }
 
     // 사용자가 속한 팀 찾기
@@ -301,8 +320,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public CommonResponseDto certificationMentor(MentorCertificationRequestDto requestDto) {
-        Long mentorSeq = requestDto.getUserSeq();
+    public CommonResponseDto certificationMentor(Long mentorSeq,MentorCertificationRequestDto requestDto) {
         userRepository.certifyMentor(mentorSeq);
         User user = userRepository.findById(mentorSeq).get();
 
@@ -311,14 +329,40 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<NotificationListResponseDto> findUserNotification(Long userSeq) {
+    public List<NotificationResponseDto> findUserNotification(Long userSeq) {
         List<Notification> notificationList = notificationRepository.findNotificationByUserSeq(userSeq);
-        List<NotificationListResponseDto> responseDto = new ArrayList<>();
+        List<NotificationResponseDto> responseDto = new ArrayList<>();
         notificationList.forEach(notification -> {
             Long sendUserSeq = notification.getNotificationSendUserSeq();
             String sendUserName = userRepository.findByUserSeq(sendUserSeq).get().getUserName();
-            responseDto.add(new NotificationListResponseDto(notification, sendUserName));
+            responseDto.add(new NotificationResponseDto(notification, sendUserName));
         });
         return responseDto;
+    }
+
+    @Override
+    @Transactional
+    public NotificationResponseDto findUserDetailNotification(Long notificationSeq) {
+        Notification notification = notificationRepository.findById(notificationSeq).get();
+        notification.changeIsCheck();
+        String sendUserName = userRepository.findByUserSeq(notification.getNotificationSendUserSeq()).get().getUserName();
+        NotificationResponseDto responseDto = new NotificationResponseDto(notification, sendUserName);
+        return responseDto;
+    }
+
+    @Override
+    public String confirmVerificationCode(User user, EmailConfirmRequestDto requestDto) {
+        String enteredCode = requestDto.getEnteredCode();
+        String verificationCode = userRepository.findVerificaionCodeByUserSeq(user.getUserSeq());
+
+        if(verificationCode.equals(enteredCode)) {
+            user.changeUserRole(UserRole.MENTOR);
+            user.changeVerificationCode("");
+            mentorRepository.save(Mentor.builder().user(user).mentorExp(new Long(0)).mentorSeq(user.getUserSeq()).verificationDate(LocalDateTime.now()).build());
+            String accessToken = JwtTokenUtil.getToken(user.getUserId(),user.getUserSeq(),user.getUserRole().name());
+            return accessToken;
+        } else {
+            return null;
+        }
     }
 }

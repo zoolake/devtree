@@ -18,9 +18,9 @@ public class MentorSelfDetailSelfResponseDto {
     private String mentorCareer;
     private String mentorDesc;
     private String mentorEmail;
+    private Long mentorExp;
     private Tier tier;
     private List<MentorTechInfoDto> mentorTechList;
-    private List<MentorTimeInfoDto> mentorTimeList;
     private List<MentoringInfoDto> mentoringInfoList;
     private List<MentoringCommentInfoDto> mentoringReviewList;
 }

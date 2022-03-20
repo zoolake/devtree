@@ -1,5 +1,6 @@
 package com.rootnode.devtree.api.service;
 
+import com.rootnode.devtree.api.request.EmailConfirmRequestDto;
 import com.rootnode.devtree.api.request.MentorCertificationRequestDto;
 import com.rootnode.devtree.api.request.UserRegisterPostReq;
 import com.rootnode.devtree.api.request.UserUpdateRequestDto;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,12 +46,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(UserRegisterPostReq userRegisterInfo) {
+        System.out.println("userRegisterInfo = " + userRegisterInfo.toString());
         User user = User.builder()
-                .userId(userRegisterInfo.getUser_id())
+                .userId(userRegisterInfo.getUserId())
                 // 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
-                .user_password(passwordEncoder.encode(userRegisterInfo.getUser_password()))
-                .userName(userRegisterInfo.getUser_name())
-                .userEmail(userRegisterInfo.getUser_email())
+                .userPassword(passwordEncoder.encode(userRegisterInfo.getUserPassword()))
+                .userName(userRegisterInfo.getUserName())
+                .userEmail(userRegisterInfo.getUserEmail())
                 .userRole(UserRole.USER)
                 .build();
         return userRepository.save(user);
@@ -84,17 +87,17 @@ public class UserServiceImpl implements UserService {
             user = User.builder()
                     .userSeq(user.getUserSeq())
                     .userId(user.getUserId())
-                    .user_password(user.getUser_password())
+                    .userPassword(user.getUserPassword())
                     .userEmail(user.getUserEmail())
                     .userRole(user.getUserRole())
-                    .userDesc(userUpdateRequestDto.getUser_desc())
-                    .userName(userUpdateRequestDto.getUser_name())
-                    .userNickname(userUpdateRequestDto.getUser_nickname())
+                    .userDesc(userUpdateRequestDto.getUserDesc())
+                    .userName(userUpdateRequestDto.getUserName())
+                    .userNickname(userUpdateRequestDto.getUserNickname())
                     .build();
             userRepository.save(user);
             userTechRepository.deleteByUserTechIdUserSeq(user.getUserSeq());
             //기술 스택 관련 정보(사용자 기술스택)먼저  save 해야한다.
-            for (Long t : userUpdateRequestDto.getUser_tech()){
+            for (Long t : userUpdateRequestDto.getUserTech()){
                 System.out.println(t);
                 userTechRepository.save(new UserTech(new UserTechId(user.getUserSeq(),t),user,techRepository.findByTechSeq(t)));
             }
@@ -301,8 +304,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public CommonResponseDto certificationMentor(MentorCertificationRequestDto requestDto) {
-        Long mentorSeq = requestDto.getUserSeq();
+    public CommonResponseDto certificationMentor(Long mentorSeq,MentorCertificationRequestDto requestDto) {
         userRepository.certifyMentor(mentorSeq);
         User user = userRepository.findById(mentorSeq).get();
 
@@ -320,5 +322,28 @@ public class UserServiceImpl implements UserService {
             responseDto.add(new NotificationListResponseDto(notification, sendUserName));
         });
         return responseDto;
+    }
+
+    @Override
+    @Transactional
+    public CommonResponseDto checkUserNotification(Long notificationSeq) {
+        Notification notification = notificationRepository.findById(notificationSeq).get();
+        notification.changeIsCheck();
+        return new CommonResponseDto(200, "알림을 확인하였습니다.");
+    }
+
+    @Override
+    public CommonResponseDto confirmVerificationCode(User user, EmailConfirmRequestDto requestDto) {
+        String enteredCode = requestDto.getEnteredCode();
+        String verificationCode = userRepository.findVerificaionCodeByUserSeq(user.getUserSeq());
+
+        if(verificationCode.equals(enteredCode)) {
+            user.changeUserRole(UserRole.MENTOR);
+            user.changeVerificationCode("");
+            mentorRepository.save(Mentor.builder().user(user).mentorSeq(user.getUserSeq()).verificationDate(LocalDateTime.now()).build());
+            return new CommonResponseDto(200, "멘토인증이 완료되었습니다.");
+        } else {
+            return new CommonResponseDto(400, "멘토인증 실패");
+        }
     }
 }

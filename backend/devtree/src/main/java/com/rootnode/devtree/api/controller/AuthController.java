@@ -2,6 +2,7 @@ package com.rootnode.devtree.api.controller;
 
 import com.rootnode.devtree.api.request.UserLoginPostReq;
 import com.rootnode.devtree.api.request.UserUpdateRequestDto;
+import com.rootnode.devtree.api.response.UserDetailResponseDto;
 import com.rootnode.devtree.api.response.UserLoginPostRes;
 import com.rootnode.devtree.api.service.UserService;
 import com.rootnode.devtree.common.auth.UserDetail;
@@ -35,13 +36,14 @@ public class AuthController {
 	 * */
     @PostMapping("/v1/user/login")
     public ResponseEntity<UserLoginPostRes> login(@RequestBody UserLoginPostReq loginInfo) {
-        String userId = loginInfo.getUser_id();
-        String password = loginInfo.getUser_password();
+        String userId = loginInfo.getUserId();
+        String password = loginInfo.getUserPassword();
         User user = userService.getUserByUserId(userId);
+
         // 로그인 요청한 유저로부터 입력된 패스워드 와 디비에 저장된 유저의 암호화된 패스워드가 같은지 확인.(유효한 패스워드인지 여부 확인)
-        if (user != null && passwordEncoder.matches(password, user.getUser_password())) {
+        if (user != null && passwordEncoder.matches(password, user.getUserPassword())) {
             // 유효한 패스워드가 맞는 경우, 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
-            return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", JwtTokenUtil.getToken(userId)));
+            return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", JwtTokenUtil.getToken(userId,user.getUserSeq(),user.getUserRole().name())));
         }
         // 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
         return ResponseEntity.status(401).body(UserLoginPostRes.of(401, "Invalid Password", null));
@@ -59,11 +61,8 @@ public class AuthController {
     public ResponseEntity<Result> getUserInfo(@ApiIgnore Authentication authentication) {
 //		userdetails를 통해서 user를 가져온다.
         UserDetail userDetails = (UserDetail)authentication.getDetails();
-
-//		userdetail에서는 getusername 이 userid 를 가져오는것
-        String userId = userDetails.getUsername();
-
-        return ResponseEntity.status(200).body(new Result(userService.getUserDetailByUserId(userId),200,"성공"));
+        UserDetailResponseDto user = userService.getUserDetailByUserId(userDetails.getUsername());
+        return ResponseEntity.status(200).body(new Result(user,200,"성공"));
     }
 
 
@@ -74,7 +73,7 @@ public class AuthController {
      */
     @PostMapping("/v1/user/idcheck")
     public ResponseEntity<Boolean> login(@RequestBody Map<String,String> request) {
-        User user = userService.getUserByUserId(request.get("user_id"));
+        User user = userService.getUserByUserId(request.get("userId"));
         if (user == null) {
             return ResponseEntity.ok(true);
         }

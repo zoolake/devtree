@@ -51,4 +51,6 @@ public class Notification {
         this.notificationIsCheck = false;
         this.notificationType = notificationType;
     }
+
+    public void changeIsCheck() { this.notificationIsCheck = true; }
 }

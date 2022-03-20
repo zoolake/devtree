@@ -1,0 +1,595 @@
+diff --git a/node_modules/openvidu-react/dist/components/VideoRoomComponent.css b/node_modules/openvidu-react/dist/components/VideoRoomComponent.css
+index e47b105..8064d6f 100644
+--- a/node_modules/openvidu-react/dist/components/VideoRoomComponent.css
++++ b/node_modules/openvidu-react/dist/components/VideoRoomComponent.css
+@@ -1,6 +1,6 @@
+ #header {
+   color: #ffffff;
+-  background-color: #333333;
++  background-color: #41CE8A;
+   padding: 0 14px 0 0;
+   position: absolute;
+   top: 0;
+@@ -45,7 +45,7 @@
+ 
+ 
+ .bounds {
+-  background-color: #494949;
++  background-color: #e0e0e0;
+   overflow: hidden;
+   position: absolute;
+   left: 0;
+diff --git a/node_modules/openvidu-react/dist/components/chat/ChatComponent.css b/node_modules/openvidu-react/dist/components/chat/ChatComponent.css
+index f89ba74..c0b99dd 100644
+--- a/node_modules/openvidu-react/dist/components/chat/ChatComponent.css
++++ b/node_modules/openvidu-react/dist/components/chat/ChatComponent.css
+@@ -1,198 +1,199 @@
+ #chatContainer {
+-    position: absolute;
+-    z-index: 0;
+-    width: 100%;
+-    height: 100%;
+-  }
+-  
+-  #chatToolbar {
+-    height: 30px;
+-    background-color: #3d3d3d;
+-    box-sizing: border-box;
+-    font-weight: bold;
+-    font-size: 14px;
+-    text-align: center;
+-    padding-top: 4px;
+-    border-top-left-radius: 6px;
+-    border-top-right-radius: 6px;
+-    color: #ffffff;
+-  }
+-  
+-  #closeButton {
+-    position: absolute;
+-    right: 0;
+-    top: -8px;
+-  }
+-  
+-  #chatComponent {
+-    background-color: #b8b8b8;
+-    position: absolute;
+-    z-index: 99999;
+-    top: 0;
+-    left: 0;
+-    right: 0;
+-    bottom: 0;
+-    margin: auto;
+-    height: calc(100% - 30px);
+-    width: calc(100% - 30px);
+-    border-radius: 20px;
+-  }
+-  
+-  .message-wrap {
+-    padding: 0 15px;
+-    height: calc(100% - 80px);
+-    overflow: auto;
+-  }
+-  
+-  .message {
+-    position: relative;
+-    padding: 7px 0;
+-  }
+-  .user-img {
+-    position: absolute;
+-    border-radius: 45px;
+-    width: 60px;
+-    height: 60px;
+-    top: 15px;
+-  }
+-  
+-  .msg-detail {
+-    width: calc(100% - 65px);
+-    display: inline-block;
+-  }
+-  
+-  .msg-detail p {
+-    margin: 0;
+-    font-size: 15px;
+-  }
+-  
+-  .msg-info p {
+-    font-size: 0.8em;
+-    color: #000000;
+-    font-style: italic;
+-  }
+-  
+-  .msg-content {
+-    position: relative;
+-    margin-top: 5px;
+-    border-radius: 5px;
+-    padding: 8px;
+-    color: #000000;
+-    width: auto;
+-    max-width: 80%;
+-  }
+-  
+-  span.triangle {
+-    border-radius: 2px;
+-    height: 8px;
+-    width: 8px;
+-    top: 12px;
+-    display: block;
+-    -webkit-transform: rotate(45deg);
+-    transform: rotate(45deg);
+-    position: absolute;
+-  }
+-  
+-  .text {
+-    word-break: break-all;color: #000000;
+-  }
+-  
+-  /* Start message from other user */
+-  
+-  .message > .left .msg-detail .msg-info {
+-    text-align: left;
+-  }
+-  
+-  .message.left .msg-detail {
+-    padding-left: 65px;
+-  }
+-  
+-  .message.left .user-img {
+-    left: -5px;
+-    border: 1px solid #f0f0f094;
+-  }
+-  
+-  .message.left .msg-detail .msg-content {
+-    background-color: #f0f0f0;
+-    float: left;
+-  }
+-  .message.left .msg-detail .msg-content span.triangle {
+-    background-color: #f0f0f0;
+-    border-bottom-width: 0;
+-    border-left-width: 0;
+-    left: -5px;
+-  }
+-  
+-  /* End message from other user */
+-  
+-  /* Start my messages */
+-  
+-  .message.right .msg-detail .msg-info {
+-    text-align: right;
+-  }
+-  .message.right .user-img {
+-    right: -5px;
+-    border: 1px solid #c8ffe8ab;
+-  }
+-  
+-  .message.right .msg-detail .msg-content {
+-    background-color: #c8ffe8;
+-    float: right;
+-  }
+-  .message.right .msg-detail .msg-content span.triangle {
+-    background-color: #c8ffe8;
+-    border-bottom-width: 0;
+-    border-left-width: 0;
+-    right: -5px;
+-  }
+-  
+-  /* End my messages */
+-  
+-  #messageInput {
+-    position: absolute;
+-    bottom: 0px;
+-    width: 100%;
+-    background-color: #ffffff;
+-    text-align: center;
+-    padding: 10px 0px;
+-    height: 30px;
+-    border-bottom-left-radius: 6px;
+-    border-bottom-right-radius: 6px;
+-  }
+-  #messageInput input {
+-    width: 90%;
+-    height: 100%;
+-    border: none;
+-    outline: none;
+-    font-size: 14px;
+-    margin-left: -6%;
+-    color: #000000;
+-  }
+-  
+-  #sendButton {
+-    background-color: #81e9b0;
+-    position: absolute;
+-    right: 10px;
+-    top: 0;
+-    bottom: 0;
+-    margin: auto;
+-    border: 1px solid #7ae2a9;
+-    box-shadow: none !important;
+-  }
+-  #sendButton {
+-    margin-left: 3px !important;
+-    margin-bottom: 2px !important;
+-  }
+-  
+-  ::-webkit-scrollbar {
+-    width: 8px;
+-  }
+-  
+-  ::-webkit-scrollbar-thumb {
+-    background-color: #6b6b6b;
+-  }
+-  
+-  .chatComponentLight ::-webkit-scrollbar-thumb {
+-    background-color: #eeeeee !important;
+-  }
+-  
+\ No newline at end of file
++  position: absolute;
++  z-index: 0;
++  width: 100%;
++  height: 100%;
++}
++
++#chatToolbar {
++  height: 30px;
++  background-color: #3d3d3d;
++  box-sizing: border-box;
++  font-weight: bold;
++  font-size: 14px;
++  text-align: center;
++  padding-top: 4px;
++  border-top-left-radius: 6px;
++  border-top-right-radius: 6px;
++  color: #ffffff;
++}
++
++#closeButton {
++  position: absolute;
++  right: 0;
++  top: -8px;
++}
++
++#chatComponent {
++  background-color: #b8b8b8;
++  position: absolute;
++  z-index: 99999;
++  top: 0;
++  left: 0;
++  right: 0;
++  bottom: 0;
++  margin: auto;
++  height: calc(100% - 30px);
++  width: calc(100% - 30px);
++  border-radius: 20px;
++}
++
++#chatToolbar > span {display: none;}
++
++.message-wrap {
++  padding: 0 15px;
++  height: calc(100% - 80px);
++  overflow: auto;
++}
++
++.message {
++  position: relative;
++  padding: 7px 0;
++}
++.user-img {
++  position: absolute;
++  border-radius: 45px;
++  width: 60px;
++  height: 60px;
++  top: 15px;
++}
++
++.msg-detail {
++  width: calc(100% - 65px);
++  display: inline-block;
++}
++
++.msg-detail p {
++  margin: 0;
++  font-size: 15px;
++}
++
++.msg-info p {
++  font-size: 0.8em;
++  color: #000000;
++  font-style: italic;
++}
++
++.msg-content {
++  position: relative;
++  margin-top: 5px;
++  border-radius: 5px;
++  padding: 8px;
++  color: #000000;
++  width: auto;
++  max-width: 80%;
++}
++
++span.triangle {
++  border-radius: 2px;
++  height: 8px;
++  width: 8px;
++  top: 12px;
++  display: block;
++  -webkit-transform: rotate(45deg);
++  transform: rotate(45deg);
++  position: absolute;
++}
++
++.text {
++  word-break: break-all;color: #000000;
++}
++
++/* Start message from other user */
++
++.message > .left .msg-detail .msg-info {
++  text-align: left;
++}
++
++.message.left .msg-detail {
++  padding-left: 65px;
++}
++
++.message.left .user-img {
++  left: -5px;
++  border: 1px solid #f0f0f094;
++}
++
++.message.left .msg-detail .msg-content {
++  background-color: #f0f0f0;
++  float: left;
++}
++.message.left .msg-detail .msg-content span.triangle {
++  background-color: #f0f0f0;
++  border-bottom-width: 0;
++  border-left-width: 0;
++  left: -5px;
++}
++
++/* End message from other user */
++
++/* Start my messages */
++
++.message.right .msg-detail .msg-info {
++  text-align: right;
++}
++.message.right .user-img {
++  right: -5px;
++  border: 1px solid #c8ffe8ab;
++}
++
++.message.right .msg-detail .msg-content {
++  background-color: #41CE8A;
++  float: right;
++}
++.message.right .msg-detail .msg-content span.triangle {
++  background-color: #41CE8A;
++  border-bottom-width: 0;
++  border-left-width: 0;
++  right: -5px;
++}
++
++/* End my messages */
++
++#messageInput {
++  position: absolute;
++  bottom: 0px;
++  width: 100%;
++  background-color: #ffffff;
++  text-align: center;
++  /* padding: 10px 0px; */
++  height: 30px;
++  border-bottom-left-radius: 6px;
++  border-bottom-right-radius: 6px;
++}
++#messageInput input {
++  width: 90%;
++  height: 100%;
++  border: none;
++  outline: none;
++  font-size: 14px;
++  margin-left: -6%;
++  color: #000000;
++}
++
++#sendButton {
++  background-color: #81e9b0;
++  position: absolute;
++  right: 10px;
++  top: 0;
++  bottom: 0;
++  margin: auto;
++  border: 1px solid #7ae2a9;
++  box-shadow: none !important;
++}
++#sendButton {
++  margin-left: 3px !important;
++  margin-bottom: 2px !important;
++}
++
++::-webkit-scrollbar {
++  width: 8px;
++}
++
++::-webkit-scrollbar-thumb {
++  background-color: #6b6b6b;
++}
++
++.chatComponentLight ::-webkit-scrollbar-thumb {
++  background-color: #eeeeee !important;
++}
+diff --git a/node_modules/openvidu-react/dist/components/stream/StreamComponent.css b/node_modules/openvidu-react/dist/components/stream/StreamComponent.css
+index 9cd3843..e6ebf68 100644
+--- a/node_modules/openvidu-react/dist/components/stream/StreamComponent.css
++++ b/node_modules/openvidu-react/dist/components/stream/StreamComponent.css
+@@ -13,6 +13,8 @@
+     cursor: pointer;
+ }
+ 
++#nickname + span {display: none;}
++
+ #closeButton {
+     position: absolute;
+     top: -3px;
+diff --git a/node_modules/openvidu-react/dist/components/toolbar/ToolbarComponent.css b/node_modules/openvidu-react/dist/components/toolbar/ToolbarComponent.css
+index 113aa86..f9ca77b 100644
+--- a/node_modules/openvidu-react/dist/components/toolbar/ToolbarComponent.css
++++ b/node_modules/openvidu-react/dist/components/toolbar/ToolbarComponent.css
+@@ -1,85 +1,87 @@
+ #header {
+-    color: #ffffff;
+-    height: 40px;
+-    background-color: #333333;
+-    padding: 0 14px 0 0;
+-    position: absolute;
+-    top: 0;
+-    left: 0;
+-    z-index: 999999;
+-    min-width: 400px !important;
+-  }
+-  .toolbar{
+-    padding: 0 !important;
+-  }
++  color: #ffffff;
++  height: 40px;
++  background-color: #41CE8A;
++  padding: 0 14px 0 0;
++  position: absolute;
++  top: 0;
++  left: 0;
++  z-index: 999999;
++  min-width: 400px !important;
++}
++.toolbar{
++  padding: 0 !important;
++}
+ 
+-  .headerLight{
+-    color: #706969 !important;
+-    background-color: #eeeeee !important;
+-  }
++.headerLight{
++  color: #706969 !important;
++  background-color: #eeeeee !important;
++}
+ 
+-  #navSessionInfo {
+-    position: absolute;
+-  }
++#navSessionInfo {
++  position: absolute;
++  display: none;
++}
+ 
+-  #navButtons {
+-    position: absolute;
+-    left: 0;
+-    right: 0;
+-    min-width: 400px;
+-  }
+-  #navChatButton {
+-    position: absolute;
+-    right: 10px;
+-    top: 0;
+-  }
++#navButtons {
++  position: absolute;
++  left: 0;
++  right: 0;
++  min-width: 400px;
++}
++#navChatButton {
++  position: absolute;
++  right: 10px;
++  top: 0;
++}
+ 
+-  #titleContent{
+-    max-width: 100px;
+-    background-color: #494949;
+-    margin: 5px -18px;
+-    padding: 0px 15px;
+-    font-size: 16px;
+-    overflow: hidden;
+-    text-overflow: ellipsis;
+-    float: right;
+-    margin-top: 20px;
+-  }
++#titleContent{
++  max-width: 100px;
++  background-color: #494949;
++  margin: 5px -18px;
++  padding: 0px 15px;
++  font-size: 16px;
++  overflow: hidden;
++  text-overflow: ellipsis;
++  float: right;
++  margin-top: 20px;
++  display: none;
++}
+ 
+-  .titleContentLight{
+-    background-color: #dfdfdf !important; 
+-    color: #000;
+-  }
++.titleContentLight{
++  background-color: #dfdfdf !important; 
++  color: #000;
++}
+ 
+-  #header_img {
+-    max-width: 135px;
+-    margin-right: 10px;
+-    margin-top: 10px;
+-  }
++#header_img {
++  max-width: 135px;
++  margin-right: 10px;
++  margin-top: 10px;
++}
+ 
+-  #session-title{
+-    font-family: 'Open Sans', sans-serif; 
+-  }
++#session-title{
++  font-family: 'Open Sans', sans-serif; 
++}
+ 
+ 
+ #point{
+-  width: 10px;
+-  height: 10px;
+-  position: absolute;
+-  top: 12px;
+-  right: 33px;
+-  border-radius: 50%;
+-  background-color: #ffa600;
+-  border: 1px solid #000;
+-  z-index: 99999;
++width: 10px;
++height: 10px;
++position: absolute;
++top: 12px;
++right: 33px;
++border-radius: 50%;
++background-color: #ffa600;
++border: 1px solid #000;
++z-index: 99999;
+ }
+ .pointLight{
+-  border: 1px solid #ffffff !important;
++border: 1px solid #ffffff !important;
+ }
+ 
+ 
+ @media only screen and (max-width: 700px) {
+-  #titleContent, #navChatButton {
+-      display: none;
+-  }
++#titleContent, #navChatButton {
++    display: none;
++}
+ }

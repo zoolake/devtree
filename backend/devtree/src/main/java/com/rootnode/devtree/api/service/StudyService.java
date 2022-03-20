@@ -4,10 +4,7 @@ import com.rootnode.devtree.api.request.StudyCreateRequestDto;
 import com.rootnode.devtree.api.request.StudyJoinRequestDto;
 import com.rootnode.devtree.api.request.StudyRespondRequestDto;
 import com.rootnode.devtree.api.request.StudyUpdateRequestDto;
-import com.rootnode.devtree.api.response.CommonResponseDto;
-import com.rootnode.devtree.api.response.StudyDetailResponseDto;
-import com.rootnode.devtree.api.response.StudyJoinListResponseDto;
-import com.rootnode.devtree.api.response.StudyListResponseDto;
+import com.rootnode.devtree.api.response.*;
 import com.rootnode.devtree.db.entity.*;
 import com.rootnode.devtree.db.entity.compositeKey.StudyReservationId;
 import com.rootnode.devtree.db.entity.compositeKey.StudyUserId;
@@ -88,10 +85,16 @@ public class StudyService {
         return new StudyDetailResponseDto(team, managerName);
     }
 
+    // 스터디 멤버 조회
+    public List<StudyMemberListResponseDto> findStudyMember(Long teamSeq) {
+        // 1. 팀 테이블 조회
+        List<User> userList = studyUserRepository.findUserByTeamSeq(teamSeq);
+        return userList.stream().map(user -> new StudyMemberListResponseDto(user)).collect(Collectors.toList());
+    }
+
+
     // 스터디 신청
-    public CommonResponseDto joinStudy(Long teamSeq, StudyJoinRequestDto requestDto) {
-        Long userSeq = requestDto.getUserSeq();
-        System.out.println("userSeq >>> " + userSeq);
+    public CommonResponseDto joinStudy(Long userSeq, Long teamSeq, StudyJoinRequestDto requestDto) {
         // 1. User 객체를 찾는다.
         User user = userRepository.findById(userSeq).get();
         System.out.println(user.getUserName());
@@ -114,8 +117,9 @@ public class StudyService {
 
     // 스터디 신청 응답
     @Transactional
-    public CommonResponseDto respondStudy(Long teamSeq, Long userSeq, StudyRespondRequestDto requestDto) {
+    public CommonResponseDto respondStudy(Long teamSeq, StudyRespondRequestDto requestDto) {
         // 응답 타입 (수락 / 거절)
+        Long userSeq = requestDto.getUserSeq();
         ResponseType responseType = requestDto.getResponseType();
         StudyUserId studyUserId = new StudyUserId(userSeq, teamSeq);
         User user = userRepository.findById(userSeq).get();

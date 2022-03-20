@@ -16,9 +16,10 @@ import java.util.List;
 @Builder
 public class UserUpdateRequestDto {
 
-    private String user_name;
-    private String user_nickname;
-    private String user_desc;
-    private List<Long> user_tech;
+    private String userEmail;
+    private String userName;
+    private String userNickname;
+    private String userDesc;
+    private List<Long> userTech;
 
 }

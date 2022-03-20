@@ -19,7 +19,7 @@ bin/
 
 ### IntelliJ IDEA ###
 application-mysql.properties
-
+/src/test
 .idea
 *.iws
 *.iml
@@ -37,3 +37,4 @@ out/
 
 ### VS Code ###
 .vscode/
+

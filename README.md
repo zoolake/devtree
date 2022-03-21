@@ -1,6 +1,6 @@
 # DevTree
 
-![자산_3_4x](/uploads/4430468ebf0f9c8e68b8448d459d0f58/자산_3_4x.png)
+![logo1](./images/devtree_logo.png)
 
 
 ## 🌳****프로젝트 소개****
@@ -15,7 +15,7 @@
 `멘토링`을 통해 효과적인 `개발자 스터디 & 프로젝트`를 도와주는 서비스
 
 
-![image](/uploads/8bee1ad0020a3d43187dae32e511400a/image.png)
+![logo2](./images/devtree_logo2.png)
 
 ### DEVTREE의 뜻?
 

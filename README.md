@@ -87,4 +87,4 @@
 
 
 - [중간발표자료](https://docs.google.com/presentation/d/1s6uNbx6AvgYlNhtxcJEs3wHcYcVWKMzVnTpuD8oVxYg/edit#slide=id.g110aa22a4c1_7_176)
-- [배포 링크](http://i6a307.p.ssafy.io/MainPage/app)
+- ~~[배포 링크](http://i6a307.p.ssafy.io/MainPage/app)~~

@@ -12,7 +12,7 @@ public class MentoringCommentInfoDto {
     private String comment;
 
     public MentoringCommentInfoDto(User user, MentoringComment mentoringComment) {
-        this.userName = user.getUserNickname();
+        this.userName = user.getUserName();
         this.comment = mentoringComment.getMentorComment();
     }
 }

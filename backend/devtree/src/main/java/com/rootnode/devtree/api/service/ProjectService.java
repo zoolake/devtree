@@ -9,7 +9,6 @@ import com.rootnode.devtree.db.entity.compositeKey.ProjectPositionUserId;
 import com.rootnode.devtree.db.entity.compositeKey.TeamTechId;
 import com.rootnode.devtree.db.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -82,12 +81,12 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = true)
-    public ProjectDetailResponseDto findProject(Long team_seq) {
+    public ProjectDetailResponseDto findProject(Long teamSeq) {
         // 1. 팀 테이블을 조회
-        Team team = teamRepository.findTeamByTeamSeq(team_seq);
+        Team team = teamRepository.findTeamByTeamSeq(teamSeq);
 
         // 2. team_seq를 활용하여 포지션 현황 조회
-        List<ProjectPosition> projectPositions = projectPositionRepository.findByTeamSeq(team_seq);
+        List<ProjectPosition> projectPositions = projectPositionRepository.findByTeamSeq(teamSeq);
 
         // 3. (1)에서 얻어온 team_manager_seq를 활용하여 관리자 이름 조회 (user 파트 완성 후 작업하기.)
         String managerName = userRepository.findById(team.getTeamManagerSeq()).get().getUserName();
@@ -96,9 +95,22 @@ public class ProjectService {
         return new ProjectDetailResponseDto(team, managerName, projectPositions);
     }
 
+
+    public List<ProjectMemberListResponseDto> findProjectMember(Long teamSeq) {
+        // 1. 팀 테이블을 조회
+        List<ProjectPositionUser> userList = projectPositionUserRepository.findUserByTeamSeq(teamSeq);
+
+        return userList.stream().map(user -> {
+            String userName = userRepository.findByUserSeq(user.getUser().getUserSeq()).get().getUserName();
+            return new ProjectMemberListResponseDto(user, userName);
+        }).collect(Collectors.toList());
+    }
+
+
+
+
     @Transactional
-    public CommonResponseDto joinProject(Long teamSeq, ProjectJoinRequestDto requestDto) {
-        Long userSeq = requestDto.getUserSeq();
+    public CommonResponseDto joinProject(Long userSeq,Long teamSeq, ProjectJoinRequestDto requestDto) {
         String detailPositionName = requestDto.getDetailPositionName();
 
         // 1. User 객체를 찾는다.
@@ -123,7 +135,8 @@ public class ProjectService {
     }
 
     @Transactional
-    public CommonResponseDto respondPosition(Long teamSeq, Long userSeq, ProjectRespondRequestDto requestDto) {
+    public CommonResponseDto respondPosition(Long teamSeq, ProjectRespondRequestDto requestDto) {
+        Long userSeq = requestDto.getUserSeq();
 
         String detailPositionName = requestDto.getDetailPositionName();
         ResponseType responseType = requestDto.getResponseType();
@@ -176,20 +189,20 @@ public class ProjectService {
 
 
     @Transactional
-    public ProjectPositionDetailResponseDto findProjectPositionDetail(Long team_seq) {
-        return new ProjectPositionDetailResponseDto(projectPositionRepository.findByTeamSeq(team_seq));
+    public ProjectPositionDetailResponseDto findProjectPositionDetail(Long teamSeq) {
+        return new ProjectPositionDetailResponseDto(projectPositionRepository.findByTeamSeq(teamSeq));
     }
 
     @Transactional
-    public CommonResponseDto updateTeamState(Long team_seq, TeamState team_state) {
-        Team team = teamRepository.findById(team_seq).get();
-        team.changeTeamState(team_state);
+    public CommonResponseDto updateTeamState(Long teamSeq, TeamState teamState) {
+        Team team = teamRepository.findById(teamSeq).get();
+        team.changeTeamState(teamState);
         return new CommonResponseDto(201, "팀 상태 변경에 성공하였습니다.");
     }
 
     @Transactional
-    public CommonResponseDto updateProject(Long team_seq, ProjectUpdateRequestDto requestDto) {
-        Team team = teamRepository.findById(team_seq).get();
+    public CommonResponseDto updateProject(Long teamSeq, ProjectUpdateRequestDto requestDto) {
+        Team team = teamRepository.findById(teamSeq).get();
 
         if (StringUtils.hasText(requestDto.getTeamName())) {
             team.changeTeamName(requestDto.getTeamName());
@@ -203,12 +216,12 @@ public class ProjectService {
             // 부모쪽 먼저 삭제
             team.getTeamTechList().clear();
             // 자식쪽 삭제
-            teamTechRepository.deleteByTeamSeq(team_seq);
+            teamTechRepository.deleteByTeamSeq(teamSeq);
 
             // 새로 삽입
             requestDto.getTeamTech().forEach(techSeq -> {
                 teamTechRepository.save(TeamTech.builder()
-                        .teamTechID(new TeamTechId(team_seq, techSeq))
+                        .teamTechID(new TeamTechId(teamSeq, techSeq))
                         .team(team)
                         .tech(techRepository.findById(techSeq).get())
                         .build());
@@ -222,8 +235,8 @@ public class ProjectService {
             // 기존 포지션이 인원이 변경되는 경우면 update
             positionMembers.forEach(positionMember -> {
                 // 이미 있는 포지션이라면 인원만 update
-                if (projectPositionRepository.findById(new ProjectPositionId(team_seq, positionMember.getPosition().getDetailPositionName())).isPresent()) {
-                    ProjectPosition projectPosition = projectPositionRepository.findById(new ProjectPositionId(team_seq, positionMember.getPosition().getDetailPositionName())).get();
+                if (projectPositionRepository.findById(new ProjectPositionId(teamSeq, positionMember.getPosition().getDetailPositionName())).isPresent()) {
+                    ProjectPosition projectPosition = projectPositionRepository.findById(new ProjectPositionId(teamSeq, positionMember.getPosition().getDetailPositionName())).get();
                     int positionRecruitCnt = positionMember.getPositionRecruitCnt();
                     projectPosition.changeRecruitCount(positionRecruitCnt);
                 }
@@ -256,11 +269,9 @@ public class ProjectService {
     /**
      * List<포지션 이름, 정원> , 팀을 넘기면 저장해주는 메소드
      */
-    private void saveProjectPosition(List<PositionMember> project_position, Team team) {
-        project_position.forEach(positionMember -> {
+    private void saveProjectPosition(List<PositionMember> projectPosition, Team team) {
+        projectPosition.forEach(positionMember -> {
             projectPositionRepository.save(positionMember.toProjectPositionEntity(team));
         });
     }
-
-
 }

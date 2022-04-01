@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class StudyRespondRequestDto {
+    private Long userSeq;
     private ResponseType responseType;
 }

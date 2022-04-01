@@ -13,5 +13,6 @@ import java.io.Serializable;
 @NoArgsConstructor @AllArgsConstructor
 @Embeddable
 public class MentoringCommentId implements Serializable {
-    private MentoringUserId mentoringUserID;
+    private Long userSeq;
+    private Long mentoringSeq;
 }

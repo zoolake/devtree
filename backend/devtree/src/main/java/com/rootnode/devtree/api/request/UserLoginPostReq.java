@@ -13,6 +13,6 @@ import lombok.Setter;
 @ApiModel("UserLoginPostRequest")
 public class UserLoginPostReq {
 
-	String user_id;
-	String user_password;
+	String userId;
+	String userPassword;
 }
